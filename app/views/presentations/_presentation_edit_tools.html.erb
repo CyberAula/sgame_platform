@@ -1,0 +1,28 @@
+<% if isPresentationOwner%>
+
+<!--BTN ACTIONS-->
+<div class="btn-group actions_layout_show" role="group">
+
+  <!-- Edit -->
+  <button class="btn button-primary-red" data-toggle="tooltip" title="Edit" onclick="location.href='<%=edit_presentation_path(@presentation)%>'">
+    <i class="fa fa-pencil"></i>
+  </button>
+
+
+
+ <!--Remove confirmation-->
+  <div class="contentdelete" style="display: none">
+    <p class="delete_p">Are you sure?</p>
+    <div class="actions">
+      <button class="button-secondary-red closepopover">Cancel</button>
+      <%= link_to 'Delete', @presentation, :method => :delete, :class => 'button-primary-red' %>
+    </div>
+  </div>
+  <!--Remove-->
+    <button class="btn with_tooltip delete button-primary-red" data-toggle="popover" data-container="body" title="Delete Presentation" data-placement="left" aria-hidden="true">
+      <i class="fa fa-trash"></i>
+    </button>
+</div>
+
+
+<%end%>

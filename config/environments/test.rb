@@ -28,6 +28,7 @@ SgamePlatform::Application.configure do
   # The :test delivery method accumulates sent emails in the
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
+  Rails.application.routes.default_url_options[:host] = config.APP_CONFIG['domain']
 
   # Raise exception on mass assignment protection for Active Record models
   config.active_record.mass_assignment_sanitizer = :strict

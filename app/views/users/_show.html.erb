@@ -1,0 +1,7 @@
+<% tab ||= "presentations" %>
+
+<%= render "users/profile_header", :active => tab %>
+
+<div class="profile_tab_wrapper">
+    <%= render "users/show_" + tab %>
+</div>

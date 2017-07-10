@@ -1,0 +1,106 @@
+<%= javascript_include_tag 've_sgame_locales' %>
+<%= render :partial => 'vish_editor' %>
+
+<script>	
+	options = {};
+	var configuration = {};
+
+	configuration["ImagesPath"] = "/assets/";
+	configuration["StylesheetsPath"] = "/assets/";
+
+	configuration["uploadPresentationPath"] = "<%= presentation_path @presentation, :format=> "json" %>";
+	configuration["previewPresentationPath"] = "/presentations/preview";
+
+	configuration["uploadImagePath"] = "<%= documents_path :format=> "json"%>";
+	// configuration["uploadObjectPath"] = "<%= documents_path :format=> "json"%>";
+	configuration["uploadPDF2PPath"] = "<%= pdfps_path :format=> "json"%>";
+	// configuration["uploadEPackagesPath"] = "<%= documents_path :format=> "json"%>";
+	configuration["enableFileImportation"] = true;
+
+	// Sources enabled
+	configuration["ViSH"] = true;
+	configuration["ViSH_instances"] = ["http://vishub.org","http://educainternet.es"];
+	configuration["Flickr"] = true;
+	<% unless SgamePlatform::Application.config.APP_CONFIG['EuropeanaAPIKEY'].nil? %>
+		configuration["Europeana"] = true;
+		configuration["EuropeanaAPIKEY"] =  "<%= SgamePlatform::Application.config.APP_CONFIG['EuropeanaAPIKEY'] %>";
+	<% end %>
+	<% unless SgamePlatform::Application.config.APP_CONFIG['YouTubeAPIKEY'].nil? %>
+		configuration["Youtube"] = true;
+		configuration["YoutubeAPIKEY"] =  "<%= SgamePlatform::Application.config.APP_CONFIG['YouTubeAPIKEY'] %>";
+	<% end %>
+	configuration["LRE"] = true;
+	configuration["LRE_path"] = "http://vishub.org/lre/search";
+	<% unless SgamePlatform::Application.config.APP_CONFIG['soundCloudAPIKEY'].nil? %>
+		configuration["SoundCloud"] = true;
+		configuration["SoundCloudAPIKEY"] =  "<%= SgamePlatform::Application.config.APP_CONFIG['soundCloudAPIKEY'] %>";
+	<% end %>
+
+	//Thumbnails
+	configuration["thumbnailsPath"] = '/thumbnails.json';
+	
+	//Tags
+	configuration["tagsPath"] = "/tags.json?mode=popular&limit=100";
+	
+	//TmpJSON
+	configuration["uploadJSONPath"] = '/presentations/tmpJson'
+
+	//Attachment
+	// configuration["uploadAttachmentPath"]
+	
+
+	configuration["presentationSettings"] = true;
+
+	var tagsSettings = new Object();
+	tagsSettings.maxLength = '<%=SgamePlatform::Application.config.tagsSettings["maxLength"]%>';
+	tagsSettings.maxTags = '<%=SgamePlatform::Application.config.tagsSettings["maxTags"]%>';
+	tagsSettings.triggerKeys = <%=raw(SgamePlatform::Application.config.tagsSettings["triggerKeys"].to_json)%>;     	
+	configuration["tagsSettings"] = tagsSettings;
+
+	configuration["publishPermissions"] = ["Comment","Download","Clone"]
+
+	// Locales
+	configuration["defaultLanguage"] = "en";
+	configuration["locales"] = VE_SGAME_Locales;
+
+	//WAPP TOKEN API
+	configuration["WAPP_TOKEN_API"] = {
+		rootURL: "<%=SgamePlatform::Application.config.full_domain%>" + "/apis/wapp_token"
+	};
+
+	options["configuration"] = configuration;
+	options["developping"] = false;
+
+	options["environment"] = {
+		name: "<%= SgamePlatform::Application.config.name %>"
+	}
+
+	options["user"] = {
+		name: "<%= @presentation.owner.name %>",
+		id: "<%= @presentation.owner.id %>",
+		token: "<%= form_authenticity_token %>"
+	};
+
+	options["draft"] = <%= @presentation.draft.to_s %>;
+
+	options["lang"] = "<%= I18n.locale.to_s%>";
+
+	<% if current_user %>
+		<% if @presentation.draft.to_s == "false" %>
+			options["exitURL"]  = "<%= presentation_path(@presentation) %>";
+		<% else %>
+			options["exitURL"]  = "<%= url_for(current_user) %>";
+		<% end %>
+	<% end %>
+
+	options.addons = [];
+	var addon = new Object();
+	addon.target = "Both";
+	addon.id = "IframeMessenger";
+	addon.config = {enable: true};
+	options.addons.push(addon);
+
+	function start(){
+		VISH.Editor.init(options, <%= raw @presentation.to_json%> );
+	}
+</script>

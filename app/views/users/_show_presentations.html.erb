@@ -1,0 +1,10 @@
+<div id="presentations" class="tab-pane in active">
+  <div class="row">
+    <% if @isProfileOwner %>
+      <%= render 'presentations/presentation_new' %>
+    <%end%>
+    <% @presentations.each do |presentation| %>
+      <%= render 'presentations/presentation', :presentation => presentation %>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,48 @@
+<div class="col-md-2 col-xs-6 presentation-item">
+
+  <div class="presentation">
+    <% generated_id= "presentation-" + presentation.id.to_s %>
+    <div class="title_icon">
+      <!--Title -->
+      <a href=<%=  presentation_url(presentation) %>>
+        <h5>
+          <i class="fa fa-picture-o fa-lg"></i>
+        </h5>
+      </a>
+    </div>
+    <%= link_to(presentation_url(presentation)) do %>
+      <!-- image/icon -->
+      <div class="container-img">
+        <div class="img-box" id="<%=generated_id%>"></div>
+        <%if presentation.draft%>
+          <div class="presentation-draft">
+            <h4 class="draftstyle">
+              <i class="fa fa-edit"></i>
+              Draft
+            </h4>
+          </div>
+        <%end%>
+      </div>
+    <%end%>
+
+    <script>
+        document.getElementById("<%=generated_id%>").style.backgroundImage = "url('<%=presentation.thumbnail_url%>')";
+    </script>
+
+    <!-- Info -->
+    <div class="caption">
+      <!--presentation title -->
+      <%= link_to(presentation_url(presentation)) do %>
+        <p class="title"><%= presentation.title %></p>
+      <%end%>
+      <!--Author -->
+      <div class="author">
+        <%= render 'users/user', :user => presentation.author%>
+      </div>
+      <!-- Link -->
+      <!--<div class="link button-secondary-red">
+         <%#= link_to('Go to presentation', presentation_url(presentation), :class => "logo");%>
+      </div>-->
+    </div>
+  </div>
+</div>

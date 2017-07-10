@@ -50,6 +50,7 @@ SgamePlatform::Application.configure do
 
   # Disable delivery errors, bad email addresses will be ignored
   # config.action_mailer.raise_delivery_errors = false
+  Rails.application.routes.default_url_options[:host] = config.APP_CONFIG['domain']
 
   # Enable threaded mode
   # config.threadsafe!

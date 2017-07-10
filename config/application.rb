@@ -15,6 +15,11 @@ module SgamePlatform
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
+    #Automatically connect to the database when a rails console is started
+    console do
+      ActiveRecord::Base.connection
+    end
+    
     #Load SGAME Platform configuration
     #Accesible here: SgamePlatform::Application.config.APP_CONFIG
     config.APP_CONFIG = YAML.load_file("config/application_config.yml")[Rails.env]
@@ -31,23 +36,56 @@ module SgamePlatform
     # I18n fallbacks: rails will fallback to config.i18n.default_locale translation
     config.i18n.fallbacks = true
 
-    # Custom directories with classes and modules you want to be autoloadable.
-    # config.autoload_paths += %W(#{config.root}/extras)
+    #Load ViSH Editor plugin
+    config.before_configuration do
+      $:.unshift File.expand_path("#{__FILE__}/../../lib/plugins/vish_editor/lib")
+      require 'vish_editor'
+    end
 
-    # Only load the plugins named here, in the order given (default is alphabetical).
-    # :all can be used as a placeholder for all plugins not explicitly named.
-    # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
+    #Tags settings
+    config.tagsSettings = (config.APP_CONFIG['tagsSettings'] || {})
+    default_tags = {
+        "minLength" => 2,
+        "maxLength" => 20,
+        "maxTags" => 10,
+        "tagSeparators" => [',',';'],
+        "triggerKeys" => ['enter', 'comma', 'tab', 'space']
+    }
+    config.tagsSettings = default_tags.merge(config.tagsSettings)
 
-    # Activate observers that should always be running.
-    # config.active_record.observers = :cacher, :garbage_collector, :forum_observer
+    #External services settings
+    config.uservoice = (!config.APP_CONFIG['uservoice'].nil? and !config.APP_CONFIG['uservoice']["scriptURL"].nil?)
+    config.ganalytics = (!config.APP_CONFIG['ganalytics'].nil? and !config.APP_CONFIG['ganalytics']["trackingID"].nil?)
+    config.gwebmastertools = (!config.APP_CONFIG['gwebmastertools'].nil? and !config.APP_CONFIG['gwebmastertools']["site-verification"].nil?)
+    config.facebook = (!config.APP_CONFIG['facebook'].nil? and !config.APP_CONFIG['facebook']["appID"].nil? and !config.APP_CONFIG['facebook']["accountID"].nil?)
+    config.twitter = (!config.APP_CONFIG['twitter'].nil? and config.APP_CONFIG['twitter']["enable"]===true)
+    config.gplus = (!config.APP_CONFIG['gplus'].nil? and config.APP_CONFIG['gplus']["enable"]===true)
+
+    config.after_initialize do
+      #Agnostic random
+      if ActiveRecord::Base.connection.adapter_name == "PostgreSQL"
+        config.agnostic_random = "RANDOM()"
+      else
+        #MySQL
+        config.agnostic_random = "RAND()"
+      end
+    end
+
+    ActsAsTaggableOn.strict_case_match = true
+
+    config.subtype_classes_mime_types = {
+      :picture => [:jpeg, :gif, :png, :bmp, :xcf],
+      :zipfile=> [:zip],
+      :officedoc=> [:odt, :odp, :ods, :doc, :ppt, :xls, :rtf, :pdf]
+    }
+
+    #Require core extensions
+    Dir[File.join(Rails.root, "lib", "core_ext", "*.rb")].each {|l| require l }
+    Dir[File.join(Rails.root, "lib", "acts_as_taggable_on", "*.rb")].each {|l| require l }
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     # config.time_zone = 'Central Time (US & Canada)'
-
-    # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
-    # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
-    # config.i18n.default_locale = :de
 
     # Configure the default encoding used in templates for Ruby 1.9.
     config.encoding = "utf-8"
@@ -62,6 +100,8 @@ module SgamePlatform
     # This is necessary if your schema can't be completely dumped by the schema dumper,
     # like if you have constraints or database-specific column types
     # config.active_record.schema_format = :sql
+
+    config.active_record.raise_in_transactional_callbacks = true
 
     # Enable the asset pipeline
     config.assets.enabled = true

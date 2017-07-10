@@ -1,0 +1,16 @@
+<% if SgamePlatform::Application.config.gplus %>
+
+  <div class="g-plusone" data-size="medium" data-href="<%= url %>"></div>
+
+  <script type="text/javascript">
+    (function(){
+      var gplus_js = document.createElement('script');
+      gplus_js.type = 'text/javascript';
+      gplus_js.async = true;
+      gplus_js.src = '//apis.google.com/js/plusone.js';
+      var head = document.getElementsByTagName('head')[0];
+      head.appendChild(gplus_js);
+    })();
+  </script>
+
+<% end %>

@@ -1,0 +1,17 @@
+<% active ||= "presentations" %>
+
+<div id="user">
+	<div id="info">
+		<p id="name">
+			<span><%=@profile_user.name%></span>
+		</p>
+	</div>
+</div>
+
+<ul class="nav nav-tabs user-nav">
+	<% ["presentations"].each do |resource| %>
+		<li id="<%=resource%>_tab" class="<%= (active==resource ? "active" : "") %>">
+			<a href="/users/<%=@profile_user.id.to_s + "/" + resource %>"><%= resource.capitalize %></a>
+		</li>
+	<% end %>
+</ul>

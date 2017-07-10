@@ -1,0 +1,26 @@
+<div class="presentation_item_mini" pres-url="<%=presentation_path(presentation, :format => :full)%>">
+	<% generated_id= "presentation-" + presentation.id.to_s %>
+
+	<!-- image/icon -->
+	<%= image_tag(presentation.thumbnail_url, :alt => presentation.title, :class => "presentation-image") %>
+
+	<!-- Info -->
+	<div class="caption">
+
+		<!--Title -->
+		<h5>
+		<%=presentation.title%>
+		</h5>
+
+		<!--Author -->
+		<div class="author">
+			<%= render 'users/user', :user => presentation.author%>
+		</div>
+
+		<!-- Link -->
+		<div class="link">
+			<a href="<%= presentation_url(presentation)%>"><i class="fa fa-eye"></i></a>
+			<a href="<%= edit_presentation_path(presentation)%>"><i class="fa fa-pencil"></i></a>
+		</div>
+	</div>
+</div>

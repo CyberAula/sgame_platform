@@ -16,3 +16,8 @@
 
 config/database.yml
 config/application_config.yml
+
+# scorm zip files
+public/scorm/12/presentations/*
+public/scorm/2004/presentations/*
+public/scorm/packages/*

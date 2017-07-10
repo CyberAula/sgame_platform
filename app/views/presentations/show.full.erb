@@ -1,0 +1,107 @@
+<%= javascript_include_tag 've_sgame_locales' %>
+<%= render :partial => 'presentations/vish_viewer.full' %>
+
+<script>
+	options = {};
+	var configuration = {};
+
+	configuration["ImagesPath"] = "/assets/";
+	configuration["StylesheetsPath"] = "/assets/";
+
+	// Locales
+	configuration["defaultLanguage"] = "en";
+	configuration["locales"] = VE_SGAME_Locales;
+
+	// Recommendations API
+	configuration["recommendationsAPI"] = {
+		rootURL: "<%=SgamePlatform::Application.config.full_domain%>" + "/presentations/last_slide.json"
+	};
+
+	//WAPP TOKEN API
+	configuration["WAPP_TOKEN_API"] = {
+		rootURL: "<%=SgamePlatform::Application.config.full_domain%>" + "/apis/wapp_token"
+	};
+
+	options["configuration"] = configuration;
+	options["developping"] = false;
+
+	//Environment data
+	options["environment"] = {
+		name: "<%= SgamePlatform::Application.config.name %>"
+	}
+
+	//User data
+	<% if user_signed_in? %>
+		options["user"] = {
+			name: "<%= current_user.name %>",
+			id: "<%= current_user.id %>",
+			token: "<%= form_authenticity_token %>"
+		};
+	<% end %>
+
+	options["lang"] = "<%= I18n.locale.to_s%>";
+
+	//Watermark
+	<% if @presentation %>
+		options["watermarkURL"] = "<%=presentation_path(@presentation)%>";
+	<% end %>
+	
+	//comeBackUrl for Mobile Devices
+	<% if @orgUrl %>
+		options["comeBackUrl"] = "<%=@orgUrl%>";
+	<% else %>
+		<% if request && request.referrer %>
+			options["comeBackUrl"] = "<%=request.referrer%>";
+		<% end %>
+	<% end %>
+
+	<% unless params["oreferrer"].blank? %>
+		options["referrer"] = "<%=params['oreferrer']%>";
+	<% end %>
+	
+	//Extra options from parent
+	try {
+		if(typeof window.parent.options != "undefined"){
+			options["readHashFromParent"] = window.parent.options["readHashFromParent"];
+		}
+	} catch(err){}
+
+
+	options.addons = [];
+
+	var addon = new Object();
+	addon.target = "Both";
+	addon.id = "IframeMessenger";
+	addon.url = "";
+	addon.config = {enable: true};
+	options.addons.push(addon);
+
+
+	function start(){
+		var isPreview = false;
+		try {
+			isPreview = window.parent.VISH && 
+						window.parent.VISH.Editor && 
+						(typeof window.parent.VISH.Editor.Preview.getPreview == "function") && 
+						(typeof window.parent.VISH.Editor.Preview.getPreview() != 'undefined') &&
+						(window.parent.VISH.Editor.Preview.getPreview() != null);
+		} catch(exception) {
+			isPreview = false;
+		}
+		
+		var mypresentation;
+
+		if(isPreview){
+			options["preview"] = true;
+			mypresentation =  window.parent.VISH.Editor.Preview.getPreview();
+		} else {
+			<% if @presentation %>
+				mypresentation = <%= raw @presentation.json %>;		  	
+			<% else %>
+				mypresentation = null;
+			<% end %>
+		}
+			
+		VISH.Viewer.init(options , mypresentation);
+	}
+</script>
