@@ -1,2 +1,2 @@
-# sgame_platform
-A platform to create customizable educational web games
+# SGAME Platform
+A platform to create customizable educational web games by integrating Learning Objects into existing web games

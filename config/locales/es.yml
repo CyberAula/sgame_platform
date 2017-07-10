@@ -1,0 +1,41 @@
+es:
+  activerecord:
+    errors:
+      messages:
+        confirmation: "no coincide con %{attribute}"
+      models:
+        user:
+          attributes:
+            email:
+              blank: "no puede estar en blanco"
+            language:
+              blank: "no puede estar en blanco"
+            name:
+              blank: "no puede estar en blanco"
+            password:
+              blank: "no puede estar en blanco"
+  delete: "Borrar"
+  dictionary:
+    are_you_sure: "¿Estás seguro?"
+    back: "Volver"
+    edit: "Editar"
+    email: "Correo electrónico"
+    errors:
+      blank: "no puede estar en blanco"
+      name_blank: "El nombre no puede estar en blanco"
+      page_not_found: "Esta página no existe"
+      reserved_word: "es una palabra reservada"
+      too_short: "es demasiado corto"
+      unspecified: "tiene que ser especificado"
+    finish: "Terminar"
+    language: "Idioma"
+    next: "Siguiente"
+    password: "Contraseña"
+    relevance: "Relevancia"
+    remove: "Borrar"
+    save: "Salvar"
+    search: "Buscar"
+    tags: "Etiquetas"
+    untitled: "Sin título"
+    update: "Actualizar"
+    username: "Nombre de usuario"

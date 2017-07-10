@@ -1,0 +1,8 @@
+development:
+  adapter: postgresql
+  encoding: unicode
+  host: localhost
+  database: sgame_development
+  pool: 5
+  username: sgame_dev
+  password: password

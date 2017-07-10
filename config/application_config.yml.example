@@ -1,0 +1,6 @@
+development:
+  domain: "localhost:3000"
+  secret_token: "Place secret token here"
+  # YouTubeAPIKEY: ""
+  # EuropeanaAPIKEY: ""
+  # soundCloudAPIKEY: ""

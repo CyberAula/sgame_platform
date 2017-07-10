@@ -1,0 +1,39 @@
+i18n:
+  transliterate:
+    rule:
+      ª: "ª"
+      º: "º"
+      ´: "´"
+      ?: "?"
+      ¿: "¿"
+      ¡: "¡"
+      ́ : ""
+  activerecord:
+    errors:
+      messages:
+        confirmation: "doesn't match %{attribute}"
+      models:
+        user:
+          attributes:
+            email:
+              blank: "can't be blank"
+            language:
+              blank: "can't be blank"
+            name:
+              blank: "can't be blank"
+            password:
+              blank: "can't be blank"
+  delete: "Delete"
+  dictionary:
+    are_you_sure: "Are you sure?"
+    back: "Back"
+    edit: "Edit"
+    email: "Email"
+    language: "Language"
+    errors:
+      blank: "can't be blank"
+      name_blank: "Name can't be blank"
+      page_not_found: "This page does not exists"
+      reserved_word: "is a reserved word"
+      too_short: "is too short"
+      unspecified: "has to be specified"

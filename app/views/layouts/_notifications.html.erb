@@ -1,0 +1,34 @@
+<div id="sgame_notifications">
+	<% if flash[:notice] %>
+		<% if flash[:notice].is_a? Array %>
+			<% flash[:notice].uniq! %>
+			<% flash[:notice].each do |msg| %>
+				<%= render '/layouts/notification', :alertType => "success", :msg => msg %>
+			<% end %>
+		<% else %>
+			<%= render '/layouts/notification', :alertType => "success", :msg => flash[:notice] %>
+		<% end %>
+	<% end %>
+
+	<% if flash[:alert] %>
+		<% if flash[:alert].is_a? Array %>
+			<% flash[:alert].uniq! %>
+			<% flash[:alert].each do |msg| %>
+				<%= render '/layouts/notification', :alertType => "danger", :msg => msg %>
+			<% end %>
+		<% else %>
+			<%= render '/layouts/notification', :alertType => "danger", :msg => flash[:alert] %>
+		<% end %>
+	<% end %>
+
+	<% if flash[:warning] %>
+		<% if flash[:warning].is_a? Array %>
+			<% flash[:warning].uniq! %>
+			<% flash[:warning].each do |msg| %>
+				<%= render '/layouts/notification', :alertType => "warning", :msg => msg %>
+			<% end %>
+		<% else %>
+			<%= render '/layouts/notification', :alertType => "warning", :msg => flash[:warning] %>
+		<% end %>
+	<% end %>
+</div>

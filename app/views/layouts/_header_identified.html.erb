@@ -1,0 +1,17 @@
+<div id="sgame-logo">
+	<a href="/"><img src="/assets/sgame_logo.png" alt="SGAME" class="logo"/></a>
+</div>
+
+<div id="profile" class="dropdown">
+	<button class="dropdown-toggle" type="button" data-toggle="dropdown">
+		<%= current_user.name %>
+		<span class="caret"></span>
+	</button>
+	<ul class="dropdown-menu">
+		<div class="arrow-up-orange"></div>
+		<li><%= link_to('Profile',user_path(current_user))%></li>
+		<li><%= link_to('My presentations',user_path(current_user)+'/presentations')%></li>
+		<li role="separator" class="divider"></li>
+		<li><%= link_to('Logout', destroy_user_session_path, :method => :delete) %></li>
+	</ul>
+</div>

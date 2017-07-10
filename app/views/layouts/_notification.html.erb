@@ -1,0 +1,9 @@
+<% alertType ||= "danger" %>
+<% alertClass = (alertType=="success") ? "alert-success" : ((alertType=="warning") ? "alert-warning" : "alert-danger") %>
+<% dismissable ||= true %>
+<% dismissableClass = (dismissable==true) ? "alert-dismissable" : "" %>
+
+<div class="alert <%=alertClass=%> <%=dismissableClass%> ">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+	<%= msg %>
+</div>
