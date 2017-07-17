@@ -1,0 +1,87 @@
+div#session_form {
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  border: 1px solid #c9c9c9;
+  box-shadow: 3px 3px 4px #c3c3c3;
+}
+
+div#session_form h2 {
+  margin: 0px;
+  font-size: 2.2rem;
+}
+
+div#session_form form {
+  margin: 20px 0px 25px 0px;
+}
+
+div#session_form div.field {
+  margin: 10px 0px 10px 0px;
+}
+
+div#session_form form p {
+  margin: 0px 0px 1px 0px;
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+div#session_form input[type='text'], div#session_form [type='email'], div#session_form [type='password'], div#session_form select.account_language {
+  padding: 5px;
+  min-width: 400px;
+  font-size: 1.2rem;
+}
+
+div#session_form div.field div.select2-container{
+  width: 400px;
+}
+
+div#session_form p.remember_me {
+  text-align: left;
+  font-weight: normal;
+  font-size: 1.1rem;
+}
+
+div#session_form p.remember_me input[type='checkbox'] {
+  margin-right: 5px;
+  height: 13px;
+}
+    
+div#session_form input[type='submit'] {
+  min-width: 400px;
+  font-size: 1.4rem;
+}
+
+div#session_form p.forgot_password {
+  width: 400px;
+  text-align: right;
+  font-weight: normal;
+  font-size: 1rem;
+  margin-top: 1px;
+}
+
+div.devise_error_messages {
+  margin: 25px 0px 25px 0px;
+  font-size: 1.2rem;
+}
+
+div.devise_error_messages h2 {
+  font-size: 1.7rem !important;
+}
+
+div.devise_error_messages li {
+  font-size: 1.2rem;
+  margin: 5px 0px 5px 0px;
+}
+
+div#cancel_account_wrapper {
+  margin-top: 45px;
+}
+
+div#cancel_account_wrapper p.cancel_account_description {
+  font-size: 1.2rem;
+  margin-bottom: 0px;
+}
+
+div#cancel_account_wrapper form {
+  margin-top: 6px;
+}

@@ -1,0 +1,52 @@
+#header {
+	padding-top: 10px;
+	display: inline-block;
+	color: white;
+}
+
+#sgame-logo {
+	display: inline-block;
+}
+
+#sgame-logo img {
+	height: 50px;
+}
+
+#buttons_header {
+	display: inline-block;
+	float: right;
+	height: 60px;
+	margin-right: 5px;
+}
+
+#buttons_header div {
+	display: inline-block;
+}
+
+#header_profile ul {
+	border: none;
+	border-top: 3px solid white;
+	border-radius: 0px;
+	margin-top: 4px;
+}
+
+#header_profile button {
+	padding-top: 3px;
+	font-weight: bold;
+	font-size: 1.4em;
+	color: white;
+	border: none;
+	background: none;
+}
+
+#arrow-up-header-profile {
+	width: 0;
+	height: 0;
+	border-style: solid;
+	border-width: 10px;
+	border-width: 0px 6px 7px 6px;
+	border-color: white transparent;
+	position: absolute;
+	top: -9px;
+	left: 112px;
+}

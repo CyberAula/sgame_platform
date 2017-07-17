@@ -1,7 +1,11 @@
 <div id="sgame-logo">
 	<a href="/"><img src="/assets/sgame_logo.png" alt="SGAME" class="logo"/></a>
 </div>
-<div class="button-primary" id="register">
-	<a href="/users/sign_in">Login</a>
-	<a href="/users/sign_up">Register</a>
+<div id="buttons_header">
+	<div class="sgame_secondary_button" id="register_wrapper">
+		<a href="/users/sign_up"><%=t("dictionary.register")%></a>
+	</div>
+	<div class="sgame_button" id="login_wrapper">
+		<a href="/users/sign_in"><%=t("dictionary.login")%></a>
+	</div>
 </div>

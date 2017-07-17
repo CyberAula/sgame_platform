@@ -1,0 +1,36 @@
+html, body {
+	height: 100%;
+	font-size: 12px;
+	background: #046598;
+	color: white;
+}
+#wrapper{
+
+}
+#container, #header, #footer{
+	padding: 0px 30px 0px 30px;
+}
+
+#container {
+	position: relative;
+	height: auto;
+	width: 100%;
+	padding-bottom: 150px;
+}
+#header {
+	position: relative;
+	height: 70px;
+	width: 100%;
+}
+#footer {
+	position: fixed;
+	bottom: 0px;
+	left: 0px;
+	height: 50px;
+	width: 100%;
+	background: #2d2d2d;
+}
+
+a, a:hover {
+	color: white;
+}

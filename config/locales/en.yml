@@ -1,13 +1,14 @@
-i18n:
-  transliterate:
-    rule:
-      ª: "ª"
-      º: "º"
-      ´: "´"
-      ?: "?"
-      ¿: "¿"
-      ¡: "¡"
-      ́ : ""
+en:
+  i18n:
+    transliterate:
+      rule:
+        ª: "ª"
+        º: "º"
+        ´: "´"
+        ?: "?"
+        ¿: "¿"
+        ¡: "¡"
+        ́ : ""
   activerecord:
     errors:
       messages:
@@ -29,7 +30,6 @@ i18n:
     back: "Back"
     edit: "Edit"
     email: "Email"
-    language: "Language"
     errors:
       blank: "can't be blank"
       name_blank: "Name can't be blank"
@@ -37,3 +37,34 @@ i18n:
       reserved_word: "is a reserved word"
       too_short: "is too short"
       unspecified: "has to be specified"
+    finish: "Finish"
+    language: "Language"
+    login: "Login"
+    next: "Next"
+    password: "Password"
+    relevance: "Relevance"
+    remove: "Remove"
+    save: "Save"
+    search: "Search"
+    tags: "Tags"
+    untitled: "Untitled"
+    update: "Update"
+    username: "Username"
+    register: "Sign up"
+  languages:
+    bg: "Bulgarian"
+    cy: "Welsh"
+    de: "German"
+    en: "English"
+    es: "Spanish"
+    et: "Estonian"
+    fr: "French"
+    it: "Italian"
+    lb: "Luxembourgish"
+    lv: "Latvian"
+    nl: "Dutch"
+    pl: "Polish"
+    pt: "Portuguese"
+    ro: "Romanian"
+    ru: "Russian"
+    sr: "Serbian"

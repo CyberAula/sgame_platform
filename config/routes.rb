@@ -34,6 +34,9 @@ SgamePlatform::Application.routes.draw do
   #Tags
   match "/tags" => 'tags#index', :via => :get
 
+  #Change ui language
+  match '/change_locale', to: 'locales#change_locale', via: [:get]
+
   #Wildcard route (This rule should be placed the last)
   match "*not_found", :to => 'application#page_not_found', via: [:get]
 end
