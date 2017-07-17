@@ -73,7 +73,6 @@ class PresentationsController < ApplicationController
   end
 
   def create
-    binding.pry
     params[:excursion].permit!
     @presentation = Presentation.new(params[:excursion])
 

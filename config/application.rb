@@ -52,6 +52,7 @@ module SgamePlatform
         "triggerKeys" => ['enter', 'comma', 'tab', 'space']
     }
     config.tagsSettings = default_tags.merge(config.tagsSettings)
+    config.stoptags = File.read("config/stoptags.yml").split(",").map{|s| s.gsub("\n","").gsub("\"","") } rescue []
 
     #External services settings
     config.uservoice = (!config.APP_CONFIG['uservoice'].nil? and !config.APP_CONFIG['uservoice']["scriptURL"].nil?)

@@ -1,5 +1,4 @@
 class Document < ActiveRecord::Base
-
   has_attached_file :file, 
                     :url => '/:class/:id.:content_type_extension',
                     :path => ':rails_root/documents/:class/:id_partition/original/:filename.:extension'
@@ -28,7 +27,7 @@ class Document < ActiveRecord::Base
 
     # # Searches for the suitable class based on its mime type
     def lookup_subtype_class(doc)
-      SgamePlatform::Application.config:config.subtype_classes_mime_types.each_pair do |klass, mime_types|
+      SgamePlatform::Application.config.subtype_classes_mime_types.each_pair do |klass, mime_types|
         return klass.to_s.classify.constantize if mime_types.include?(doc.mime_type.to_sym)
       end
       nil

@@ -1,6 +1,7 @@
 require 'builder'
 
 class Presentation < ActiveRecord::Base
+  include Taggable
   acts_as_ordered_taggable
 
   attr_accessor :attachment_url
@@ -20,8 +21,8 @@ class Presentation < ActiveRecord::Base
   end
 
   before_save :parse_for_metadata
-  # before_save :fillTags
-  # before_save :save_tag_array_text
+  before_save :fillTags
+  before_save :save_tag_array_text
   after_save :parse_for_metadata_id
   after_destroy :remove_scorms
 
@@ -174,17 +175,16 @@ class Presentation < ActiveRecord::Base
       lomIdentifier = Rails.application.routes.url_helpers.presentation_url(:id => presentation.id)
     elsif (ejson["vishMetadata"] and ejson["vishMetadata"]["id"])
       identifier = ejson["vishMetadata"]["id"].to_s
-      lomIdentifier = "urn:ViSH:" + identifier
+      lomIdentifier = "urn:SGAME:" + identifier
     else    
       identifier = "TmpSCORM_" + Time.now.to_i.to_s
-      lomIdentifier = "urn:ViSH:" + identifier
+      lomIdentifier = "urn:SGAME:" + identifier
     end
 
     myxml = ::Builder::XmlMarkup.new(:indent => 2)
     myxml.instruct! :xml, :version => "1.0", :encoding => "UTF-8"
 
-
-     #Select LOM Header options
+    #Select LOM Header options
     manifestHeaderOptions = {}
     manifestContent = {}
 
@@ -192,7 +192,7 @@ class Presentation < ActiveRecord::Base
     when "12"
       #SCORM 1.2
       manifestHeaderOptions = {
-        "identifier"=>"VISH_PRESENTATION_" + identifier,
+        "identifier"=>"SGAME_PRESENTATION_" + identifier,
         "version"=>"1.0",
         "xmlns"=>"http://www.imsproject.org/xsd/imscp_rootv1p1p2",
         "xmlns:adlcp"=>"http://www.adlnet.org/xsd/adlcp_rootv1p2",
@@ -203,7 +203,7 @@ class Presentation < ActiveRecord::Base
     when "2004"
       #SCORM 2004 4th Edition
       manifestHeaderOptions =  { 
-        "identifier"=>"VISH_PRESENTATION_" + identifier,
+        "identifier"=>"SGAME_PRESENTATION_" + identifier,
         "version"=>"1.3",
         "xmlns"=>"http://www.imsglobal.org/xsd/imscp_v1p1",
         "xmlns:adlcp"=>"http://www.adlnet.org/xsd/adlcp_v1p3",
@@ -289,7 +289,7 @@ class Presentation < ActiveRecord::Base
   def self.generate_LOM_metadata(ejson, presentation, options={})
     _LOMschema = "custom"
 
-    supportedLOMSchemas = ["custom","loose","ODS","ViSH"]
+    supportedLOMSchemas = ["custom","loose","ODS","SGAME"]
     if supportedLOMSchemas.include? options[:LOMschema]
       _LOMschema = options[:LOMschema]
     end
@@ -345,7 +345,7 @@ class Presentation < ActiveRecord::Base
 
           if !loIdIsURI and !loIdIsURN
             #Build URN
-            loId = "urn:ViSH:"+loId
+            loId = "urn:SGAME:"+loId
           end
       end
 
@@ -429,9 +429,9 @@ class Presentation < ActiveRecord::Base
           if ejson["description"]
             myxml.string(ejson["description"], loLanOpts)
           elsif ejson["title"]
-            myxml.string(ejson["title"] + ". A Virtual Presentation provided by " + SgamePlatform::Application.config.full_domain + ".", :language=> metadataLanguage)
+            myxml.string(ejson["title"] + ". Web Presentation provided by " + SgamePlatform::Application.config.full_domain + ".", :language=> metadataLanguage)
           else
-            myxml.string("Virtual Presentation provided by " + SgamePlatform::Application.config.full_domain + ".", :language=> metadataLanguage)
+            myxml.string("Web Presentation provided by " + SgamePlatform::Application.config.full_domain + ".", :language=> metadataLanguage)
           end
         end
         if ejson["tags"] && ejson["tags"].kind_of?(Array)
@@ -707,8 +707,8 @@ class Presentation < ActiveRecord::Base
       else
         return nil
       end
-    when "ViSH"
-      #ViSH LOM extension
+    when "SGAME"
+      #SGAME LOM extension
       case context
       when "unspecified"
         return "Unspecified"

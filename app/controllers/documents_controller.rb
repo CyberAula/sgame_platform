@@ -19,7 +19,9 @@ class DocumentsController < ApplicationController
   def show
     @document ||= Document.find_by_id(params[:id])
     respond_to do |format|
-      format.json {render :json => @document.to_json }
+      format.json {
+        render :json => @document.to_json 
+      }
       format.any {
         path = @document.file.path(params[:style] || params[:format])
         head(:not_found) and return unless File.exist?(path)

@@ -17,6 +17,10 @@
 config/database.yml
 config/application_config.yml
 
+# ignore documents folder
+/documents
+/public/system
+
 # scorm zip files
 public/scorm/12/presentations/*
 public/scorm/2004/presentations/*

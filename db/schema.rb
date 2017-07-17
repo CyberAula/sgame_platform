@@ -11,10 +11,36 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170710122461) do
+ActiveRecord::Schema.define(version: 20170717080042) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "documents", force: :cascade do |t|
+    t.string   "title"
+    t.text     "description"
+    t.string   "type"
+    t.integer  "owner_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "file_processing"
+    t.string   "file_file_name"
+    t.string   "file_content_type"
+    t.integer  "file_file_size"
+    t.datetime "file_updated_at"
+  end
+
+  create_table "pdfps", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "pcount"
+    t.boolean  "permanent",           default: false
+    t.string   "attach_file_name"
+    t.string   "attach_content_type"
+    t.integer  "attach_file_size"
+    t.datetime "attach_updated_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "presentations", force: :cascade do |t|
     t.integer  "author_id"
@@ -36,6 +62,7 @@ ActiveRecord::Schema.define(version: 20170710122461) do
     t.datetime "attachment_updated_at"
     t.datetime "created_at",                              null: false
     t.datetime "updated_at",                              null: false
+    t.text     "tag_array_text",          default: ""
   end
 
   create_table "taggings", force: :cascade do |t|
@@ -54,6 +81,7 @@ ActiveRecord::Schema.define(version: 20170710122461) do
   create_table "tags", force: :cascade do |t|
     t.string  "name"
     t.integer "taggings_count", default: 0
+    t.string  "plain_name"
   end
 
   add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
@@ -78,6 +106,7 @@ ActiveRecord::Schema.define(version: 20170710122461) do
     t.string   "name"
     t.string   "language"
     t.string   "ui_language"
+    t.text     "tag_array_text",         default: ""
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
