@@ -16,6 +16,7 @@ es:
               blank: "no puede estar en blanco"
   delete: "Borrar"
   dictionary:
+    about: "About"
     are_you_sure: "¿Estás seguro?"
     back: "Volver"
     edit: "Editar"
@@ -41,6 +42,18 @@ es:
     update: "Actualizar"
     username: "Nombre de usuario"
     register: "Regístrate"
+  frontpage:
+    title: "Bienvenido a SGAME, la plataforma de creación de juegos educativos"
+    description: "SGAME es una plataforma web gratuita dirigida a toda la comunidad educativa que permite crear de forma muy fácil juegos web educativos mediante la integración de recursos educativos en juegos existentes."
+    feature_1_title: "Importa y crea contenidos"
+    feature_1_description: "Puedes importar objetos de aprendizaje de paquetes SCORM así como crear tus propios objetos de aprendizaje utilizando herramientas de creación"
+    feature_2_title: "Crea juegos educativos"
+    feature_2_description: "Crea juegos educativos integrando objetos de aprendizaje en juegos existentes"
+    feature_3_title: "Comparte"
+    feature_3_description: "Comparte tus juegos educativos en páginas web y entornos virtuales de aprendizaje"
+  footer:
+    contact: "Contacto"
+    code: "Código fuente"
   languages:
     bg: "Búlgaro"
     cy: "Galés"

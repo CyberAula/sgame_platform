@@ -1,24 +1,37 @@
-<ul>
-  <li class="language">
-    <div class="dropup">
-      <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-        <img src="/assets/flags/flag_<%=I18n.locale.to_s%>"/>
-        <div>
-          <span class="languagetext"><%=t("dictionary.language")%></span>
-          <span class="caret"></span>
-        </div>
-      </button>
-      <ul class="dropdown-menu">
-        <% I18n.available_locales.map(&:to_s).each do |lanCode| %>
-          <form id="change_locale" action="/change_locale" action="GET">
-            <input name="locale" value="" type="hidden"/>
-            <li value="<%=lanCode%>"><img src="/assets/flags/flag_<%=lanCode%>"/><%=t("languages." + lanCode)%></li>
-          </form>
-        <% end %>
-      </ul>
-    </div>
-  </li>
-</ul>
+<div class="col1">
+  <img class="icon" src="/assets/escudo_upm.png"/>
+</div>
+<div class="col2">
+  <div class="dropup footer_dropdown">
+    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <img src="/assets/flags/flag_<%=I18n.locale.to_s%>"/>
+      <div>
+        <span class="languagetext"><%=t("dictionary.language")%></span>
+        <span class="caret"></span>
+      </div>
+    </button>
+    <ul class="dropdown-menu">
+      <% I18n.available_locales.map(&:to_s).each do |lanCode| %>
+        <form id="change_locale" action="/change_locale" action="GET">
+          <input name="locale" value="" type="hidden"/>
+          <li value="<%=lanCode%>"><img src="/assets/flags/flag_<%=lanCode%>"/><%=t("languages." + lanCode)%></li>
+        </form>
+      <% end %>
+    </ul>
+  </div>
+</div>
+<div class="col3">
+  <div class="dropup footer_dropdown">
+    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <span class="languagetext"><%=t("dictionary.about")%></span>
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+      <li><a href="mailto:virtual.science.hub@gmail.com"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span><span><%=t("footer.contact")%></span></a></li>
+      <li><a href="https://github.com/ging/sgame_platform" target="_blank"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span><%=t("footer.code")%></a></li>
+    </ul>
+  </div>
+</div>
 
 <script>
   $(document).ready(function(){

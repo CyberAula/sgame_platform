@@ -1,1 +1,29 @@
-<p>SGAME Frontpage</p>
+<div id="frontpage">
+	<div class="row frontpage_row1">
+		<div class="col-md-6 col1">
+			<p class="title"><%=t("frontpage.title")%></p>
+			<p><%=t("frontpage.description")%></p>
+		</div>
+		<div class="col-md-6 col2">
+			<video preload='metadata' controls='controls' poster='//vishub.org/pictures/11783.jpg'>
+				<source src='//vishub.org/videos/11782.flv' type='video/x-flv'>
+				<source src='//vishub.org/videos/11782.mp4' type='video/mp4'>
+				Sorry, your browser does not support HTML5 video.
+			</video>
+		</div>
+	</div>
+	<div class="row frontpage_row2">
+		<div class="col-md-4 col1">
+			<p class="text_title"><img class="icon" src="/assets/cube_blank.png"/><%=t("frontpage.feature_1_title")%></p>
+			<p class="text_description"><%=t("frontpage.feature_1_description")%></p>
+		</div>
+		<div class="col-md-4 col2">
+			<p class="text_title"><img class="icon" src="/assets/gamepad.png"/><%=t("frontpage.feature_2_title")%></p>
+			<p class="text_description"><%=t("frontpage.feature_2_description")%></p>
+		</div>
+		<div class="col-md-4 col3">
+			<p class="text_title_glyphicon"><span class="glyphicon glyphicon-globe" aria-hidden="true"></span><%=t("frontpage.feature_3_title")%></p>
+			<p class="text_description"><%=t("frontpage.feature_3_description")%></p>
+		</div>
+	</div>
+</div>

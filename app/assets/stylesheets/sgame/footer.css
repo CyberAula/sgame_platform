@@ -1,37 +1,55 @@
-#footer li.language {
-	text-decoration: none;
-	list-style-type:none;
-	cursor: pointer;
+#footer{
+	text-align: center;
+	display: inline-block;
 }
-
-#footer li.language img {
+#footer > div{
+	display: inline-block;
+}
+#footer div.col1 {
+	float: left;
+}
+#footer div.col1 img {
+	height: 52px;
+	margin-top: 4px;
+}
+#footer div.footer_dropdown img {
 	width: 23px;
 	margin-right: 10px;
 	margin-bottom: 1px;
 }
-
-#footer li.language button.dropdown-toggle > div {
+#footer div.footer_dropdown {
+	margin-top: 5px;
+}
+#footer div.footer_dropdown button.dropdown-toggle > div {
 	display: inline-block;
 	margin-top: 3px;
 }
-
-
-#footer li.language ul {
+#footer div.footer_dropdown ul {
 	color: black;
 }
-
-#footer li.language ul img {
+#footer div.footer_dropdown ul li {
+	cursor: pointer;
+}
+#footer div.footer_dropdown ul li:hover {
+	background-color: #e8e8e8;
+}
+#footer div.footer_dropdown ul img {
 	margin-left: 10px;
 }
-
-#footer li.language button {
+#footer div.footer_dropdown button {
 	padding-top: 3px;
 	margin-top: 7px;
-	border: 1px solid white;
+	border: none;
+	box-shadow: none;
 	font-weight: normal;
 	font-size: 1.3em;
 	color: white;
 	background: none;
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	text-shadow: none;
+	margin-left: 20px;
+	margin-right: 20px;
+}
+#footer div.footer_dropdown span.glyphicon{
+	margin-right: 15px;
 }
