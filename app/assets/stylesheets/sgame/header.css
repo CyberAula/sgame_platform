@@ -2,25 +2,48 @@
 	padding-top: 10px;
 	display: inline-block;
 	color: white;
+	border-bottom: 1px solid white;
 }
 
-#sgame-logo {
+#sgame_logo_wrapper {
 	display: inline-block;
+	float: left;
 }
 
-#sgame-logo img {
-	height: 50px;
+#sgame_logo_wrapper img {
+	height: 55px;
 }
 
 #buttons_header {
 	display: inline-block;
 	float: right;
-	height: 60px;
+	height: 100%;
 	margin-right: 5px;
+	margin-top: 5px;
 }
 
 #buttons_header div {
 	display: inline-block;
+}
+
+#header_plus_wrapper{
+	float: left;
+	margin-left: 10px;
+}
+#header_profile{
+	float: right;
+}
+
+#buttons_header button {
+	min-height: 40px;
+	max-height: 40px;
+}
+
+#header_plus_wrapper button {
+	font-weight: bold;
+	font-size: 1.6em;
+	min-width: 40px;
+    margin-right: 10px;
 }
 
 #header_profile ul {
@@ -34,9 +57,8 @@
 	padding-top: 3px;
 	font-weight: bold;
 	font-size: 1.4em;
-	color: white;
-	border: none;
-	background: none;
+	min-width: 100px;
+    text-align: center;
 }
 
 #arrow-up-header-profile {

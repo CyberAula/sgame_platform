@@ -1,3 +1,7 @@
+#sgame_notifications{
+	margin-top: 20px;
+}
+
 div.alert-success{
 	background-image: -webkit-linear-gradient(left, #000000 0%, #4e4e4e 100%);
 	border-color: white;

@@ -1,5 +1,5 @@
-div.sgame_button, input.sgame_button {
-    border: 1px solid black;
+div.sgame_button, input.sgame_button, button.sgame_button {
+    border: 2px solid black;
     padding: 4px 10px;
     text-align: center;
     font-size: 1.3em;
@@ -13,7 +13,7 @@ div.sgame_button, input.sgame_button {
 }
 
 div.sgame_secondary_button, input.sgame_secondary_button {
-    border: 1px solid white;
+    border: 2px solid white;
     padding: 4px 10px;
     text-align: center;
     font-size: 1.3em;
@@ -35,4 +35,8 @@ div.sgame_button a {
 div.sgame_secondary_button a {
     color: white;
     text-decoration: none;
+}
+
+.btn:focus, .btn:active:focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn.active.focus {
+    outline: none;
 }

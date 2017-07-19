@@ -1,9 +1,5 @@
 div#session_form {
-  padding: 20px;
-  background: white;
-  border-radius: 10px;
-  border: 1px solid #c9c9c9;
-  box-shadow: 3px 3px 4px #c3c3c3;
+  margin-top: 50px;
 }
 
 div#session_form h2 {
@@ -25,10 +21,19 @@ div#session_form form p {
   font-weight: bold;
 }
 
+div#session_form input, div#session_form select {
+  color: black;
+}
+
 div#session_form input[type='text'], div#session_form [type='email'], div#session_form [type='password'], div#session_form select.account_language {
   padding: 5px;
   min-width: 400px;
   font-size: 1.2rem;
+}
+
+div#session_form .sign_up_button, div#session_form .forgot_password_button{
+  margin-top: 15px;
+  margin-bottom: 10px;
 }
 
 div#session_form div.field div.select2-container{

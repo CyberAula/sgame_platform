@@ -64,6 +64,11 @@ en:
   footer:
     contact: "Contact"
     code: "Source code"
+  header:
+    menu:
+      profile: "Profile"
+      presentations: "My learning objects"
+      logout: "Logout"
   languages:
     bg: "Bulgarian"
     cy: "Welsh"
@@ -81,3 +86,28 @@ en:
     ro: "Romanian"
     ru: "Russian"
     sr: "Serbian"
+  login:
+    confirmation_instructions: "Didn't receive confirmation instructions?"
+    confirmation_instructions_resend: "Resend confirmation instructions"
+    message:
+      error:
+        captcha: "There was an error with the recaptcha code below. Please re-enter the code."
+    password: "Password"
+    password_change: "Change your password"
+    password_confirmation: "Password confirmation"
+    password_current_in_settings: "Current password (we need your current password to confirm your changes)"
+    password_forgot: "Forgot your password?"
+    password_in_settings: "Password (leave blank if you don't want to change it)"
+    password_new: "New password"
+    password_new_confirmation: "Confirm new password"
+    password_reset_instructions: "Send me reset password instructions"
+    remember_me: "Remember me"
+    sign_in: "Sign in"
+    sign_in_with: "Sign in with %{provider}"
+    sign_out: "Sign out"
+    sign_up: "Sign up"
+    unlock_instructions: "Didn't receive unlock instructions?"
+    unlock_instructions_resend: "Resend unlock instructions"
+    username_or_email: "Username or Email"
+  presentation:
+    new: "Create presentation"

@@ -1,19 +1,27 @@
-<div id="sgame-logo">
+<div id="sgame_logo_wrapper">
 	<a href="/"><img src="/assets/sgame_logo.png" alt="SGAME" class="logo"/></a>
 </div>
 
 <div id="buttons_header">
+	<div id="header_plus_wrapper" class="dropdown">
+		<button class="dropdown-toggle sgame_button" type="button" data-toggle="dropdown">
+			+
+		</button>
+		<ul class="dropdown-menu dropdown-menu-right">
+			<li><%= link_to(t("presentation.new"),new_presentation_path())%></li>
+		</ul>
+	</div>
 	<div id="header_profile" class="dropdown">
-		<button class="dropdown-toggle" type="button" data-toggle="dropdown">
+		<button class="dropdown-toggle sgame_button" type="button" data-toggle="dropdown">
 			<%= current_user.name %>
 			<span class="caret"></span>
 		</button>
 		<ul class="dropdown-menu dropdown-menu-right">
 			<div id="arrow-up-header-profile"></div>
-			<li><%= link_to('Profile',user_path(current_user))%></li>
-			<li><%= link_to('My presentations',user_path(current_user)+'/presentations')%></li>
+			<li><%= link_to(t("header.menu.profile"),user_path(current_user))%></li>
+			<li><%= link_to(t("header.menu.presentations"),user_path(current_user)+'/presentations')%></li>
 			<li role="separator" class="divider"></li>
-			<li><%= link_to('Logout', destroy_user_session_path, :method => :delete) %></li>
+			<li><%= link_to(t("header.menu.logout"), destroy_user_session_path, :method => :delete) %></li>
 		</ul>
 	</div>
 </div>

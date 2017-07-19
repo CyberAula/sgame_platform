@@ -54,6 +54,11 @@ es:
   footer:
     contact: "Contacto"
     code: "Código fuente"
+  header:
+    menu:
+      profile: "Perfil"
+      presentations: "Mis objetos de aprendizaje"
+      logout: "Cerrar sesión"
   languages:
     bg: "Búlgaro"
     cy: "Galés"
@@ -71,3 +76,28 @@ es:
     ro: "Rumano"
     ru: "Ruso"
     sr: "Serbio"
+  login:
+    confirmation_instructions: "¿No has recibido las instrucciones de confirmación?"
+    confirmation_instructions_resend: "Reenviar instrucciones para confirmar cuenta"
+    message:
+      error:
+        captcha: "Hubo un error con el código captcha. Por favor, vuelve a introducir el código."
+    password: "Contraseña"
+    password_change: "Cambia tu contraseña"
+    password_confirmation: "Confirmación de contraseña"
+    password_current_in_settings: "Contraseña actual (la contraseña es necesaria para confirmar tus cambios)"
+    password_in_settings: "Contraseña (dejar en blanco si no deseas cambiarla)"
+    password_new: "Nueva contraseña"
+    password_new_confirmation: "Confirmar nueva contraseña"
+    password_forgot: "¿Olvidaste tu contraseña?"
+    password_reset_instructions: "Envíame instrucciones para reestablecer mi contraseña"
+    remember_me: "Recuérdame"
+    sign_in: "Iniciar sesión"
+    sign_in_with: "Iniciar sesión con %{provider}"
+    sign_out: "Cerrar sesión"
+    sign_up: "Regístrate"
+    unlock_instructions: "¿No has recibido las instrucciones para desbloquear la cuenta?"
+    unlock_instructions_resend: "Reenviar instrucciones para desbloquear la cuenta"
+    username_or_email: "Nombre de usuario o Correo electrónico"
+  presentation:
+    new: "Crear presentacion"
