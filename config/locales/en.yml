@@ -9,6 +9,10 @@ en:
         ¿: "¿"
         ¡: "¡"
         ́ : ""
+  account:
+    cancel: "Cancel my account"
+    edit: "Edit account"
+    update: "Update account"
   activerecord:
     errors:
       messages:
@@ -67,6 +71,7 @@ en:
   header:
     menu:
       profile: "Profile"
+      settings: "Account"
       presentations: "My learning objects"
       logout: "Logout"
   languages:

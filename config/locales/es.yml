@@ -1,4 +1,8 @@
 es:
+  account:
+    cancel: "Cancelar mi cuenta"
+    edit: "Editar cuenta"
+    update: "Actualizar cuenta"
   activerecord:
     errors:
       messages:
@@ -57,6 +61,7 @@ es:
   header:
     menu:
       profile: "Perfil"
+      settings: "Cuenta"
       presentations: "Mis objetos de aprendizaje"
       logout: "Cerrar sesión"
   languages:

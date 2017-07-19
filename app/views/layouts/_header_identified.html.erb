@@ -19,6 +19,7 @@
 		<ul class="dropdown-menu dropdown-menu-right">
 			<div id="arrow-up-header-profile"></div>
 			<li><%= link_to(t("header.menu.profile"),user_path(current_user))%></li>
+			<li><%= link_to(t("header.menu.settings"),edit_user_registration_path(current_user))%></li>
 			<li><%= link_to(t("header.menu.presentations"),user_path(current_user)+'/presentations')%></li>
 			<li role="separator" class="divider"></li>
 			<li><%= link_to(t("header.menu.logout"), destroy_user_session_path, :method => :delete) %></li>

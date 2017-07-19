@@ -31,7 +31,7 @@ div#session_form input[type='text'], div#session_form [type='email'], div#sessio
   font-size: 1.2rem;
 }
 
-div#session_form .sign_up_button, div#session_form .forgot_password_button{
+div#session_form .sign_up_button, div#session_form .forgot_password_button, div#session_form .update_account_button{
   margin-top: 15px;
   margin-bottom: 10px;
 }

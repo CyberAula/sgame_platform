@@ -12,7 +12,6 @@ class UsersController < ApplicationController
     render :show
   end
 
-
   private
 
   def find_user
