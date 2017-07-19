@@ -72,7 +72,7 @@ en:
     menu:
       profile: "Profile"
       settings: "Account"
-      presentations: "My learning objects"
+      presentations: "My presentations"
       logout: "Logout"
   languages:
     bg: "Bulgarian"
@@ -94,6 +94,7 @@ en:
   login:
     confirmation_instructions: "Didn't receive confirmation instructions?"
     confirmation_instructions_resend: "Resend confirmation instructions"
+    email_description: "Please make sure you enter a valid email address since you will be sent an email including a link to activate your account"
     message:
       error:
         captcha: "There was an error with the recaptcha code below. Please re-enter the code."
@@ -116,3 +117,6 @@ en:
     username_or_email: "Username or Email"
   presentation:
     new: "Create presentation"
+  recaptcha:
+    errors:
+      verification_failed: 'reCAPTCHA verification failed, please try again'

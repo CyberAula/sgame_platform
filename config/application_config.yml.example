@@ -1,6 +1,10 @@
 development:
   domain: "localhost:3000"
   secret_token: "Place secret token here"
+  # recaptcha:
+  # Get keys from https://www.google.com/recaptcha
+  #  site_key: ""
+  #  secret_key: ""
   # YouTubeAPIKEY: ""
   # EuropeanaAPIKEY: ""
   # soundCloudAPIKEY: ""

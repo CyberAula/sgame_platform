@@ -9,4 +9,6 @@ class User < ActiveRecord::Base
 
 	before_save :fillTags
 	before_save :save_tag_array_text
+
+	validates_presence_of :name
 end

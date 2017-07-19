@@ -21,6 +21,15 @@ div#session_form form p {
   font-weight: bold;
 }
 
+div#session_form p.form_legend_description{
+  font-size: 1.1rem;
+  font-weight: normal;
+}
+
+div#session_form div.g-recaptcha {
+  margin-top: 20px;
+}
+
 div#session_form input, div#session_form select {
   color: black;
 }

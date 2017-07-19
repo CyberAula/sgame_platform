@@ -5,12 +5,13 @@
     <%= devise_error_messages! %>
 
     <div class="field">
-      <p class="form_legend"><%=t("dictionary.email")%></p>
+      <p class="form_legend">* <%=t("dictionary.email")%></p>
+      <p class="form_legend_description"><%=t("login.email_description")%></p>
       <%= f.email_field :email, autofocus: true %>
     </div>
 
     <div class="field">
-      <p class="form_legend"><%=t("dictionary.username")%></p>
+      <p class="form_legend">* <%=t("dictionary.username")%></p>
       <%= f.text_field :name %>
     </div>
 
@@ -28,6 +29,12 @@
       <p class="form_legend">* <%=t("login.password_confirmation")%></p>
       <%= f.password_field :password_confirmation, autocomplete: "off" %>
     </div>
+
+    <% if  SgamePlatform::Application.config.recaptcha %>
+      <div class="field">
+        <%= recaptcha_tags %>
+      </div>
+    <% end %>
 
     <div class="actions">
       <%= f.submit(t("devise.registrations.new"), {class: "sgame_button sign_up_button"}) %>

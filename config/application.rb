@@ -107,6 +107,16 @@ module SgamePlatform
     # Enable the asset pipeline
     config.assets.enabled = true
 
+    #Recaptacha
+    config.recaptcha = (config.APP_CONFIG["recaptcha"] && !config.APP_CONFIG["recaptcha"]["site_key"].blank? && !config.APP_CONFIG["recaptcha"]["secret_key"].blank?)
+
+    if config.recaptcha
+        Recaptcha.configure do |config|
+            config.site_key  = SgamePlatform::Application.config.APP_CONFIG["recaptcha"]["site_key"]
+            config.secret_key = SgamePlatform::Application.config.APP_CONFIG["recaptcha"]["secret_key"]
+        end
+    end
+
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
   end

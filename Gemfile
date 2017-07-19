@@ -18,6 +18,7 @@ gem 'jquery-ui-rails', '6.0.1'
 gem 'acts-as-taggable-on', '3.4'
 gem 'devise', '4.3.0'
 gem 'warden', '1.2.7'
+gem "recaptcha", '4.3.1', require: "recaptcha/rails"
 gem 'omniauth', '1.4.2'
 gem 'paperclip', '= 4.3.6'
 gem 'rubyzip', '= 1.0.0'
