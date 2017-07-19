@@ -1,0 +1,28 @@
+div.profile_tab {
+}
+
+div.profile_tab div.row {
+	margin-top: 15px;
+    margin-left: -10px;
+}
+
+#user_profile_info {
+	padding-left: 1px;
+	margin-top: 30px;
+}
+
+#user_profile_info p.title {
+	font-size: 2.2em;
+	margin-bottom: 40px;
+}
+
+ul.nav-tabs.user-nav li {
+	font-size: 1.5em;
+}
+
+ul.nav-tabs.user-nav li a, ul.nav-tabs.user-nav li a:hover {
+	color: black;
+	border: 2px solid black;
+	border-bottom: none !important;
+	cursor: pointer !important;
+}

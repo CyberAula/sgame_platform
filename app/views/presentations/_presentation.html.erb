@@ -1,48 +1,29 @@
-<div class="col-md-2 col-xs-6 presentation-item">
+<% generated_id= "presentation-" + presentation.id.to_s %>
 
-  <div class="presentation">
-    <% generated_id= "presentation-" + presentation.id.to_s %>
-    <div class="title_icon">
-      <!--Title -->
-      <a href=<%=  presentation_url(presentation) %>>
-        <h5>
-          <i class="fa fa-picture-o fa-lg"></i>
-        </h5>
-      </a>
-    </div>
-    <%= link_to(presentation_url(presentation)) do %>
-      <!-- image/icon -->
-      <div class="container-img">
-        <div class="img-box" id="<%=generated_id%>"></div>
-        <%if presentation.draft%>
-          <div class="presentation-draft">
-            <h4 class="draftstyle">
-              <i class="fa fa-edit"></i>
-              Draft
-            </h4>
-          </div>
-        <%end%>
-      </div>
-    <%end%>
-
-    <script>
-        document.getElementById("<%=generated_id%>").style.backgroundImage = "url('<%=presentation.thumbnail_url%>')";
-    </script>
-
-    <!-- Info -->
-    <div class="caption">
-      <!--presentation title -->
+<div class="item_box">
+  <div class="item_icon">
+    <a href=<%=  presentation_url(presentation) %>>
+      <img src="/assets/slides_num.png"/>
+    </a>
+  </div>
+  <div class="item_thumbnail <%="item_thumbnail_draft_wrapper" if presentation.draft %>">
       <%= link_to(presentation_url(presentation)) do %>
-        <p class="title"><%= presentation.title %></p>
+        <div class="item_thumbnail_img" id="<%=generated_id%>"></div>
+        <% if presentation.draft %>
+          <div class="item_thubmnail_draft">
+              <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+              Draft
+          </div>
+        <% end %>
       <%end%>
-      <!--Author -->
-      <div class="author">
-        <%= render 'users/user', :user => presentation.author%>
-      </div>
-      <!-- Link -->
-      <!--<div class="link button-secondary-red">
-         <%#= link_to('Go to presentation', presentation_url(presentation), :class => "logo");%>
-      </div>-->
-    </div>
+  </div>
+  <div class="item_title">
+    <%= link_to(presentation_url(presentation)) do %>
+      <p class="title"><%= presentation.title %></p>
+    <%end%>
   </div>
 </div>
+
+<script>
+  document.getElementById("<%=generated_id%>").style.backgroundImage = "url('<%=presentation.thumbnail_url%>')";
+</script>

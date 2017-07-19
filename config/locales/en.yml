@@ -117,6 +117,9 @@ en:
     username_or_email: "Username or Email"
   presentation:
     new: "Create presentation"
+  profile:
+    title: "%{name}'s profile"
+    title_own: "Your profile"
   recaptcha:
     errors:
       verification_failed: 'reCAPTCHA verification failed, please try again'

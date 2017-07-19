@@ -107,6 +107,9 @@ es:
     username_or_email: "Nombre de usuario o Correo electrónico"
   presentation:
     new: "Crear presentacion"
+  profile:
+    title: "Perfil de %{name}"
+    title_own: "Tu perfil"
   recaptcha:
     errors:
       verification_failed: 'La verificación reCAPTCHA falló, por favor pruebe otra vez'
