@@ -1,5 +1,4 @@
 <% generated_id= "presentation-" + presentation.id.to_s %>
-
 <div class="item_box">
   <div class="item_icon">
     <a href=<%=  presentation_url(presentation) %>>
@@ -23,7 +22,6 @@
     <%end%>
   </div>
 </div>
-
 <script>
   document.getElementById("<%=generated_id%>").style.backgroundImage = "url('<%=presentation.thumbnail_url%>')";
 </script>

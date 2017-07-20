@@ -1,10 +1,10 @@
-#editor_wrapper {
+#ve_wrapper {
 	text-align: center;
 }
-#presentation_editor_iframe {
+#ve_iframe {
 	border: 2px solid white !important;
 }
-#editor_tools_wrapper {
+#ve_tools_wrapper {
 	width: 1200px;
 	margin: auto;
 	margin-top: 10px;

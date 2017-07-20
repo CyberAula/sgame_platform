@@ -1,0 +1,18 @@
+<% resourceClassName = resource.class.name.underscore %>
+
+<section id="resource_wrapper" class="resource_wrapper_<%=resource.class.name.downcase%>">
+  <div class="resource_wrapper_2">
+    <h3><%= resource.title %></h3>
+    <div class="resource_wrapper_3 row">
+      <div class="resource_content_wrapper col-md-9">
+        <%= render :partial => (resourceClassName + '_show'), :locals  => { resourceClassName.to_sym => resource } %>
+      </div>
+      <div class="resource_suggestions_wrapper col-md-3">
+        <%= render :partial => "resources/suggestions" %>
+      </div>
+    </div>
+    <div class="resource_tools_wrapper">
+      <%= render :partial => 'resources/tools', :locals  => { :resource => resource, :resourceClassName =>  resourceClassName} %>
+    </div>
+  </div>
+</section>

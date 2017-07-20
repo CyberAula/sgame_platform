@@ -125,3 +125,12 @@ en:
   recaptcha:
     errors:
       verification_failed: 'reCAPTCHA verification failed, please try again'
+  resources:
+    suggestions: "Suggestions"
+    tools:
+      description: "Description"
+      description_no: "No description available"
+      insert: "Insert"
+      share: "Share"
+      download: "Download"
+      text_copy: "Copy to clip"

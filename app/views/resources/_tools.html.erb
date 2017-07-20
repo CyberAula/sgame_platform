@@ -1,0 +1,147 @@
+<% canBeEmbeded = lookup_context.template_exists?("embedcode", resourceClassName.pluralize, true) %>
+<% canBeShared = true %>
+<% canBeDownloaded = true %>
+<% canBeDownloadedInSCORM = ["presentation"].include?(resourceClassName) %>
+
+<ul class="nav nav-tabs tooltab">
+  <li class="active">
+    <a href="#tab1" tabTitle='description' data-toggle="tab">
+      <span class="hidden-xs"><%=t("resources.tools.description")%></span>
+    </a>
+  </li>
+  <%if canBeEmbeded %>
+    <li>
+      <a href="#tab2" tabTitle='embed' data-toggle="tab">
+        <span class="hidden-xs"><%=t("resources.tools.insert")%></span>
+      </a>
+    </li>
+  <% end %>
+  <li>
+    <a href="#tab3" tabTitle='share' data-toggle="tab">
+      <span class="hidden-xs"><%=t("resources.tools.share")%></span>
+    </a>
+  </li>
+  <li>
+    <a href="#tab4" tabTitle='download' data-toggle="tab">
+      <span class="hidden-xs"><%=t("resources.tools.download")%></span>
+    </a>
+  </li>
+</ul>
+
+<div class="tab-content">
+
+  <!-- Tab1 / description -->
+  <div class="tab-pane active" id="tab1">
+    <% unless resource.description.blank? %>
+      <%=resource.description%>
+    <% else %>
+      <div class="no_description"><%=t("resources.tools.description_no")%></div>
+    <% end %>
+  </div>
+
+  <!-- Tab2 / embed -->
+  <%if canBeEmbeded %>
+    <div class="tab-pane" id="tab2">
+      <div class="input-group">
+        <textarea class="form-control" readonly="true" id="textarea_embed" type="text" style="overflow:auto;resize:none"><%= render partial: "#{ resourceClassName.tableize }/embedcode", locals: { resourceClassName.to_sym => resource } %></textarea>
+        <div class="input-group-addon">
+          <div data-toggle="tooltip" data-placement="right" title="<%=t("resources.tools.text_copy")%>">
+            <button class="button-primary-red" id="btn_copy_embed">
+              <span class="glyphicon glyphicon-share"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Tab3 / share -->
+  <% if canBeShared %>
+    <% sharedURL = request.protocol + request.env['HTTP_HOST'].sub(/^(m|www)\./, '') + polymorphic_path(resource) %>
+    <div class="tab-pane" id="tab3">
+      <div class="input-group">
+        <input class="form-control" readonly="true" id="input_with_sharedURL" type="text" value="<%=sharedURL%>"/>
+        <div class="input-group-addon">
+          <div data-toggle="tooltip" data-placement="right" title="<%=t("resources.tools.text_copy")%>">
+            <button id="btn_copy_share">
+              <span class="glyphicon glyphicon-share"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Tab4 / download -->
+  <%if canBeDownloaded %>
+    <div class="tab-pane" id="tab4">
+        <% if canBeDownloadedInSCORM %>
+          <button class="sgame_button"><a href='<%=polymorphic_path(resource, :format => "scorm", :version => "12")%>'><span class="glyphicon glyphicon-download"></span>SCORM 1.2</a></button>
+          <button class="sgame_button"><a href='<%=polymorphic_path(resource, :format => "scorm", :version => "2004")%>'><span class="glyphicon glyphicon-download"></span>SCORM 2004</a></button>
+        <% else %>
+          <button class="sgame_button"><a href='<%=download_resource_path(resource)%>'><span class="glyphicon glyphicon-download"></span><%=t("dictionary.download")%></a></button>
+        <% end %>
+    </div>
+  <% end %>
+
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function(){
+    var embedEvents = false;
+    var shareEvents = false;
+    var mytxt;
+
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
+      // e.target // activated tab
+      // e.relatedTarget // previous tab
+      var loadedTab = $(e.target).attr("tabTitle");
+      switch (loadedTab){
+        case "embed":
+          if(!embedEvents){
+            embedEvents = true;
+            $('button#btn_copy_embed').zclip({
+              path:'/assets/ZeroClipboard.swf',
+              copy:function(){
+                return $('#textarea_embed').text();
+              }
+            });
+            $("#textarea_embed").mouseup(function(e){
+              // fixes safari/chrome problem
+              e.preventDefault();
+            }).focus(function(e){
+              mytxt = $(this).text();
+              $(this).select();
+            }).click(function(e){
+              mytxt = $(this).text();
+              $(this).select();
+            });
+          }
+          break;
+        case "share":
+          if(!shareEvents){
+            shareEvents = true;
+            $('button#btn_copy_share').zclip({
+              path:'/assets/ZeroClipboard.swf',
+              copy:function(){
+                return $('#input_with_sharedURL').val();
+              }
+            });
+            $("#input_with_sharedURL").mouseup(function(e){
+              // fixes safari/chrome problem
+              e.preventDefault();
+            }).focus(function(e){
+              mytxt = $(this).text();
+              $(this).select();
+            }).click(function(e){
+              mytxt = $(this).text();
+              $(this).select();
+            });
+          }
+          break;
+        default:
+          break;
+      }
+    });
+  });
+</script>

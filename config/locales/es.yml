@@ -115,3 +115,12 @@ es:
   recaptcha:
     errors:
       verification_failed: 'La verificación reCAPTCHA falló, por favor pruebe otra vez'
+  resources:
+    suggestions: "Sugerencias"
+    tools:
+      description: "Descripción"
+      description_no: "Descripción no disponible"
+      insert: "Insertar"
+      share: "Compartir"
+      download: "Descargar"
+      text_copy: "Copiar al portapapeles"

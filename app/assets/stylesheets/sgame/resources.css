@@ -1,0 +1,61 @@
+#resource_wrapper {
+	width: 100%;
+}
+
+#resource_wrapper div.resource_wrapper_2 {
+	width: 100%;
+}
+
+#resource_wrapper div.resource_wrapper_3 {
+	width: 100%;
+}
+
+#resource_wrapper div.resource_wrapper_2 > h3 {
+	font-size: 2.1em;
+	margin-top: 15px;
+	margin-bottom: 20px;
+}
+
+#resource_wrapper div.resource_suggestions_wrapper {
+
+}
+
+#resource_wrapper div.resource_suggestions_wrapper > h4 {
+	margin-top: 0px;
+	font-size: 1.5em;
+}
+
+#resource_wrapper div.resource_suggestions_wrapper > div {
+}
+
+#resource_wrapper div.resource_tools_wrapper {
+	margin-top: 25px;
+	min-height: 200px;
+}
+
+#resource_wrapper ul.tooltab li a {
+	font-size: 1.2em;
+	color: white;
+}
+
+#resource_wrapper ul.tooltab li.active a {
+	border: 2px solid black;
+	color: black;
+}
+
+#resource_wrapper ul.tooltab li a:hover {
+	color: black;
+}
+
+#resource_wrapper .resource_tools_wrapper div.tab-content {
+	margin-top: 15px;
+	font-size: 1.2em;
+}
+
+#resource_wrapper div.tab-pane > div.input-group, #textarea_embed, #input_with_sharedURL {
+	min-height: 60px;
+}
+
+#textarea_embed, #input_with_sharedURL {
+	height: 100%;
+}

@@ -1,3 +1,21 @@
-<div id="editor_wrapper">
-	<iframe id="presentation_editor_iframe" src="<%=new_presentation_path(:format => :full, :default_tag=>params[:default_tag])%>" width="1200" height="750" style="border:0" iframeborder="0" frameborder="0" iframeElement.frameBorder=0; webkitAllowFullScreen="true" allowfullscreen="true" mozallowfullscreen="true"></iframe>
+<div id="ve_wrapper">
+  <iframe class="vishEditorIframe" id="ve_iframe" src="<%=new_presentation_path(:format => :full, :default_tag=>params[:default_tag])%>" width="1200" height="750" style="border:0" iframeborder="0" frameborder="0" iframeElement.frameBorder=0; webkitAllowFullScreen="true" allowfullscreen="true" mozallowfullscreen="true"></iframe>
 </div>
+
+<%=javascript_include_tag "VISH.IframeAPI" %>
+
+<script type="text/javascript">
+  var VEconnected = false;
+  window.onload = function(){
+    VISH.IframeAPI.init({callback: onConnect});
+  };
+  function onConnect(origin){
+    // console.log("Communication stablished with " + origin);
+    VEconnected = true;
+    VISH.IframeAPI.registerCallback("onVEFocusChange",function(focus,origin){
+        if((focus===true)&&($('[data-toggle="dropdown"]').length>0)&&($('[data-toggle="dropdown"]').parent().hasClass('open'))){
+          $('[data-toggle="dropdown"]').parent().removeClass('open');
+        }
+    });
+  };
+</script>

@@ -1,5 +1,10 @@
-<%= render :partial => 'presentation_edit_tools', :locals  => { :presentation => @presentation, :isPresentationOwner => isPresentationOwner } %>
-<div class="presentation_viewer_wrapper">
-  <iframe class="vishEditorIframe" src="<%=presentation_path(presentation, :format => :full, :trseid => @tracking_system_entry_id, :oreferrer => request.referrer)%>" width="100%" height="100%" iframeborder="0" frameborder="0" iframeElement.frameBorder = 0; webkitAllowFullScreen="true" allowfullscreen="true" mozallowfullscreen="true">
-  </iframe>
-</div>
+ <%=javascript_include_tag "VISH.IframeAPI" %>
+
+<script type="text/javascript">
+//VE extra vars
+var options = {};
+options["readHashFromParent"] = true;
+</script>
+
+<iframe class="vishEditorIframe" src="<%=presentation_path(presentation, :format => :full, :trseid => @tracking_system_entry_id, :oreferrer => request.referrer)%>" width="100%" height="100%" iframeborder="0" frameborder="0" iframeElement.frameBorder = 0; webkitAllowFullScreen="true" allowfullscreen="true" mozallowfullscreen="true">
+</iframe>
