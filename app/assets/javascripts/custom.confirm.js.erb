@@ -1,0 +1,78 @@
+$.rails.allowAction = function(link){
+  if (!link.attr('data-confirm')){
+   return true;
+  }
+  $.rails.showConfirmDialog(link);
+  return false;
+};
+
+$.rails.confirmed = function(link){
+  link.removeAttr('data-confirm');
+  return link.trigger('click.rails');
+};
+
+$.rails.showConfirmDialog = function(link){
+  _showSGAMEDialogWithSettings({"msg":link.attr('data-confirm'), "ok_button":link.attr('data-ok-button'), "cancel_button":link.attr('data-cancel-button')}, true, function(result){
+    if(link.attr('data-callback')){
+      if(typeof window[link.attr('data-callback')] == "function"){
+        window[link.attr('data-callback')](result);
+      }
+    }
+    if(result==true){
+      //Ok
+      return $.rails.confirmed(link);
+    } else {
+      //Cancel
+    }
+  })
+};
+
+var _showSGAMEDialogWithSettings = function(settings, showCancelButton, callback){
+  var html = '<div id="dialog" title="Basic dialog"><p>'+settings["msg"]+'</p></div>';
+
+  if (typeof settings["ok_button"] == "undefined"){
+    settings["ok_button"] = '<%=I18n.t("dialog.ok",:locale => I18n.default_locale)%>'
+  }
+  if (typeof settings["cancel_button"] == "undefined"){
+    settings["cancel_button"] = '<%=I18n.t("dialog.cancel",:locale => I18n.default_locale)%>'
+  }
+  
+  var dialogButtons = {};
+  dialogButtons[settings["ok_button"]] = function(){
+    $(this).dialog("close");
+    if(typeof callback == "function"){
+        callback(true);
+    }
+  };
+
+  if(showCancelButton===true){
+    dialogButtons[settings["cancel_button"]] = function(){
+      $(this).dialog("close");
+      if(typeof callback == "function"){
+        callback(false);
+      }
+    }
+  }
+
+  $(html).dialog({
+    resizable: false,
+    // Not specified height = height auto
+    // height: 300,
+    modal: true,
+    dialogClass: 'noTitleStuff',
+    open: function() {
+      //Fix bug introduced on JQuery UI 1.10.3
+      $(this).closest(".ui-dialog")
+      .find(".ui-dialog-titlebar-close")
+      .removeClass("ui-dialog-titlebar-close")
+      .addClass("ui-icon-closethick-wrapper")
+      .html("<span class='ui-button-icon-primary ui-icon ui-icon-closethick'></span>");
+    },
+    buttons: dialogButtons
+  });
+};
+
+$(document).on('click', '[promptOkAlertDialog="true"]', function(event){
+  var link = $(event.target);
+  _showSGAMEDialogWithSettings({"msg":link.attr('data-confirm'), "ok_button":link.attr('data-ok-button'), "cancel_button":link.attr('data-cancel-button')}, false);
+});

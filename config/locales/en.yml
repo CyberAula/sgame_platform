@@ -33,6 +33,7 @@ en:
     about: "About"
     are_you_sure: "Are you sure?"
     back: "Back"
+    cancel: "Cancel"
     edit: "Edit"
     email: "Email"
     errors:
@@ -46,6 +47,7 @@ en:
     language: "Language"
     login: "Login"
     next: "Next"
+    ok: "Ok"
     password: "Password"
     relevance: "Relevance"
     remove: "Remove"

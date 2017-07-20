@@ -4,3 +4,10 @@
 #presentation_editor_iframe {
 	border: 2px solid white !important;
 }
+#editor_tools_wrapper {
+	width: 1200px;
+	margin: auto;
+	margin-top: 10px;
+	padding: 0px;
+	text-align: right;
+}

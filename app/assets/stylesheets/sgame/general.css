@@ -15,7 +15,7 @@ html, body {
 	position: relative;
 	height: auto;
 	width: 100%;
-	padding-bottom: 150px;
+	padding-bottom: 100px;
 }
 #header {
 	position: relative;
@@ -31,6 +31,7 @@ html, body {
 	background: #2d2d2d;
 }
 
-a, a:hover {
+a, a:hover, a:active, a:focus {
 	color: white;
+	outline: none !important;
 }

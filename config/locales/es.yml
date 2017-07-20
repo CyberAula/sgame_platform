@@ -23,6 +23,7 @@ es:
     about: "About"
     are_you_sure: "¿Estás seguro?"
     back: "Volver"
+    cancel: "Cancelar"
     edit: "Editar"
     email: "Correo electrónico"
     errors:
@@ -36,6 +37,7 @@ es:
     language: "Idioma"
     login: "Inicia sesión"
     next: "Siguiente"
+    ok: "Ok"
     password: "Contraseña"
     relevance: "Relevancia"
     remove: "Borrar"

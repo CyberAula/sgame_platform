@@ -5,21 +5,15 @@
   <div id="editor_wrapper">
     <iframe class="vishEditorIframe" id="presentation_editor_iframe" src="<%=edit_presentation_path(@presentation, :format => :full)%>" width="1200" height="750" style="border:0" iframeborder="0" frameborder="0" iframeElement.frameBorder=0; webkitAllowFullScreen="true" allowfullscreen="true" mozallowfullscreen="true"></iframe>
     <div id="editor_tools_wrapper">
-      <%= render :partial => 'presentations/presentation_tool_tab' %>
+      <button class="sgame_button">
+        <a href="<%=presentation_path(@presentation)%>" data-confirm="<%=t('dictionary.are_you_sure')%>" data-ok-button="<%=t('dictionary.ok')%>" data-cancel-button="<%=t('dictionary.cancel')%>" data-method="delete" data-callback="beforeDelete" rel="nofollow">
+          <span class="glyphicon glyphicon-trash"></span><%=t("dictionary.remove")%>
+        </a>
+      </button>
     </div>
 </div>
 
 <%=javascript_include_tag "VISH.IframeAPI" %>
-
-<% content_for :javascript do %>
-    function setFavicon(){
-      var link = $('link[type="image/vnd.microsoft.icon"]').remove().attr("href");
-      $('<link href="'+ link +'" rel="shortcut icon" type="image/x-icon" />').appendTo('head');
-    }
-
-    //location.href = "#presentation_iframe";
-    setFavicon();
-<%end%>
 
 <script type="text/javascript">
   var VEconnected = false;
@@ -34,5 +28,12 @@
           $('[data-toggle="dropdown"]').parent().removeClass('open');
         }
     });
-  }
+  };
+  function beforeDelete(result){
+    if(result===true){
+      if((typeof VISH != "undefined")&&(typeof VISH.IframeAPI != "undefined")&&(typeof VISH.IframeAPI.allowExitWithoutConfirmation == "function")&&(VEconnected===true)){
+        VISH.IframeAPI.allowExitWithoutConfirmation();
+      }
+    }
+  };
 </script>

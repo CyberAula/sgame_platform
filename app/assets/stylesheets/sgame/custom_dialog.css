@@ -1,0 +1,35 @@
+/* Customizing */
+
+.ui-widget.ui-widget-content {
+	border: 2px solid black;
+}
+
+.ui-dialog-content p {
+	font-size: 1.5rem !important;
+}
+
+.ui-icon-closethick-wrapper {
+	width: 10%;
+	padding: 0px 0px 0px 3px !important;
+}
+
+.ui-dialog-buttonset > button {
+	background-color: white;
+	border: 1px solid black;
+	color: black;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	border-radius: 4px;
+	font-weight: normal;
+	font-size: 1.2rem !important;
+	opacity: 0.9;
+	padding: 2px 7px;
+	display: inline-block;
+	text-align: center;
+	min-width: 70px;
+	margin-bottom: 6px;
+	outline: none;
+}
+
+.noTitleStuff .ui-dialog-titlebar {
+	display:none
+}
