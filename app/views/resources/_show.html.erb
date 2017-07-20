@@ -8,7 +8,7 @@
         <%= render :partial => (resourceClassName + '_show'), :locals  => { resourceClassName.to_sym => resource } %>
       </div>
       <div class="resource_suggestions_wrapper col-md-3">
-        <%= render :partial => "resources/suggestions" %>
+        <%= render :partial => "resources/suggestions", :locals  => { :suggestions => @suggestions } %>
       </div>
     </div>
     <div class="resource_tools_wrapper">

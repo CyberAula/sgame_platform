@@ -22,6 +22,7 @@
 
 #resource_wrapper div.resource_suggestions_wrapper > h4 {
 	margin-top: 0px;
+	margin-bottom: 14px;
 	font-size: 1.5em;
 }
 
@@ -58,4 +59,19 @@
 
 #textarea_embed, #input_with_sharedURL {
 	height: 100%;
+}
+
+@media (max-width: 992px){
+	#resource_wrapper div.resource_suggestions_wrapper > h4 {
+		margin-top: 25px;
+	}
+	#resource_wrapper div.rsitem_box {
+		height: 80px;
+	}
+}
+
+@media (max-width: 767px){
+	#resource_wrapper div.resource_tools_wrapper ul.tooltab li a {
+		background: white;
+	}
 }

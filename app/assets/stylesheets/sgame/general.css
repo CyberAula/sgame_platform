@@ -29,6 +29,7 @@ html, body {
 	height: 60px;
 	width: 100%;
 	background: #2d2d2d;
+	z-index: 3;
 }
 
 a, a:hover, a:active, a:focus {

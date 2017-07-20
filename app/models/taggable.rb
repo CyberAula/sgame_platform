@@ -1,9 +1,6 @@
 module Taggable
 	extend ActiveSupport::Concern
 
-	module ClassMethods
-	end
-
 	private
 
 	def fillTags

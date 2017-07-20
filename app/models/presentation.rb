@@ -3,6 +3,7 @@ require 'builder'
 class Presentation < ActiveRecord::Base
   include Taggable
   acts_as_ordered_taggable
+  include Recommendable
 
   attr_accessor :attachment_url
   has_attached_file :attachment, 

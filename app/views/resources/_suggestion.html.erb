@@ -1,0 +1,24 @@
+<% generated_id= (profile[:object_class] + "-" + profile[:id_repository].to_s) %>
+<div class="rsitem_box">
+  <div class="rsitem_icon">
+    <a href=<%= profile[:url] %>>
+      <img src="/assets/slides_num.png"/>
+    </a>
+  </div>
+  <div class="rsitem_thumbnail">
+      <%= link_to(profile[:url]) do %>
+        <div class="rsitem_thumbnail_img" id="<%=generated_id%>"></div>
+      <% end %>
+  </div>
+  <div class="rsitem_title">
+    <%= link_to(profile[:url]) do %>
+      <p class="title"><%= profile[:title] %></p>
+    <% end %>
+  </div>
+</div>
+
+<% unless profile[:thumbnail_url].blank? %>
+	<script>
+	  document.getElementById("<%=generated_id%>").style.backgroundImage = "url('<%=profile[:thumbnail_url]%>')";
+	</script>
+<% end %>

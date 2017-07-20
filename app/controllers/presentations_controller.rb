@@ -18,7 +18,7 @@ class PresentationsController < ApplicationController
 
   def show
     @presentation = Presentation.find(params[:id])
-    # @recommended_resources = RecommenderSystem.suggestions({:n => 4, :lo_profile => @presentation.profile, :settings => {:preselection_filter_by_resource_types => ["Presentation"]}})
+    @suggestions = RecommenderSystem.suggestions({:n => 6, :lo_profile => @presentation.profile, :settings => {:preselection_filter_by_resource_types => ["Presentation"]}})
     respond_to do |format|
       format.html {
         # @presentation.increment!(:visit_count)

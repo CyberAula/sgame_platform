@@ -1,4 +1,6 @@
-<h4><%=t("resource.suggestions")%></h4>
+<h4><%=t("resources.suggestions")%></h4>
 <div>
-  <%#= render 'rs_items/rs_items_sidebar', :resources => @recommended_resources%>
+	<% suggestions.each do |profile| %>
+		<%= render :partial => 'resources/suggestion', :locals  => { :profile => profile } %>
+	<% end %>
 </div>

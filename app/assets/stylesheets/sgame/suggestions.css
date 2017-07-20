@@ -1,0 +1,66 @@
+div.rsitem_box {
+	display: block;
+	height: 99px;
+	width: 100%;
+	border: 2px solid black;
+	border-radius: 5px;
+	background: white;
+	margin-bottom: 5px;
+}
+
+div.rsitem_box div.rsitem_icon {
+	position: absolute;
+	background-color: white;
+	padding: 10px;
+	border-radius: 0 0 3px 0;
+	width: 40px;
+	height: 40px;
+	text-align: center;
+	z-index: 2;
+}
+
+div.rsitem_box div.rsitem_icon a {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+div.rsitem_box div.rsitem_icon img {
+	margin-left: 5px;
+	margin-top: 5px;
+	max-width: 30px;
+	max-height: 30px;
+}
+
+div.rsitem_box div.rsitem_thumbnail {
+	float: left;
+	position: relative;
+	width: 35%;
+	height: 100%;
+	z-index: 1;
+}
+
+div.rsitem_box div.rsitem_thumbnail_img {
+	min-width: 100%;
+	min-height: 100%;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+div.rsitem_box div.rsitem_title {
+	float: left;
+	position: relative;
+	width: 65%;
+	height: 100%;
+	color: black;
+	z-index: 1;
+	padding: 8px;
+	overflow: hidden;
+}
+
+div.rsitem_box div.rsitem_title a {
+	color: black;
+	font-size: 1.2em;
+	text-decoration: none;
+}
