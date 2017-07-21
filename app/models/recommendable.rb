@@ -3,16 +3,6 @@ module Recommendable
 	include ActionDispatch::Routing::PolymorphicRoutes
 	include Rails.application.routes.url_helpers
 
-	module ClassMethods
-		def public
-			if self.column_names.include?("draft")
-				self.where(:draft => false)
-			else
-				self
-			end
-		end
-	end
-
 	def profile
 		profile = {}
 		profile[:title] = self.title if self.respond_to?("title")
@@ -28,5 +18,4 @@ module Recommendable
 		profile[:object_class] = profile[:object].class.name.underscore
 		profile
 	end
-
 end

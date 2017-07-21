@@ -3,6 +3,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # before_action :configure_account_update_params, only: [:update]
   prepend_before_action :check_captcha, only: [:create] if  SgamePlatform::Application.config.recaptcha
 
+
   # GET /resource/sign_up
   # def new
   #   super

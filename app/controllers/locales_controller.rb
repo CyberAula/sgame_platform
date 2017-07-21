@@ -1,4 +1,5 @@
 class LocalesController < ActionController::Base
+  skip_authorization_check
 
   def change_locale
     locale = params[:locale]

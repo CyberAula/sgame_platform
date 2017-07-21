@@ -9,3 +9,10 @@ div.alert-success{
 	border-size: 3px;
 	font-size: 1.2em;
 }
+
+div.alert-danger {
+	color: black;
+	font-size: 1.2em;
+	border-size: 3px;
+	border-color: black;
+}

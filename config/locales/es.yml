@@ -18,6 +18,9 @@ es:
               blank: "no puede estar en blanco"
             password:
               blank: "no puede estar en blanco"
+  authorization:
+    errors:
+      generic: "No estás autorizado a acceder a esta página"
   delete: "Borrar"
   dictionary:
     about: "About"

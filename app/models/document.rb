@@ -1,4 +1,7 @@
 class Document < ActiveRecord::Base
+  include Item
+  acts_as_ordered_taggable
+  
   has_attached_file :file, 
                     :url => '/:class/:id.:content_type_extension',
                     :path => ':rails_root/documents/:class/:id_partition/original/:filename.:extension'

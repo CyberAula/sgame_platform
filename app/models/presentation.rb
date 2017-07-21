@@ -1,23 +1,16 @@
 require 'builder'
 
 class Presentation < ActiveRecord::Base
-  include Taggable
+  include Item
   acts_as_ordered_taggable
-  include Recommendable
 
-  attr_accessor :attachment_url
-  has_attached_file :attachment, 
-                    :url => '/:class/:id/attachment_file',
-                    :path => ':rails_root/documents/attachments/:id_partition/:filename.:extension'
-  validates_attachment_size :attachment, :less_than => 8.megabytes
-
-  belongs_to :author, :class_name => 'User', :foreign_key => "author_id"
+  belongs_to :author, :class_name => 'User', :foreign_key => "owner_id"
 
   validates_presence_of :json
-  validates_presence_of :author_id
+  validates_presence_of :owner_id
   validate :author_validation
   def author_validation
-    return errors[:base] << "Presentation without author" if self.author_id.blank? or User.find_by_id(self.author_id).nil?
+    return errors[:base] << "Presentation without author" if self.owner_id.blank? or User.find_by_id(self.owner_id).nil?
     true
   end
 
@@ -26,14 +19,6 @@ class Presentation < ActiveRecord::Base
   before_save :save_tag_array_text
   after_save :parse_for_metadata_id
   after_destroy :remove_scorms
-
-  ####################
-  ## Class methods
-  ####################
-
-  # def self.public
-  #   self.where(:draft => false)
-  # end
 
   ####################
   ## Model methods
@@ -854,10 +839,6 @@ class Presentation < ActiveRecord::Base
         :views => visit_count
       }
       rjson
-  end
-
-  def get_attachment_name
-    "presentation_" + self.id.to_s + "_attachment" + File.extname(self.attachment_file_name)
   end
 
 

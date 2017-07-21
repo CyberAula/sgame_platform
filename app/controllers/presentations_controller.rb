@@ -1,8 +1,7 @@
 class PresentationsController < ApplicationController
-
   require 'fileutils'
-
-  before_filter :authenticate_user!, :only => [ :new, :create, :edit, :update, :uploadTmpJSON, :upload_attachment ]
+  before_filter :authenticate_user!, :only => [ :new, :create, :edit, :update, :uploadTmpJSON ]
+  load_and_authorize_resource
 
   # Enable CORS
   before_filter :cors_preflight_check, :only => [:presentation_thumbnails, :last_slide, :iframe_api]
@@ -81,7 +80,7 @@ class PresentationsController < ApplicationController
     else
       @presentation.draft = false
     end
-    @presentation.author_id = current_user.id
+    @presentation.owner_id = current_user.id
     @presentation.save!
 
     published = (@presentation.draft===false)
@@ -320,19 +319,6 @@ class PresentationsController < ApplicationController
         end
       }
     end
-  end
-
-
-  private
-
-  def allowed_params
-    [:json, :thumbnail_url, :draft]
-  end
-
-  def rename_attachment(name,id)
-      file_ext= File.extname(name)
-      file_new_name = "presentation_"+ id +"_attachment" + file_ext
-      file_new_name
   end
 
 end

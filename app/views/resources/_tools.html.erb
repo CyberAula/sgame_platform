@@ -2,13 +2,14 @@
 <% canBeShared = true %>
 <% canBeDownloaded = true %>
 <% canBeDownloadedInSCORM = ["presentation"].include?(resourceClassName) %>
-<% isOwner = (user_signed_in? and (resource.author_id === current_user.id)) %>
 
 <div class="tooltab_buttons">
-  <% if isOwner %>
+  <% if can? :update, resource %>
     <%= link_to(edit_polymorphic_path(resource), :title => t("dictionary.edit")) do %>
       <button class="sgame_button"><span class="glyphicon glyphicon-edit"></span></button>
     <%end%>
+  <% end %>
+  <% if can? :destroy, resource %>
     <a href="<%=polymorphic_path(resource)%>" data-confirm="<%=t('dictionary.are_you_sure')%>" data-ok-button="<%=t('dictionary.ok')%>" data-cancel-button="<%=t('dictionary.cancel')%>" data-method="delete" rel="nofollow">
       <button class="sgame_button"><span class="glyphicon glyphicon-trash"></span></button>
     </a>

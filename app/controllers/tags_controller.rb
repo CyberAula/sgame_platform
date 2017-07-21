@@ -1,5 +1,7 @@
 class TagsController < ApplicationController
-  
+  before_filter :authenticate_user!
+  skip_authorization_check
+
   # Enable CORS
   before_filter :cors_preflight_check, :only => [:index]
   after_filter :cors_set_access_control_headers, :only => [:index]

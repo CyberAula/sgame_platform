@@ -1,7 +1,7 @@
 class AddPdfps < ActiveRecord::Migration
   def change
     create_table :pdfps do |t|
-      t.column :user_id, :integer
+      t.column :owner_id, :integer
       t.column :pcount, :integer
       t.column :permanent, :boolean, :default => false
       t.column :attach_file_name,     :string

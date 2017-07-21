@@ -31,7 +31,7 @@ ActiveRecord::Schema.define(version: 20170717080042) do
   end
 
   create_table "pdfps", force: :cascade do |t|
-    t.integer  "user_id"
+    t.integer  "owner_id"
     t.integer  "pcount"
     t.boolean  "permanent",           default: false
     t.string   "attach_file_name"
@@ -43,7 +43,7 @@ ActiveRecord::Schema.define(version: 20170717080042) do
   end
 
   create_table "presentations", force: :cascade do |t|
-    t.integer  "author_id"
+    t.integer  "owner_id"
     t.string   "title"
     t.text     "json"
     t.boolean  "draft",                   default: false

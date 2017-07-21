@@ -1,6 +1,7 @@
 class PdfpsController < ApplicationController
   before_filter :authenticate_user_on_pdfps
   before_filter :fill_create_params, :only => [ :new, :create]
+  load_and_authorize_resource
 
   def new
     @pdfp = Pdfp.new
@@ -32,14 +33,13 @@ class PdfpsController < ApplicationController
 
   def fill_create_params
     params["pdfex"] ||= {}
-    params["pdfex"]["user_id"] = current_user.id
-
     params["pdfex"].delete "owner_id" if params["pdfex"]["owner_id"]
     params["pdfex"].delete "scope" if params["pdfex"]["scope"]
+    params["pdfex"]["owner_id"] = current_user.id
   end
 
   def pdfp_params
-    params.require(:pdfex).permit(:attach, :user_id)
+    params.require(:pdfex).permit(:attach, :owner_id)
   end
 
 end

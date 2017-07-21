@@ -1,7 +1,7 @@
 class AddPresentations < ActiveRecord::Migration
 	def change
 		create_table(:presentations) do |t|
-			t.integer  "author_id"
+			t.integer  "owner_id"
 			t.string   "title"
 			t.text     "json"
 			t.boolean  "draft", :default => false

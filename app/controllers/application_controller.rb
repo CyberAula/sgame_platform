@@ -2,6 +2,8 @@ class ApplicationController < ActionController::Base
 	protect_from_forgery
 	before_action :configure_permitted_parameters, if: :devise_controller?
 	before_action :set_locale
+	check_authorization :unless => :devise_controller?
+	skip_authorization_check :only => :page_not_found
 
 	def set_locale
 		I18n.locale = extract_locale_from_params || extract_locale_from_user_profile || extract_locale_from_session || extract_locale_from_webclient || I18n.default_locale
@@ -35,12 +37,18 @@ class ApplicationController < ActionController::Base
 		response.headers.delete('X-Frame-Options')
 	end
 
-	  #Wildcard route rescue
+	#Rescue for authorization errors
+	rescue_from CanCan::AccessDenied do |exception|
+		flash[:alert] = I18n.t("authorization.errors.generic")
+		redirect_to "/"
+	end
+
+	#Wildcard route rescue
 	def page_not_found
 		respond_to do |format|
 			format.html {
 				if request.path.include?("assets/") or request.xhr?
-					render :text => 'Not Found', :status => '404'
+					render :text => I18n.t("dictionary.errors.page_not_found"), :status => '404'
 				else
 					flash[:alert] = I18n.t("dictionary.errors.page_not_found")
 					redirect_to view_context.home_path, alert: flash[:alert]

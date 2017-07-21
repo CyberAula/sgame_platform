@@ -28,6 +28,9 @@ en:
               blank: "can't be blank"
             password:
               blank: "can't be blank"
+  authorization:
+    errors:
+      generic: "You are not authorized to access this page"
   delete: "Delete"
   dictionary:
     about: "About"

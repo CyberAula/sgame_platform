@@ -1,7 +1,7 @@
 class DocumentsController < ApplicationController
-  
   before_filter :authenticate_user!, :except => [:show]
   before_filter :fill_create_params, :only => [:create]
+  load_and_authorize_resource
 
   def create
     @document = Document.create(document_params)
