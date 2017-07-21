@@ -2,6 +2,18 @@
 <% canBeShared = true %>
 <% canBeDownloaded = true %>
 <% canBeDownloadedInSCORM = ["presentation"].include?(resourceClassName) %>
+<% isOwner = (user_signed_in? and (resource.author_id === current_user.id)) %>
+
+<div class="tooltab_buttons">
+  <% if isOwner %>
+    <%= link_to(edit_polymorphic_path(resource), :title => t("dictionary.edit")) do %>
+      <button class="sgame_button"><span class="glyphicon glyphicon-edit"></span></button>
+    <%end%>
+    <a href="<%=polymorphic_path(resource)%>" data-confirm="<%=t('dictionary.are_you_sure')%>" data-ok-button="<%=t('dictionary.ok')%>" data-cancel-button="<%=t('dictionary.cancel')%>" data-method="delete" rel="nofollow">
+      <button class="sgame_button"><span class="glyphicon glyphicon-trash"></span></button>
+    </a>
+  <% end %>
+</div>
 
 <ul class="nav nav-tabs tooltab">
   <li class="active">
@@ -46,7 +58,7 @@
         <textarea class="form-control" readonly="true" id="textarea_embed" type="text" style="overflow:auto;resize:none"><%= render partial: "#{ resourceClassName.tableize }/embedcode", locals: { resourceClassName.to_sym => resource } %></textarea>
         <div class="input-group-addon">
           <div data-toggle="tooltip" data-placement="right" title="<%=t("resources.tools.text_copy")%>">
-            <button class="button-primary-red" id="btn_copy_embed">
+            <button id="btn_copy_embed">
               <span class="glyphicon glyphicon-share"></span>
             </button>
           </div>

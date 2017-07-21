@@ -24,6 +24,7 @@ es:
     are_you_sure: "¿Estás seguro?"
     back: "Volver"
     cancel: "Cancelar"
+    delete: "Borrar"
     edit: "Editar"
     email: "Correo electrónico"
     errors:

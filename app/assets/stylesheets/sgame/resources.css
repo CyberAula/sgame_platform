@@ -61,6 +61,22 @@
 	height: 100%;
 }
 
+#resource_wrapper div.tooltab_buttons {
+	float: right;
+}
+
+#resource_wrapper div.tooltab_buttons a {
+	text-decoration: none;
+}
+
+#resource_wrapper div.tooltab_buttons button {
+	margin-top: 5px;
+}
+
+#resource_wrapper button.sgame_button span.glyphicon-trash {
+	margin-right: 1px;
+}
+
 @media (max-width: 992px){
 	#resource_wrapper div.resource_suggestions_wrapper > h4 {
 		margin-top: 25px;

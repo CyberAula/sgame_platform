@@ -34,6 +34,7 @@ en:
     are_you_sure: "Are you sure?"
     back: "Back"
     cancel: "Cancel"
+    delete: "Delete"
     edit: "Edit"
     email: "Email"
     errors:

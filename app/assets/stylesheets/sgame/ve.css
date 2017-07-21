@@ -11,3 +11,7 @@
 	padding: 0px;
 	text-align: right;
 }
+
+#ve_wrapper button span.glyphicon-trash {
+	margin-right: 6px;
+}
