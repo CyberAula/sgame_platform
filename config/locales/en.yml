@@ -96,6 +96,7 @@ en:
   login:
     confirmation_instructions: "Didn't receive confirmation instructions?"
     confirmation_instructions_resend: "Resend confirmation instructions"
+    confirmation_waiting: "Currently waiting confirmation for"
     email_description: "Please make sure you enter a valid email address since you will be sent an email including a link to activate your account"
     message:
       error:

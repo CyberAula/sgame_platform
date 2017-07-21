@@ -86,6 +86,7 @@ es:
   login:
     confirmation_instructions: "¿No has recibido las instrucciones de confirmación?"
     confirmation_instructions_resend: "Reenviar instrucciones para confirmar cuenta"
+    confirmation_waiting: "Actualmente esperando confirmación para"
     email_description: "Por favor asegúrese de ingresar una dirección de correo electrónico válida ya que se le enviará un email con un enlace para activar su cuenta"
     message:
       error:

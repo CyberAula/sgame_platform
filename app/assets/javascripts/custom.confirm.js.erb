@@ -31,10 +31,10 @@ var _showSGAMEDialogWithSettings = function(settings, showCancelButton, callback
   var html = '<div id="dialog" title="Basic dialog"><p>'+settings["msg"]+'</p></div>';
 
   if (typeof settings["ok_button"] == "undefined"){
-    settings["ok_button"] = '<%=I18n.t("dialog.ok",:locale => I18n.default_locale)%>'
+    settings["ok_button"] = '<%=I18n.t("dictionary.ok",:locale => I18n.default_locale)%>'
   }
   if (typeof settings["cancel_button"] == "undefined"){
-    settings["cancel_button"] = '<%=I18n.t("dialog.cancel",:locale => I18n.default_locale)%>'
+    settings["cancel_button"] = '<%=I18n.t("dictionary.cancel",:locale => I18n.default_locale)%>'
   }
   
   var dialogButtons = {};
