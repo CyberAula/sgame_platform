@@ -38,6 +38,7 @@ en:
     back: "Back"
     cancel: "Cancel"
     delete: "Delete"
+    description: "Description"
     edit: "Edit"
     email: "Email"
     errors:
@@ -47,6 +48,7 @@ en:
       reserved_word: "is a reserved word"
       too_short: "is too short"
       unspecified: "has to be specified"
+    file: "File"
     finish: "Finish"
     language: "Language"
     login: "Login"
@@ -57,11 +59,15 @@ en:
     remove: "Remove"
     save: "Save"
     search: "Search"
+    submit: "Submit"
     tags: "Tags"
+    title: "Title"
     untitled: "Untitled"
     update: "Update"
     username: "Username"
     register: "Sign up"
+  document:
+    new: "Upload file"
   frontpage:
     title: "Welcome to SGAME, the platform to create educational video games"
     description: "SGAME is a free web platform aimed at the educational community that allows to easily create web educational games by integrating  educational resources into existing games."

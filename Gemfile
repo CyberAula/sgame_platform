@@ -27,6 +27,13 @@ gem 'pdf-reader', '= 1.3.3'
 gem 'font-awesome-sass', '4.7.0'
 gem 'cancancan', '~> 2.0'
 
+# $ export FORCE_LOCAL_SCORM=scormGemPath
+if ENV['FORCE_LOCAL_SCORM']
+  gem "scorm", :path => ENV['FORCE_LOCAL_SCORM'], :branch => "master"
+else
+  gem "scorm", :git => 'git://github.com/agordillo/scorm.git', :branch => "master"
+end
+
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'web-console', '2.0.0'

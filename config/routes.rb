@@ -16,6 +16,7 @@ SgamePlatform::Application.routes.draw do
   #Documents
   resources :documents
   resources :pictures
+  resources :zipfiles
 
   #Presentations
   match '/presentations/:id/metadata' => 'presentations#metadata', :via => :get

@@ -1,3 +1,11 @@
+GIT
+  remote: git://github.com/agordillo/scorm.git
+  revision: b3d47f9c90ea2f314859b0e92fd30113775f2613
+  branch: master
+  specs:
+    scorm (1.0.5)
+      rubyzip (>= 1.0.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -227,6 +235,7 @@ DEPENDENCIES
   rmagick (= 2.13.2)
   rubyzip (= 1.0.0)
   sass-rails (= 5.0.6)
+  scorm!
   spring
   thin
   uglifier (= 3.2.0)

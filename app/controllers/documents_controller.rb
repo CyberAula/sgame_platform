@@ -5,14 +5,24 @@ class DocumentsController < ApplicationController
 
   def create
     @document = Document.create(document_params)
+
     respond_to do |format|
-      format.json {
-        if @document.persisted?
+      if @document.persisted?
+        format.json {
           render :json => @document.to_json(:protocol => request.protocol)
-        else
+        }
+        format.html { 
+          redirect_to document_path(@document), notice: "Success"
+        }
+      else
+        format.json {
           return head(:not_found)
-        end
-      }
+        }
+        format.html { 
+          flash.now[:alert] = @document.errors.full_messages
+          render action: "new"
+        }
+      end
     end
   end
 
@@ -21,6 +31,9 @@ class DocumentsController < ApplicationController
     respond_to do |format|
       format.json {
         render :json => @document.to_json 
+      }
+      format.html {
+        @suggestions = RecommenderSystem.suggestions({:n => 6, :lo_profile => @document.profile, :settings => {}})
       }
       format.any {
         path = @document.file.path(params[:style] || params[:format])
@@ -33,18 +46,20 @@ class DocumentsController < ApplicationController
     end
   end
 
+  def new
+  end
 
   private
 
   def fill_create_params
     params["document"] ||= {}
     params["document"].each{|k,v| 
-      params["document"].delete(k) unless ["file","owner_id"].include? k
+      params["document"].delete(k) unless ["title","description","file","owner_id"].include? k
     }
   end
 
   def document_params
-    params.require(:document).permit(:file, :owner_id)
+    params.require(:document).permit(:title, :description, :file, :owner_id)
   end
 
 end

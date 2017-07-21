@@ -8,6 +8,11 @@
 
 #resource_wrapper div.resource_wrapper_3 {
 	width: 100%;
+	height: 650px;
+}
+
+#resource_wrapper div.resource_content_wrapper {
+	height: 100%;
 }
 
 #resource_wrapper div.resource_wrapper_2 > h3 {

@@ -1,8 +1,8 @@
 class Document < ActiveRecord::Base
   include Item
   acts_as_ordered_taggable
-  
-  has_attached_file :file, 
+
+  has_attached_file :file,
                     :url => '/:class/:id.:content_type_extension',
                     :path => ':rails_root/documents/:class/:id_partition/original/:filename.:extension'
 
@@ -13,9 +13,6 @@ class Document < ActiveRecord::Base
   validates_presence_of :title
 
   belongs_to :author, :class_name => 'User', :foreign_key => "owner_id"
-
-  #Limited to pictures in the first version.
-  validates_attachment :file, content_type: { content_type: ["image/jpeg", "image/gif", "image/png"] }
   
   class << self
     def new(*args)
@@ -41,17 +38,6 @@ class Document < ActiveRecord::Base
   def mime_type
     Mime::Type.lookup(self.file_content_type)
   end
-
-  def as_json(options)
-    json = {
-     :id => self.id,
-     :title => self.title,
-     :src => SgamePlatform::Application.config.full_domain + self.file.url
-    }
-    json[:src] = Utils.checkUrlProtocol(json[:src],options[:protocol]) unless options[:protocol].blank?
-    json
-  end
-
 
   private
 
