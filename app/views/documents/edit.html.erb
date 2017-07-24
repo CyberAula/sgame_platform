@@ -1,0 +1,17 @@
+<div id="update_document_form_wrapper" class="document_form_wrapper">
+	<%= form_for @document, url: {action: "update"}, html: {class: "update_document_form document_form"} do |f| %>
+		<div class="field">
+			<p class="form_legend"><%=t("dictionary.title")%></p>
+			<%= f.text_field :title, :maxlength => 60, :size => 70 %>
+		</div>
+		<div class="field">
+			<p class="form_legend"><%=t("dictionary.description")%></p>
+			<%= f.text_area :description, :cols => 73, :rows => 4, :maxlength => 280, :resize => "none" %>
+		</div>
+	    <div class="actions">
+	      <%= f.submit(t("documents.update"), {class: "sgame_button sign_up_button"}) %>
+	    </div>
+	    <br/>
+	    <%= link_to t("dictionary.back"), :back, :class=>"back_button" %>
+	<% end %>
+</div>

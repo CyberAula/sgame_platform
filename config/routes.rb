@@ -15,6 +15,7 @@ SgamePlatform::Application.routes.draw do
 
   #Documents
   resources :documents
+  match '/documents/:id/download' => 'documents#download', :via => :get
   resources :pictures
   resources :zipfiles
 

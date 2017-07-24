@@ -39,6 +39,7 @@ en:
     cancel: "Cancel"
     delete: "Delete"
     description: "Description"
+    download: "Download"
     edit: "Edit"
     email: "Email"
     errors:
@@ -66,8 +67,15 @@ en:
     update: "Update"
     username: "Username"
     register: "Sign up"
-  document:
+  documents:
     new: "Upload file"
+    messages:
+      success:
+        create: "File has been succesfully uploaded"
+        update: "File has been succesfully updated"
+      error:
+        generic_update: "File couldn't be updated"
+    update: "Update file"
   frontpage:
     title: "Welcome to SGAME, the platform to create educational video games"
     description: "SGAME is a free web platform aimed at the educational community that allows to easily create web educational games by integrating  educational resources into existing games."
@@ -128,7 +136,7 @@ en:
     unlock_instructions: "Didn't receive unlock instructions?"
     unlock_instructions_resend: "Resend unlock instructions"
     username_or_email: "Username or Email"
-  presentation:
+  presentations:
     new: "Create presentation"
   profile:
     title: "%{name}'s profile"

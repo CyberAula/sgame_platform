@@ -29,6 +29,7 @@ es:
     cancel: "Cancelar"
     delete: "Borrar"
     description: "Descripción"
+    download: "Descargar"
     edit: "Editar"
     email: "Correo electrónico"
     errors:
@@ -56,8 +57,15 @@ es:
     update: "Actualizar"
     username: "Nombre de usuario"
     register: "Regístrate"
-  document:
+  documents:
     new: "Subir archivo"
+    messages:
+      success:
+        create: "El archivo ha sido subido con éxito"
+        update: "El archivo ha sido actualizado con éxito"
+      error:
+        generic_update: "El archivo no pudo ser actualizado"
+    update: "Actualizar archivo"
   frontpage:
     title: "Bienvenido a SGAME, la plataforma de creación de juegos educativos"
     description: "SGAME es una plataforma web gratuita dirigida a toda la comunidad educativa que permite crear de forma muy fácil juegos web educativos mediante la integración de recursos educativos en juegos existentes."
@@ -118,7 +126,7 @@ es:
     unlock_instructions: "¿No has recibido las instrucciones para desbloquear la cuenta?"
     unlock_instructions_resend: "Reenviar instrucciones para desbloquear la cuenta"
     username_or_email: "Nombre de usuario o Correo electrónico"
-  presentation:
+  presentations:
     new: "Crear presentacion"
   profile:
     title: "Perfil de %{name}"

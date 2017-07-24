@@ -1,0 +1,2 @@
+class ZipfilesController < DocumentsController
+end

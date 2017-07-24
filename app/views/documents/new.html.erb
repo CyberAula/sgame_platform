@@ -1,5 +1,5 @@
-<div id="new_document_form_wrapper">
-	<%= form_for (@document || Document.new), url: {action: "create"}, html: {class: "new_document_form"} do |f| %>
+<div id="new_document_form_wrapper" class="document_form_wrapper">
+	<%= form_for (@document || Document.new), url: {action: "create"}, html: {class: "new_document_form document_form"} do |f| %>
 		
 		<%= f.hidden_field :owner_id, :value => current_user.id %>
 
@@ -10,15 +10,15 @@
 
 		<div class="field">
 			<p class="form_legend"><%=t("dictionary.title")%></p>
-			<%= f.text_field :title %>
+			<%= f.text_field :title, :maxlength => 60, :size => 70 %>
 		</div>
 		<div class="field">
 			<p class="form_legend"><%=t("dictionary.description")%></p>
-			<%= f.text_field :description %>
+			<%= f.text_area :description, :cols => 73, :rows => 4, :maxlength => 280, :resize => "none" %>
 		</div>
-	  
-	    <div class="actions">
-	      <%= f.submit(t("document.new"), {class: "sgame_button sign_up_button"}) %>
-	    </div>
+	
+		<div class="actions">
+			<%= f.submit(t("documents.new"), {class: "sgame_button sign_up_button"}) %>
+		</div>
 	<% end %>
 </div>
