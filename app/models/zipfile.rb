@@ -1,5 +1,9 @@
 class Zipfile < Document
   
+  def thumbnail_url
+    "/assets/zip_file_icon.png"
+  end
+
   def fileType
     fileType = "Zipfile"
 
@@ -31,8 +35,22 @@ class Zipfile < Document
     nil
   end
 
-  def thumbnail_url
-    "/assets/zip_file_icon.png"
+  def getResourceAfterSave
+    case self.fileType
+    when "Scormfile"
+      resource = Scormfile.createScormfileFromZip(self)
+    when "Imscpfile"
+      # TODO
+      # resource = Imscpfile.createImscpfileFromZip(self)
+      resource = self
+    when "Webapp"
+      # TODO
+      # resource = Webapp.createWebappFromZip(self)
+      resource = self
+    else
+      resource = self
+    end
+    return resource
   end
   
 end

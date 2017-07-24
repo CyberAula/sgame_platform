@@ -45,15 +45,6 @@
 	<% if @presentation %>
 		options["watermarkURL"] = "<%=presentation_path(@presentation)%>";
 	<% end %>
-	
-	//comeBackUrl for Mobile Devices
-	<% if @orgUrl %>
-		options["comeBackUrl"] = "<%=@orgUrl%>";
-	<% else %>
-		<% if request && request.referrer %>
-			options["comeBackUrl"] = "<%=request.referrer%>";
-		<% end %>
-	<% end %>
 
 	<% unless params["oreferrer"].blank? %>
 		options["referrer"] = "<%=params['oreferrer']%>";

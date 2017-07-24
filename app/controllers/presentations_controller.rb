@@ -32,13 +32,11 @@ class PresentationsController < ApplicationController
         end
       }
       format.full {
-        @orgUrl = params[:orgUrl]
         @title = @presentation.title
         render :layout => 'veditor'
       }
       format.fs {
         @presentation.increment!(:visit_count)
-        @orgUrl = params[:orgUrl]
         @title = @presentation.title
         render "show.full", :layout => 'veditor'
       }

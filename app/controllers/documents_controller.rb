@@ -5,6 +5,25 @@ class DocumentsController < ApplicationController
 
   def create
     @document = Document.create(document_params)
+    
+    if @document.is_a? Zipfile
+      fileType = @document.fileType
+      if fileType != "Zipfile"
+        #SCORM package, IMS content package file or web application packaged in a ZIP file
+        newResource = @document.getResourceAfterSave
+        if newResource.is_a? String
+          #Raise error
+          flash.now[:alert] = newResource
+          return render action: :new
+        else
+          if params["format"] == "json"
+            return render :json => newResource.to_json(helper: self), status: :created
+          else
+            return redirect_to newResource
+          end
+        end
+      end
+    end
 
     respond_to do |format|
       if @document.persisted?
@@ -41,7 +60,7 @@ class DocumentsController < ApplicationController
   end
 
   def show
-    @document ||= Document.find_by_id(params[:id])
+    @document = Document.find_by_id(params[:id])
     respond_to do |format|
       format.json {
         render :json => @document.to_json 
@@ -88,7 +107,7 @@ class DocumentsController < ApplicationController
     @document.destroy
 
     respond_to do |format|
-      format.html { redirect_to (user_path(current_user) + "/documents") }
+      format.html { redirect_to (user_path(current_user) + "/files") }
       format.json { head :no_content }
     end
   end
@@ -103,7 +122,7 @@ class DocumentsController < ApplicationController
   end
 
   def document_params
-    params.require((@document.nil? or !@document.persisted?) ? :document : @document.document_type.to_sym).permit(:title, :description, :file, :owner_id)
+    params.require((@document.nil? or !params[:document].nil?) ? :document : @document.document_type.to_sym).permit(:title, :description, :file, :owner_id)
   end
 
 end

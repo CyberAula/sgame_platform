@@ -1,10 +1,10 @@
-<div id="documents" class="tab-pane in active profile_tab">
+<div id="files" class="tab-pane in active profile_tab">
   <div class="row">
     <% if @isProfileOwner %>
       <%= render 'resources/resource_new', :new_resource_path => new_document_path %>
     <%end%>
-    <% @documents.each do |document| %>
-      <%= render 'documents/document', :document => document %>
+    <% @files.each do |file| %>
+      <%= render 'resources/resource', :resource => file %>
     <% end %>
   </div>
 </div>

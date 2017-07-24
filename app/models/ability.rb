@@ -11,12 +11,12 @@ class Ability
     end
 
     #Presentations, Pdfps and Documents
-    can :create, [Presentation, Pdfp, Document]
+    can :create, [Presentation, Pdfp, Document, Scormfile]
     can :read, Presentation do |p|
       p.draft === false
     end
-    can :read, [Pdfp, Document]
-    can :manage, [Presentation, Pdfp, Document] do |p|
+    can :read, [Pdfp, Document, Scormfile]
+    can :manage, [Presentation, Pdfp, Document, Scormfile] do |p|
       p.owner_id === user.id
     end
 

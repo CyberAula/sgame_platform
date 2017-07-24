@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170717080042) do
+ActiveRecord::Schema.define(version: 20170724113308) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -63,6 +63,29 @@ ActiveRecord::Schema.define(version: 20170717080042) do
     t.datetime "created_at",                              null: false
     t.datetime "updated_at",                              null: false
     t.text     "tag_array_text",          default: ""
+  end
+
+  create_table "scormfiles", force: :cascade do |t|
+    t.string   "title"
+    t.text     "description"
+    t.string   "type"
+    t.integer  "owner_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "file_processing"
+    t.text     "zippath"
+    t.text     "zipurl"
+    t.text     "lopath"
+    t.text     "lourl"
+    t.string   "lohref"
+    t.string   "lohreffull"
+    t.string   "schema"
+    t.string   "schemaversion"
+    t.string   "scorm_version"
+    t.string   "file_file_name"
+    t.string   "file_content_type"
+    t.integer  "file_file_size"
+    t.datetime "file_updated_at"
   end
 
   create_table "taggings", force: :cascade do |t|

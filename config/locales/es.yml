@@ -67,6 +67,8 @@ es:
         generic_update: "El archivo no pudo ser actualizado"
     update: "Actualizar archivo"
     tabtitle: "Archivos"
+  files:
+    tabtitle: "Archivos"
   frontpage:
     title: "Bienvenido a SGAME, la plataforma de creación de juegos educativos"
     description: "SGAME es una plataforma web gratuita dirigida a toda la comunidad educativa que permite crear de forma muy fácil juegos web educativos mediante la integración de recursos educativos en juegos existentes."
@@ -84,7 +86,7 @@ es:
       profile: "Perfil"
       settings: "Cuenta"
       presentations: "Mis presentaciones"
-      documents: "Mis archivos"
+      files: "Mis archivos"
       logout: "Cerrar sesión"
   languages:
     bg: "Búlgaro"

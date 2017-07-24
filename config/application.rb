@@ -25,9 +25,10 @@ module SgamePlatform
     config.APP_CONFIG = YAML.load_file("config/application_config.yml")[Rails.env]
     config.domain = (config.APP_CONFIG["domain"] || "localhost:3000")
     config.full_domain = "http://" + config.domain
+    config.full_code_domain = "http://" + (config.APP_CONFIG['code_domain'] || config.APP_CONFIG['domain'])
 
     config.name = (config.APP_CONFIG["name"] || "SGAME Platform")
-    
+
     # I18n (http://guides.rubyonrails.org/i18n.html)
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]

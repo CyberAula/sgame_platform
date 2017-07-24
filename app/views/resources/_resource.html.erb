@@ -1,0 +1,33 @@
+<% resourceClassName = resource.class.name.underscore %>
+
+<% if lookup_context.template_exists?(resourceClassName, resourceClassName.tableize, true) %>
+	<%= render partial: "#{resourceClassName.tableize}/#{resourceClassName}", locals: { resourceClassName.to_sym => resource } %>
+<% else %>
+	<% generated_id = (resourceClassName + "-" + resource.id.to_s) %>
+	<div class="item_box item_box_<%=resourceClassName%>">
+		<div class="item_icon">
+			<a href=<%=  polymorphic_url(resource) %>>
+				<% if resource.respond_to?("mini_thumbnail_url") %>
+					<img src="<%=resource.mini_thubnail_url%>"/>
+				<% else %>
+					<img src="/assets/glyphicons-37-file.png"/>
+				<% end %>
+			</a>
+		</div>
+		<div class="item_thumbnail">
+			<%= link_to(polymorphic_url(resource)) do %>
+				<div class="item_thumbnail_img" id="<%=generated_id%>"></div>
+			<%end%>
+		</div>
+		<div class="item_title">
+			<%= link_to(polymorphic_url(resource)) do %>
+				<p class="title"><%= resource.title %></p>
+			<%end%>
+		</div>
+	</div>
+	<% if resource.respond_to?("thumbnail_url") %>
+		<script>
+			document.getElementById("<%=generated_id%>").style.backgroundImage = "url('<%=resource.thumbnail_url%>')";
+		</script>
+	<% end %>
+<% end %>

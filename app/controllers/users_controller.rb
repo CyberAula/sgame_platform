@@ -4,20 +4,20 @@ class UsersController < ApplicationController
 
   def show
     authorize! :read, @profile_user
-    @presentations = @profile_user.presentations
+    @presentations = @profile_user.presentations.order('updated_at DESC')
     @presentations = @presentations.public unless @isProfileOwner
   end
 
   def show_presentations
     authorize! :read, @profile_user
-    @presentations = @profile_user.presentations
+    @presentations = @profile_user.presentations.order('updated_at DESC')
     @presentations = @presentations.public unless @isProfileOwner
   end
 
-  def show_documents
+  def show_files
     authorize! :read, @profile_user
-    @documents = @profile_user.documents
-    @documents = @documents.public unless @isProfileOwner
+    @files = @profile_user.files.sort_by(&:updated_at).reverse
+    @files = @files.public unless @isProfileOwner
   end
 
   private

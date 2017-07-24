@@ -30,7 +30,7 @@ function SCORM_Player(options){
 		SCORM_VERSION: undefined,
 		SCORM_PACKAGE_URL: undefined,
 		LMS_API: undefined,
-		VISH_IFRAME_API: undefined
+		IFRAME_API: undefined
 	};
 
 	// Settings merged with defaults and extended options */
@@ -47,8 +47,8 @@ function SCORM_Player(options){
 		settings.SCORM_PACKAGE_URL = checkUrlProtocol(settings.SCORM_PACKAGE_URL);
 	}
 
-	if((typeof settings.LMS_API != "undefined")&&(typeof settings.VISH_IFRAME_API != "undefined")){
-		setVEGateway();
+	if((typeof settings.LMS_API != "undefined")&&(typeof settings.IFRAME_API != "undefined")){
+		setSCORMGateway();
 	}
 
 	adaptContentWrapper();
@@ -61,14 +61,14 @@ function SCORM_Player(options){
 
 			var timeoutToLoadScormContent = 500;
 
-			if((typeof settings.VISH_IFRAME_API != "undefined")&&(isIframe())){
-				settings.VISH_IFRAME_API.init(
+			if((typeof settings.IFRAME_API != "undefined")&&(isIframe())){
+				settings.IFRAME_API.init(
 					{
 						wapp: true,
 						tracking: true,
 						callback: function(origin){
 							debug("WAPP connnected with " + origin);
-							settings.VISH_IFRAME_API.getUser(function(user){
+							settings.IFRAME_API.getUser(function(user){
 								if((typeof user == "object")&&(typeof user.username == "string")&&(typeof settings.LMS_API != "undefined")){
 									if(typeof settings.LMS_API.setCMILMSValue == "function"){
 										settings.LMS_API.setCMILMSValue("learner_name",user.username);
@@ -209,14 +209,14 @@ function SCORM_Player(options){
 		return url;
 	};
 
-	function setVEGateway(){
+	function setSCORMGateway(){
 		if((typeof settings.LMS_API != "object")||(typeof settings.LMS_API.addListener != "function")){
 			return;
 		}
 		
 		if(settings.SCORM_VERSION === "1.2"){
 			settings.LMS_API.addListener("cmi.core.lesson_status", function(value){
-				if(settings.VISH_IFRAME_API.isConnected()){
+				if(settings.IFRAME_API.isConnected()){
 					// Completion status and success status are not considered in SCORM 1.2, but can be inferred from lesson_status
 					// lesson_status = "|passed|completed|failed|incomplete|browsed|not attempted|unknown|"
 					// completion_status = "|completed|incomplete|not attempted|unknown|"
@@ -249,13 +249,13 @@ function SCORM_Player(options){
 					if((typeof completionValue == "string")&&(completionValue != status.completionStatus)){
 						if(status.completionStatus != "completed"){
 							//Do not allow to undo "completed" lesson_status.
-							settings.VISH_IFRAME_API.setCompletionStatus(completionValue);
+							settings.IFRAME_API.setCompletionStatus(completionValue);
 							status.completionStatus = completionValue;
 						}
 					}
 					if((typeof successValue == "string")&&(successValue != status.successStatus)){
 						if(status.completionStatus != "passed"){
-							settings.VISH_IFRAME_API.setSuccessStatus(successValue);
+							settings.IFRAME_API.setSuccessStatus(successValue);
 							status.successStatus = successValue;
 						}
 					}
@@ -263,33 +263,33 @@ function SCORM_Player(options){
 			});
 
 			settings.LMS_API.addListener("cmi.score.scaled", function(value){
-				if(settings.VISH_IFRAME_API.isConnected()){
-					settings.VISH_IFRAME_API.setScore(value*100);
+				if(settings.IFRAME_API.isConnected()){
+					settings.IFRAME_API.setScore(value*100);
 				}
 			});
 
 		} else if((settings.SCORM_VERSION === "2004")||(typeof settings.SCORM_VERSION != "string")){
 			settings.LMS_API.addListener("cmi.progress_measure", function(value){
-				if(settings.VISH_IFRAME_API.isConnected()){
-					settings.VISH_IFRAME_API.setProgress(value*100);
+				if(settings.IFRAME_API.isConnected()){
+					settings.IFRAME_API.setProgress(value*100);
 				}
 			});
 
 			settings.LMS_API.addListener("cmi.completion_status", function(value){
-				if(settings.VISH_IFRAME_API.isConnected()){
-					settings.VISH_IFRAME_API.setCompletionStatus(value);
+				if(settings.IFRAME_API.isConnected()){
+					settings.IFRAME_API.setCompletionStatus(value);
 				}
 			});
 
 			settings.LMS_API.addListener("cmi.score.scaled", function(value){
-				if(settings.VISH_IFRAME_API.isConnected()){
-					settings.VISH_IFRAME_API.setScore(value*100);
+				if(settings.IFRAME_API.isConnected()){
+					settings.IFRAME_API.setScore(value*100);
 				}
 			});
 
 			settings.LMS_API.addListener("cmi.success_status", function(value){
-				if(settings.VISH_IFRAME_API.isConnected()){
-					settings.VISH_IFRAME_API.setSuccessStatus(value);
+				if(settings.IFRAME_API.isConnected()){
+					settings.IFRAME_API.setSuccessStatus(value);
 				}
 			});
 		}

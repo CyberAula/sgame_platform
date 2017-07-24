@@ -39,10 +39,6 @@ class Document < ActiveRecord::Base
     Mime::Type.lookup(self.file_content_type)
   end
 
-  def document_type
-    self.class.name.underscore
-  end
-
   private
 
   def set_title

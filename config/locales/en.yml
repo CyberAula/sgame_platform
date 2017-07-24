@@ -77,6 +77,8 @@ en:
         generic_update: "File couldn't be updated"
     tabtitle: "Files"
     update: "Update file"
+  files:
+    tabtitle: "Files"
   frontpage:
     title: "Welcome to SGAME, the platform to create educational video games"
     description: "SGAME is a free web platform aimed at the educational community that allows to easily create web educational games by integrating  educational resources into existing games."
@@ -94,7 +96,7 @@ en:
       profile: "Profile"
       settings: "Account"
       presentations: "My presentations"
-      documents: "My files"
+      files: "My files"
       logout: "Logout"
   languages:
     bg: "Bulgarian"

@@ -5,7 +5,7 @@ SgamePlatform::Application.routes.draw do
   devise_for :users, controllers: { sessions: "users/sessions", registrations: "users/registrations", :omniauth_callbacks => "users/omniauth_callbacks" }
 
   match '/users/:id/presentations' => 'users#show_presentations', via: [:get]
-  match '/users/:id/documents' => 'users#show_documents', via: [:get]
+  match '/users/:id/files' => 'users#show_files', via: [:get]
   resources :users
 
   #Locale
@@ -16,9 +16,11 @@ SgamePlatform::Application.routes.draw do
 
   #Documents
   resources :documents
-  match '/documents/:id/download' => 'documents#download', :via => :get
   resources :pictures
   resources :zipfiles
+  resources :scormfiles
+  match '/documents/:id/download' => 'documents#download', :via => :get
+  match '/scormfiles/:id/download' => 'scormfiles#download', :via => :get
 
   #Presentations
   match '/presentations/:id/metadata' => 'presentations#metadata', :via => :get

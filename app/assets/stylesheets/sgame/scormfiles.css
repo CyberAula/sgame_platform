@@ -1,0 +1,12 @@
+#container .resource_wrapper_scormfile div.resource_content_wrapper {
+	height: 650px;
+}
+
+.resource_wrapper_scormfile .resource_content_wrapper {
+	border: 1px solid black;
+}
+
+div.item_box_scormfile div.item_thumbnail div.item_thumbnail_img {
+	background-size: contain;
+	background-size: 45%;
+}
