@@ -2,36 +2,21 @@
 	width: 100%;
 }
 
-#resource_wrapper div.resource_wrapper_2 {
-	width: 100%;
-}
-
-#resource_wrapper div.resource_wrapper_3 {
-	width: 100%;
-	height: 650px;
-}
-
 #resource_wrapper div.resource_content_wrapper {
 	height: 100%;
 }
 
-#resource_wrapper div.resource_wrapper_2 > h3 {
+#resource_wrapper > h3 {
 	font-size: 2.1em;
 	margin-top: 15px;
 	margin-bottom: 20px;
-}
-
-#resource_wrapper div.resource_suggestions_wrapper {
-
+	margin-left: 13px;
 }
 
 #resource_wrapper div.resource_suggestions_wrapper > h4 {
 	margin-top: 0px;
 	margin-bottom: 14px;
 	font-size: 1.5em;
-}
-
-#resource_wrapper div.resource_suggestions_wrapper > div {
 }
 
 #resource_wrapper div.resource_tools_wrapper {
@@ -64,6 +49,7 @@
 
 #textarea_embed, #input_with_sharedURL {
 	height: 100%;
+	min-height: 75px;
 }
 
 #resource_wrapper div.tooltab_buttons {
