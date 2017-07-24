@@ -20,13 +20,14 @@ div.item_box div.item_icon {
 }
 
 div.item_box div.item_icon a {
+	width: 100%;
 	position: absolute;
 	top: 0;
 	left: 0;
 }
 
 div.item_box div.item_icon img {
-	margin-left: 5px;
+	margin-left: 0px;
 	margin-top: 5px;
 	max-width: 30px;
 	max-height: 30px;
@@ -45,6 +46,7 @@ div.item_box div.item_thumbnail_img {
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: center;
+	background-color: #ddd;
 }
 
 div.item_box div.item_thubmnail_draft {

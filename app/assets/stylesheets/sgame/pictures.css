@@ -6,3 +6,8 @@ section.resource_wrapper_picture .resource_content_wrapper {
 	background-color: #eee;
 	padding: 25px;
 }
+
+section.resource_wrapper_picture .resource_content_wrapper img {
+	max-height: 600px;
+}
+

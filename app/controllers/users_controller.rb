@@ -1,8 +1,9 @@
 class UsersController < ApplicationController
-  before_filter :find_user, :only => [:show, :show_presentations]
+  before_filter :find_user
   load_and_authorize_resource :except => [:show_presentations]
 
   def show
+    authorize! :read, @profile_user
     @presentations = @profile_user.presentations
     @presentations = @presentations.public unless @isProfileOwner
   end
@@ -11,7 +12,12 @@ class UsersController < ApplicationController
     authorize! :read, @profile_user
     @presentations = @profile_user.presentations
     @presentations = @presentations.public unless @isProfileOwner
-    render :show
+  end
+
+  def show_documents
+    authorize! :read, @profile_user
+    @documents = @profile_user.documents
+    @documents = @documents.public unless @isProfileOwner
   end
 
   private

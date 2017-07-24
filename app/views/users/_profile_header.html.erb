@@ -11,9 +11,9 @@
 </div>
 
 <ul class="nav nav-tabs user-nav">
-	<% ["presentations"].each do |resource| %>
+	<% ["presentations","documents"].each do |resource| %>
 		<li id="<%=resource%>_tab" class="<%= (active==resource ? "active" : "") %>">
-			<a href="/users/<%=@profile_user.id.to_s + "/" + resource %>"><%= resource.capitalize %></a>
+			<a href="/users/<%=@profile_user.id.to_s + "/" + resource %>"><%= t(resource.underscore + ".tabtitle") %></a>
 		</li>
 	<% end %>
 </ul>

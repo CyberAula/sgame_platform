@@ -83,6 +83,16 @@ class DocumentsController < ApplicationController
     send_file(path, send_file_options)
   end
 
+  def destroy
+    @document = Document.find_by_id(params[:id])
+    @document.destroy
+
+    respond_to do |format|
+      format.html { redirect_to (user_path(current_user) + "/documents") }
+      format.json { head :no_content }
+    end
+  end
+
   private
 
   def fill_create_params

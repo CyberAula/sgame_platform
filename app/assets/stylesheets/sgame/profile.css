@@ -26,3 +26,11 @@ ul.nav-tabs.user-nav li a, ul.nav-tabs.user-nav li a:hover {
 	border-bottom: none !important;
 	cursor: pointer !important;
 }
+
+ul.nav-tabs.user-nav li:not(.active) a {
+	color: white;
+}
+
+ul.nav-tabs.user-nav li:not(.active) a:hover {
+	color: black;
+}

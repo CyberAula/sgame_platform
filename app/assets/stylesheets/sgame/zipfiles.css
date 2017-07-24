@@ -6,3 +6,7 @@ section.resource_wrapper_zipfile div.resource_content_wrapper img {
 	height: 85px;
 }
 
+div.item_box_zipfile div.item_thumbnail div.item_thumbnail_img {
+	background-size: contain;
+	background-size: 40%;
+}

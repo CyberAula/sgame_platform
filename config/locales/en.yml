@@ -75,6 +75,7 @@ en:
         update: "File has been succesfully updated"
       error:
         generic_update: "File couldn't be updated"
+    tabtitle: "Files"
     update: "Update file"
   frontpage:
     title: "Welcome to SGAME, the platform to create educational video games"
@@ -93,6 +94,7 @@ en:
       profile: "Profile"
       settings: "Account"
       presentations: "My presentations"
+      documents: "My files"
       logout: "Logout"
   languages:
     bg: "Bulgarian"
@@ -138,6 +140,7 @@ en:
     username_or_email: "Username or Email"
   presentations:
     new: "Create presentation"
+    tabtitle: "Presentations"
   profile:
     title: "%{name}'s profile"
     title_own: "Your profile"

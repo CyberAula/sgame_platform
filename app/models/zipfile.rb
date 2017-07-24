@@ -30,5 +30,9 @@ class Zipfile < Document
     return schemaEl.text unless schemaEl.nil?
     nil
   end
+
+  def thumbnail_url
+    "/assets/zip_file_icon.png"
+  end
   
 end
