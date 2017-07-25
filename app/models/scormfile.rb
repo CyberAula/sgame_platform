@@ -1,8 +1,12 @@
 class Scormfile < ActiveRecord::Base
   include Item
+  include Extractable
   acts_as_ordered_taggable
   
+  belongs_to :author, :class_name => 'User', :foreign_key => "owner_id"
+
   before_destroy :remove_files #This callback need to be before has_attached_file, to be executed before paperclip callbacks
+  after_destroy :remove_los
 
   has_attached_file :file,
                     :url => '/:class/:id.:extension',
@@ -14,11 +18,8 @@ class Scormfile < ActiveRecord::Base
   validates_presence_of :lohref
   validates_inclusion_of :scorm_version, in: ["1.2","2004"], :allow_blank => false, :message => "Invalid SCORM version. Only SCORM 1.2 and 2004 are supported"
   validates_presence_of :schema, :message => "Invalid SCORM package. Schema is not defined."
-  validates_presence_of :schemaversion, :message => "Invalid SCORM package. Schema version is not defined."
+  validates_presence_of :schema_version, :message => "Invalid SCORM package. Schema version is not defined."
   before_validation :fill_scorm_version
-
-  belongs_to :author, :class_name => 'User', :foreign_key => "owner_id"
-
 
   def self.createScormfileFromZip(zipfile)
     begin
@@ -35,7 +36,7 @@ class Scormfile < ActiveRecord::Base
       pkgPath = nil
       Scorm::Package.open(zipfile.file, :cleanup => true) do |pkg|
         resource.schema = pkg.manifest.schema
-        resource.schemaversion = pkg.manifest.schema_version
+        resource.schema_version = pkg.manifest.schema_version
         resource.lohref = pkg.manifest.resources.first.href
         pkgPath = pkg.path
       end
@@ -46,6 +47,8 @@ class Scormfile < ActiveRecord::Base
       resource.save!
 
       resource.updateScormfile(pkgPath)
+
+      resource.extract_los
 
       #Remove previous ZIP file
       zipfile.destroy
@@ -71,12 +74,12 @@ class Scormfile < ActiveRecord::Base
   def updateScormfile(pkgPath=nil)
 
     #Deal with blank pkgPath or undefined mandatory fields
-    if pkgPath.blank? or ["schema","schemaversion","lohref"].select{|f| self.send(f).blank?}.length > 1
+    if pkgPath.blank? or ["schema","schema_version","lohref"].select{|f| self.send(f).blank?}.length > 1
       #We need to unpack the SCORM file
       unless self.file.blank?
         Scorm::Package.open(self.file, :cleanup => true) do |pkg|
           self.schema = pkg.manifest.schema
-          self.schemaversion = pkg.manifest.schema_version
+          self.schema_version = pkg.manifest.schema_version
           self.lohref = pkg.manifest.resources.first.href
           pkgPath = pkg.path
         end
@@ -124,7 +127,7 @@ class Scormfile < ActiveRecord::Base
 
   #Return version to show in metadata UI
   def resource_version
-    self.schema + " " + self.schemaversion
+    self.schema + " " + self.schema_version
   end
 
   def getZipPath
@@ -144,21 +147,64 @@ class Scormfile < ActiveRecord::Base
     "/assets/scormfile_icon.png"
   end
 
+  def extract_los
+    Scorm::Package.open(self.file, :cleanup => false) do |pkg|
+      pkg.manifest.resources.each do |resource|
+        lo = Lo.new
+        lo.container_type = self.class.name
+        lo.container_id = self.id
+        lo.standard = "SCORM"
+        lo.standard_version = self.scorm_version
+        lo.schema_version = self.schema_version
+        if ["sco","asset"].include? resource.scorm_type
+          lo.lo_type = resource.scorm_type
+        end
+        if lo.lo_type == "asset"
+          lo.rdata = false
+        else
+          lo.rdata = true
+        end
+        lo.href = resource.href
+        lo.hreffull = SgamePlatform::Application.config.full_code_domain + "/scorm/packages/" + self.id.to_s + "/" + lo.href
+        lo.metadata = Scormfile.parse_metadata(resource.metadata)
+        lo.save!
+      end
+    end
+  end
+
+  def self.parse_metadata(metadata)
+    metadata = YAML.dump(metadata)
+    metadata = JSON.parse({}.merge(YAML.load(metadata)).to_json) rescue nil
+    return nil if metadata.nil?
+    parse_metadata_field(metadata)
+  end
+
+  def self.parse_metadata_field(field)
+    if field.is_a? Hash
+      field.keys.each do |key|
+        field[key] = parse_metadata_field(field[key])
+      end
+    else
+      field = field.gsub(/'/,"").gsub(/\"/,"") if field.is_a? String
+    end
+    field
+  end
+
 
   private
 
   def fill_scorm_version
-    if self.schema == "ADL SCORM" and !self.schemaversion.blank?
-      if (self.schemaversion.scan(/2004\s[\w]+\sEdition/).length > 0) or (self.schemaversion == "CAM 1.3")
+    if self.schema == "ADL SCORM" and !self.schema_version.blank?
+      if (self.schema_version.scan(/2004\s[\w]+\sEdition/).length > 0) or (self.schema_version == "CAM 1.3")
         self.scorm_version = "2004"
       else
-        self.scorm_version = self.schemaversion
+        self.scorm_version = self.schema_version
       end
     end
-    if self.schema.blank? and self.schemaversion.blank?
+    if self.schema.blank? and self.schema_version.blank?
       #Some ATs create SCORM 1.2 Packages without specifying schema data
       self.schema = "ADL SCORM"
-      self.schemaversion = "1.2"
+      self.schema_version = "1.2"
       self.scorm_version = "1.2" 
     end
   end

@@ -1,7 +1,10 @@
 require 'builder'
 
 class Presentation < ActiveRecord::Base
+  include ActionDispatch::Routing::PolymorphicRoutes
+  include Rails.application.routes.url_helpers
   include Item
+  include Extractable
   acts_as_ordered_taggable
 
   belongs_to :author, :class_name => 'User', :foreign_key => "owner_id"
@@ -18,6 +21,8 @@ class Presentation < ActiveRecord::Base
   before_save :fillTags
   before_save :save_tag_array_text
   after_save :parse_for_metadata_id
+  after_save :extract_los
+  after_destroy :remove_los
   after_destroy :remove_scorms
 
   ####################
@@ -779,69 +784,9 @@ class Presentation < ActiveRecord::Base
   ####################
 
   def afterPublish
-    #Try to infer the language of the presentation if it is not spcifiyed
-    if (self.language.nil? or !self.language.is_a? String or self.language=="independent")
-      self.inferLanguage
-    end
-  end
-
-  def inferLanguage
-    unless SgamePlatform::Application.config.APP_CONFIG["languageDetectionAPIKEY"].nil?
-      stringToTestLanguage = ""
-      if self.title.is_a? String and !self.title.blank?
-        stringToTestLanguage = stringToTestLanguage + self.title + " "
-      end
-      if self.description.is_a? String and !self.description.blank?
-        stringToTestLanguage = stringToTestLanguage + self.description + " "
-      end
-
-      if stringToTestLanguage.is_a? String and !stringToTestLanguage.blank?
-        
-        begin
-          detectionResult = DetectLanguage.detect(stringToTestLanguage)
-        rescue Exception => e
-          detectionResult = []
-        end
-        
-        validLanguageCodes = ["de","en","es","fr","it","pt","ru"]
-
-        detectionResult.each do |result|
-          if result["isReliable"] == true
-            detectedLanguageCode = result["language"]
-            if validLanguageCodes.include? detectedLanguageCode
-              lan = detectedLanguageCode
-            else
-              lan = "ot"
-            end
-
-            #Update language
-            self.update_column :language, lan
-            eJson = JSON(self.json)
-            eJson["language"] = lan
-            self.update_column :json, eJson.to_json
-            break
-          end
-        end
-      end
-    end
   end
 
   
-  #method used to return json objects to the recommendation in the last slide
-  def reduced_json(controller)
-      rjson = {
-        :id => id,
-        :url => controller.presentation_url(:id => self.id),
-        :title => title,
-        :author => author.name,
-        :description => description,
-        :image => thumbnail_url ? thumbnail_url : SgamePlatform::Application.config.full_domain + "/assets/logos/original/presentation-00.png",
-        :views => visit_count
-      }
-      rjson
-  end
-
-
   private
 
   def parse_for_metadata
@@ -882,6 +827,25 @@ class Presentation < ActiveRecord::Base
     parsed_json["author"] = {name: author.name, vishMetadata:{ id: author.id }}
 
     self.update_column :json, parsed_json.to_json
+  end
+
+  def extract_los
+    if self.los.blank?
+      lo = Lo.new
+    else
+      lo = self.los.first
+    end
+    lo.container_type = self.class.name
+    lo.container_id = self.id
+    lo.standard = "SCORM"
+    lo.standard_version = "2004"
+    lo.schema_version = "ADL SCORM 2004 4th Edition"
+    lo.lo_type = "sco"
+    lo.rdata = VishEditorUtils.reportData?(JSON.parse(self.json))
+    lo.href = self.id.to_s + ".full"
+    lo.hreffull = SgamePlatform::Application.config.full_domain + presentation_path(self, :format => "full")
+    lo.metadata = JSON.parse(self.json)
+    lo.save!
   end
   
 end

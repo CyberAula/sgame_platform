@@ -34,7 +34,7 @@ class Document < ActiveRecord::Base
     end
   end
 
-  # # The Mime::Type of this document's file
+  # The Mime::Type of this document's file
   def mime_type
     Mime::Type.lookup(self.file_content_type)
   end

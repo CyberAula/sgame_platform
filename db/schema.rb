@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170724113308) do
+ActiveRecord::Schema.define(version: 20170725083956) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,21 @@ ActiveRecord::Schema.define(version: 20170724113308) do
     t.string   "file_content_type"
     t.integer  "file_file_size"
     t.datetime "file_updated_at"
+  end
+
+  create_table "los", force: :cascade do |t|
+    t.string   "container_type"
+    t.integer  "container_id"
+    t.string   "standard"
+    t.string   "standard_version"
+    t.string   "schema_version"
+    t.string   "lo_type"
+    t.boolean  "rdata"
+    t.string   "href"
+    t.string   "hreffull"
+    t.string   "metadata"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "pdfps", force: :cascade do |t|
@@ -80,7 +95,7 @@ ActiveRecord::Schema.define(version: 20170724113308) do
     t.string   "lohref"
     t.string   "lohreffull"
     t.string   "schema"
-    t.string   "schemaversion"
+    t.string   "schema_version"
     t.string   "scorm_version"
     t.string   "file_file_name"
     t.string   "file_content_type"

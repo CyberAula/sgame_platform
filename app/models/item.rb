@@ -12,4 +12,12 @@ module Item
 			end
 		end
 	end
+
+	def public?
+		if self.respond_to?("draft")
+			!self.draft
+		else
+			true
+		end
+	end
 end

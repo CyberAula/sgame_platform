@@ -215,22 +215,27 @@ class PresentationsController < ApplicationController
   ##################
   
   def last_slide
-    #Prepare parameters to call the RecommenderSystem
     current_presentation =  Presentation.find_by_id(params[:presentation_id]) if params[:presentation_id]
     options = {:user => current_user, :lo => current_presentation, :n => (params[:quantity] || 6).to_i, :models => [Presentation]}
-    options[:keywords] = params[:q].split(",") if params[:q]
-
-    # presentations = RecommenderSystem.resource_suggestions(options)
-    # TODO. RecommenderSystem
-    presentations =  Presentation.limit(options[:n]).order(SgamePlatform::Application::config.agnostic_random).where("draft='false'")
-
+    options[:keywords] = params[:q].split(",") if current_presentation.nil? and params[:q]
+    presentations = RecommenderSystem.suggestions(options).map { |profile|
+      {
+        :id => profile[:id_repository],
+        :url => profile[:url],
+        :title => profile[:title],
+        :description => profile[:description],
+        :author => profile[:object].author.name,
+        :image => profile[:thumbnail_url],
+        :views => "",
+        :favourites => ""
+      }
+    }
     respond_to do |format|
       format.json {
-        render :json => presentations.map { |ex| ex.reduced_json(self) }
+        render :json => presentations
       }
     end
   end
-
 
 
   #####################

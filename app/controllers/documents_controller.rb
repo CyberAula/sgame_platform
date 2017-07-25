@@ -11,6 +11,7 @@ class DocumentsController < ApplicationController
       if fileType != "Zipfile"
         #SCORM package, IMS content package file or web application packaged in a ZIP file
         newResource = @document.getResourceAfterSave
+
         if newResource.is_a? String
           #Raise error
           flash.now[:alert] = newResource
@@ -122,7 +123,14 @@ class DocumentsController < ApplicationController
   end
 
   def document_params
-    params.require((@document.nil? or !params[:document].nil?) ? :document : @document.document_type.to_sym).permit(:title, :description, :file, :owner_id)
+    if !params[:zipfile].nil?
+      key = :zipfile
+    elsif !params[:document].nil? or @document.nil?
+      key = :document
+    else
+      key = @document.class.name.to_sym
+    end
+    params.require(key).permit(:title, :description, :file, :owner_id)
   end
 
 end

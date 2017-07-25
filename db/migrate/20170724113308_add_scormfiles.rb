@@ -15,7 +15,7 @@ class AddScormfiles < ActiveRecord::Migration
       t.string   "lohref"
       t.string   "lohreffull"
       t.string   "schema"
-      t.string   "schemaversion"
+      t.string   "schema_version"
       t.string   "scorm_version"
     end
 
