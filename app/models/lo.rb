@@ -10,6 +10,8 @@ class Lo < ActiveRecord::Base
 	validates_presence_of :hreffull
 	validates_presence_of :metadata
 
+	has_many :game_event_mappings, :dependent => :destroy
+
 	def container
 		self.container_type.constantize.find_by_id(self.container_id)
 	end
@@ -26,5 +28,4 @@ class Lo < ActiveRecord::Base
 		smetadata["lom_metadata"] = self.metadata
 		return smetadata
 	end
-
 end

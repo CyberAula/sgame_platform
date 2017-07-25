@@ -4,8 +4,9 @@ namespace :sgame do
 			system "rake db:drop"
 			system "rake db:create" 
 			system "rake db:migrate"
-			# system "rm -rf public/scorm/*"
-			# system "rake db:populate"
+			system "rm -rf public/scorm/*"
+			system "rm -rf documents/*"
+			system "rake db:populate"
 		puts "Rebuild finish"
 	end
 end

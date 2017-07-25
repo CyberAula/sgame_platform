@@ -27,6 +27,7 @@ class Scormfile < ActiveRecord::Base
       resource.owner_id = zipfile.owner_id
       resource.title = zipfile.title
       resource.description = zipfile.description
+      resource.thumbnail_url = zipfile.thumbnail_url
 
       #Copy attachment
       resource.file = zipfile.file

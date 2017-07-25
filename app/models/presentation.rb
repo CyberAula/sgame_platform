@@ -839,7 +839,7 @@ class Presentation < ActiveRecord::Base
     lo.container_id = self.id
     lo.standard = "SCORM"
     lo.standard_version = "2004"
-    lo.schema_version = "ADL SCORM 2004 4th Edition"
+    lo.schema_version = "2004 4th Edition"
     lo.lo_type = "sco"
     lo.rdata = VishEditorUtils.reportData?(JSON.parse(self.json))
     lo.href = self.id.to_s + ".full"

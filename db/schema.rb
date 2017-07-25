@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170725083956) do
+ActiveRecord::Schema.define(version: 20170725105744) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 20170725083956) do
   create_table "documents", force: :cascade do |t|
     t.string   "title"
     t.text     "description"
+    t.text     "thumbnail_url"
     t.string   "type"
     t.integer  "owner_id"
     t.datetime "created_at"
@@ -28,6 +29,42 @@ ActiveRecord::Schema.define(version: 20170725083956) do
     t.string   "file_content_type"
     t.integer  "file_file_size"
     t.datetime "file_updated_at"
+  end
+
+  create_table "game_event_mappings", force: :cascade do |t|
+    t.integer  "game_template_event_id"
+    t.integer  "game_id"
+    t.integer  "lo_id"
+    t.string   "data"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "game_template_events", force: :cascade do |t|
+    t.integer  "game_template_id"
+    t.string   "title"
+    t.string   "description"
+    t.integer  "id_in_game"
+    t.string   "metadata"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "game_templates", force: :cascade do |t|
+    t.string   "title"
+    t.string   "description"
+    t.string   "thumbnail_url"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "games", force: :cascade do |t|
+    t.integer  "game_template_id"
+    t.string   "title"
+    t.string   "description"
+    t.string   "thumbnail_url"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "los", force: :cascade do |t|
@@ -49,6 +86,7 @@ ActiveRecord::Schema.define(version: 20170725083956) do
     t.integer  "owner_id"
     t.integer  "pcount"
     t.boolean  "permanent",           default: false
+    t.text     "thumbnail_url"
     t.string   "attach_file_name"
     t.string   "attach_content_type"
     t.integer  "attach_file_size"
@@ -83,6 +121,7 @@ ActiveRecord::Schema.define(version: 20170725083956) do
   create_table "scormfiles", force: :cascade do |t|
     t.string   "title"
     t.text     "description"
+    t.text     "thumbnail_url"
     t.string   "type"
     t.integer  "owner_id"
     t.datetime "created_at"

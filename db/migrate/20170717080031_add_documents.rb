@@ -3,6 +3,7 @@ class AddDocuments < ActiveRecord::Migration
     create_table "documents", :force => true do |t|
       t.string   "title"
       t.text     "description"
+      t.text     "thumbnail_url"
       t.string   "type"
       t.integer  "owner_id"
       t.datetime "created_at"
