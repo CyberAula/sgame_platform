@@ -6,33 +6,13 @@ class DocumentsController < ApplicationController
   def create
     @document = Document.create(document_params)
     
-    if @document.is_a? Zipfile
-      fileType = @document.fileType
-      if fileType != "Zipfile"
-        #SCORM package, IMS content package file or web application packaged in a ZIP file
-        newResource = @document.getResourceAfterSave
-
-        if newResource.is_a? String
-          #Raise error
-          flash.now[:alert] = newResource
-          return render action: :new
-        else
-          if params["format"] == "json"
-            return render :json => newResource.to_json(helper: self), status: :created
-          else
-            return redirect_to newResource
-          end
-        end
-      end
-    end
-
     respond_to do |format|
       if @document.persisted?
         format.json {
           render :json => @document.to_json(:protocol => request.protocol)
         }
         format.html {
-          redirect_to document_path(@document), notice: I18n.t("documents.messages.success.create")
+          redirect_to polymorphic_path(@document), notice: I18n.t("documents.messages.success.create")
         }
       else
         format.json {

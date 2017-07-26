@@ -4,7 +4,7 @@ class AddGames < ActiveRecord::Migration
       t.integer :game_template_id
       t.integer :owner_id
       t.string :title
-      t.string :description
+      t.text :description
       t.string :thumbnail_url
       t.string :language
       t.boolean  :draft, :default => false

@@ -9,7 +9,7 @@ class AddLos < ActiveRecord::Migration
       t.string  :lo_type
       t.boolean :rdata
       t.string  :href
-      t.string :hreffull
+      t.string  :hreffull
       t.string  :metadata
       t.timestamps
     end

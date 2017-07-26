@@ -2,6 +2,8 @@ class Document < ActiveRecord::Base
   include Item
   acts_as_ordered_taggable
 
+  belongs_to :owner, :class_name => 'User', :foreign_key => "owner_id"
+
   has_attached_file :file,
                     :url => '/:class/:id.:content_type_extension',
                     :path => ':rails_root/documents/:class/:id_partition/original/:filename.:extension'
@@ -14,8 +16,7 @@ class Document < ActiveRecord::Base
   validate :owner_validation
   validates_presence_of :title
 
-  belongs_to :owner, :class_name => 'User', :foreign_key => "owner_id"
-  
+
   class << self
     def new(*args)
       # If already called from subtype, continue through the stack
@@ -23,6 +24,10 @@ class Document < ActiveRecord::Base
       doc = super
       return doc if doc.file_content_type.blank?
       klass = lookup_subtype_class(doc)
+      if klass == Zipfile
+        zipFileType = Zipfile.fileType(doc.file.queued_for_write[:original].path)
+        klass = zipFileType.constantize unless zipFileType.nil?
+      end
       return klass.new *args unless klass.blank?
       doc
     end

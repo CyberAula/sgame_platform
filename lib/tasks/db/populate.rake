@@ -15,13 +15,11 @@ namespace :db do
 		puts "User '" + user.name + "' created with email '" + user.email + "' and password 'demonstration'"
 
 		#2: Create SCORM packages
-		zf1 = Zipfile.create! :owner_id => user.id,
+		sf1 = Scormfile.create! :owner_id => user.id,
 			:title  => "Golf",
 			:description   => "SCORM package that explains everything about golf",
 			:thumbnail_url => "/gallery/images/golf1.jpg",
 			:file =>  File.open(File.join(Rails.root, 'public/scorm_examples/golf_n_sco.zip'))
-
-		sf1 = Scormfile.createScormfileFromZip(zf1)
 
 		#3: Create game templates
 		# Events of the game templates are created based on the sgame_events_json.json file

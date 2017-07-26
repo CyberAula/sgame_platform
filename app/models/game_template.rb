@@ -3,7 +3,8 @@ class GameTemplate < ActiveRecord::Base
 	has_many :games, :dependent => :destroy
 	has_many :events, class_name: :GameTemplateEvent, :dependent => :destroy
 
-	before_destroy :remove_files #This callback need to be before has_attached_file, to be executed before paperclip callbacks
+	after_destroy :remove_template_files
+	after_create :extract_game
 
 	has_attached_file :file,
 		:url => '/:class/:id.:extension',
@@ -14,12 +15,15 @@ class GameTemplate < ActiveRecord::Base
 	validates_presence_of :owner_id
 	validates_presence_of :title
 	validate :sgame_requirements
-	after_save :extract_game
 
 	def sgame_requirements
 		sgame_errors = []
 
-		zipFilePath = self.persisted? ? self.file.path : self.file.queued_for_write[:original].path
+		if self.file.queued_for_write[:original] and File.exists?(self.file.queued_for_write[:original].path)
+			zipFilePath = self.file.queued_for_write[:original].path
+		else
+			zipFilePath = self.file.path
+		end
 		Zip::File.open(zipFilePath) do |zip|
 			#Validate index HTML file
 			sgame_errors << "No index.html file" if zip.entries.select{|e| e.name == "index.html"}.first.nil?
@@ -49,6 +53,13 @@ class GameTemplate < ActiveRecord::Base
 		end
 	end
 
+	def url_full
+		SgamePlatform::Application.config.full_code_domain + "/code/game_templates/" + self.id.to_s + "/"
+	end
+
+
+	private
+
 	def extract_game
 		#Unpack the ZIP file and extract the game
 		if SgamePlatform::Application.config.APP_CONFIG["code_path"].nil?
@@ -57,7 +68,18 @@ class GameTemplate < ActiveRecord::Base
 			gameTemplatesPath = SgamePlatform::Application.config.APP_CONFIG["code_path"] + "/game_templates"
 		end
 		gameTemplatePath = gameTemplatesPath + "/" + self.id.to_s
-		Utils.extract_folder(self.file.path,gameTemplatePath)
+
+		if self.file.queued_for_write[:original] and File.exists?(self.file.queued_for_write[:original].path)
+			zipFilePath = self.file.queued_for_write[:original].path
+		else
+			zipFilePath = self.file.path
+		end
+		Utils.extract_folder(zipFilePath,gameTemplatePath)
+
+		#Template paths are saved as absolute paths when APP_CONFIG["code_path"] is defined
+		templatePathToSave = gameTemplatePath.dup
+		templatePathToSave.slice! (Rails.root.to_s+"/") if SgamePlatform::Application.config.APP_CONFIG["code_path"].nil?
+		self.update_column(:path, templatePathToSave)
 
 		#Process events file
 		if File.exists?(gameTemplatePath+"/sgame_events.json")
@@ -71,8 +93,9 @@ class GameTemplate < ActiveRecord::Base
 		end
 	end
 
-	def template_full_url
-		SgamePlatform::Application.config.full_code_domain + "/code/game_templates/" + self.id.to_s + "/"
+	def remove_template_files
+		require "fileutils"
+		FileUtils.rm_rf(self.path) if File.exists? self.path
 	end
 
 end
