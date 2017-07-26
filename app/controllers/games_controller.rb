@@ -1,6 +1,7 @@
 class GamesController < ApplicationController
   before_filter :authenticate_user!, :only => [:new, :create, :edit, :update]
-  load_and_authorize_resource
+  load_and_authorize_resource :except => :sgame_api
+  skip_authorization_check :only => :sgame_api
  
   #############
   # REST methods

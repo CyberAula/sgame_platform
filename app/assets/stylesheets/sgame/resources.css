@@ -4,6 +4,7 @@
 
 #resource_wrapper div.resource_content_wrapper {
 	height: 100%;
+	background: white;
 }
 
 #resource_wrapper > h3 {

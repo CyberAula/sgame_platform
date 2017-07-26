@@ -24,4 +24,10 @@ config/application_config.yml
 # scorm zip files
 public/scorm/12/presentations/*
 public/scorm/2004/presentations/*
-public/scorm/packages/*
+public/scorm/12/games/*
+public/scorm/2004/games/*
+
+#Code
+public/code/scormfiles/*
+public/code/game_templates/*
+public/code/webapps/*

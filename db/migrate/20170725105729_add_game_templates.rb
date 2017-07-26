@@ -8,5 +8,7 @@ class AddGameTemplates < ActiveRecord::Migration
       t.string :language
       t.timestamps
     end
+
+    add_attachment :game_templates, :file
   end
 end

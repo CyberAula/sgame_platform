@@ -92,7 +92,7 @@ class Presentation < ActiveRecord::Base
     schemaFiles.push("#{Rails.root}/public/schemas/lom/lom.xsd");
     
     schemaDirs.each do |dir|
-      zip_folder(t.path,dir)
+      Utils.zip_folder(t.path,dir)
     end
 
     if schemaFiles.length > 0
@@ -105,7 +105,7 @@ class Presentation < ActiveRecord::Base
 
     #Copy SCORM assets (image, javascript and css files)
     dir = "#{Rails.root}/lib/plugins/vish_editor/app/scorm"
-    zip_folder(t.path,dir)
+    Utils.zip_folder(t.path,dir)
 
     #Add theme
     themesPath = "#{Rails.root}/lib/plugins/vish_editor/app/assets/images/themes/"
@@ -114,39 +114,9 @@ class Presentation < ActiveRecord::Base
       theme = json["theme"]
     end
     #Copy presentation theme
-    zip_folder(t.path,"#{Rails.root}/lib/plugins/vish_editor/app/assets",themesPath + theme)
+    Utils.zip_folder(t.path,"#{Rails.root}/lib/plugins/vish_editor/app/assets",themesPath + theme)
 
     t.close
-  end
-
-  def self.zip_folder(zipFilePath,root,dir=nil)
-    dir = root unless dir
-
-    folderNames = []
-    fileNames = []
-    Dir.entries(dir).reject{|i| i.start_with?(".")}.each do |itemName|
-      itemPath = "#{dir}/#{itemName}"
-      if File.directory?(itemPath)
-        folderNames << itemName
-      elsif File.file?(itemPath)
-        fileNames << itemName
-      end
-    end
-
-    #Subdirectories
-    folderNames.each do |subFolderName|
-      zip_folder(zipFilePath,root,"#{dir}/#{subFolderName}")
-    end
-
-    #Files
-    if fileNames.length > 0
-      Zip::File.open(zipFilePath, Zip::File::CREATE) { |zipfile|
-        fileNames.each do |fileName|
-          filePathInZip = String.new("#{dir}/#{fileName}").sub(root + "/","")
-          zipfile.add(filePathInZip,"#{dir}/#{fileName}")
-        end
-      }
-    end
   end
 
   def self.generate_scorm_manifest(version,ejson,presentation,options={})

@@ -90,13 +90,13 @@ class Scormfile < ActiveRecord::Base
         raise "No file has been found. This SCORM package is corrupted."
       end
     end
-    loURLRoot = SgamePlatform::Application.config.full_code_domain + "/scorm/packages/" + self.id.to_s
+    loURLRoot = SgamePlatform::Application.config.full_code_domain + "/code/scormfiles/" + self.id.to_s
 
     #Create folders
     if SgamePlatform::Application.config.APP_CONFIG["code_path"].nil?
-      scormPackagesDirectoryPath = Rails.root.join('public', 'scorm', 'packages').to_s
+      scormPackagesDirectoryPath = Rails.root.join('public', 'code', 'scormfiles').to_s
     else
-      scormPackagesDirectoryPath = SgamePlatform::Application.config.APP_CONFIG["code_path"] + "/scorm/packages"
+      scormPackagesDirectoryPath = SgamePlatform::Application.config.APP_CONFIG["code_path"] + "/scormfiles"
     end
     loDirectoryPath = scormPackagesDirectoryPath + "/" + self.id.to_s
     
@@ -168,7 +168,7 @@ class Scormfile < ActiveRecord::Base
           lo.rdata = true
         end
         lo.href = resource.href
-        lo.hreffull = SgamePlatform::Application.config.full_code_domain + "/scorm/packages/" + self.id.to_s + "/" + lo.href
+        lo.hreffull = SgamePlatform::Application.config.full_code_domain + "/code/scormfiles/" + self.id.to_s + "/" + lo.href
         lo.metadata = Scormfile.parse_metadata(resource.metadata)
         lo.save!
       end

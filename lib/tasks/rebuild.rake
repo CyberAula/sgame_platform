@@ -6,6 +6,7 @@ namespace :sgame_platform do
 			system "rake db:migrate"
 			system "rm -rf public/scorm/*"
 			system "rm -rf documents/*"
+			system "rm -rf public/code/*"
 			system "rake db:populate"
 		puts "Rebuild finish"
 	end

@@ -15,7 +15,7 @@ namespace :db do
 		puts "User '" + user.name + "' created with email '" + user.email + "' and password 'demonstration'"
 
 		#2: Create SCORM packages
-		zf1 = Zipfile.create :owner_id => user.id,
+		zf1 = Zipfile.create! :owner_id => user.id,
 			:title  => "Golf",
 			:description   => "SCORM package that explains everything about golf",
 			:thumbnail_url => "/gallery/images/golf1.jpg",
@@ -24,12 +24,16 @@ namespace :db do
 		sf1 = Scormfile.createScormfileFromZip(zf1)
 
 		#3: Create game templates
+		system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/Onslaught_Arena.zip')
+		Utils.zip_folder(File.join(Rails.root, 'public/game_template_examples/Onslaught_Arena.zip'),File.join(Rails.root, 'public/game_template_examples/Onslaught_Arena'))
 		oArena = GameTemplate.create! :owner_id => user.id,
 			:title=>"Onslaught Arena", 
 			:description=>"Battle hordes of classic medieval monsters in this fast-paced arcade shooter", 
-			:thumbnail_url=>"/gallery/game_OnslaughtArena.jpg"
+			:thumbnail_url=>"/gallery/game_OnslaughtArena.jpg",
+			:file =>  File.open(File.join(Rails.root, 'public/game_template_examples/Onslaught_Arena.zip'))
 
 		#Create the events of the game templates
+		#TODO: events should be created by reading a file in the template file
 		oArenaEvent1 = GameTemplateEvent.create! :game_template_id=>oArena.id,
 			:title=>"Extra weapon",
 			:description=>"Event triggered when the player tries to get a new weapon",
@@ -40,7 +44,7 @@ namespace :db do
 		oArenaInstance = Game.create! :owner_id => user.id,
 			:title=>"Onslaught Arena", 
 			:description=>"Onslaught Arena instance example", 
-			:thumbnail_url=>"/gallery/gameInstance_OnslaughtArena.jpg", 
+			:thumbnail_url=>"/assets//gallery/gameInstance_OnslaughtArena.jpg", 
 			:game_template_id=>oArena.id
 
 		#Event mapping for the oArena game

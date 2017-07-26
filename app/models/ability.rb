@@ -6,18 +6,21 @@ class Ability
 
     #Users
     can :read, User
-    can :manage, User do |u|
-      u.id === user.id
+    can :read, [Presentation, Pdfp, Document, Scormfile, Game, Lo] do |r|
+      r.public?
     end
+    
+    unless user.id.nil?
+      #Registered users
+      can :manage, User do |u|
+        u.id === user.id
+      end
 
-    #Presentations, Pdfps and Documents
-    can :create, [Presentation, Pdfp, Document, Scormfile, Game]
-    can :read, Presentation do |p|
-      p.draft === false
-    end
-    can :read, [Pdfp, Document, Scormfile, Game]
-    can :manage, [Presentation, Pdfp, Document, Scormfile, Game] do |p|
-      p.owner_id === user.id
+      can :create, [Presentation, Pdfp, Document, Scormfile, Game, Lo]
+
+      can :manage, [Presentation, Pdfp, Document, Scormfile, Game, Lo] do |p|
+        p.owner_id === user.id
+      end
     end
 
   end

@@ -6,9 +6,12 @@ class Zipfile < Document
 
   def fileType
     fileType = "Zipfile"
+    fileType = Zipfile.fileType(self.file.path) if self.file.class == Paperclip::Attachment and !self.file.path.blank?
+    return fileType
+  end
 
-    if self.file.class == Paperclip::Attachment and !self.file.path.blank?
-      Zip::File.open(self.file.path) do |zip|
+  def self.fileType(filePath)
+    Zip::File.open(filePath) do |zip|
         manifest = zip.entries.select{|e| e.name == "imsmanifest.xml"}.first
         if manifest
           schema = Zipfile.getSchemaFromXmlManifest(Nokogiri::XML(manifest.get_input_stream.read)) rescue "invalid schema"
@@ -22,10 +25,7 @@ class Zipfile < Document
           index = zip.entries.select{|e| e.name == "index.html"}.first
           fileType = "Webapp" if index
         end
-      end
     end
-
-    return fileType
   end
 
   def self.getSchemaFromXmlManifest(xmlManifest)

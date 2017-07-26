@@ -1,0 +1,2 @@
+class GameTemplateController < ApplicationController
+end
