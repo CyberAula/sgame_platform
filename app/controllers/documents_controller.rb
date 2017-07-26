@@ -1,6 +1,5 @@
 class DocumentsController < ApplicationController
   before_filter :authenticate_user!, :except => [:show]
-  before_filter :fill_create_params, :only => [:create]
   load_and_authorize_resource :except => [:download]
 
   def create
@@ -95,20 +94,22 @@ class DocumentsController < ApplicationController
 
   private
 
-  def fill_create_params
-    params["document"] ||= {}
-    params["document"].each{|k,v| 
-      params["document"].delete(k) unless ["title","description","file","owner_id"].include? k
-    }
-  end
-
   def document_params
-    if !params[:zipfile].nil?
-      key = :zipfile
-    elsif !params[:document].nil? or @document.nil?
+    key = nil
+    unless params[:document].blank?
       key = :document
     else
-      key = @document.class.name.underscore.to_sym
+      if @document and !params[@document.class.name.underscore.to_sym].blank?
+        key = @document.class.name.underscore.to_sym
+      else
+        params.keys.each do |pkey|
+          if params[pkey].is_a? Hash and !params[pkey][:owner_id].blank?
+            key = pkey
+            break
+          end
+        end
+        return {} if key.nil?
+      end
     end
     params.require(key).permit(:title, :description, :file, :owner_id)
   end
