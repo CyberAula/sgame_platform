@@ -1,8 +1,16 @@
 class Game < ActiveRecord::Base
+	include Item
+
+	belongs_to :owner, :class_name => 'User', :foreign_key => "owner_id"
 	belongs_to :template, class_name: :GameTemplate, foreign_key: "game_template_id"
 	has_many :mappings, class_name: :GameEventMapping, :dependent => :destroy
 	has_many :events, class_name: :GameTemplateEvent, :through => :template
 	has_many :los, :through => :mappings
+
+	validates_presence_of :game_template_id
+	validates_presence_of :owner_id
+	validate :owner_validation
+	validates_presence_of :title
 
 	def settings
 		settings = Hash.new

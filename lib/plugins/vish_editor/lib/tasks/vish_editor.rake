@@ -22,12 +22,9 @@ CSS_EDITOR = ['lib/plugins/vish_editor/app/assets/css_to_compile/all/editor.css'
 JS_VIEWER = ['lang/translations.js', 'libs/jquery-1.7.2.min.js', 'libs/jquery.watermark.min.js', 'libs/RegaddiChart.js', 'libs/jquery-ui-1.9.2.custom.min.js', 'libs/jquery.fancybox-1.3.4.js', 'libs/jquery.qrcode.min.js', 'libs/jquery.joyride-1.0.5.js', 'libs/jquery.cookie.js', 'libs/modernizr.mq.js', 'libs/modernizr.foundation.js', 'libs/jquery.ui.touch-punch.0.2.3.js', 'libs/loep.js', 'VISH.js', 'VISH.Constant.js', 'VISH.Configuration.js', 'VISH.QuizCharts.js', 'VISH.IframeAPI.js', 'VISH.User.js', 'VISH.I18n.js', 'VISH.Object.js', 'VISH.Object.PDF.js', 'VISH.Object.GoogleDOC.js', 'VISH.Object.Webapp.js', 'VISH.Object.Webapp.Handler.js', 'VISH.Renderer.js', 'VISH.Renderer.Filter.js', 'VISH.Debugging.js', 'VISH.Presentation.js', 'VISH.Slideset.js', 'VISH.SlidesSelector.js', 'VISH.Text.js', 'VISH.Video.js', 'VISH.Video.CustomPlayer.js', 'VISH.Video.HTML5.js', 'VISH.Video.Youtube.js', 'VISH.Audio.js', 'VISH.Audio.HTML5.js', 'VISH.ObjectPlayer.js', 'VISH.SnapshotPlayer.js', 'VISH.AppletPlayer.js', 'VISH.Viewer.js', 'VISH.Utils.js', 'VISH.Utils.iso8601Parser.js', 'VISH.Utils.Loader.js', 'VISH.Status.js', 'VISH.Status.Device.js', 'VISH.Status.Device.Browser.js', 'VISH.Status.Device.Features.js', 'VISH.ViewerAdapter.js', 'VISH.Flashcard.js',  'VISH.VirtualTour.js', 'VISH.EVideo.js', 'VISH.Themes.js', 'VISH.Themes.Core.js', 'VISH.Themes.Presentation.js', 'VISH.Animations.js', 'VISH.IframeMessenger.js', 'VISH.Messenger.js', 'VISH.Messenger.VE.js', 'VISH.Messenger.WAPP.js', 'VISH.Addons.js', 'VISH.Storage.js', 'VISH.Slides.js', 'VISH.Events.js', 'VISH.EventsNotifier.js', 'VISH.Quiz.js', 'VISH.Quiz.MC.js', 'VISH.Quiz.TF.js', 'VISH.Quiz.Sorting.js', 'VISH.Quiz.Open.js', 'VISH.Quiz.API.js', 'VISH.Events.Mobile.js', 'VISH.Events.Touchable.js', 'VISH.Recommendations.js', 'VISH.Tour.js', 'VISH.FullScreen.js', 'VISH.TrackingSystem.js', 'VISH.ProgressTracking.js', 'VISH.SCORM.js', 'VISH.SCORM.API.js']
 CSS_VIEWER = ['customPlayer.css','pack1templates.css','quiz.css','styles.css'];
 
-COMPILER_JAR_PATH = "lib/plugins/vish_editor/extras/compile"
+COMPILER_JAR_PATH = "extras/compile"
 JSCOMPILER_JAR_FILE = COMPILER_JAR_PATH + "/compiler.jar"
 CSSCOMPILER_JAR_FILE = COMPILER_JAR_PATH + "/yuicompressor-2.4.2.jar"
-# JSCOMPILER_DOWNLOAD_URI = 'http://closure-compiler.googlecode.com/files/compiler-latest.zip'
-JSCOMPILER_DOWNLOAD_URI =  'http://closure-compiler.googlecode.com/files/compiler-20130823.zip'
-CSSCOMPILER_DOWNLOAD_URI = 'http://yui.zenfs.com/releases/builder/builder_1.0.0b1.zip'
 
 
 # Rake Task
@@ -200,14 +197,6 @@ namespace :vish_editor do
   #========================================================================
 
   def compile_js(files)
-    unless File.exist?(JSCOMPILER_JAR_FILE)
-      Rake::Task["vish_editor:download_gcompiler"].invoke
-    end
-    unless File.exist?(JSCOMPILER_JAR_FILE)
-      puts "#{JSCOMPILER_JAR_FILE} not found !"
-      raise "try to run `rake vish_editor:download_gcompiler` manually to download the compiler jar"
-    end
-
     files = [ files ] unless files.is_a?(Array)
 
     compiler_options = {}
@@ -261,14 +250,6 @@ namespace :vish_editor do
 
 
   def compile_css(files)
-    unless File.exist?(CSSCOMPILER_JAR_FILE)
-      Rake::Task["vish_editor:download_YUIcompressor"].invoke
-    end
-    unless File.exist?(CSSCOMPILER_JAR_FILE)
-      puts "#{CSSCOMPILER_JAR_FILE} not found !"
-      raise "try to run `rake vish_editor:download_YUIcompressor` manually to download the compiler jar"
-    end
-
     files = [ files ] unless files.is_a?(Array)
 
     files.each do |file|
@@ -293,36 +274,6 @@ namespace :vish_editor do
   
     #Restore vish_editor.css rails file
     system "cp " + VISH_EDITOR_PATH + "/stylesheets/vish_editor.css " + VISH_EDITOR_PLUGIN_PATH + "/app/assets/stylesheets/vish_editor.css"
-  end
-
-
-  desc "downloads (and extracts) the latest closure compiler.jar into COMPILER_JAR_PATH path (#{COMPILER_JAR_PATH})"
-  task :download_gcompiler do
-    require 'uri'; require 'net/http'; require 'tempfile'; require 'open-uri'
-    puts "downloading compiler jar from: #{JSCOMPILER_DOWNLOAD_URI}"
-   
-    FileUtils.mkdir_p(COMPILER_JAR_PATH)
-    writeOut = open(COMPILER_JAR_PATH + "/compiler-latest.zip", "wb")
-    writeOut.write(open(JSCOMPILER_DOWNLOAD_URI).read)
-    writeOut.close
-
-    # -u  update files, create if necessary :
-    system "unzip -u " + COMPILER_JAR_PATH + "/compiler-latest.zip -d " + COMPILER_JAR_PATH
-  end
-
-  desc "downloads (and extracts) the YUI compressor into COMPILER_JAR_PATH path (#{COMPILER_JAR_PATH})"
-  task :download_YUIcompressor do
-    require 'uri'; require 'net/http'; require 'tempfile'; require 'open-uri'
-    puts "downloading compiler jar from: #{CSSCOMPILER_DOWNLOAD_URI}"
-   
-    FileUtils.mkdir_p(COMPILER_JAR_PATH)
-    writeOut = open(COMPILER_JAR_PATH + "/YUIcompressor.zip", "wb")
-    writeOut.write(open(CSSCOMPILER_DOWNLOAD_URI).read)
-    writeOut.close
-
-    system "unzip -u " + COMPILER_JAR_PATH + "/YUIcompressor.zip -d " + COMPILER_JAR_PATH
-    system "mv " + COMPILER_JAR_PATH + "/builder/componentbuild/lib/yuicompressor/yuicompressor-2.4.2.jar " + COMPILER_JAR_PATH + "/yuicompressor-2.4.2.jar"
-    system "rm -rf " + COMPILER_JAR_PATH + "/builder"
   end
 
 end

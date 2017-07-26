@@ -10,9 +10,11 @@ class Document < ActiveRecord::Base
 
   validates_attachment_presence :file
   do_not_validate_attachment_file_type :file
+  validates_presence_of :owner_id
+  validate :owner_validation
   validates_presence_of :title
 
-  belongs_to :author, :class_name => 'User', :foreign_key => "owner_id"
+  belongs_to :owner, :class_name => 'User', :foreign_key => "owner_id"
   
   class << self
     def new(*args)

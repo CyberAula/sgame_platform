@@ -12,7 +12,7 @@ class PresentationsController < ApplicationController
   #############
 
   def index
-    redirect_to home_path
+    redirect_to "/"
   end
 
   def show
@@ -20,37 +20,30 @@ class PresentationsController < ApplicationController
     @suggestions = RecommenderSystem.suggestions({:n => 6, :lo_profile => @presentation.profile, :settings => {:preselection_filter_by_resource_types => ["Presentation"]}})
     respond_to do |format|
       format.html {
-        # @presentation.increment!(:visit_count)
         if @presentation.draft 
-          # if (can? :edit, @presentation)
+          if (can? :edit, @presentation)
             redirect_to edit_presentation_path(@presentation)
-          # else
-          #   redirect_to "/"
-          # end
+          else
+            redirect_to "/"
+          end
         else
           render
         end
       }
       format.full {
-        @title = @presentation.title
         render :layout => 'veditor'
-      }
-      format.fs {
-        @presentation.increment!(:visit_count)
-        @title = @presentation.title
-        render "show.full", :layout => 'veditor'
       }
       format.json {
         render :json => @presentation.json
       }
       format.scorm {
-        # if (can? :download_source, @presentation)
+        if (can? :read, @presentation)
           scormVersion = (params["version"].present? and ["12","2004"].include?(params["version"])) ? params["version"] : "2004"
           @presentation.to_scorm(self,scormVersion)
           send_file @presentation.scormFilePath(scormVersion), :type => 'application/zip', :disposition => 'attachment', :filename => ("scorm" + scormVersion + "-#{@presentation.id}.zip")
-        # else
-        #   render :nothing => true, :status => 500
-        # end
+        else
+          render :nothing => true, :status => 500
+        end
       }      
     end
   end
@@ -224,7 +217,7 @@ class PresentationsController < ApplicationController
         :url => profile[:url],
         :title => profile[:title],
         :description => profile[:description],
-        :author => profile[:object].author.name,
+        :author => profile[:object].owner.name,
         :image => profile[:thumbnail_url],
         :views => "",
         :favourites => ""

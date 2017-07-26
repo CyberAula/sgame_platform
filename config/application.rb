@@ -40,7 +40,9 @@ module SgamePlatform
     #Load ViSH Editor plugin
     config.before_configuration do
       $:.unshift File.expand_path("#{__FILE__}/../../lib/plugins/vish_editor/lib")
+      $:.unshift File.expand_path("#{__FILE__}/../../lib/plugins/sgame/lib")
       require 'vish_editor'
+      require 'sgame'
     end
 
     #Tags settings
@@ -62,16 +64,6 @@ module SgamePlatform
     config.facebook = (!config.APP_CONFIG['facebook'].nil? and !config.APP_CONFIG['facebook']["appID"].nil? and !config.APP_CONFIG['facebook']["accountID"].nil?)
     config.twitter = (!config.APP_CONFIG['twitter'].nil? and config.APP_CONFIG['twitter']["enable"]===true)
     config.gplus = (!config.APP_CONFIG['gplus'].nil? and config.APP_CONFIG['gplus']["enable"]===true)
-
-    config.after_initialize do
-      #Agnostic random
-      if ActiveRecord::Base.connection.adapter_name == "PostgreSQL"
-        config.agnostic_random = "RANDOM()"
-      else
-        #MySQL
-        config.agnostic_random = "RAND()"
-      end
-    end
 
     ActsAsTaggableOn.strict_case_match = true
 
@@ -116,6 +108,19 @@ module SgamePlatform
             config.site_key  = SgamePlatform::Application.config.APP_CONFIG["recaptcha"]["site_key"]
             config.secret_key = SgamePlatform::Application.config.APP_CONFIG["recaptcha"]["secret_key"]
         end
+    end
+
+    config.after_initialize do
+      #Agnostic random
+      if ActiveRecord::Base.connection.adapter_name == "PostgreSQL"
+        config.agnostic_random = "RANDOM()"
+      else
+        #MySQL
+        config.agnostic_random = "RAND()"
+      end
+
+      #Demo user
+      config.demo_user = User.find_by_email("demo@sgame.dit.upm.es") if (Rails.env == "development" and ActiveRecord::Base.connection.table_exists? "users" and !User.find_by_email("demo@sgame.dit.upm.es").nil?)
     end
 
     # Version of your assets, change this if you want to expire all your assets

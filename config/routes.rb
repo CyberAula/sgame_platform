@@ -21,6 +21,8 @@ SgamePlatform::Application.routes.draw do
   resources :scormfiles
   match '/documents/:id/download' => 'documents#download', :via => :get
   match '/scormfiles/:id/download' => 'scormfiles#download', :via => :get
+  resources :games
+  resources :game_templates
 
   #Presentations
   match '/presentations/:id/metadata' => 'presentations#metadata', :via => :get
@@ -41,6 +43,9 @@ SgamePlatform::Application.routes.draw do
 
   #Change ui language
   match '/change_locale', to: 'locales#change_locale', via: [:get]
+
+  #SGAME API
+  match '/SGAME.js', to: 'games#sgame_api', via: [:get]
 
   #Wildcard route (This rule should be placed the last)
   match "*not_found", :to => 'application#page_not_found', via: [:get]

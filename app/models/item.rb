@@ -13,6 +13,11 @@ module Item
 		end
 	end
 
+	def owner_validation
+		return errors[:base] << "Item without author" if self.owner_id.blank? or User.find_by_id(self.owner_id).nil?
+		true
+	end
+
 	def public?
 		if self.respond_to?("draft")
 			!self.draft

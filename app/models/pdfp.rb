@@ -7,6 +7,7 @@ class Pdfp < ActiveRecord::Base
 
   validates_attachment_content_type :attach, :content_type =>['application/pdf'], :message => '#PDFexAPIError:1 File format is invalid'
   validates_attachment_size :attach, :in => 0.megabytes..8.megabytes, :message => '#PDFexAPIError:2 File size is too big'
+  validates_presence_of :owner_id
 
   def to_img(options)
     if self.pcount > 90

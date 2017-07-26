@@ -1,4 +1,4 @@
-namespace :sgame do
+namespace :sgame_platform do
 	task :rebuild do
 		desc "Rebuild..."
 			system "rake db:drop"

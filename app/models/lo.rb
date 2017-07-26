@@ -20,6 +20,10 @@ class Lo < ActiveRecord::Base
 		self.container.public?
 	end
 
+	def owner
+		self.container.owner
+	end
+
 	def sgame_metadata
 		smetadata = Hash.new
 		smetadata["id"] = self.id

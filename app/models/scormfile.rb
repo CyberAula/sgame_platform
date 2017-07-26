@@ -3,7 +3,7 @@ class Scormfile < ActiveRecord::Base
   include Extractable
   acts_as_ordered_taggable
   
-  belongs_to :author, :class_name => 'User', :foreign_key => "owner_id"
+  belongs_to :owner, :class_name => 'User', :foreign_key => "owner_id"
 
   before_destroy :remove_files #This callback need to be before has_attached_file, to be executed before paperclip callbacks
   after_destroy :remove_los
@@ -14,6 +14,8 @@ class Scormfile < ActiveRecord::Base
 
   validates_attachment_presence :file
   validates_attachment :file, content_type: { content_type: ["application/zip"] }
+  validates_presence_of :owner_id
+  validate :owner_validation
   validates_presence_of :title
   validates_presence_of :lohref
   validates_inclusion_of :scorm_version, in: ["1.2","2004"], :allow_blank => false, :message => "Invalid SCORM version. Only SCORM 1.2 and 2004 are supported"

@@ -43,7 +43,7 @@ class Utils
   end
 
   def self.getResourceTypes
-    ["Presentation","Document","Scormfile"]
+    ["Presentation","Document","Scormfile","Game"]
   end
 
 end

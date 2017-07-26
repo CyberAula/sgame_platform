@@ -51,18 +51,25 @@ ActiveRecord::Schema.define(version: 20170725105744) do
   end
 
   create_table "game_templates", force: :cascade do |t|
+    t.integer  "owner_id"
     t.string   "title"
     t.string   "description"
     t.string   "thumbnail_url"
+    t.string   "language"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "games", force: :cascade do |t|
     t.integer  "game_template_id"
+    t.integer  "owner_id"
     t.string   "title"
     t.string   "description"
     t.string   "thumbnail_url"
+    t.string   "language"
+    t.boolean  "draft",               default: false
+    t.datetime "scorm2004_timestamp"
+    t.datetime "scorm12_timestamp"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -97,25 +104,19 @@ ActiveRecord::Schema.define(version: 20170725105744) do
 
   create_table "presentations", force: :cascade do |t|
     t.integer  "owner_id"
-    t.string   "title"
     t.text     "json"
-    t.boolean  "draft",                   default: false
-    t.text     "thumbnail_url"
+    t.string   "title"
     t.text     "description"
-    t.integer  "visit_count",             default: 0
+    t.text     "thumbnail_url"
     t.string   "language"
-    t.integer  "age_min",                 default: 0
-    t.integer  "age_max",                 default: 0
-    t.integer  "license_id"
+    t.integer  "age_min",             default: 0
+    t.integer  "age_max",             default: 0
+    t.boolean  "draft",               default: false
     t.datetime "scorm2004_timestamp"
     t.datetime "scorm12_timestamp"
-    t.string   "attachment_file_name"
-    t.string   "attachment_content_type"
-    t.integer  "attachment_file_size"
-    t.datetime "attachment_updated_at"
-    t.datetime "created_at",                              null: false
-    t.datetime "updated_at",                              null: false
-    t.text     "tag_array_text",          default: ""
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+    t.text     "tag_array_text",      default: ""
   end
 
   create_table "scormfiles", force: :cascade do |t|

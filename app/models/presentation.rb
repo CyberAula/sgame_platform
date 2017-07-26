@@ -7,15 +7,11 @@ class Presentation < ActiveRecord::Base
   include Extractable
   acts_as_ordered_taggable
 
-  belongs_to :author, :class_name => 'User', :foreign_key => "owner_id"
+  belongs_to :owner, :class_name => 'User', :foreign_key => "owner_id"
 
   validates_presence_of :json
   validates_presence_of :owner_id
-  validate :author_validation
-  def author_validation
-    return errors[:base] << "Presentation without author" if self.owner_id.blank? or User.find_by_id(self.owner_id).nil?
-    true
-  end
+  validate :owner_validation
 
   before_save :parse_for_metadata
   before_save :fillTags
@@ -31,10 +27,6 @@ class Presentation < ActiveRecord::Base
 
   def to_json(options=nil)
     json
-  end
-
-  def owner
-    self.author
   end
 
 
@@ -368,8 +360,8 @@ class Presentation < ActiveRecord::Base
       authorName = nil
       if ejson["author"] and ejson["author"]["name"]
         authorName = ejson["author"]["name"]
-      elsif (!presentation.nil? and !presentation.author.nil? and !presentation.author.name.nil?)
-        authorName = presentation.author.name
+      elsif (!presentation.nil? and !presentation.owner.nil? and !presentation.owner.name.nil?)
+        authorName = presentation.owner.name
       end
 
       # loDate 
@@ -823,8 +815,7 @@ class Presentation < ActiveRecord::Base
       parsed_json["vishMetadata"]["released"] = "true"
     end
     
-    author = self.author
-    parsed_json["author"] = {name: author.name, vishMetadata:{ id: author.id }}
+    parsed_json["author"] = {name: self.owner.name, vishMetadata:{ id: self.owner.id }}
 
     self.update_column :json, parsed_json.to_json
   end

@@ -1,24 +1,22 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <%if @title%>
-      <title><%=@title%></title>
-    <% end %>
+    <title><%=@presentation.title%></title>
 
     <%= favicon_link_tag "icons/favicon.ico" %>
     <meta charset="UTF-8">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 
-    <%if controller.action_name == "show" %>
+    <% if controller.action_name == "show" %>
       <%js_file = "vishViewer"%>
-    <%else%>
+    <% else %>
       <%js_file = "vishEditor"%>
       <script type="text/javascript">
         var CKEDITOR_BASEPATH = '/assets/ckeditor/';
       </script>
       <%= javascript_include_tag "ckeditor/ckeditor" %>
-    <%end%>
+    <% end %>
 
     <% if Rails.env == "production" %>
       <%= javascript_include_tag js_file + ".min" %>
