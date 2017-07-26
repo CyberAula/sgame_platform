@@ -24,6 +24,7 @@ namespace :db do
 		sf1 = Scormfile.createScormfileFromZip(zf1)
 
 		#3: Create game templates
+		# Events of the game templates are created based on the sgame_events_json.json file
 		system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/Onslaught_Arena.zip')
 		Utils.zip_folder(File.join(Rails.root, 'public/game_template_examples/Onslaught_Arena.zip'),File.join(Rails.root, 'public/game_template_examples/Onslaught_Arena'))
 		oArena = GameTemplate.create! :owner_id => user.id,
@@ -31,13 +32,6 @@ namespace :db do
 			:description=>"Battle hordes of classic medieval monsters in this fast-paced arcade shooter", 
 			:thumbnail_url=>"/gallery/game_OnslaughtArena.jpg",
 			:file =>  File.open(File.join(Rails.root, 'public/game_template_examples/Onslaught_Arena.zip'))
-
-		#Create the events of the game templates
-		#TODO: events should be created by reading a file in the template file
-		oArenaEvent1 = GameTemplateEvent.create! :game_template_id=>oArena.id,
-			:title=>"Extra weapon",
-			:description=>"Event triggered when the player tries to get a new weapon",
-			:id_in_game=>1
 
 		#4: Create games
 		#oArena
@@ -50,7 +44,7 @@ namespace :db do
 		#Event mapping for the oArena game
 		(sf1.los.map{|lo| lo.id}).uniq.each do |lo_id|
 			GameEventMapping.create! :game_id => oArenaInstance.id, 
-				:game_template_event_id => oArenaEvent1.id, 
+				:game_template_event_id => oArena.events.first.id, 
 				:lo_id => lo_id
 		end
 		

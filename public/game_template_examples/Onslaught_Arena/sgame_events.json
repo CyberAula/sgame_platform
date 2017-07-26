@@ -1,0 +1,9 @@
+[
+	{
+		"id": 1,
+		"title": "Extra weapon",
+		"description": "Event triggered when the player tries to get a new weapon",
+		"type": "new_item",
+		"frequency": "high"
+	}
+]

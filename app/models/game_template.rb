@@ -17,19 +17,35 @@ class GameTemplate < ActiveRecord::Base
 	after_save :extract_game
 
 	def sgame_requirements
-		errors = []
+		sgame_errors = []
 
 		zipFilePath = self.persisted? ? self.file.path : self.file.queued_for_write[:original].path
 		Zip::File.open(zipFilePath) do |zip|
 			#Validate index HTML file
-			errors << "No index.html file" if zip.entries.select{|e| e.name == "index.html"}.first.nil?
-			#Validate events (TODO)
-			errors << "No events file" if false
+			sgame_errors << "No index.html file" if zip.entries.select{|e| e.name == "index.html"}.first.nil?
+			#Validate events
+			eventsFile = zip.entries.select{|e| e.name == "sgame_events.json"}.first
+			if eventsFile.nil?
+				sgame_errors << "No sgame_events-json file"
+			else
+				events = nil
+				events = JSON.parse(zip.read(eventsFile)) rescue sgame_errors << "Incorrect format of sgame_events.json file"
+				unless events.nil?
+					events.each do |event|
+						gte = GameTemplateEvent.new
+						gte.game_template_id = self.id || 0 #Id will be available after creation
+						gte.fill_with_json_event(event)
+						unless gte.valid?
+							sgame_errors = sgame_errors + gte.errors.full_messages
+						end
+					end
+				end
+			end			
 		end
-		if errors.length == 0
+		if sgame_errors.length == 0
 			return true
 		else
-			return (errors[:base] + errors)
+			return (errors[:base] + sgame_errors.uniq)
 		end
 	end
 
@@ -42,6 +58,17 @@ class GameTemplate < ActiveRecord::Base
 		end
 		gameTemplatePath = gameTemplatesPath + "/" + self.id.to_s
 		Utils.extract_folder(self.file.path,gameTemplatePath)
+
+		#Process events file
+		if File.exists?(gameTemplatePath+"/sgame_events.json")
+			events = JSON.parse(File.read(gameTemplatePath+"/sgame_events.json"))
+			events.each do |event|
+				gte = GameTemplateEvent.new
+				gte.game_template_id = self.id
+				gte.fill_with_json_event(event)
+				gte.save!
+			end
+		end
 	end
 
 	def template_full_url
