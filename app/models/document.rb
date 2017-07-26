@@ -46,6 +46,16 @@ class Document < ActiveRecord::Base
     Mime::Type.lookup(self.file_content_type)
   end
 
+  def as_json(options)
+    json = {
+     :id => self.id,
+     :title => self.title,
+     :src => SgamePlatform::Application.config.full_domain + self.file.url
+    }
+    json[:src] = Utils.checkUrlProtocol(json[:src],options[:protocol]) unless options[:protocol].blank?
+    json
+  end
+
   private
 
   def set_title

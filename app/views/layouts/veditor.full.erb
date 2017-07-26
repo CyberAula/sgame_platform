@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%=@presentation.title%></title>
-
+    <title><%=@presentation.title unless @presentation.nil?%></title>
     <%= favicon_link_tag "icons/favicon.ico" %>
     <meta charset="UTF-8">
     <meta name="apple-mobile-web-app-capable" content="yes">

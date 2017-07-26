@@ -108,7 +108,7 @@ class DocumentsController < ApplicationController
     elsif !params[:document].nil? or @document.nil?
       key = :document
     else
-      key = @document.class.name.to_sym
+      key = @document.class.name.underscore.to_sym
     end
     params.require(key).permit(:title, :description, :file, :owner_id)
   end
