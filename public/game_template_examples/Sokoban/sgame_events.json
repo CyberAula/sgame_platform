@@ -1,0 +1,9 @@
+[
+	{
+		"id": 1,
+		"title": "Extra live",
+		"description": "Event triggered when the devil catches the player",
+		"type": "extra_life",
+		"frequency": "medium"
+	}
+]

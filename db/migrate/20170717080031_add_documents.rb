@@ -8,6 +8,7 @@ class AddDocuments < ActiveRecord::Migration
       t.string   :type
       t.integer  :owner_id
       t.boolean  :file_processing
+      t.boolean  :certified, :default => false
       t.timestamps
     end
 

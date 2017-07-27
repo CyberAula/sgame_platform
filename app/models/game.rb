@@ -7,6 +7,7 @@ class Game < ActiveRecord::Base
 	has_many :events, class_name: :GameTemplateEvent, :through => :template
 	has_many :los, :through => :mappings
 
+	before_validation :fill_language
 	validates_presence_of :game_template_id
 	validates_presence_of :owner_id
 	validate :owner_validation
@@ -31,7 +32,7 @@ class Game < ActiveRecord::Base
 			end
 			mapping = Hash.new;
 			mapping["event_id"] = event.id_in_game;
-			mapping["los_id"] = los;
+			mapping["los_id"] = los.uniq;
 			settings["event_mapping"].push(mapping);
 		end
 		return settings
@@ -39,6 +40,13 @@ class Game < ActiveRecord::Base
 
 	def los_sgame_metadata
 		self.los.map{|lo| lo.sgame_metadata}
+	end
+
+
+	private
+
+	def fill_language
+		self.language = self.template.language if self.language.nil? and !self.template.nil?
 	end
 	
 end

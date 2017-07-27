@@ -11,6 +11,7 @@ class AddLos < ActiveRecord::Migration
       t.string  :href
       t.string  :hreffull
       t.string  :metadata
+      t.boolean :certified, :default => false
       t.timestamps
     end
   end

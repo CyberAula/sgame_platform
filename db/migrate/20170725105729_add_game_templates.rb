@@ -7,6 +7,7 @@ class AddGameTemplates < ActiveRecord::Migration
       t.string  :thumbnail_url
       t.string  :language
       t.text    :path
+      t.boolean  :certified, :default => false
       t.timestamps
     end
 

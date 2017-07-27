@@ -1,6 +1,15 @@
 class Lo < ActiveRecord::Base
+	has_many :game_event_mappings, :dependent => :destroy
+
+	before_validation :fill_certified
+
 	validates_presence_of :container_type
 	validates_presence_of :container_id
+	validate :container_validation
+	def container_validation
+		return errors[:base] << "Learning Object without container" if self.container.nil?
+		true
+	end
 	validates_presence_of :standard
 	validates_presence_of :standard_version
 	validates_presence_of :schema_version
@@ -9,11 +18,10 @@ class Lo < ActiveRecord::Base
 	validates_presence_of :href
 	validates_presence_of :hreffull
 	validates_presence_of :metadata
-
-	has_many :game_event_mappings, :dependent => :destroy
+	validates_inclusion_of :certified, :in => [ true, false ]
 
 	def container
-		self.container_type.constantize.find_by_id(self.container_id)
+		self.container_type.constantize.find_by_id(self.container_id) rescue nil
 	end
 
 	def public?
@@ -28,8 +36,17 @@ class Lo < ActiveRecord::Base
 		smetadata = Hash.new
 		smetadata["id"] = self.id
 		smetadata["url"] = self.hreffull
-		smetadata["scorm_type"] = self.lo_type;
-		smetadata["lom_metadata"] = self.metadata
+		smetadata["scorm_type"] = self.lo_type
+		# smetadata["lom_metadata"] = self.metadata #TODO. fix metadata parsing
+		smetadata["lom_metadata"] = "{}"
 		return smetadata
+	end
+
+
+	private
+	
+	def fill_certified
+		self.certified = self.container.certified unless self.container.nil?
+		true
 	end
 end

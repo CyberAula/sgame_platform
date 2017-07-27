@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 20170725105744) do
     t.string   "type"
     t.integer  "owner_id"
     t.boolean  "file_processing"
+    t.boolean  "certified",         default: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "file_file_name"
@@ -58,6 +59,7 @@ ActiveRecord::Schema.define(version: 20170725105744) do
     t.string   "thumbnail_url"
     t.string   "language"
     t.text     "path"
+    t.boolean  "certified",         default: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "file_file_name"
@@ -76,6 +78,7 @@ ActiveRecord::Schema.define(version: 20170725105744) do
     t.boolean  "draft",               default: false
     t.datetime "scorm2004_timestamp"
     t.datetime "scorm12_timestamp"
+    t.boolean  "certified",           default: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -91,6 +94,7 @@ ActiveRecord::Schema.define(version: 20170725105744) do
     t.string   "href"
     t.string   "hreffull"
     t.string   "metadata"
+    t.boolean  "certified",        default: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -120,6 +124,7 @@ ActiveRecord::Schema.define(version: 20170725105744) do
     t.boolean  "draft",               default: false
     t.datetime "scorm2004_timestamp"
     t.datetime "scorm12_timestamp"
+    t.boolean  "certified",           default: false
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
     t.text     "tag_array_text",      default: ""
@@ -138,6 +143,7 @@ ActiveRecord::Schema.define(version: 20170725105744) do
     t.string   "schema"
     t.string   "schema_version"
     t.string   "scorm_version"
+    t.boolean  "certified",         default: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "file_file_name"

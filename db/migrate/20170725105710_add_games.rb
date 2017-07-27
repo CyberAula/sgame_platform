@@ -10,6 +10,7 @@ class AddGames < ActiveRecord::Migration
       t.boolean  :draft, :default => false
       t.datetime :scorm2004_timestamp
       t.datetime :scorm12_timestamp
+      t.boolean  :certified, :default => false
       t.timestamps
     end
   end
