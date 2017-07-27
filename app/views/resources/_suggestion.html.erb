@@ -1,8 +1,12 @@
 <% generated_id= (profile[:object_class] + "-" + profile[:id_repository].to_s) %>
-<div class="rsitem_box">
+<div class="rsitem_box rsitem_box_<%=profile[:object_class]%>">
   <div class="rsitem_icon">
     <a href=<%= profile[:url] %>>
-      <img src="/assets/slides_num.png"/>
+      <%if profile[:mini_thumbnail_url] %>
+        <img src="<%=profile[:mini_thumbnail_url]%>"/>
+      <% else %>
+        <img src="/assets/glyphicons-37-file.png"/>
+      <% end %>
     </a>
   </div>
   <div class="rsitem_thumbnail">

@@ -28,9 +28,11 @@ div.frontpage_row1 div.col2 video {
 	border: 3px solid white;
 }
 div.frontpage_row2 {
-	margin-top: 80px;
+	margin-top: 50px;
 	text-align: center;
 	font-size: 1.4em;
+}
+div.frontpage_row2, div.frontpage_row3 {
 	padding-left: 8%;
 	padding-right: 8%;
 }
@@ -61,3 +63,29 @@ div.frontpage_row2 p.text_description {
 	margin-top: 20px;
 	color: #ccc;
 }
+
+div.frontpage_row3 {
+	margin-top: 25px;
+}
+
+div.frontpage_row3 > p.title {
+	font-size: 1.9em;
+}
+
+div.frontpage_decoration {
+	margin-top: 8px;
+	position: relative;
+	width: 100%;
+	text-align: center;
+}
+
+div.frontpage_decoration hr.frontpage_line {
+	border-bottom: 2px solid white;
+}
+
+div.frontpage_decoration span.glyphicon {
+	position: absolute;
+	font-size: 2.2em;
+	top: -9px;
+}
+

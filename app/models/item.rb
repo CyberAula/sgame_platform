@@ -11,6 +11,13 @@ module Item
 				self
 			end
 		end
+		def certified
+			if self.column_names.include?("certified")
+				self.where(:certified => true).public
+			else
+				self.public
+			end
+		end
 	end
 
 	def owner_validation

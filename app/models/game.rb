@@ -42,6 +42,10 @@ class Game < ActiveRecord::Base
 		self.los.map{|lo| lo.sgame_metadata}
 	end
 
+	def mini_thumbnail_url
+		return "/assets/gamepad_black.png"
+	end
+
 
 	private
 

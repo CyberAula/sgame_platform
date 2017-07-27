@@ -3,7 +3,7 @@ class HomeController < ApplicationController
 	skip_authorization_check :only => [:frontpage]
 
 	def frontpage
-		# return redirect_to :controller=>'home', :action => 'index' if user_signed_in?
+		@certified_resources = Game.certified
 		respond_to do |format|
 			format.html { render layout: "application" }
 		end

@@ -8,7 +8,7 @@
 		<div class="item_icon">
 			<a href=<%=  polymorphic_url(resource) %>>
 				<% if resource.respond_to?("mini_thumbnail_url") %>
-					<img src="<%=resource.mini_thubnail_url%>"/>
+					<img src="<%=resource.mini_thumbnail_url%>"/>
 				<% else %>
 					<img src="/assets/glyphicons-37-file.png"/>
 				<% end %>

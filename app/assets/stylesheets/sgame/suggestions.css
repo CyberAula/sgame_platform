@@ -13,6 +13,10 @@ div.rsitem_box div.rsitem_icon {
 	background-color: white;
 	padding: 10px;
 	border-radius: 0 0 3px 0;
+	border-top: none;
+	border-left: none;
+	border-right: 1px solid black;
+	border-bottom: 1px solid black;
 	width: 40px;
 	height: 40px;
 	text-align: center;
@@ -63,4 +67,17 @@ div.rsitem_box div.rsitem_title a {
 	color: black;
 	font-size: 1.2em;
 	text-decoration: none;
+}
+
+div.rsitem_box.rsitem_box_game div.rsitem_icon img {
+	margin-top: 10px;
+	margin-right: 2px;
+}
+
+div.rsitem_box.rsitem_box_scormfile div.rsitem_icon img {
+	margin-left: 10px;
+}
+
+div.rsitem_box.rsitem_box_scormfile div.rsitem_thumbnail_img {
+	background-size: 60%;
 }

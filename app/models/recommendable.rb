@@ -14,6 +14,7 @@ module Recommendable
 		profile[:repository] = "SGAME"
 		profile[:url] = (polymorphic_path(self) rescue nil)
 		profile[:thumbnail_url] = (self.thumbnail_url) if self.respond_to?("thumbnail_url")
+		profile[:mini_thumbnail_url] = self.mini_thumbnail_url if self.respond_to?("mini_thumbnail_url")
 		profile[:object] = self
 		profile[:object_class] = profile[:object].class.name.underscore
 		profile

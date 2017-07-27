@@ -1,10 +1,10 @@
 div.item_box {
 	width: 224px;
 	height: 224px;
-	border: 2px solid white;
+	border: 2px solid black;
 	border-radius: 3px;
 	display: inline-block;
-	margin: 10px;
+	margin: 10px 10px 10px 0px;
 	float: left;
 }
 
@@ -13,6 +13,10 @@ div.item_box div.item_icon {
 	background-color: white;
 	padding: 10px;
 	border-radius: 0 0 3px 0;
+	border-top: none;
+	border-left: none;
+	border-right: 1px solid black;
+	border-bottom: 1px solid black;
 	width: 40px;
 	height: 40px;
 	text-align: center;
@@ -97,4 +101,9 @@ div.item_box div.item_thubmnail_new {
 
 div.item_box div.item_thubmnail_new a {
 	text-decoration: none;
+}
+
+div.item_box_game div.item_icon img {
+	margin-top: 10px;
+	margin-right: 2px;
 }

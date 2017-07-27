@@ -81,6 +81,7 @@ en:
     tabtitle: "Files"
   frontpage:
     title: "Welcome to SGAME, the platform to create educational video games"
+    title_certified_resources: "Educational Games"
     description: "SGAME is a free web platform aimed at the educational community that allows to easily create web educational games by integrating  educational resources into existing games."
     feature_1_title: "Import and create content"
     feature_1_description: "You can import learning objects from SCORM packages as well as create your own learning objects by using authoring tools"

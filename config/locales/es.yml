@@ -71,6 +71,7 @@ es:
     tabtitle: "Archivos"
   frontpage:
     title: "Bienvenido a SGAME, la plataforma de creación de juegos educativos"
+    title_certified_resources: "Juegos Educativos"
     description: "SGAME es una plataforma web gratuita dirigida a toda la comunidad educativa que permite crear de forma muy fácil juegos web educativos mediante la integración de recursos educativos en juegos existentes."
     feature_1_title: "Importa y crea contenidos"
     feature_1_description: "Puedes importar objetos de aprendizaje de paquetes SCORM así como crear tus propios objetos de aprendizaje utilizando herramientas de creación"

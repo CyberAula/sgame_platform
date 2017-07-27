@@ -26,4 +26,16 @@
 			<p class="text_description"><%=t("frontpage.feature_3_description")%></p>
 		</div>
 	</div>
+	<% if @certified_resources.length > 0 %>
+		<div class="frontpage_decoration">
+			<hr class="frontpage_line">
+			<span class="glyphicon glyphicon-certificate"></span>
+		</div>
+		<div class="row frontpage_row3">
+			<p class="title"><%=t("frontpage.title_certified_resources")%></p>
+			<% @certified_resources.each do |resource| %>
+				<%= render 'resources/resource', :resource => resource %>
+			<% end %>
+		</div>
+	<% end %>
 </div>
