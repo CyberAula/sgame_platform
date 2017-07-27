@@ -6,7 +6,7 @@ class Ability
 
     #Users
     can :read, User
-    can :read, [Presentation, Pdfp, Document, Scormfile, Game, Lo] do |r|
+    can :read, [Presentation, Pdfp, Document, Scormfile, Game, GameTemplate, Lo] do |r|
       r.public?
     end
     
@@ -16,9 +16,9 @@ class Ability
         u.id === user.id
       end
 
-      can :create, [Presentation, Pdfp, Document, Scormfile, Game, Lo]
+      can :create, [Presentation, Pdfp, Document, Scormfile, Game, GameTemplate, Lo]
 
-      can :manage, [Presentation, Pdfp, Document, Scormfile, Game, Lo] do |p|
+      can :manage, [Presentation, Pdfp, Document, Scormfile, Game, GameTemplate, Lo] do |p|
         p.owner_id === user.id
       end
     end

@@ -67,6 +67,9 @@ es:
         generic_update: "El archivo no pudo ser actualizado"
     update: "Actualizar archivo"
     tabtitle: "Archivos"
+  games:
+    new: "Crear juego"
+    tabtitle: "Juegos"
   files:
     tabtitle: "Archivos"
   frontpage:
@@ -88,6 +91,8 @@ es:
       settings: "Cuenta"
       presentations: "Mis presentaciones"
       files: "Mis archivos"
+      games: "Mis juegos"
+      templates: "Mis plantillas"
       logout: "Cerrar sesión"
   languages:
     bg: "Búlgaro"
@@ -149,3 +154,6 @@ es:
       share: "Compartir"
       download: "Descargar"
       text_copy: "Copiar al portapapeles"
+  templates:
+    new: "Subir plantilla"
+    tabtitle: "Plantillas"

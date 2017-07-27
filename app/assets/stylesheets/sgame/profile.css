@@ -18,6 +18,7 @@ div.profile_tab div.row {
 
 ul.nav-tabs.user-nav li {
 	font-size: 1.5em;
+	margin-right: 4px;
 }
 
 ul.nav-tabs.user-nav li a, ul.nav-tabs.user-nav li a:hover {

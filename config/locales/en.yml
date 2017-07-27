@@ -77,6 +77,9 @@ en:
         generic_update: "File couldn't be updated"
     tabtitle: "Files"
     update: "Update file"
+  games:
+    new: "Create game"
+    tabtitle: "Games"
   files:
     tabtitle: "Files"
   frontpage:
@@ -98,6 +101,8 @@ en:
       settings: "Account"
       presentations: "My presentations"
       files: "My files"
+      games: "My games"
+      templates: "My templates"
       logout: "Logout"
   languages:
     bg: "Bulgarian"
@@ -159,3 +164,6 @@ en:
       share: "Share"
       download: "Download"
       text_copy: "Copy to clip"
+  templates:
+    new: "Upload template"
+    tabtitle: "Templates"

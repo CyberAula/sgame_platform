@@ -1,0 +1,7 @@
+#container .resource_wrapper_gametemplate div.resource_content_wrapper {
+	height: 650px;
+}
+
+.resource_wrapper_gametemplate .resource_content_wrapper {
+	border: 1px solid black;
+}

@@ -9,6 +9,8 @@ class User < ActiveRecord::Base
 	has_many :documents, :foreign_key => "owner_id"
 	has_many :scormfiles, :foreign_key => "owner_id"
 	has_many :pdfp, :foreign_key => "owner_id"
+	has_many :games, :foreign_key => "owner_id"
+	has_many :game_templates, :foreign_key => "owner_id"
 
 	before_save :fillTags
 	before_save :save_tag_array_text

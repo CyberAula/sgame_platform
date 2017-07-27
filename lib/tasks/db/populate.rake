@@ -18,7 +18,7 @@ namespace :db do
 		sf1 = Scormfile.create! :owner_id => user.id,
 			:title  => "Golf",
 			:description   => "SCORM package that explains everything about golf",
-			:thumbnail_url => "/gallery/images/golf1.jpg",
+			:thumbnail_url => "/assets/gallery/images/golf1.jpg",
 			:language => "en",
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/scorm_examples/golf_n_sco.zip'))
@@ -26,7 +26,7 @@ namespace :db do
 		sf2 = Scormfile.create! :owner_id => user.id,
 			:title  => "Ancient Weapons",
 			:description   => "Quiz about ancient weapons",
-			:thumbnail_url => "/gallery/images/weapons.jpg",
+			:thumbnail_url => "/assets/gallery/images/weapons.jpg",
 			:language => "en",
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/scorm_examples/AncientWeaponsQuiz.zip'))
@@ -34,7 +34,7 @@ namespace :db do
 		sf3 = Scormfile.create! :owner_id => user.id,
 			:title  => "Weapons Timeline",
 			:description   => "Weapons Timeline Quiz",
-			:thumbnail_url => "/gallery/images/battle.jpg",
+			:thumbnail_url => "/assets/gallery/images/battle.jpg",
 			:language => "en",
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/scorm_examples/WeaponsTimelineQuiz.zip'))
@@ -42,7 +42,7 @@ namespace :db do
 		sf4 = Scormfile.create! :owner_id => user.id,
 			:title  => "Iberian Lynx",
 			:description   => "Iberian Lynx",
-			:thumbnail_url => "/gallery/images/iberian_lynx.jpg",
+			:thumbnail_url => "/assets/gallery/images/iberian_lynx.jpg",
 			:language => "en",
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/scorm_examples/iberianlynx.zip'))
@@ -54,7 +54,7 @@ namespace :db do
 		oArena = GameTemplate.create! :owner_id => user.id,
 			:title=>"Onslaught Arena", 
 			:description=>"Battle hordes of classic medieval monsters in this fast-paced arcade shooter", 
-			:thumbnail_url=>"/gallery/game_OnslaughtArena.jpg",
+			:thumbnail_url=>"/assets/gallery/game_OnslaughtArena.jpg",
 			:language => "en",
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/game_template_examples/Onslaught_Arena.zip'))
@@ -64,7 +64,7 @@ namespace :db do
 		sokoban = GameTemplate.create! :owner_id => user.id,
 			:title=>"Sokoban", 
 			:description=>"Sokoban is a type of puzzle game, in which the player pushes diamonds around in a warehouse", 
-			:thumbnail_url=>"/gallery/game_sokoban.png",
+			:thumbnail_url=>"/assets/gallery/game_sokoban.png",
 			:language => "en",
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/game_template_examples/Sokoban.zip'))
@@ -74,7 +74,7 @@ namespace :db do
 		nPark = GameTemplate.create! :owner_id => user.id,
 			:title=>"Natural Park", 
 			:description=>"Go meet and feed the lynxes in this park", 
-			:thumbnail_url=>"/gallery/game_dpark.png",
+			:thumbnail_url=>"/assets/gallery/game_dpark.png",
 			:language => "en",
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/game_template_examples/Natural_Park.zip'))

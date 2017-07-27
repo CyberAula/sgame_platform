@@ -103,7 +103,7 @@ div.item_box div.item_thubmnail_new a {
 	text-decoration: none;
 }
 
-div.item_box_game div.item_icon img {
+div.item_box_game div.item_icon img, div.item_box_game_template div.item_icon img {
 	margin-top: 10px;
 	margin-right: 2px;
 }

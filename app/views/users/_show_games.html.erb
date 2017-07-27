@@ -1,0 +1,10 @@
+<div id="games" class="tab-pane in active profile_tab">
+  <div class="row">
+    <% if @isProfileOwner %>
+      <%= render 'resources/resource_new', :new_resource_path => new_game_path %>
+    <%end%>
+    <% @games.each do |game| %>
+      <%= render 'resources/resource', :resource => game %>
+    <% end %>
+  </div>
+</div>

@@ -6,6 +6,8 @@ SgamePlatform::Application.routes.draw do
 
   match '/users/:id/presentations' => 'users#show_presentations', via: [:get]
   match '/users/:id/files' => 'users#show_files', via: [:get]
+  match '/users/:id/games' => 'users#show_games', via: [:get]
+  match '/users/:id/templates' => 'users#show_templates', via: [:get]
   resources :users
 
   #Locale

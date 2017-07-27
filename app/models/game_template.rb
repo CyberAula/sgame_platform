@@ -1,4 +1,6 @@
 class GameTemplate < ActiveRecord::Base
+	include Item
+
 	belongs_to :owner, :class_name => 'User', :foreign_key => "owner_id"
 	has_many :games, :dependent => :destroy
 	has_many :events, class_name: :GameTemplateEvent, :dependent => :destroy
@@ -55,6 +57,10 @@ class GameTemplate < ActiveRecord::Base
 
 	def url_full
 		SgamePlatform::Application.config.full_code_domain + "/code/game_templates/" + self.id.to_s + "/"
+	end
+
+	def mini_thumbnail_url
+		return "/assets/gamepad_black.png"
 	end
 
 
