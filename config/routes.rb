@@ -49,6 +49,9 @@ SgamePlatform::Application.routes.draw do
   #SGAME API
   match '/SGAME.js', to: 'games#sgame_api', via: [:get]
 
+  #Demo
+  match '/demo', to: 'demo#demo', via: [:get]
+
   #Wildcard route (This rule should be placed the last)
   match "*not_found", :to => 'application#page_not_found', via: [:get]
 end

@@ -18,7 +18,7 @@ namespace :db do
 		sf1 = Scormfile.create! :owner_id => user.id,
 			:title  => "Golf",
 			:description   => "SCORM package that explains everything about golf",
-			:thumbnail_url => "/assets/gallery/images/golf1.jpg",
+			:thumbnail_url => "/assets/gallery/golf1.jpg",
 			:language => "en",
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/scorm_examples/golf_n_sco.zip'))
@@ -26,7 +26,7 @@ namespace :db do
 		sf2 = Scormfile.create! :owner_id => user.id,
 			:title  => "Ancient Weapons",
 			:description   => "Quiz about ancient weapons",
-			:thumbnail_url => "/assets/gallery/images/weapons.jpg",
+			:thumbnail_url => "/assets/gallery/weapons.jpg",
 			:language => "en",
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/scorm_examples/AncientWeaponsQuiz.zip'))
@@ -34,7 +34,7 @@ namespace :db do
 		sf3 = Scormfile.create! :owner_id => user.id,
 			:title  => "Weapons Timeline",
 			:description   => "Weapons Timeline Quiz",
-			:thumbnail_url => "/assets/gallery/images/battle.jpg",
+			:thumbnail_url => "/assets/gallery/battle.jpg",
 			:language => "en",
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/scorm_examples/WeaponsTimelineQuiz.zip'))
@@ -42,7 +42,7 @@ namespace :db do
 		sf4 = Scormfile.create! :owner_id => user.id,
 			:title  => "Iberian Lynx",
 			:description   => "Iberian Lynx",
-			:thumbnail_url => "/assets/gallery/images/iberian_lynx.jpg",
+			:thumbnail_url => "/assets/gallery/iberian_lynx.jpg",
 			:language => "en",
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/scorm_examples/iberianlynx.zip'))

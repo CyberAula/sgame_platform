@@ -120,7 +120,7 @@ module SgamePlatform
       end
 
       #Demo user
-      config.demo_user = User.find_by_email("demo@sgame.dit.upm.es") if (Rails.env == "development" and ActiveRecord::Base.connection.table_exists? "users" and !User.find_by_email("demo@sgame.dit.upm.es").nil?)
+      config.demo_user = User.find_by_email("demo@sgame.dit.upm.es") if (ActiveRecord::Base.connection.table_exists? "users" and !User.find_by_email("demo@sgame.dit.upm.es").nil?)
     end
 
     # Version of your assets, change this if you want to expire all your assets

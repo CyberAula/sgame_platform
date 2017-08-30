@@ -14,6 +14,7 @@ class Scormfile < ActiveRecord::Base
                     :url => '/:class/:id.:extension',
                     :path => ':rails_root/documents/:class/:id_partition/:filename.:extension'
 
+  before_validation :fill_thumbnail_url
   before_validation :fill_package_params, :only => [:create]
   before_validation :fill_scorm_version
 
@@ -35,11 +36,12 @@ class Scormfile < ActiveRecord::Base
     self.schema + " " + self.schema_version
   end
 
-  def thumbnail_url
-    "/assets/scormfile_icon.png"
-  end
 
   private
+
+  def fill_thumbnail_url
+    self.thumbnail_url = "/assets/scormfile_icon.png" if self.thumbnail_url.blank?
+  end
 
   def fill_package_params
     begin
