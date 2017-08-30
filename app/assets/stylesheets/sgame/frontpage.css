@@ -15,6 +15,9 @@ div.frontpage_row1 div.col1 p.title{
 	font-weight: normal;
 	color: white;
 }
+div.frontpage_row1 div.col1 p a{
+	text-decoration: none;
+}
 div.frontpage_row1 div.col2 {
 	text-align: center;
 }

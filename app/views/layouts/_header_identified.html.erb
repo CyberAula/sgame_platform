@@ -24,6 +24,8 @@
 			<li><%= link_to(t("header.menu.presentations"),user_path(current_user)+'/presentations')%></li>
 			<li><%= link_to(t("header.menu.files"),user_path(current_user)+'/files')%></li>
 			<li role="separator" class="divider"></li>
+			<li><%= link_to(t("header.menu.demo"),'/demo')%></li>
+			<li role="separator" class="divider"></li>
 			<li><%= link_to(t("header.menu.logout"), destroy_user_session_path, :method => :delete) %></li>
 		</ul>
 	</div>
