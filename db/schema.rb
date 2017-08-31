@@ -143,6 +143,8 @@ ActiveRecord::Schema.define(version: 20170725105744) do
     t.string   "schema"
     t.string   "schema_version"
     t.string   "scorm_version"
+    t.integer  "nassets"
+    t.integer  "nscos"
     t.boolean  "certified",         default: false
     t.datetime "created_at"
     t.datetime "updated_at"

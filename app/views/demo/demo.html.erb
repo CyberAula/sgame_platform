@@ -23,7 +23,7 @@
 		<div class="carrousel_wrapper">
 			<div id="games_carrousel"></div>
 		</div>
-		<div class="preview">
+		<div class="selected">
 			<img/>
 			<p></p>
 		</div>
@@ -35,39 +35,12 @@
 		<div class="carrousel_wrapper">
 			<div id="scormfiles_carrousel"></div>
 		</div>
-		<div class="preview">
-			<ul id="lo_list"></ul>
+		<div class="selected">
+			<ul id="scormfiles_list"></ul>
 		</div>
 	</div>
 	<div class="create">    
 		<p class="createButton">Create</p>
 	</div>
-
-  	<a id="game_fancybox_link" href="#game_fancybox" style="display:none"></a>
-	<div style='display:none'>
-		<div id="game_fancybox">
-			<div id="form_game_title">Create new game</div>
-			<%= form_for(:game, :html => {:multipart => true, :id=>"create_form"}, :url => "/game") do |f| %>
-				<input type="hidden" name="g_template_id" id="g_template_id" value=""></input>
-				<input type="hidden" name="scorms_ids" id="scorms_ids" value=""></input>
-				<p><span class="game_form_span">Game template:</span><span id="g_template_info"></span></p>
-				<p><span class="game_form_span">Scorm packages:</span><span id="scorms_info"></span></p>
-
-				<label class="text_label" for="name">
-					<%= f.label "Name" %>
-				</label>
-				<div>
-					<%= f.text_field :name, :class => "", :rows => 5 %>
-				</div>
-				<label class="text_label" for="avatar">
-					<%= f.label "Avatar URL" %>
-				</label>
-				<div>
-					<%= f.text_field :avatar_url, :class => "" %>
-				</div>
-
-				<button id="submit_game_form" class="createGameButton">Create</button>
-			<%end%>
-		</div>
-	</div>
+	<a id="preview_scormfile_fancybox" class="fancybox" style="display:none"></a>
 </div>

@@ -6,7 +6,7 @@ SGAME_DEMO = (function($,undefined){
 	catalog.scormfiles = {};
 
 	current_game = {};
-	current_scorm_files = [];
+	current_scormfiles = [];
 
 	var games_carrousel_id = "games_carrousel";
 	var scormfiles_carrousel_id = "scormfiles_carrousel";
@@ -29,6 +29,19 @@ SGAME_DEMO = (function($,undefined){
 	};
 
 	var _createFancyboxes = function(){
+		$("#preview_scormfile_fancybox").fancybox(
+			{
+				openEffect  : 'none',
+				closeEffect : 'none',
+				type: 'iframe',
+				scrolling : false,
+				autoSize : true,
+				beforeLoad: function(){
+				},
+				afterLoad: function(){
+				}
+			}
+		);
 	};
 
 	var _createGamesCarrousel = function(){
@@ -37,7 +50,7 @@ SGAME_DEMO = (function($,undefined){
 		// 	$("#" + games_carrousel_id).append(div);
 		// }
 		$.each(catalog.games, function(i, game){
-			var div = $("<div itemId="+game.id+"><p>" + game.title + "</p><img src="+game.thumbnail_url+"/></div>");
+			var div = $("<div itemid="+game.id+"><p>" + game.title + "</p><img src="+game.thumbnail_url+"/></div>");
 			$("#" + games_carrousel_id).append(div);
 		});
 		$("#" + games_carrousel_id).slick({
@@ -46,7 +59,10 @@ SGAME_DEMO = (function($,undefined){
 			slidesToShow: 3,
 			slidesToScroll: 1
 		});
-		_previewGame(catalog.games[Object.keys(catalog.games)[0]]); //Preview first game
+		$("#" + games_carrousel_id + " div[itemid]").on("click", function(event){
+			_selectGame(catalog.games[$(this).attr("itemid")]);
+		});
+		_selectGame(catalog.games[Object.keys(catalog.games)[0]]); //Preview first game
 	};
 
 	var _createScormfilesCarrousel = function(){
@@ -55,7 +71,7 @@ SGAME_DEMO = (function($,undefined){
 			$("#" + scormfiles_carrousel_id).append(div);
 		}
 		$.each(catalog.scormfiles, function(i, scormfile){
-			var div = $("<div itemId="+scormfile.id+"><p>" + scormfile.title + "</p><img src="+scormfile.thumbnail_url+"/></div>");
+			var div = $("<div itemid="+scormfile.id+"><p>" + scormfile.title + "</p><img src="+scormfile.thumbnail_url+"/></div>");
 			$("#" + scormfiles_carrousel_id).append(div);
 		});
 		$("#" + scormfiles_carrousel_id).slick({
@@ -64,10 +80,87 @@ SGAME_DEMO = (function($,undefined){
 			slidesToShow: 3,
 			slidesToScroll: 1
 		});
-		$("#games_carrousel div[itemId]").on("click", function(event){
-			_previewGame(catalog.games[$(this).attr("itemId")]);
+		$("#" + scormfiles_carrousel_id + " div[itemid]").on("click", function(event){
+			_addScormfile(catalog.scormfiles[$(this).attr("itemid")]);
 		});
 	};
+
+	var _addScormfile = function(scormfile){
+		//Already added scormfile
+		if(current_scormfiles.indexOf(scormfile)!==-1){
+			return;
+		}
+		current_scormfiles.push(scormfile);
+
+		var li = $("<li itemid='"+scormfile.id+"' class='scormfile_item'>");
+		var scormfile_item_c1 = $("<div class='scormfile_item_c1'>");
+		var img = $("<img class='scormfile_item_thumbnail' src='"+scormfile.thumbnail_url+"' />");
+		$(img).click(function(){
+			_previewScormfile(catalog.scormfiles[$(this).parents("[itemid]").attr("itemid")]);
+		});
+		$(scormfile_item_c1).append(img);
+
+		var scormfile_item_c2 = $("<div class='scormfile_item_c2'>");
+		var description = $("<p class='scormfile_description'>"+scormfile.description+"</p>");
+
+		var msgDescriptionb = "";
+		if((scormfile.nscos > 0)&&(scormfile.assets > 0)){
+			if(scormfile.nscos > 1){
+				msgDescriptionb += scormfile.nscos + " SCOs"
+			} else {
+				msgDescriptionb += scormfile.nscos + " SCO"
+			}
+			if(scormfile.nassets > 1){
+				msgDescriptionb += " and " + scormfile.nassets + " assets"
+			} else {
+				msgDescriptionb += " and " + scormfile.nassets + " asset"
+			}
+		} else {
+			if(scormfile.nscos > 0){
+				if(scormfile.nscos > 1){
+					msgDescriptionb += scormfile.nscos + " SCOs"
+				} else {
+					msgDescriptionb += scormfile.nscos + " SCO"
+				}
+			}
+			if(scormfile.nassets > 0){
+				if(scormfile.nassets > 1){
+					msgDescriptionb += scormfile.nassets + " assets"
+				} else {
+					msgDescriptionb += scormfile.nassets + " asset"
+				}
+			}
+		}
+		var descriptionb = $("<p class='scormfile_description_b'>" + msgDescriptionb + "</p>");
+		$(scormfile_item_c2).append(description);
+		$(scormfile_item_c2).append(descriptionb);
+		$(li).append(scormfile_item_c2);
+
+		var scormfile_item_c3 = $("<div class='scormfile_item_c3'>");
+		var removeButton = $("<button class='remove_button'><span class='glyphicon glyphicon-remove'></span></button>");
+		$(removeButton).click(function(event){
+	 		_removeScormfile(catalog.scormfiles[$(this).parents("li[itemid]").attr("itemid")]);
+		});
+		$(scormfile_item_c3).append(removeButton);
+
+		$(li).append(scormfile_item_c1);
+		$(li).append(scormfile_item_c2);
+		$(li).append(scormfile_item_c3);
+
+		$("#scormfiles_list").append(li);
+	};
+
+	var _removeScormfile = function(scormfile){
+		current_scormfiles.splice(current_scormfiles.indexOf(scormfile),1);
+		$("div.scormfiles #scormfiles_list li[itemid='" + scormfile.id + "']").remove();
+	};
+
+	var _previewScormfile = function(scormfile){
+		var scormfileURL = "/scormfiles/" + scormfile.id + ".full";
+		$("#preview_scormfile_fancybox").attr("href",scormfileURL);
+		$("#preview_scormfile_fancybox").trigger("click");
+	};
+
 
 	/**
 	 * Events
@@ -80,10 +173,10 @@ SGAME_DEMO = (function($,undefined){
 	 * Update UI
 	 */
 
-	var _previewGame = function(game){
+	var _selectGame = function(game){
 		current_game = game;
-		$("#sgame_demo .game .preview img").attr("src",game.thumbnail_url);
-		$("#sgame_demo .game .preview p").html(game.description);
+		$("#sgame_demo .game .selected img").attr("src",game.thumbnail_url);
+		$("#sgame_demo .game .selected p").html(game.description);
 	};
 
 

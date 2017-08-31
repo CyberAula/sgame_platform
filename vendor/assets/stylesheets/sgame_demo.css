@@ -3,7 +3,7 @@
   margin-left: auto;
   margin-right: auto;
   margin-top: 10px;
-  height: 670px;
+  height: 690px;
 }
 
 #sgame_demo .game {
@@ -82,7 +82,7 @@
 }
 
 #sgame_demo div.slick-slide img {
-	width: 80%;
+	width: 90%;
 	min-width: 90%;
 	max-width: 90%;
 	margin-left: 5%;
@@ -97,20 +97,20 @@
   text-decoration: none;
 }
 
-#sgame_demo div.game .preview {
+#sgame_demo div.game .selected {
   margin-top: 20px;
   height: 300px;
   text-align: center;
 }
 
-#sgame_demo div.game .preview img {
+#sgame_demo div.game .selected img {
   min-width: 400px;
   min-height: 300px;
   max-width: 400px;
   max-height: 300px;
 }
 
-#sgame_demo div.game .preview p {
+#sgame_demo div.game .selected p {
   padding: 5px;
   padding-top: 10px;
   font-size: 15px;
@@ -120,12 +120,71 @@
   max-height: 71px;
 }
 
+#sgame_demo div.scormfiles div.selected {
+  height: 430px;
+}
+
+ul#scormfiles_list {
+  list-style-type: none;
+  padding: 0px 20px;
+  padding-right: 2px;
+  margin-left: 15px;
+  margin-top: 10px;
+  overflow: auto;
+  height: 100%;
+}
+
+ul#scormfiles_list li.scormfile_item {
+  height: 110px;
+  overflow: hidden;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+ul#scormfiles_list li.scormfile_item div.scormfile_item_c1 {
+  float: left;
+  width: 140px;
+}
+
+ul#scormfiles_list li.scormfile_item div.scormfile_item_c1 img.scormfile_item_thumbnail {
+  width: 100%;
+  height: 110px;
+  min-height: 110px;
+  max-height: 110px;
+  cursor: pointer;
+}
+
+ul#scormfiles_list li.scormfile_item div.scormfile_item_c2 {
+  padding: 15px;
+  font-size: 13px;
+  height: 110px;
+  width: 314px;
+  float: left;
+}
+
+ul#scormfiles_list li.scormfile_item div.scormfile_item_c3 {
+  float: right;
+  width: 30px;
+  height: 110px;
+  text-align: right;
+}
+
+ul#scormfiles_list li.scormfile_item div.scormfile_item_c3  button.remove_button {
+  background: none;
+  border: none;
+}
+
+ul#scormfiles_list li.scormfile_item div.scormfile_item_c3  button.remove_button span {
+  font-size: 16px;
+  margin-top: 2px;
+}
+
 #sgame_demo .create{
   width: 100px;
   height: 40px;
   background: #046598;
   position: absolute;
-  top: 647px;
+  top: 667px;
   left: 50%;
   margin-left: -53px;
   font-size: 20px;
@@ -150,4 +209,24 @@
 
 #sgame_demo .create:hover > p{
   font-weight:bold;
+}
+
+#preview_scormfile {
+  padding: 0px;
+  margin: 0px;
+}
+
+#preview_scormfile iframe {
+  padding: 0px;
+  margin: 0px;
+}
+
+.fancybox-close-small:after {
+  color: white;
+  background: #046598;
+}
+
+.fancybox-close-small:hover:after {
+  color: white;
+  background: #007bbb;
 }

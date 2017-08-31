@@ -13,6 +13,8 @@ class AddScormfiles < ActiveRecord::Migration
       t.string   :schema
       t.string   :schema_version
       t.string   :scorm_version
+      t.integer  :nassets
+      t.integer  :nscos
       t.boolean  :certified, :default => false
       t.timestamps
     end

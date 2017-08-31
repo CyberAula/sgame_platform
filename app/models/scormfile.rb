@@ -139,6 +139,8 @@ class Scormfile < ActiveRecord::Base
         lo.save!
       end
     end
+    self.update_column(:nscos, self.los.select{|lo| lo.lo_type == "sco"}.length)
+    self.update_column(:nassets, self.los.select{|lo| lo.lo_type == "asset"}.length)
   end
 
   def self.parse_metadata(metadata)
