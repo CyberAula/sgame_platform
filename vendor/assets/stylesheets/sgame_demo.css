@@ -180,14 +180,14 @@ ul#scormfiles_list li.scormfile_item div.scormfile_item_c3  button.remove_button
 }
 
 #sgame_demo .create{
-  width: 100px;
-  height: 40px;
+  width: 180px;
+  height: 60px;
   background: #046598;
   position: absolute;
-  top: 667px;
+  top: 660px;
   left: 50%;
-  margin-left: -53px;
-  font-size: 20px;
+  margin-left: -92px;
+  font-size: 19px;
   text-align: center;
   color: white;
   padding: 5px;
@@ -204,7 +204,8 @@ ul#scormfiles_list li.scormfile_item div.scormfile_item_c3  button.remove_button
 }
 
 #sgame_demo .create > p {
-  margin-top: -1px;
+  margin-top: -4px;
+  margin-bottom: 0px;
 }
 
 #sgame_demo .create:hover > p{

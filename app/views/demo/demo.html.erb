@@ -1,4 +1,5 @@
 <%= javascript_include_tag "sgame_demo" %>
+<%= javascript_include_tag "sgame_demo_locales" %>
 <%= stylesheet_link_tag "sgame_demo" %>
 
 <script type="text/javascript">
@@ -10,15 +11,17 @@
 		scormfiles = <%=raw @scormfiles.to_json%>;
 		options = {};
 		options.user_logged_in = <%=raw user_signed_in?%>;
+		options.language = "<%=I18n.locale.to_s%>";
 		SGAME_DEMO.init(game_templates,scormfiles,options);
 	});
 </script>
 
 <div id="sgame_demo">
+
 	<img src="/assets/plus.png" class="plus" />
 	<div class="game">
 		<div class="carrousel_title_wrapper">
-			<p class="carrousel_title">choose game</p>
+			<p class="carrousel_title"><%=t("demo.game_carousel_title")%></p>
 		</div>
 		<div class="carrousel_wrapper">
 			<div id="games_carrousel"></div>
@@ -30,7 +33,7 @@
 	</div>
 	<div class="scormfiles">
 		<div class="carrousel_title_wrapper">
-			<p class="carrousel_title">choose SCORM package</p>
+			<p class="carrousel_title"><%=t("demo.scormfiles_carousel_title")%></p>
 		</div>
 		<div class="carrousel_wrapper">
 			<div id="scormfiles_carrousel"></div>
@@ -40,7 +43,8 @@
 		</div>
 	</div>
 	<div class="create">    
-		<p class="createButton">Create</p>
+		<p class="createButton"><%=t("demo.create")%></p>
+		<p class="createButton"><%=t("demo.educational_game")%></p>
 	</div>
 	<a id="preview_scormfile_fancybox" class="fancybox" style="display:none"></a>
 </div>

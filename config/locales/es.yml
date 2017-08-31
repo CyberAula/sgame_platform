@@ -22,6 +22,11 @@ es:
     errors:
       generic: "No estás autorizado a acceder a esta página"
   delete: "Borrar"
+  demo:
+    game_carousel_title: "Elige un juego"
+    scormfiles_carousel_title: "Elige un paquete SCORM"
+    create: "Crear"
+    educational_game: "juego educativo"
   dictionary:
     about: "About"
     are_you_sure: "¿Estás seguro?"

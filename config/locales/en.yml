@@ -32,6 +32,11 @@ en:
     errors:
       generic: "You are not authorized to access this page"
   delete: "Delete"
+  demo:
+    game_carousel_title: "Choose game"
+    scormfiles_carousel_title: "Choose SCORM package"
+    create: "Create"
+    educational_game: "educational game"
   dictionary:
     about: "About"
     are_you_sure: "Are you sure?"
