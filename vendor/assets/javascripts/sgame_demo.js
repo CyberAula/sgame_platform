@@ -79,7 +79,7 @@ SGAME_DEMO = (function($,undefined){
 
 	var _createScormfilesCarrousel = function(){
 		if(options.user_logged_in === true){
-			var div = $("<div id='addFileButton'><a i18n-key-data-confirm='i.dialog_confirmation' data-confirm='are you sure?' href='/documents/new'><p i18n-key='i.upload'>Upload</p><img src='/assets/add_file.png'/></a></div>");
+			var div = $("<div id='addFileButton'><a i18n-key-data-confirm='i.dialog_confirmation' data-confirm='are you sure?' data-method='get' href='/documents/new'><p i18n-key='i.upload'>Upload</p><img src='/assets/add_file.png'/></a></div>");
 			$("#" + scormfiles_carrousel_id).append(div);
 		}
 		$.each(catalog.scormfiles, function(i, scormfile){
