@@ -7,6 +7,5 @@
 }
 
 div.item_box_scormfile div.item_thumbnail div.item_thumbnail_img {
-	background-size: contain;
-	background-size: 45%;
+	background-size: cover;
 }

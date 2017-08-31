@@ -4,10 +4,13 @@
 <script type="text/javascript">
 	var game_templates;
 	var scormfiles;
+	var options;
 	$(document).ready(function(){
 		game_templates = <%=raw @game_templates.to_json%>;
 		scormfiles = <%=raw @scormfiles.to_json%>;
-		SGAME_DEMO.init(game_templates,scormfiles);
+		options = {};
+		options.user_logged_in = <%=raw user_signed_in?%>;
+		SGAME_DEMO.init(game_templates,scormfiles,options);
 	});
 </script>
 

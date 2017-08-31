@@ -89,7 +89,12 @@
 	height: 120px;
 	min-height: 120px;
 	max-height: 120px;
-	border: 1px solid white;
+	border: 2px solid black;
+  background-color: #ddd;
+}
+
+#sgame_demo div.slick-slide a {
+  text-decoration: none;
 }
 
 #sgame_demo div.game .preview {

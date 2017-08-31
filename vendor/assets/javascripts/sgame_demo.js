@@ -1,4 +1,6 @@
 SGAME_DEMO = (function($,undefined){
+	var options = {};
+
 	var catalog = {};
 	catalog.games = {};
 	catalog.scormfiles = {};
@@ -10,7 +12,10 @@ SGAME_DEMO = (function($,undefined){
 	var scormfiles_carrousel_id = "scormfiles_carrousel";
 
 
-	var init = function (game_templates,scormfiles){
+	var init = function (game_templates,scormfiles,initOptions){
+		if(typeof initOptions == "object"){
+			options = initOptions;
+		}
 		$.each(game_templates, function(i, game_template){
 			catalog.games[game_template.id] = game_template;
 		});
@@ -19,17 +24,21 @@ SGAME_DEMO = (function($,undefined){
 		});
 		_createFancyboxes();
 		_loadEvents();
-		_createGamesCarrousel(catalog.games);
-		_createScormfilesCarrousel(catalog.scormfiles);
+		_createGamesCarrousel();
+		_createScormfilesCarrousel();
 	};
 
 	var _createFancyboxes = function(){
 	};
 
-	var _createGamesCarrousel = function(games){
-		$.each(games, function(i, game){
+	var _createGamesCarrousel = function(){
+		// if(options.user_logged_in === true){
+		// 	var div = $("<div id='addGameButton'><a href='/game_templates/new'><p>Upload</p><img src='/assets/add_game.png'/></a></div>");
+		// 	$("#" + games_carrousel_id).append(div);
+		// }
+		$.each(catalog.games, function(i, game){
 			var div = $("<div itemId="+game.id+"><p>" + game.title + "</p><img src="+game.thumbnail_url+"/></div>");
-			$("#" + games_carrousel_id).prepend(div);
+			$("#" + games_carrousel_id).append(div);
 		});
 		$("#" + games_carrousel_id).slick({
 			dots: true,
@@ -40,10 +49,14 @@ SGAME_DEMO = (function($,undefined){
 		_previewGame(catalog.games[Object.keys(catalog.games)[0]]); //Preview first game
 	};
 
-	var _createScormfilesCarrousel = function(scormfiles){
-		$.each(scormfiles, function(i, scormfile){
+	var _createScormfilesCarrousel = function(){
+		if(options.user_logged_in === true){
+			var div = $("<div id='addFileButton'><a href='/documents/new'><p>Upload</p><img src='/assets/add_file.png'/></a></div>");
+			$("#" + scormfiles_carrousel_id).append(div);
+		}
+		$.each(catalog.scormfiles, function(i, scormfile){
 			var div = $("<div itemId="+scormfile.id+"><p>" + scormfile.title + "</p><img src="+scormfile.thumbnail_url+"/></div>");
-			$("#" + scormfiles_carrousel_id).prepend(div);
+			$("#" + scormfiles_carrousel_id).append(div);
 		});
 		$("#" + scormfiles_carrousel_id).slick({
 			dots: true,
