@@ -2,7 +2,7 @@
 #
 # Rake task to compile the SGAME API
 # Compile javascript using google's closure compiler (see http://code.google.com/closure/compiler/)
-# Also rewrite routes
+# How to use: bundle exec rake sgame:build
 #
 
 #PATHS
@@ -10,7 +10,7 @@ SGAME_PLUGIN_PATH = "lib/plugins/sgame";
 SGAME_PATH = "../sgame";
 
 # SGAME files and dirs :
-SGAME_JS_FILES_AND_DIRS = ['app/assets/js_to_compile/SGAME_development.js','app/assets/js_to_compile']
+SGAME_JS_FILES_AND_DIRS = ['app/assets/js_to_compile/jquery-1.9.1.js','app/assets/js_to_compile/iso8601Parser.js','app/assets/js_to_compile/Local_API_1484_11.js','app/assets/js_to_compile/Local_API_SCORM_12.js','app/assets/js_to_compile/SGAME.js','app/assets/js_to_compile/SGAME.Debugger.js','app/assets/js_to_compile']
 
 SGAME_COMPILER_JAR_PATH = "extras/compile"
 SGAME_JSCOMPILER_JAR_FILE = SGAME_COMPILER_JAR_PATH + "/compiler.jar"
@@ -26,8 +26,6 @@ namespace :sgame do
   end
 
   task :prepare do
-    system "rm -rf " + SGAME_PLUGIN_PATH + "/app/assets/javascripts/SGAME.min.js"
-    system "rm -rf " + SGAME_PLUGIN_PATH + "/app/assets/javascripts/SGAME.js"
     system "rm -rf public/sgame_api/SGAME.js"
     system "rm -rf public/sgame_api/SGAME.min.js"
 
