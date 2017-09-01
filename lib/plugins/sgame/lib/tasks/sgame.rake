@@ -18,6 +18,7 @@ SGAME_JSCOMPILER_JAR_FILE = SGAME_COMPILER_JAR_PATH + "/compiler.jar"
 # Rake Task
 namespace :sgame do
 
+  #bundle exec rake sgame:build
   task :build do
     Rake::Task["sgame:prepare"].invoke
     Rake::Task["sgame:compile"].invoke

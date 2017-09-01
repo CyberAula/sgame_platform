@@ -434,7 +434,13 @@ SGAME = function(undefined) {
         var rRobinResult = _roundRobinChoice(los_candidate);
         _event_mapping[event_id].los = rRobinResult.los
       }
-      showLO(_los[rRobinResult.lo.id], callback)
+      if(typeof rRobinResult.lo != "undefined") {
+        showLO(_los[rRobinResult.lo.id], callback)
+      }else {
+        if(typeof callback == "function") {
+          callback(null, null)
+        }
+      }
     }
   };
   var _containWildcard = function(los_array) {
@@ -516,7 +522,9 @@ SGAME = function(undefined) {
       }
       selectedLO = _randomChoice(los)
     }
-    los[los.indexOf(selectedLO)].marked = true;
+    if(typeof selectedLO != "undefined") {
+      los[los.indexOf(selectedLO)].marked = true
+    }
     return{lo:selectedLO, los:los}
   };
   var _randomChoice = function(box) {
