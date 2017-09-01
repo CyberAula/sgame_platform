@@ -1,7 +1,9 @@
 class GamesController < ApplicationController
   before_filter :authenticate_user!, :only => [:new, :create, :edit, :update]
+  before_filter :allow_iframe_requests
   load_and_authorize_resource :except => :sgame_api
   skip_authorization_check :only => :sgame_api
+
  
   #############
   # REST methods
@@ -27,12 +29,12 @@ class GamesController < ApplicationController
       format.scorm {
         if (can? :read, @game)
           scormVersion = (params["version"].present? and ["12","2004"].include?(params["version"])) ? params["version"] : "2004"
-          # @game.to_scorm(self,scormVersion)
-          # send_file @game.scormFilePath(scormVersion), :type => 'application/zip', :disposition => 'attachment', :filename => ("scorm" + scormVersion + "-#{@game.id}.zip")
+          @game.to_scorm(self,scormVersion)
+          send_file @game.scormFilePath(scormVersion), :type => 'application/zip', :disposition => 'attachment', :filename => ("scorm" + scormVersion + "-#{@game.id}.zip")
         else
           render :nothing => true, :status => 500
         end
-      }      
+      }
     end
   end
 

@@ -1,7 +1,7 @@
 <% canBeEmbeded = lookup_context.template_exists?("embedcode", resourceClassName.pluralize, true) %>
 <% canBeShared = true %>
 <% canBeDownloaded = true %>
-<% canBeDownloadedInSCORM = ["presentation"].include?(resourceClassName) %>
+<% canBeDownloadedInSCORM = ["presentation","game"].include?(resourceClassName) %>
 
 <div class="tooltab_buttons">
   <% if can? :update, resource %>
