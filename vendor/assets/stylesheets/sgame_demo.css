@@ -179,7 +179,7 @@ ul#scormfiles_list li.scormfile_item div.scormfile_item_c3  button.remove_button
   margin-top: 2px;
 }
 
-#sgame_demo .create{
+#sgame_demo .demo_create{
   width: 180px;
   height: 60px;
   background: #046598;
@@ -203,12 +203,12 @@ ul#scormfiles_list li.scormfile_item div.scormfile_item_c3  button.remove_button
   margin-left: -25px;
 }
 
-#sgame_demo .create > p {
+#sgame_demo .demo_create > p {
   margin-top: -4px;
   margin-bottom: 0px;
 }
 
-#sgame_demo .create:hover > p{
+#sgame_demo .demo_create:hover > p{
   font-weight:bold;
 }
 

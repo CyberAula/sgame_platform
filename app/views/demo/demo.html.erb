@@ -42,9 +42,13 @@
 			<ul id="scormfiles_list"></ul>
 		</div>
 	</div>
-	<div class="create">    
+	<div class="demo_create">
 		<p class="createButton"><%=t("demo.create")%></p>
 		<p class="createButton"><%=t("demo.educational_game")%></p>
 	</div>
 	<a id="preview_scormfile_fancybox" class="fancybox" style="display:none"></a>
+	<form id="demo_form" action="/demo/create" method="post" style="display:none">
+		<input type="hidden" name="game_template"></input>
+		<input type="hidden" name="scormfiles"></input>
+	</form>
 </div>

@@ -33,14 +33,14 @@ SGAME_DEMO = (function($,undefined){
 		$.each(scormfiles, function(i, scormfile){
 			catalog.scormfiles[scormfile.id] = scormfile;
 		});
-		_createFancyboxes();
 		_loadEvents();
 		_createGamesCarrousel();
 		_createScormfilesCarrousel();
 		_translateUI();
 	};
 
-	var _createFancyboxes = function(){
+	var _loadEvents = function(){
+		//Fancyboxes
 		$("#preview_scormfile_fancybox").fancybox(
 			{
 				openEffect  : 'none',
@@ -54,6 +54,23 @@ SGAME_DEMO = (function($,undefined){
 				}
 			}
 		);
+
+		//Submit form
+		$("#sgame_demo .demo_create").click(function(event){
+			if(current_scormfiles.length < 1){
+				return _showSGAMEDialogWithSettings({"msg":_getTrans("i.error_no_scormfiles")}, false);
+			}
+			if((typeof current_game == "undefined")||(typeof current_game.id == "undefined")){
+				return _showSGAMEDialogWithSettings({"msg":_getTrans("i.error_no_game")}, false);
+			}
+			var scormfiles_ids = [];
+			$.each(current_scormfiles, function(i,scormfile){
+				scormfiles_ids.push(scormfile.id);
+			});
+			$("#demo_form input[name='game_template']").val(current_game.id);
+			$("#demo_form input[name='scormfiles']").val(scormfiles_ids);
+			$("#demo_form").submit();
+		});
 	};
 
 	var _createGamesCarrousel = function(){
@@ -114,38 +131,41 @@ SGAME_DEMO = (function($,undefined){
 
 		var scormfile_item_c2 = $("<div class='scormfile_item_c2'>");
 		var description = $("<p class='scormfile_description'>"+scormfile.description+"</p>");
-
-		var msgDescriptionb = "";
+		var descriptionb = $("<p class='scormfile_description_c'>" + scormfile.schema + " " + scormfile.schema_version + "</p>");
+		
+		var msgDescriptionResources = "";
 		if((scormfile.nscos > 0)&&(scormfile.assets > 0)){
 			if(scormfile.nscos > 1){
-				msgDescriptionb += scormfile.nscos + " SCOs"
+				msgDescriptionResources += scormfile.nscos + " SCOs"
 			} else {
-				msgDescriptionb += scormfile.nscos + " SCO"
+				msgDescriptionResources += scormfile.nscos + " SCO"
 			}
 			if(scormfile.nassets > 1){
-				msgDescriptionb += " and " + scormfile.nassets + " assets"
+				msgDescriptionResources += " and " + scormfile.nassets + " assets"
 			} else {
-				msgDescriptionb += " and " + scormfile.nassets + " asset"
+				msgDescriptionResources += " and " + scormfile.nassets + " asset"
 			}
 		} else {
 			if(scormfile.nscos > 0){
 				if(scormfile.nscos > 1){
-					msgDescriptionb += scormfile.nscos + " SCOs"
+					msgDescriptionResources += scormfile.nscos + " SCOs"
 				} else {
-					msgDescriptionb += scormfile.nscos + " SCO"
+					msgDescriptionResources += scormfile.nscos + " SCO"
 				}
 			}
 			if(scormfile.nassets > 0){
 				if(scormfile.nassets > 1){
-					msgDescriptionb += scormfile.nassets + " assets"
+					msgDescriptionResources += scormfile.nassets + " assets"
 				} else {
-					msgDescriptionb += scormfile.nassets + " asset"
+					msgDescriptionResources += scormfile.nassets + " asset"
 				}
 			}
 		}
-		var descriptionb = $("<p class='scormfile_description_b'>" + msgDescriptionb + "</p>");
+		var descriptionc = $("<p class='scormfile_description_b'>" + msgDescriptionResources + "</p>");
+		
 		$(scormfile_item_c2).append(description);
 		$(scormfile_item_c2).append(descriptionb);
+		$(scormfile_item_c2).append(descriptionc);
 		$(li).append(scormfile_item_c2);
 
 		var scormfile_item_c3 = $("<div class='scormfile_item_c3'>");
@@ -172,18 +192,6 @@ SGAME_DEMO = (function($,undefined){
 		$("#preview_scormfile_fancybox").attr("href",scormfileURL);
 		$("#preview_scormfile_fancybox").trigger("click");
 	};
-
-
-	/**
-	 * Events
-	 */
-	var _loadEvents = function(){
-
-	};
-
-	/*
-	 * Update UI
-	 */
 
 	var _selectGame = function(game){
 		current_game = game;
