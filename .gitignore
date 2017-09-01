@@ -26,6 +26,7 @@ public/scorm/12/presentations/*
 public/scorm/2004/presentations/*
 public/scorm/12/games/*
 public/scorm/2004/games/*
+public/tmp/scorm/*
 
 #Code
 public/code/scormfiles/*

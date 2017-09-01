@@ -152,6 +152,8 @@ ul#scormfiles_list li.scormfile_item div.scormfile_item_c1 img.scormfile_item_th
   min-height: 110px;
   max-height: 110px;
   cursor: pointer;
+  border: 2px solid black;
+  background-color: #ddd;
 }
 
 ul#scormfiles_list li.scormfile_item div.scormfile_item_c2 {

@@ -5655,9 +5655,13 @@ function Local_API_1484_11(options, jQuery) {
     }
   }
 }
-;function Local_API_SCORM_12(options) {
+;function Local_API_SCORM_12(options, jQuery) {
+  if(jQuery) {
+    var $ = jQuery
+  }
+  "use strict";
   var defaults = {version:"1.0", moddate:"20/04/2016 7:10PM", createdate:"20/04/2016 7:10PM", prefix:"Local_API_SCORM_12", errorCode:0, diagnostic:"", initialized:0, terminated:0, debug:true, listeners:{}, CMI:{_version:"Local 1.0", comments_from_learner:{_children:"comment,location,timestamp", _count:"0"}, comments_from_lms:{_children:"comment,location,timestamp", _count:"0"}, lesson_status:"unknown", completion_threshold:"0.7", credit:"no-credit", entry:"ab-initio", exit:"", interactions:{_children:"id,type,objectives,timestamp,correct_responses,weighting,learner_response,result,latency,description", 
-  _count:"0"}, launch_data:"?name1=value1&name2=value2&name3=value3", learner_id:"100", learner_name:"Simulated User", learner_preference:{_children:"audio_level,language,delivery_speed,audio_captioning", audio_level:"1", language:"", delivery_speed:"1", audio_captioning:"0"}, location:"", lesson_location:"", max_time_allowed:"", mode:"normal", objectives:{_children:"id,score,lesson_status,description", _count:"0"}, progress_measure:"", scaled_passing_score:"0.7", score:{_children:"scaled,raw,min,max", 
+  _count:"0"}, launch_data:"?name1=value1&name2=value2&name3=value3", learner_id:"100", learner_name:"Simulated User", learner_preference:{_children:"audio_level,language,delivery_speed,audio_captioning", audio_level:"1", language:"", delivery_speed:"1", audio_captioning:"0"}, lesson_mode:"normal", location:"", lesson_location:"", max_time_allowed:"", mode:"normal", objectives:{_children:"id,score,lesson_status,description", _count:"0"}, progress_measure:"", scaled_passing_score:"0.7", score:{_children:"scaled,raw,min,max", 
   scaled:"", raw:"", min:"", max:""}, session_time:"PT0H0M0S", suspend_data:"", time_limit_action:"", total_time:"PT0H0M0S"}}, settings = $.extend(defaults, options), cmi = {}, lesson_status = "|passed|completed|failed|incomplete|browsed|not attempted|unknown|", read_only = "|_version|completion_threshold|credit|entry|launch_data|learner_id|learner_name|_children|_count|mode|maximum_time_allowed|scaled_passing_score|time_limit_action|total_time|comment|", write_only = "|exit|session_time|", exit = 
   "|time-out|suspend|logout|normal||", errors = {0:"No error", 101:"General exception", 102:"General Initialization Failure", 103:"Already Initialized", 104:"Content Instance Terminated", 111:"General Termination Failure", 112:"Termination Before Initialization", 113:"Termination After Termination", 122:"Retrieve Data Before Initialization", 123:"Retrieve Data After Termination", 132:"Store Data Before Initialization", 133:"Store Data After Termination", 142:"Commit Before Initialization", 143:"Commit After Termination", 
   201:"General Argument Error", 301:"General Get Failure", 351:"General Set Failure", 391:"General Commit Failure", 401:"Undefined Data Model", 402:"Unimplemented Data Model Element", 403:"Data Model Element Value Not Initialized", 404:"Data Model Element Is Read Only", 405:"Data Model Element Is Write Only", 406:"Data Model Element Type Mismatch", 407:"Data Model Element Value Out Of Range", 408:"Data Model Dependency Not Established"}, self = this;
@@ -6000,12 +6004,15 @@ SGAME.Debugger = function() {
       _debugging = debugging
     }
   };
+  var isDebugging = function() {
+    return _debugging
+  };
   var log = function(msg) {
     if(_debugging && window.console) {
       console.log(msg)
     }
   };
-  return{init:init, log:log}
+  return{init:init, isDebugging:isDebugging, log:log}
 }();
 SGAME.API = function() {
   var init = function() {
@@ -6165,6 +6172,7 @@ SGAME.CORE = function() {
   };
   return{init:init, loadSettings:loadSettings, triggerLO:triggerLO, showLO:showLO, showRandomLO:showRandomLO, closeLO:closeLO}
 }();
+var API;
 var API_1484_11;
 SGAME.Fancybox = function(undefined) {
   var _currentFancybox = undefined;
@@ -6174,7 +6182,6 @@ SGAME.Fancybox = function(undefined) {
   var create = function(options, onCloseCallback) {
     _removeCurrentFancybox();
     _currentOnCloseCallback = onCloseCallback;
-    API_1484_11 = new Local_API_1484_11({}, jqSGAME);
     var width = 850;
     var height = 650;
     var lo = {};
@@ -6193,8 +6200,22 @@ SGAME.Fancybox = function(undefined) {
         url = lo["url"]
       }
     }
-    if(typeof url != "string") {
+    if(typeof url != "string" || typeof lo.scorm_type == "undefined") {
       return
+    }
+    var SCORM_API = undefined;
+    API = undefined;
+    API_1484_11 = undefined;
+    if(lo.scorm_type === "sco") {
+      if(lo.scorm_version === "1.2") {
+        API = new Local_API_SCORM_12({debug:SGAME.Debugger.isDebugging()}, jqSGAME);
+        SCORM_API = API
+      }else {
+        if(lo.scorm_version === "2004") {
+          API_1484_11 = new Local_API_1484_11({debug:SGAME.Debugger.isDebugging()}, jqSGAME);
+          SCORM_API = API_1484_11
+        }
+      }
     }
     var fancybox = document.createElement("div");
     fancybox.style.width = width + "px";
@@ -6223,31 +6244,32 @@ SGAME.Fancybox = function(undefined) {
       closeCurrentFancybox()
     };
     fancybox.appendChild(closeButton);
-    var semaphore = document.createElement("img");
-    semaphore.id = "semaphore";
-    semaphore.src = "/assets/sgame/semaphore/semaphore_red.png";
-    semaphore.style.width = "45px";
-    semaphore.style.height = "40px";
-    semaphore.style.padding = "5px";
-    semaphore.style.position = "absolute";
-    semaphore.style.left = "0px";
-    semaphore.style.top = "0px";
-    fancybox.appendChild(semaphore);
+    var trafficLight = document.createElement("img");
+    trafficLight.id = "trafficLight";
+    trafficLight.src = "/assets/sgame/trafficLight/trafficLight_red.png";
+    trafficLight.style.width = "45px";
+    trafficLight.style.height = "40px";
+    trafficLight.style.padding = "5px";
+    trafficLight.style.position = "absolute";
+    trafficLight.style.left = "0px";
+    trafficLight.style.top = "0px";
+    fancybox.appendChild(trafficLight);
     var iframe = document.createElement("iframe");
     iframe.src = url;
-    iframe.style.width = "95%";
-    iframe.style.height = "95%";
-    iframe.style.marginLeft = "2.5%";
-    iframe.style.marginTop = "40px";
+    iframe.style.width = "94%";
+    iframe.style.height = "94%";
+    iframe.style.marginLeft = "3%";
+    iframe.style.marginTop = "3%";
     iframe.style.overflow = "hidden";
     iframe.style.overflowY = "auto";
     iframe.scrolling = "yes";
     iframe.style.frameBorder = "0";
     iframe.style.borderStyle = "none";
+    iframe.setAttribute("allowfullscreen", "false");
     fancybox.appendChild(iframe);
     _currentFancybox = fancybox;
     document.body.appendChild(fancybox);
-    SGAME.Observer.start(iframe, lo, API_1484_11)
+    SGAME.Observer.start(iframe, lo, SCORM_API)
   };
   var _removeCurrentFancybox = function() {
     if(typeof _currentFancybox == "undefined") {
@@ -6256,6 +6278,7 @@ SGAME.Fancybox = function(undefined) {
     _currentFancybox.style.display = "none";
     _currentFancybox.parentNode.removeChild(_currentFancybox);
     _currentFancybox = undefined;
+    API = undefined;
     API_1484_11 = undefined
   };
   var closeCurrentFancybox = function() {
@@ -6272,7 +6295,7 @@ SGAME.Observer = function(undefined) {
   var _stopped = true;
   var _current_iframe = undefined;
   var _current_lo = undefined;
-  var _SCORM_LMS_API = undefined;
+  var _SCORM_API = undefined;
   var startTime;
   var success;
   var scorm_success_status;
@@ -6280,7 +6303,7 @@ SGAME.Observer = function(undefined) {
   var scorm_completion_status;
   var scorm_progress_measure;
   var scorm_scaled_score_threshold = 0.8;
-  var start = function(iframe, lo, SCORM_LMS_API) {
+  var start = function(iframe, lo, SCORM_API) {
     if(_stopped === false || typeof _current_iframe != "undefined") {
       return null
     }
@@ -6288,7 +6311,7 @@ SGAME.Observer = function(undefined) {
     _resetParams();
     _current_iframe = iframe;
     _current_lo = lo;
-    _SCORM_LMS_API = SCORM_LMS_API;
+    _SCORM_API = SCORM_API;
     _loadEvents();
     SGAME.TrafficLight.changeColor("red");
     if(_current_lo.scorm_type == "asset") {
@@ -6300,7 +6323,7 @@ SGAME.Observer = function(undefined) {
   var _resetParams = function() {
     _current_iframe = undefined;
     _current_lo = undefined;
-    _SCORM_LMS_API = undefined;
+    _SCORM_API = undefined;
     startTime = Date.now();
     success = false;
     scorm_success_status = undefined;
@@ -6309,8 +6332,8 @@ SGAME.Observer = function(undefined) {
     scorm_progress_measure = undefined
   };
   var _loadEvents = function() {
-    if(_current_lo.scorm_type == "sco") {
-      _SCORM_LMS_API.addListener("cmi.success_status", function(value) {
+    if(_current_lo.scorm_type == "sco" && typeof _SCORM_API != "undefined") {
+      _SCORM_API.addListener("cmi.success_status", function(value) {
         scorm_success_status = value;
         if(scorm_success_status === "passed") {
           if(SGAME.TrafficLight.getCurrentColor() != "green") {
@@ -6319,7 +6342,7 @@ SGAME.Observer = function(undefined) {
           }
         }
       });
-      _SCORM_LMS_API.addListener("cmi.score.scaled", function(value) {
+      _SCORM_API.addListener("cmi.score.scaled", function(value) {
         scorm_scaled_score = value;
         if(scorm_scaled_score >= scorm_scaled_score_threshold) {
           if(SGAME.TrafficLight.getCurrentColor() != "green") {
@@ -6328,10 +6351,10 @@ SGAME.Observer = function(undefined) {
           }
         }
       });
-      _SCORM_LMS_API.addListener("cmi.completion_status", function(value) {
+      _SCORM_API.addListener("cmi.completion_status", function(value) {
         scorm_completion_status = value
       });
-      _SCORM_LMS_API.addListener("cmi.progress_measure", function(value) {
+      _SCORM_API.addListener("cmi.progress_measure", function(value) {
         scorm_progress_measure = value
       })
     }
@@ -6412,25 +6435,25 @@ SGAME.TrafficLight = function(undefined) {
     }
   };
   var _changeColor = function(color) {
-    var semaphore = document.getElementById("semaphore");
-    if(semaphore) {
+    var trafficLight = document.getElementById("trafficLight");
+    if(trafficLight) {
       current_color = color;
-      semaphore.src = _getImageForColor(color)
+      trafficLight.src = _getImageForColor(color)
     }
   };
   var _getImageForColor = function(color) {
     switch(color) {
       case "green":
-        return"/assets/sgame/semaphore/semaphore_green.png";
+        return"/assets/sgame/trafficLight/trafficLight_green.png";
         break;
       case "yellow":
-        return"/assets/sgame/semaphore/semaphore_yellow.png";
+        return"/assets/sgame/trafficLight/trafficLight_yellow.png";
         break;
       case "red":
-        return"/assets/sgame/semaphore/semaphore_red.png";
+        return"/assets/sgame/trafficLight/trafficLight_red.png";
         break;
       default:
-        return"/assets/sgame/semaphore/semaphore.png";
+        return"/assets/sgame/trafficLight/trafficLight.png";
         break
     }
   };
@@ -6444,20 +6467,20 @@ SGAME.TrafficLight = function(undefined) {
     }
   };
   var _blink = function(color, duration) {
-    var semaphore = document.getElementById("semaphore");
-    if(!semaphore) {
+    var trafficLight = document.getElementById("trafficLight");
+    if(!trafficLight) {
       return
     }
     var coin = false;
     blinkTimer = setInterval(function() {
-      if(!semaphore) {
+      if(!trafficLight) {
         return
       }
       if(coin) {
-        semaphore.src = _getImageForColor(null);
+        trafficLight.src = _getImageForColor(null);
         coin = false
       }else {
-        semaphore.src = _getImageForColor(color);
+        trafficLight.src = _getImageForColor(color);
         coin = true
       }
     }, 500);
