@@ -19,6 +19,7 @@ class GameTemplate < ActiveRecord::Base
 	validates_attachment :file, content_type: { content_type: ["application/zip"] }
 	validates_presence_of :owner_id
 	validates_presence_of :title
+	validates_attachment :thumbnail, content_type: { content_type: ["image/jpeg", "image/gif", "image/png"] }
 	validate :sgame_requirements
 
 	def sgame_requirements

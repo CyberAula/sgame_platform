@@ -7,14 +7,18 @@ class Document < ActiveRecord::Base
   has_attached_file :file,
                     :url => '/:class/:id.:content_type_extension',
                     :path => ':rails_root/documents/:class/:id_partition/original/:filename.:extension'
+  has_attached_file :thumbnail,
+    :styles => SgamePlatform::Application.config.thumbnail_styles
 
   before_validation :set_title, :only => [:create]
+  after_save :fill_thumbnail_url
 
   validates_attachment_presence :file
   do_not_validate_attachment_file_type :file
   validates_presence_of :owner_id
   validate :owner_validation
   validates_presence_of :title
+  validates_attachment :thumbnail, content_type: { content_type: ["image/jpeg", "image/gif", "image/png"] }
 
 
   class << self
@@ -60,6 +64,10 @@ class Document < ActiveRecord::Base
 
   def set_title
     self.title = file_file_name if self.title.blank?
+  end
+
+  def fill_thumbnail_url
+    self.update_column(:thumbnail_url, self.thumbnail.url(:default, :timestamp => false)) if self.thumbnail_url.blank?
   end
 
 end

@@ -20,5 +20,6 @@ class AddScormfiles < ActiveRecord::Migration
     end
 
     add_attachment :scormfiles, :file
+    add_attachment :scormfiles, :thumbnail
   end
 end

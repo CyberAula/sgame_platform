@@ -9,13 +9,17 @@ class Game < ActiveRecord::Base
 	has_many :los, :through => :mappings
 
 	before_validation :fill_language
+	after_save :fill_thumbnail_url
+	after_destroy :remove_scorms
+
+	has_attached_file :thumbnail,
+		:styles => SgamePlatform::Application.config.thumbnail_styles
+
 	validates_presence_of :game_template_id
 	validates_presence_of :owner_id
 	validate :owner_validation
 	validates_presence_of :title
-
-	after_destroy :remove_scorms
-
+	validates_attachment :thumbnail, content_type: { content_type: ["image/jpeg", "image/gif", "image/png"] }
 
 	def settings
 		settings = Hash.new
@@ -469,6 +473,10 @@ class Game < ActiveRecord::Base
 
 
 	private
+
+	def fill_thumbnail_url
+		self.update_column(:thumbnail_url, self.thumbnail.url(:default, :timestamp => false)) if self.thumbnail_url.blank?
+	end
 
 	def fill_language
 		self.language = self.template.language if self.language.nil? and !self.template.nil?

@@ -18,7 +18,7 @@ namespace :db do
 		sf1 = Scormfile.create! :owner_id => user.id,
 			:title  => "Golf",
 			:description   => "SCORM package that explains everything about golf",
-			:thumbnail_url => "/assets/gallery/golf1.jpg",
+			:thumbnail=> File.open(File.join(Rails.root, 'public/scorm_examples/golf_n_sco_thumbnail.jpg')),
 			:language => "en",
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/scorm_examples/golf_n_sco.zip'))
@@ -26,7 +26,7 @@ namespace :db do
 		sf2 = Scormfile.create! :owner_id => user.id,
 			:title  => "Ancient Weapons",
 			:description   => "Quiz about ancient weapons",
-			:thumbnail_url => "/assets/gallery/weapons.jpg",
+			:thumbnail=> File.open(File.join(Rails.root, 'public/scorm_examples/AncientWeaponsQuiz_thumbnail.jpg')),
 			:language => "en",
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/scorm_examples/AncientWeaponsQuiz.zip'))
@@ -34,7 +34,7 @@ namespace :db do
 		sf3 = Scormfile.create! :owner_id => user.id,
 			:title  => "Weapons Timeline",
 			:description   => "Weapons Timeline Quiz",
-			:thumbnail_url => "/assets/gallery/battle.jpg",
+			:thumbnail=> File.open(File.join(Rails.root, 'public/scorm_examples/WeaponsTimelineQuiz_thumbnail.jpg')),
 			:language => "en",
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/scorm_examples/WeaponsTimelineQuiz.zip'))
@@ -42,10 +42,10 @@ namespace :db do
 		sf4 = Scormfile.create! :owner_id => user.id,
 			:title  => "Iberian Lynx",
 			:description   => "Iberian Lynx",
-			:thumbnail_url => "/assets/gallery/iberian_lynx.jpg",
+			:thumbnail=> File.open(File.join(Rails.root, 'public/scorm_examples/iberian_lynx_thumbnail.jpg')),
 			:language => "en",
 			:certified => true,
-			:file =>  File.open(File.join(Rails.root, 'public/scorm_examples/iberianlynx.zip'))
+			:file =>  File.open(File.join(Rails.root, 'public/scorm_examples/iberian_lynx.zip'))
 
 		#3: Create game templates
 		# Events of the game templates are created based on the sgame_events_json.json file
@@ -85,7 +85,7 @@ namespace :db do
 			:game_template_id=>oArena.id,
 			:title=>"Onslaught Arena",
 			:description=>"Example of educational game based on Onslaught Arena", 
-			:thumbnail_url=>"/assets/gallery/gameInstance_OnslaughtArena.jpg",
+			:thumbnail=> File.open(File.join(Rails.root, 'public/game_template_examples/Onslaught_Arena/thumbnail.jpg')),
 			:certified => true
 			
 		#Event mapping for oArenaInstance
@@ -100,7 +100,7 @@ namespace :db do
 			:game_template_id=>sokoban.id,
 			:title=>"Sokoban",
 			:description=>"Example of educational game based on Sokoban", 
-			:thumbnail_url=>"/assets/gallery/devilAvatar.gif",
+			:thumbnail=> File.open(File.join(Rails.root, 'public/game_thumbnails/devilAvatar.gif')),
 			:certified => true
 
 		#Event mapping for sokobanInstance
@@ -115,7 +115,7 @@ namespace :db do
 			:game_template_id=>nPark.id,
 			:title=>"Natural Park",
 			:description=>"Example of educational game based on Natural Park", 
-			:thumbnail_url=>"/assets/gallery/game_dpark.png",
+			:thumbnail=> File.open(File.join(Rails.root, 'public/game_template_examples/Natural_Park/thumbnail.png')),
 			:certified => true
 	
 		#Event mapping for nParkInstance

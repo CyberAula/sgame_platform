@@ -10,6 +10,7 @@ namespace :sgame_platform do
 			system "rm -rf public/scorm/2004/presentations/*"
 			system "rm -rf documents/*"
 			system "rm -rf public/code/*"
+			system "rm -rf public/system/*"
 			system "rake db:populate"
 		puts "Rebuild finish"
 	end

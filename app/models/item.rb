@@ -8,7 +8,7 @@ module Item
 			if self.column_names.include?("draft")
 				self.where(:draft => false)
 			else
-				self
+				self.all
 			end
 		end
 		def certified

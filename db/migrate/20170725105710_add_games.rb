@@ -13,5 +13,7 @@ class AddGames < ActiveRecord::Migration
       t.boolean  :certified, :default => false
       t.timestamps
     end
+
+    add_attachment :games, :thumbnail
   end
 end

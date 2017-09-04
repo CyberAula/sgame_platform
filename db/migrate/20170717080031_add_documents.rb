@@ -13,5 +13,6 @@ class AddDocuments < ActiveRecord::Migration
     end
 
     add_attachment :documents, :file
+    add_attachment :documents, :thumbnail
   end
 end

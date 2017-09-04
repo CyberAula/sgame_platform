@@ -24,13 +24,17 @@ ActiveRecord::Schema.define(version: 20170725105744) do
     t.string   "type"
     t.integer  "owner_id"
     t.boolean  "file_processing"
-    t.boolean  "certified",         default: false
+    t.boolean  "certified",              default: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "file_file_name"
     t.string   "file_content_type"
     t.integer  "file_file_size"
     t.datetime "file_updated_at"
+    t.string   "thumbnail_file_name"
+    t.string   "thumbnail_content_type"
+    t.integer  "thumbnail_file_size"
+    t.datetime "thumbnail_updated_at"
   end
 
   create_table "game_event_mappings", force: :cascade do |t|
@@ -79,12 +83,16 @@ ActiveRecord::Schema.define(version: 20170725105744) do
     t.text     "description"
     t.text     "thumbnail_url"
     t.string   "language"
-    t.boolean  "draft",               default: false
+    t.boolean  "draft",                  default: false
     t.datetime "scorm2004_timestamp"
     t.datetime "scorm12_timestamp"
-    t.boolean  "certified",           default: false
+    t.boolean  "certified",              default: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "thumbnail_file_name"
+    t.string   "thumbnail_content_type"
+    t.integer  "thumbnail_file_size"
+    t.datetime "thumbnail_updated_at"
   end
 
   create_table "los", force: :cascade do |t|
@@ -149,13 +157,17 @@ ActiveRecord::Schema.define(version: 20170725105744) do
     t.string   "scorm_version"
     t.integer  "nassets"
     t.integer  "nscos"
-    t.boolean  "certified",         default: false
+    t.boolean  "certified",              default: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "file_file_name"
     t.string   "file_content_type"
     t.integer  "file_file_size"
     t.datetime "file_updated_at"
+    t.string   "thumbnail_file_name"
+    t.string   "thumbnail_content_type"
+    t.integer  "thumbnail_file_size"
+    t.datetime "thumbnail_updated_at"
   end
 
   create_table "taggings", force: :cascade do |t|
