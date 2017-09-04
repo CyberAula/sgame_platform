@@ -28,6 +28,8 @@ module SgamePlatform
     config.full_code_domain = "http://" + (config.APP_CONFIG['code_domain'] || config.APP_CONFIG['domain'])
 
     config.name = (config.APP_CONFIG["name"] || "SGAME Platform")
+    config.sgame_platform_version = "0.1"
+    config.sgame_api_version = "0.3"
 
     # I18n (http://guides.rubyonrails.org/i18n.html)
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.

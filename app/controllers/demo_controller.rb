@@ -19,7 +19,7 @@ class DemoController < ApplicationController
 					owner = user_signed_in? ? current_user : SgamePlatform::Application.config.demo_user
 					gameInstance = Game.create!	:owner_id => owner.id,
 						:game_template_id => @game_template.id,
-						:title => "SGAME demo",
+						:title => "SGAME demo: " + @game_template.title,
 						:description => "Example of educational game based on " + @game_template.title, 
 						:thumbnail_url => @game_template.thumbnail_url,
 						:certified => false

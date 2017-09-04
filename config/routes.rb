@@ -54,6 +54,9 @@ SgamePlatform::Application.routes.draw do
   match '/demo', to: 'demo#demo', via: [:get]
   match '/demo/create', to: 'demo#create', via: [:post]
 
+  #Terms of use
+  match '/terms_of_use', to: "home#frontpage", via: [:get]
+
   #Wildcard route (This rule should be placed the last)
   match "*not_found", :to => 'application#page_not_found', via: [:get]
 end
