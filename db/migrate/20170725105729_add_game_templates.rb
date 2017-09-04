@@ -4,7 +4,7 @@ class AddGameTemplates < ActiveRecord::Migration
       t.integer :owner_id
       t.string  :title
       t.text    :description
-      t.string  :thumbnail_url
+      t.text    :thumbnail_url
       t.string  :language
       t.text    :path
       t.boolean  :certified, :default => false
@@ -12,5 +12,6 @@ class AddGameTemplates < ActiveRecord::Migration
     end
 
     add_attachment :game_templates, :file
+    add_attachment :game_templates, :thumbnail
   end
 end

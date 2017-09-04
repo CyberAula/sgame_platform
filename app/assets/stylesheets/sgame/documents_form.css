@@ -29,3 +29,13 @@ div.document_form_wrapper p.form_legend {
 div.document_form_wrapper div.actions {
 	margin-top: 25px;
 }
+
+div.document_form_wrapper select {
+	min-height: 25px;
+	min-width: 150px;
+	background: white;
+	color: black;
+	border: 1px solid black;
+	padding: 5px;
+	font-size: 1.2em; 
+}

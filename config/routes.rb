@@ -8,7 +8,7 @@ SgamePlatform::Application.routes.draw do
   match '/users/:id/scormfiles' => 'users#show_scormfiles', via: [:get]
   match '/users/:id/files' => 'users#show_files', via: [:get]
   match '/users/:id/games' => 'users#show_games', via: [:get]
-  match '/users/:id/templates' => 'users#show_templates', via: [:get]
+  match '/users/:id/game_templates' => 'users#show_templates', via: [:get]
   resources :users
 
   #Locale
@@ -28,6 +28,7 @@ SgamePlatform::Application.routes.draw do
   resources :games
   match '/games/:id/metadata' => 'games#metadata', :via => :get
   resources :game_templates
+  match '/game_templates/:id/download' => 'game_templates#download', :via => :get
 
   #Presentations
   match '/presentations/:id/metadata' => 'presentations#metadata', :via => :get

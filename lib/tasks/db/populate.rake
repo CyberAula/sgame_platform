@@ -54,7 +54,7 @@ namespace :db do
 		oArena = GameTemplate.create! :owner_id => user.id,
 			:title=>"Onslaught Arena", 
 			:description=>"Battle hordes of classic medieval monsters in this fast-paced arcade shooter", 
-			:thumbnail_url=>"/assets/gallery/game_OnslaughtArena.jpg",
+			:thumbnail=> File.open(File.join(Rails.root, 'public/game_template_examples/Onslaught_Arena/thumbnail.jpg')),
 			:language => "en",
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/game_template_examples/Onslaught_Arena.zip'))
@@ -64,7 +64,7 @@ namespace :db do
 		sokoban = GameTemplate.create! :owner_id => user.id,
 			:title=>"Sokoban", 
 			:description=>"Sokoban is a type of puzzle game, in which the player pushes diamonds around in a warehouse", 
-			:thumbnail_url=>"/assets/gallery/game_sokoban.png",
+			:thumbnail=> File.open(File.join(Rails.root, 'public/game_template_examples/Sokoban/thumbnail.png')),
 			:language => "en",
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/game_template_examples/Sokoban.zip'))
@@ -74,7 +74,7 @@ namespace :db do
 		nPark = GameTemplate.create! :owner_id => user.id,
 			:title=>"Natural Park", 
 			:description=>"Go meet and feed the lynxes in this park", 
-			:thumbnail_url=>"/assets/gallery/game_dpark.png",
+			:thumbnail=> File.open(File.join(Rails.root, 'public/game_template_examples/Natural_Park/thumbnail.png')),
 			:language => "en",
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/game_template_examples/Natural_Park.zip'))

@@ -5,7 +5,7 @@ class AddGames < ActiveRecord::Migration
       t.integer :owner_id
       t.string :title
       t.text :description
-      t.string :thumbnail_url
+      t.text :thumbnail_url
       t.string :language
       t.boolean  :draft, :default => false
       t.datetime :scorm2004_timestamp

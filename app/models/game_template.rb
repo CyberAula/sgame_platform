@@ -7,10 +7,13 @@ class GameTemplate < ActiveRecord::Base
 
 	after_destroy :remove_template_files
 	after_create :extract_game
+	after_save :fill_thumbnail_url
 
 	has_attached_file :file,
 		:url => '/:class/:id.:extension',
 		:path => ':rails_root/documents/:class/:id_partition/:filename.:extension'
+	has_attached_file :thumbnail,
+		:styles => SgamePlatform::Application.config.thumbnail_styles
 
 	validates_attachment_presence :file
 	validates_attachment :file, content_type: { content_type: ["application/zip"] }
@@ -65,6 +68,10 @@ class GameTemplate < ActiveRecord::Base
 
 
 	private
+
+	def fill_thumbnail_url
+		self.update_column(:thumbnail_url, self.thumbnail.url(:default, :timestamp => false)) if self.thumbnail_url.blank?
+	end
 
 	def extract_game
 		#Unpack the ZIP file and extract the game

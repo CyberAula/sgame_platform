@@ -31,12 +31,58 @@ class GameTemplatesController < ApplicationController
     end
   end
 
+  def create
+    @game_template = GameTemplate.create(game_template_params)
+    
+    respond_to do |format|
+      if @game_template.persisted?
+        format.json {
+          render :json => @game_template.to_json(:protocol => request.protocol)
+        }
+        format.html {
+          redirect_to polymorphic_path(@game_template), notice: I18n.t("game_templates.messages.success.create")
+        }
+      else
+        format.json {
+          return head(:not_found)
+        }
+        format.html { 
+          flash.now[:alert] = @game_template.errors.full_messages
+          render action: "new"
+        }
+      end
+    end
+  end
+
   def destroy
     @game_template = GameTemplate.find(params[:id])
     @game_template.destroy
     respond_to do |format|
       format.all { redirect_to user_path(current_user) }
     end
+  end
+
+  def download
+    @game_template = GameTemplate.find(params[:id])
+    authorize! :read, @game_template
+
+    path = @game_template.file.path
+
+    head(:not_found) and return unless File.exist?(path)
+
+    send_file_options = {
+      :filename => @game_template.file_file_name,
+      :type => @game_template.file_content_type
+    }
+
+    send_file(path, send_file_options)
+  end
+
+
+  private
+
+  def game_template_params
+    params.require(:game_template).permit(:owner_id,:file,:title,:description,:thumbnail,:thumbnail_url,:language)
   end
 
 end

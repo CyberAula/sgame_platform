@@ -58,6 +58,7 @@ es:
     submit: "Enviar"
     tags: "Etiquetas"
     title: "Título"
+    thumbnail: "Avatar"
     untitled: "Sin título"
     update: "Actualizar"
     username: "Nombre de usuario"
@@ -80,6 +81,14 @@ es:
     new: "Crear juego"
     tabtitle: "Juegos"
     update: "Actualizar juego"
+  game_templates:
+    messages:
+      success:
+        create: "La plantilla de juego ha sido subida con éxito"
+        update: "La plantilla de juego ha sido actualizada con éxito"
+    new: "Subir plantilla"
+    tabtitle: "Plantillas"
+    update: "Actualizar plantilla"
   files:
     tabtitle: "Archivos"
   frontpage:
@@ -170,6 +179,3 @@ es:
       view_metadata: "Ver metadatos"
   scormfiles:
     tabtitle: "Paquetes SCORM"
-  templates:
-    new: "Subir plantilla"
-    tabtitle: "Plantillas"

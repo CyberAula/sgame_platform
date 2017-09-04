@@ -112,6 +112,12 @@ module SgamePlatform
         end
     end
 
+    #Thumbnails
+    config.thumbnail_styles = {
+        :default => ["300x300>"],
+        :default_cropped => ["300x300#"]
+    }
+
     config.after_initialize do
       #Agnostic random
       if ActiveRecord::Base.connection.adapter_name == "PostgreSQL"
