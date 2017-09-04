@@ -73,8 +73,13 @@ es:
     update: "Actualizar archivo"
     tabtitle: "Archivos"
   games:
+    messages:
+      success:
+        create: "El juego ha sido creado con éxito"
+        update: "El juego ha sido actualizado con éxito"
     new: "Crear juego"
     tabtitle: "Juegos"
+    update: "Actualizar juego"
   files:
     tabtitle: "Archivos"
   frontpage:
@@ -95,6 +100,7 @@ es:
     menu:
       profile: "Perfil"
       settings: "Cuenta"
+      scormfiles: "Mis paquetes SCORM"
       presentations: "Mis presentaciones"
       files: "Mis archivos"
       games: "Mis juegos"
@@ -162,6 +168,8 @@ es:
       download: "Descargar"
       text_copy: "Copiar al portapapeles"
       view_metadata: "Ver metadatos"
+  scormfiles:
+    tabtitle: "Paquetes SCORM"
   templates:
     new: "Subir plantilla"
     tabtitle: "Plantillas"

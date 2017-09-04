@@ -22,7 +22,8 @@
 
 #resource_wrapper div.resource_tools_wrapper {
 	margin-top: 25px;
-	min-height: 200px;
+	min-height: 300px;
+	overflow: hidden;
 }
 
 #resource_wrapper ul.tooltab li a {

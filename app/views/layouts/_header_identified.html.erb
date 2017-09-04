@@ -8,8 +8,8 @@
 			+
 		</button>
 		<ul class="dropdown-menu dropdown-menu-right">
-			<li><%= link_to(t("presentations.new"),new_presentation_path())%></li>
 			<li><%= link_to(t("documents.new"),new_document_path())%></li>
+			<li><%= link_to(t("presentations.new"),new_presentation_path())%></li>
 			<li><%= link_to(t("games.new"),new_game_path())%></li>
 		</ul>
 	</div>
@@ -22,6 +22,7 @@
 			<div id="arrow-up-header-profile"></div>
 			<li><%= link_to(t("header.menu.profile"),user_path(current_user))%></li>
 			<li><%= link_to(t("header.menu.settings"),edit_user_registration_path(current_user))%></li>
+			<li><%= link_to(t("header.menu.scormfiles"),user_path(current_user)+'/scormfiles')%></li>
 			<li><%= link_to(t("header.menu.presentations"),user_path(current_user)+'/presentations')%></li>
 			<li><%= link_to(t("header.menu.files"),user_path(current_user)+'/files')%></li>
 			<li role="separator" class="divider"></li>

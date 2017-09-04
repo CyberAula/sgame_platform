@@ -2,8 +2,14 @@
 <% canBeShared = true %>
 <% canBeDownloaded = true %>
 <% canBeDownloadedInSCORM = ["presentation","game"].include?(resourceClassName) %>
+<% showFullScreen = ["game"].include?(resourceClassName) %>
 
 <div class="tooltab_buttons">
+  <% if showFullScreen %>
+    <a href="<%=polymorphic_path(resource, :format => 'full')%>" target="_blank">
+      <button class="sgame_button"><span class="glyphicon glyphicon-fullscreen"></span></button>
+    </a>
+  <% end %>
   <% if can? :update, resource %>
     <%= link_to(edit_polymorphic_path(resource), :title => t("dictionary.edit")) do %>
       <button class="sgame_button"><span class="glyphicon glyphicon-edit"></span></button>

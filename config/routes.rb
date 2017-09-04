@@ -5,6 +5,7 @@ SgamePlatform::Application.routes.draw do
   devise_for :users, controllers: { sessions: "users/sessions", registrations: "users/registrations", :omniauth_callbacks => "users/omniauth_callbacks" }
 
   match '/users/:id/presentations' => 'users#show_presentations', via: [:get]
+  match '/users/:id/scormfiles' => 'users#show_scormfiles', via: [:get]
   match '/users/:id/files' => 'users#show_files', via: [:get]
   match '/users/:id/games' => 'users#show_games', via: [:get]
   match '/users/:id/templates' => 'users#show_templates', via: [:get]

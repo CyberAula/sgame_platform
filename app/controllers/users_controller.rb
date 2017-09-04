@@ -3,8 +3,13 @@ class UsersController < ApplicationController
   load_and_authorize_resource :except => [:show_presentations]
 
   def show
-    @presentations = @profile_user.presentations.order('updated_at DESC')
-    @presentations = @presentations.public unless @isProfileOwner
+    @scormfiles = @profile_user.scormfiles.sort_by(&:updated_at).reverse
+    @scormfiles = @scormfiles.public unless @isProfileOwner
+  end
+
+  def show_scormfiles
+    @scormfiles = @profile_user.scormfiles.sort_by(&:updated_at).reverse
+    @scormfiles = @scormfiles.public unless @isProfileOwner
   end
 
   def show_presentations
@@ -13,7 +18,7 @@ class UsersController < ApplicationController
   end
 
   def show_files
-    @files = @profile_user.files.sort_by(&:updated_at).reverse
+    @files = @profile_user.documents.sort_by(&:updated_at).reverse
     @files = @files.public unless @isProfileOwner
   end
 

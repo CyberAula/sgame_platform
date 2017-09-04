@@ -83,8 +83,13 @@ en:
     tabtitle: "Files"
     update: "Update file"
   games:
+    messages:
+      success:
+        create: "Game has been succesfully created"
+        update: "Game has been succesfully updated"
     new: "Create game"
     tabtitle: "Games"
+    update: "Update game"
   files:
     tabtitle: "Files"
   frontpage:
@@ -105,6 +110,7 @@ en:
     menu:
       profile: "Profile"
       settings: "Account"
+      scormfiles: "My SCORM packages"
       presentations: "My presentations"
       files: "My files"
       games: "My games"
@@ -172,6 +178,8 @@ en:
       download: "Download"
       text_copy: "Copy to clip"
       view_metadata: "View metadata"
+  scormfiles:
+    tabtitle: "SCORM Packages"
   templates:
     new: "Upload template"
     tabtitle: "Templates"

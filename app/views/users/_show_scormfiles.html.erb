@@ -1,0 +1,10 @@
+<div id="scormfiles" class="tab-pane in active profile_tab">
+  <div class="row">
+    <% if @isProfileOwner %>
+      <%= render 'resources/resource_new', :new_resource_path => new_document_path %>
+    <%end%>
+    <% @scormfiles.each do |scormfile| %>
+      <%= render 'resources/resource', :resource => scormfile %>
+    <% end %>
+  </div>
+</div>
