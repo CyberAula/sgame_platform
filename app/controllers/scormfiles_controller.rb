@@ -33,6 +33,25 @@ class ScormfilesController < ApplicationController
     send_file(path, send_file_options)
   end
 
+  def edit
+    @scormfile = Scormfile.find_by_id(params[:id])
+  end
+
+  def update
+    @scormfile = Scormfile.find_by_id(params[:id])
+    params[:scormfile].permit! unless params[:scormfile].blank?
+    respond_to do |format|
+      if @scormfile.update_attributes(params[:scormfile] || {})
+        format.html { redirect_to scormfile_path(@scormfile), notice: I18n.t("documents.messages.success.update") }
+      else
+        format.html { 
+          flash.now[:alert] = I18n.t("documents.messages.error.generic_update")
+          render action: "edit"
+        }
+      end
+    end
+  end
+
   def destroy
     @scormfile = Scormfile.find_by_id(params[:id])
     @scormfile.destroy

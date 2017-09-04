@@ -54,6 +54,31 @@ class GameTemplatesController < ApplicationController
     end
   end
 
+  def edit
+    @game_template = GameTemplate.find(params[:id])
+    respond_to do |format|
+      format.html { 
+        render 
+      }
+    end
+  end
+
+  def update
+    @game_template = GameTemplate.find(params[:id])
+    params[:game_template].permit! unless params[:game_template].blank?
+
+    respond_to do |format|
+      if @game_template.update_attributes(params[:game_template] || {})
+        format.html { redirect_to game_template_path(@game_template), notice: I18n.t("game_templates.messages.success.update") }
+      else
+        format.html { 
+          flash.now[:alert] = I18n.t("game_templates.messages.error.generic_update")
+          render action: "edit"
+        }
+      end
+    end
+  end
+
   def destroy
     @game_template = GameTemplate.find(params[:id])
     @game_template.destroy

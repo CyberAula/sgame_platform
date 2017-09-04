@@ -475,7 +475,7 @@ class Game < ActiveRecord::Base
 	private
 
 	def fill_thumbnail_url
-		self.update_column(:thumbnail_url, self.thumbnail.url(:default, :timestamp => false)) if self.thumbnail_url.blank?
+		self.update_column(:thumbnail_url, self.thumbnail.url(:default, :timestamp => false)) if self.thumbnail.exists?
 	end
 
 	def fill_language
