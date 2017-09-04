@@ -161,6 +161,7 @@ es:
       share: "Compartir"
       download: "Descargar"
       text_copy: "Copiar al portapapeles"
+      view_metadata: "Ver metadatos"
   templates:
     new: "Subir plantilla"
     tabtitle: "Plantillas"

@@ -25,6 +25,7 @@ SgamePlatform::Application.routes.draw do
   match '/scormfiles/:id/download' => 'scormfiles#download', :via => :get
   match '/games/new' => 'demo#demo', :via => :get #redirect create games to the demo application
   resources :games
+  match '/games/:id/metadata' => 'games#metadata', :via => :get
   resources :game_templates
 
   #Presentations

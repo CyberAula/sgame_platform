@@ -38,10 +38,6 @@ class GamesController < ApplicationController
     end
   end
 
-  def sgame_api
-    redirect_to "/sgame_api/SGAME.js"
-  end
-
   def new
     @game = Game.new
     respond_to do |format|
@@ -106,6 +102,32 @@ class GamesController < ApplicationController
     @game.destroy
     respond_to do |format|
       format.all { redirect_to user_path(current_user) }
+    end
+  end
+
+
+  #############
+  # Custom methods
+  #############
+
+  def sgame_api
+    redirect_to "/sgame_api/SGAME.js"
+  end
+
+  def metadata
+    game = Game.find_by_id(params[:id])
+    respond_to do |format|
+      format.any {
+        unless game.nil?
+          xmlMetadata = Game.generate_LOM_metadata(game,{:id => Rails.application.routes.url_helpers.game_url(game), :LOMschema => params[:LOMschema] || "custom"})
+          render :xml => xmlMetadata.target!, :content_type => "text/xml"
+        else
+          xmlMetadata = ::Builder::XmlMarkup.new(:indent => 2)
+          xmlMetadata.instruct! :xml, :version => "1.0", :encoding => "UTF-8"
+          xmlMetadata.error("Game not found")
+          render :xml => xmlMetadata.target!, :content_type => "text/xml", :status => 404
+        end
+      }
     end
   end
 

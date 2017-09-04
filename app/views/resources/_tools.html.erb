@@ -46,9 +46,12 @@
   <!-- Tab1 / description -->
   <div class="tab-pane active" id="tab1">
     <% unless resource.description.blank? %>
-      <%=resource.description%>
+      <p class="resource_description"><%=resource.description%></p>
     <% else %>
       <div class="no_description"><%=t("resources.tools.description_no")%></div>
+    <% end %>
+    <% if canBeDownloadedInSCORM %>
+      <p class="resource_metadata_link_wrapper"><a href="<%=metadata_resource_path(resource)%>" target="_blank"><%=t("resources.tools.view_metadata")%></a></p>
     <% end %>
   </div>
 

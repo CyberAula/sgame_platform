@@ -171,6 +171,7 @@ en:
       share: "Share"
       download: "Download"
       text_copy: "Copy to clip"
+      view_metadata: "View metadata"
   templates:
     new: "Upload template"
     tabtitle: "Templates"
