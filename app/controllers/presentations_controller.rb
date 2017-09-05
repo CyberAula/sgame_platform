@@ -1,7 +1,7 @@
 class PresentationsController < ApplicationController
   require 'fileutils'
   before_filter :authenticate_user!, :only => [ :new, :create, :edit, :update, :uploadTmpJSON ]
-  load_and_authorize_resource
+  load_and_authorize_resource :except => [:metadata]
 
   # Enable CORS
   before_filter :cors_preflight_check, :only => [:presentation_thumbnails, :last_slide, :iframe_api]
@@ -136,6 +136,7 @@ class PresentationsController < ApplicationController
 
   def metadata
     presentation = Presentation.find_by_id(params[:id])
+    authorize! :show, presentation
     respond_to do |format|
       format.any {
         unless presentation.nil?
