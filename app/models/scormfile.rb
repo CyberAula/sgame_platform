@@ -5,11 +5,6 @@ class Scormfile < ActiveRecord::Base
   
   belongs_to :owner, :class_name => 'User', :foreign_key => "owner_id"
 
-  after_destroy :remove_unpackaged_files
-  after_destroy :remove_los
-  after_create :unpackage
-  after_create :extract_los
-
   has_attached_file :file,
                     :url => '/:class/:id.:extension',
                     :path => ':rails_root/documents/:class/:id_partition/:filename.:extension'
@@ -18,6 +13,10 @@ class Scormfile < ActiveRecord::Base
 
   before_validation :fill_package_params, :only => [:create]
   before_validation :fill_scorm_version
+  after_destroy :remove_unpackaged_files
+  after_destroy :remove_los
+  after_create :unpackage
+  after_create :extract_los
   after_save :fill_thumbnail_url
 
   validates_attachment_presence :file

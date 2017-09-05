@@ -6091,8 +6091,11 @@ SGAME.CORE = function() {
     }
   };
   var triggerLO = function(event_id, callback) {
-    var los_candidate = _event_mapping[event_id].los;
-    if(los_candidate) {
+    var los_candidate = [];
+    if(typeof _event_mapping[event_id] != "undefined") {
+      los_candidate = _event_mapping[event_id].los
+    }
+    if(los_candidate && (los_candidate instanceof Array && los_candidate.length > 0)) {
       if(_containWildcard(los_candidate)) {
         var rRobinResult = _roundRobinChoice(_all_mapped_los);
         _all_mapped_los = rRobinResult.los
@@ -6106,6 +6109,10 @@ SGAME.CORE = function() {
         if(typeof callback == "function") {
           callback(null, null)
         }
+      }
+    }else {
+      if(typeof callback == "function") {
+        callback(null, null)
       }
     }
   };
@@ -6200,6 +6207,10 @@ SGAME.Fancybox = function(undefined) {
         url = lo["url"]
       }
     }
+    var maxHeight = window.innerHeight - 8;
+    var maxWidth = window.innerWidth - 8;
+    height = Math.min(height, maxHeight);
+    width = Math.min(width, maxWidth);
     if(typeof url != "string" || typeof lo.scorm_type == "undefined") {
       return
     }
@@ -6220,6 +6231,8 @@ SGAME.Fancybox = function(undefined) {
     var fancybox = document.createElement("div");
     fancybox.style.width = width + "px";
     fancybox.style.height = height + "px";
+    fancybox.style.maxWidth = maxWidth + "px";
+    fancybox.style.maxHeight = maxHeight + "px";
     fancybox.style.overflow = "hidden";
     fancybox.style.background = "white";
     fancybox.style.position = "absolute";
@@ -6227,7 +6240,7 @@ SGAME.Fancybox = function(undefined) {
     fancybox.style.zindex = 9999;
     fancybox.style.borderRadius = "1em";
     fancybox.style.border = "2px solid black";
-    fancybox.setAttribute("id", "test");
+    fancybox.setAttribute("id", "sgame_fancybox");
     var marginLeft = (window.innerWidth - width) / 2;
     fancybox.style.marginLeft = marginLeft + "px";
     var marginTop = (window.innerHeight - height) / 2;

@@ -8,12 +8,12 @@ class Game < ActiveRecord::Base
 	has_many :events, class_name: :GameTemplateEvent, :through => :template
 	has_many :los, :through => :mappings
 
+	has_attached_file :thumbnail,
+		:styles => SgamePlatform::Application.config.thumbnail_styles
+
 	before_validation :fill_language
 	after_save :fill_thumbnail_url
 	after_destroy :remove_scorms
-
-	has_attached_file :thumbnail,
-		:styles => SgamePlatform::Application.config.thumbnail_styles
 
 	validates_presence_of :game_template_id
 	validates_presence_of :owner_id

@@ -5,15 +5,15 @@ class GameTemplate < ActiveRecord::Base
 	has_many :games, :dependent => :destroy
 	has_many :events, class_name: :GameTemplateEvent, :dependent => :destroy
 
-	after_destroy :remove_template_files
-	after_create :extract_game
-	after_save :fill_thumbnail_url
-
 	has_attached_file :file,
 		:url => '/:class/:id.:extension',
 		:path => ':rails_root/documents/:class/:id_partition/:filename.:extension'
 	has_attached_file :thumbnail,
 		:styles => SgamePlatform::Application.config.thumbnail_styles
+
+	after_destroy :remove_template_files
+	after_create :extract_game
+	after_save :fill_thumbnail_url
 
 	validates_attachment_presence :file
 	validates_attachment :file, content_type: { content_type: ["application/zip"] }

@@ -79,6 +79,16 @@ namespace :db do
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/game_template_examples/Natural_Park.zip'))
 
+		system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/Space_Invaders.zip')
+		Utils.zip_folder(File.join(Rails.root, 'public/game_template_examples/Space_Invaders.zip'),File.join(Rails.root, 'public/game_template_examples/Space_Invaders'))
+		spaceInvaders = GameTemplate.create! :owner_id => user.id,
+			:title=>"Space_Invaders", 
+			:description=>"Defeat waves of aliens with a laser cannon to earn as many points as possible in this arcade shooting game.",
+			:thumbnail=> File.open(File.join(Rails.root, 'public/game_template_examples/Space_Invaders/thumbnail.png')),
+			:language => "en",
+			:certified => true,
+			:file =>  File.open(File.join(Rails.root, 'public/game_template_examples/Space_Invaders.zip'))
+
 		#4: Create games
 		#With oArena template
 		oArenaInstance = Game.create! :owner_id => user.id,
@@ -122,6 +132,21 @@ namespace :db do
 		((sf4.los).map{|lo| lo.id}).uniq.each do |lo_id|
 			GameEventMapping.create! :game_id => nParkInstance.id, 
 				:game_template_event_id => nPark.events.first.id, 
+				:lo_id => lo_id
+		end
+
+		#With Space Invaders template
+		spaceInvadersInstance = Game.create! :owner_id => user.id,
+			:game_template_id=>spaceInvaders.id,
+			:title=>"Space Invaders",
+			:description=>"Example of educational game based on Space Invaders", 
+			:thumbnail=> File.open(File.join(Rails.root, 'public/game_template_examples/Space_Invaders/thumbnail.png')),
+			:certified => true
+	
+		#Event mapping for spaceInvadersInstance
+		((sf1.los).map{|lo| lo.id}).uniq.each do |lo_id|
+			GameEventMapping.create! :game_id => spaceInvadersInstance.id, 
+				:game_template_event_id => spaceInvaders.events.first.id, 
 				:lo_id => lo_id
 		end
 
