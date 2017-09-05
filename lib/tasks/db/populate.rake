@@ -82,12 +82,22 @@ namespace :db do
 		system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/Space_Invaders.zip')
 		Utils.zip_folder(File.join(Rails.root, 'public/game_template_examples/Space_Invaders.zip'),File.join(Rails.root, 'public/game_template_examples/Space_Invaders'))
 		spaceInvaders = GameTemplate.create! :owner_id => user.id,
-			:title=>"Space_Invaders", 
+			:title=>"Space Invaders",
 			:description=>"Defeat waves of aliens with a laser cannon to earn as many points as possible in this arcade shooting game.",
 			:thumbnail=> File.open(File.join(Rails.root, 'public/game_template_examples/Space_Invaders/thumbnail.png')),
 			:language => "en",
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/game_template_examples/Space_Invaders.zip'))
+
+		system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/Floppybird.zip')
+		Utils.zip_folder(File.join(Rails.root, 'public/game_template_examples/Floppybird.zip'),File.join(Rails.root, 'public/game_template_examples/Floppybird'))
+		floppybird = GameTemplate.create! :owner_id => user.id,
+			:title=>"Floppy Bird",
+			:description=>"Experience the adventure of Floppy Bird, the flying floppy disk, through the world by dodging obstacles.",
+			:thumbnail=> File.open(File.join(Rails.root, 'public/game_template_examples/Floppybird/thumbnail.png')),
+			:language => "en",
+			:certified => true,
+			:file =>  File.open(File.join(Rails.root, 'public/game_template_examples/Floppybird.zip'))
 
 		#4: Create games
 		#With oArena template
@@ -144,9 +154,24 @@ namespace :db do
 			:certified => true
 	
 		#Event mapping for spaceInvadersInstance
-		((sf1.los).map{|lo| lo.id}).uniq.each do |lo_id|
+		((sf2.los).map{|lo| lo.id}).uniq.each do |lo_id|
 			GameEventMapping.create! :game_id => spaceInvadersInstance.id, 
 				:game_template_event_id => spaceInvaders.events.first.id, 
+				:lo_id => lo_id
+		end
+
+		#With Floppybird template
+		floppybirdInstance = Game.create! :owner_id => user.id,
+			:game_template_id=>floppybird.id,
+			:title=>"Floppy Bird",
+			:description=>"Example of educational game based on Floppy Bird", 
+			:thumbnail=> File.open(File.join(Rails.root, 'public/game_template_examples/Floppybird/thumbnail.png')),
+			:certified => true
+	
+		#Event mapping for floppybirdInstance
+		((sf2.los).map{|lo| lo.id}).uniq.each do |lo_id|
+			GameEventMapping.create! :game_id => floppybirdInstance.id, 
+				:game_template_event_id => floppybird.events.first.id, 
 				:lo_id => lo_id
 		end
 

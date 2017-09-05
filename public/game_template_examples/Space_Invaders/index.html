@@ -1,30 +1,29 @@
 <!doctype html>
 <html>
-    <head>
-        <meta charset="UTF-8" />
-        <title>Space Invaders</title>
-        <script src="assets/javascript/phaser.min.js"></script>
-        <script src="assets/javascript/invaders.js"></script>
-        <script src="/SGAME.js"></script>
-        <style>
-            body {
-                background-color: black;
-            }
-            canvas {
-                position: absolute;
-                left: 50%;
-                margin-left: -400px;
-            }
-        </style>
-    </head>
-    <body>
-    background: black;
+	<head>
+		<meta charset="UTF-8" />
+		<title>Space Invaders</title>
+		<script src="assets/javascript/phaser.min.js"></script>
+		<script src="assets/javascript/invaders.js"></script>
+		<script src="/SGAME.js"></script>
+		<style>
+			body {
+				background-color: black;
+			}
+			canvas {
+				position: absolute;
+				left: 50%;
+				margin-left: -400px;
+			}
+		</style>
+	</head>
+	<body>
 		<script>
 			window.onload = function(){
-			SGAME.init({togglePause : function(){
-				togglePause();
-			}});
+				SGAME.init({togglePause : function(){
+					togglePause();
+				}});
 			}
 		</script>
-    </body>
+	</body>
 </html>

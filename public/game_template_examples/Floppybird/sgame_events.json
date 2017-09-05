@@ -1,0 +1,9 @@
+[
+	{
+		"id": 1,
+		"title": "Extra live",
+		"description": "Event triggered when the bird touches a pipe",
+		"type": "extra_life",
+		"frequency": "high"
+	}
+]

@@ -6237,7 +6237,7 @@ SGAME.Fancybox = function(undefined) {
     fancybox.style.background = "white";
     fancybox.style.position = "absolute";
     fancybox.style.top = 0;
-    fancybox.style.zindex = 9999;
+    fancybox.style.zIndex = 9999;
     fancybox.style.borderRadius = "1em";
     fancybox.style.border = "2px solid black";
     fancybox.setAttribute("id", "sgame_fancybox");
