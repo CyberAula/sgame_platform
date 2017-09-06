@@ -1,42 +1,82 @@
+
+
 <div id="frontpage">
+
 	<div class="row frontpage_row1">
-		<div class="col-md-6 col1">
-			<p class="title"><%=t("frontpage.title")%></p>
-			<p><%=t("frontpage.description")%></p>
-			<p><a href="/demo"><%=t("frontpage.description_demo")%></a></p>
+		
+		<div class="row">
+			<div class="col-md-1"></div>
+			<div class="col-md-10 col1">
+				<p class="title"><%=t("frontpage.title")%></p>
+				<p class="description_2"><%=t("frontpage.description_2")%></p>
+				<p class="description"><%=t("frontpage.description")%></p>
+				<p class="description_demo"><a href="/demo"><%=t("frontpage.description_demo")%></a></p>
+			</div>
+			<div class="col-md-1"></div>
 		</div>
-		<div class="col-md-6 col2">
-			<video preload='metadata' controls='controls' poster='//vishub.org/pictures/11783.jpg'>
-				<source src='//vishub.org/videos/11782.flv' type='video/x-flv'>
-				<source src='//vishub.org/videos/11782.mp4' type='video/mp4'>
-				Sorry, your browser does not support HTML5 video.
-			</video>
+
+		<div class="row">
+			<div class="col-md-1"></div>
+			<div class="col-md-10 col2">
+				<video preload='metadata' controls='controls' poster='//vishub.org/pictures/11783.jpg'>
+					<source src='//vishub.org/videos/11782.flv' type='video/x-flv'>
+					<source src='//vishub.org/videos/11782.mp4' type='video/mp4'>
+					Sorry, your browser does not support HTML5 video.
+				</video>
+			</div>
+			<div class="col-md-1"></div>
 		</div>
+
 	</div>
+
+
 	<div class="row frontpage_row2">
-		<div class="col-md-4 col1">
-			<p class="text_title"><img class="icon" src="/assets/cube_blank.png"/><%=t("frontpage.feature_1_title")%></p>
-			<p class="text_description"><%=t("frontpage.feature_1_description")%></p>
+		
+		<div class="col-md-12">
+			<div class="row b_color">
+				<div class="col-md-4 col1">
+					<p class="text_icon"><img class="icon" src="/assets/cube_blank.png"/></p>
+					<p class="text_title"><%=t("frontpage.feature_1_title")%></p>
+					<p class="text_description description_1"><%=t("frontpage.feature_1_description")%></p>
+				</div>
+				<div class="col-md-4 col2">
+					<p class="text_icon"><img class="icon gamepad" src="/assets/gamepad.png"/></p>
+					<p class="text_title title2"><%=t("frontpage.feature_2_title")%></p>
+					<p class="text_description description_2"><%=t("frontpage.feature_2_description")%></p>
+				</div>
+				<div class="col-md-4 col3">
+					<p class="text_icon"><img class="icon" src="/assets/world.png"/></p>
+					<p class="text_title title_3"><%=t("frontpage.feature_3_title")%></p>
+					<p class="text_description description_3"><%=t("frontpage.feature_3_description")%></p>
+				</div>
+			</div>
 		</div>
-		<div class="col-md-4 col2">
-			<p class="text_title"><img class="icon" src="/assets/gamepad.png"/><%=t("frontpage.feature_2_title")%></p>
-			<p class="text_description"><%=t("frontpage.feature_2_description")%></p>
-		</div>
-		<div class="col-md-4 col3">
-			<p class="text_title_glyphicon"><span class="glyphicon glyphicon-globe" aria-hidden="true"></span><%=t("frontpage.feature_3_title")%></p>
-			<p class="text_description"><%=t("frontpage.feature_3_description")%></p>
-		</div>
+
 	</div>
+
+	
+	<div class="row frontpage_row3">
 	<% if @certified_resources.length > 0 %>
-		<div class="frontpage_decoration">
-			<hr class="frontpage_line">
-			<span class="glyphicon glyphicon-certificate"></span>
+		<div class="col-md-12 col4">
+			<div class="col-md-5 col4_line"></div>
+			<div class="col-md-2 col4_title">
+				<p class="title"><%=t("frontpage.title_certified_resources")%></p>
+			</div>
+			<div class="col-md-5 col4_line"></div>
 		</div>
-		<div class="row frontpage_row3">
-			<p class="title"><%=t("frontpage.title_certified_resources")%></p>
-			<% @certified_resources.each do |resource| %>
-				<%= render 'resources/resource', :resource => resource %>
-			<% end %>
+			<!--<div class="frontpage_decoration">
+				<hr class="frontpage_line">
+				<span class="glyphicon glyphicon-certificate"></span>
+			</div> -->
+	</div>
+		<div class="row frontpage_row4">
+			<div class="col-md-12 col5 games_grid">
+				<% @certified_resources.each do |resource| %>
+					<%= render 'resources/resource', :resource => resource %>
+				<% end %>
+			<div>
 		</div>
+
 	<% end %>
+	</div>
 </div>

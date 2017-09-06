@@ -1,22 +1,23 @@
 div.item_box {
-	width: 224px;
-	height: 224px;
-	border: 2px solid black;
-	border-radius: 3px;
-	display: inline-block;
-	margin: 10px 10px 10px 0px;
-	float: left;
+    width: 224px;
+    // height: 224px;
+    // border: 2px solid black;
+    border-radius: 10px;
+    display: inline-block;
+    margin: 11px 11px 11px 11px;
+    float: left;
+    overflow: hidden;
 }
 
 div.item_box div.item_icon {
 	position: absolute;
 	background-color: white;
 	padding: 10px;
-	border-radius: 0 0 3px 0;
+	border-radius: 10px 0 3px 0;
 	border-top: none;
 	border-left: none;
-	border-right: 1px solid black;
-	border-bottom: 1px solid black;
+	//border-right: 1px solid black;
+	//border-bottom: 1px solid black;
 	width: 40px;
 	height: 40px;
 	text-align: center;
@@ -75,7 +76,9 @@ div.item_box div.item_thubmnail_draft span {
 div.item_box div.item_title {
 	position: relative;
 	width: 100%;
-	height: 70px;
+	height: 36px;
+	text-align: center;
+	font-weight: bold;
 	background-color: white;
 	color: black;
 	z-index: 1;

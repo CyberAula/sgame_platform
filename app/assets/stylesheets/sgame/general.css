@@ -4,9 +4,11 @@ html, body {
 	background: #046598;
 	color: white;
 }
+
 #wrapper{
 
 }
+
 #container, #header, #footer{
 	padding: 0px 30px 0px 30px;
 }
