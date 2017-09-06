@@ -99,6 +99,16 @@ namespace :db do
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/game_template_examples/Floppybird.zip'))
 
+		system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/Elemental_One.zip')
+		Utils.zip_folder(File.join(Rails.root, 'public/game_template_examples/Elemental_One.zip'),File.join(Rails.root, 'public/game_template_examples/Elemental_One'))
+		elementalOne = GameTemplate.create! :owner_id => user.id,
+			:title=>"Elemental One",
+			:description=>"A simple platformer game.",
+			:thumbnail=> File.open(File.join(Rails.root, 'public/game_template_examples/Elemental_One/thumbnail.png')),
+			:language => "en",
+			:certified => true,
+			:file =>  File.open(File.join(Rails.root, 'public/game_template_examples/Elemental_One.zip'))
+
 		#4: Create games
 		#With oArena template
 		oArenaInstance = Game.create! :owner_id => user.id,
@@ -172,6 +182,21 @@ namespace :db do
 		((sf2.los).map{|lo| lo.id}).uniq.each do |lo_id|
 			GameEventMapping.create! :game_id => floppybirdInstance.id, 
 				:game_template_event_id => floppybird.events.first.id, 
+				:lo_id => lo_id
+		end
+
+		#With ElementalOne template
+		elementalOneInstance = Game.create! :owner_id => user.id,
+			:game_template_id=>elementalOne.id,
+			:title=>"Elemental One",
+			:description=>"Example of educational game based on Elemental One", 
+			:thumbnail=> File.open(File.join(Rails.root, 'public/game_template_examples/Elemental_One/thumbnail.png')),
+			:certified => true
+	
+		#Event mapping for elementalOneInstance
+		((sf2.los).map{|lo| lo.id}).uniq.each do |lo_id|
+			GameEventMapping.create! :game_id => elementalOneInstance.id, 
+				:game_template_event_id => elementalOne.events.first.id, 
 				:lo_id => lo_id
 		end
 

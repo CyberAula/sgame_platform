@@ -372,7 +372,7 @@ function playerDead(){
          enableImmunity();
          setTimeout(function(){
             disableImmunity();
-         },1750);
+         },3000);
          togglePause();
          return;
       } else {
