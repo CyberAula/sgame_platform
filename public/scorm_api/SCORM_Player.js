@@ -1,23 +1,6 @@
 /*
  * SCORM Player
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * @version 1.0
  */
 
 function SCORM_Player(options){
@@ -29,8 +12,10 @@ function SCORM_Player(options){
 		debug: true,
 		SCORM_VERSION: undefined,
 		SCORM_PACKAGE_URL: undefined,
+		SCORM_RESOURCE_URLS: undefined,
+		NAVBAR: undefined,
 		LMS_API: undefined,
-		VISH_IFRAME_API: undefined
+		IFRAME_API: undefined
 	};
 
 	// Settings merged with defaults and extended options */
@@ -47,8 +32,28 @@ function SCORM_Player(options){
 		settings.SCORM_PACKAGE_URL = checkUrlProtocol(settings.SCORM_PACKAGE_URL);
 	}
 
-	if((typeof settings.LMS_API != "undefined")&&(typeof settings.VISH_IFRAME_API != "undefined")){
-		setVEGateway();
+	if(settings.SCORM_RESOURCE_URLS instanceof Array){
+		for(var i=0; i<settings.SCORM_RESOURCE_URLS.length; i++){
+			if(typeof settings.SCORM_RESOURCE_URLS[i] == "string"){
+				settings.SCORM_RESOURCE_URLS[i] = checkUrlProtocol(settings.SCORM_RESOURCE_URLS[i]);
+			} else {
+				settings.SCORM_RESOURCE_URLS.splice(i,1);
+			}
+		}
+	} else {
+		settings.SCORM_RESOURCE_URLS = [];
+	}
+
+	if(settings.SCORM_RESOURCE_URLS.length < 1){
+		settings.SCORM_RESOURCE_URLS = [settings.SCORM_PACKAGE_URL];
+	}
+
+	if(typeof settings.NAVBAR == "undefined"){
+		settings.NAVBAR = (settings.SCORM_RESOURCE_URLS.length > 1);
+	}
+	
+	if((typeof settings.LMS_API != "undefined")&&(typeof settings.IFRAME_API != "undefined")){
+		setSCORMGateway();
 	}
 
 	adaptContentWrapper();
@@ -61,14 +66,13 @@ function SCORM_Player(options){
 
 			var timeoutToLoadScormContent = 500;
 
-			if((typeof settings.VISH_IFRAME_API != "undefined")&&(isIframe())){
-				settings.VISH_IFRAME_API.init(
+			if((typeof settings.IFRAME_API != "undefined")&&(isIframe())){
+				settings.IFRAME_API.init(
 					{
-						wapp: true,
-						tracking: true,
+						mode: "INTERNAL",
 						callback: function(origin){
 							debug("WAPP connnected with " + origin);
-							settings.VISH_IFRAME_API.getUser(function(user){
+							settings.IFRAME_API.getUser(function(user){
 								if((typeof user == "object")&&(typeof user.username == "string")&&(typeof settings.LMS_API != "undefined")){
 									if(typeof settings.LMS_API.setCMILMSValue == "function"){
 										settings.LMS_API.setCMILMSValue("learner_name",user.username);
@@ -83,7 +87,7 @@ function SCORM_Player(options){
 				timeoutToLoadScormContent = 0;
 			}
 
-			// Ensure that SCORM content is loaded although VISH.Iframe.API connection fails
+			// Ensure that SCORM content is loaded although Iframe_API connection fails
 			setTimeout(function(){
 				loadScormContentOnIframe(callback);
 			},timeoutToLoadScormContent);
@@ -209,14 +213,14 @@ function SCORM_Player(options){
 		return url;
 	};
 
-	function setVEGateway(){
+	function setSCORMGateway(){
 		if((typeof settings.LMS_API != "object")||(typeof settings.LMS_API.addListener != "function")){
 			return;
 		}
 		
 		if(settings.SCORM_VERSION === "1.2"){
 			settings.LMS_API.addListener("cmi.core.lesson_status", function(value){
-				if(settings.VISH_IFRAME_API.isConnected()){
+				if(settings.IFRAME_API.isConnected()){
 					// Completion status and success status are not considered in SCORM 1.2, but can be inferred from lesson_status
 					// lesson_status = "|passed|completed|failed|incomplete|browsed|not attempted|unknown|"
 					// completion_status = "|completed|incomplete|not attempted|unknown|"
@@ -249,13 +253,13 @@ function SCORM_Player(options){
 					if((typeof completionValue == "string")&&(completionValue != status.completionStatus)){
 						if(status.completionStatus != "completed"){
 							//Do not allow to undo "completed" lesson_status.
-							settings.VISH_IFRAME_API.setCompletionStatus(completionValue);
+							settings.IFRAME_API.setCompletionStatus(completionValue);
 							status.completionStatus = completionValue;
 						}
 					}
 					if((typeof successValue == "string")&&(successValue != status.successStatus)){
 						if(status.completionStatus != "passed"){
-							settings.VISH_IFRAME_API.setSuccessStatus(successValue);
+							settings.IFRAME_API.setSuccessStatus(successValue);
 							status.successStatus = successValue;
 						}
 					}
@@ -263,33 +267,33 @@ function SCORM_Player(options){
 			});
 
 			settings.LMS_API.addListener("cmi.score.scaled", function(value){
-				if(settings.VISH_IFRAME_API.isConnected()){
-					settings.VISH_IFRAME_API.setScore(value*100);
+				if(settings.IFRAME_API.isConnected()){
+					settings.IFRAME_API.setScore(value*100);
 				}
 			});
 
 		} else if((settings.SCORM_VERSION === "2004")||(typeof settings.SCORM_VERSION != "string")){
 			settings.LMS_API.addListener("cmi.progress_measure", function(value){
-				if(settings.VISH_IFRAME_API.isConnected()){
-					settings.VISH_IFRAME_API.setProgress(value*100);
+				if(settings.IFRAME_API.isConnected()){
+					settings.IFRAME_API.setProgress(value*100);
 				}
 			});
 
 			settings.LMS_API.addListener("cmi.completion_status", function(value){
-				if(settings.VISH_IFRAME_API.isConnected()){
-					settings.VISH_IFRAME_API.setCompletionStatus(value);
+				if(settings.IFRAME_API.isConnected()){
+					settings.IFRAME_API.setCompletionStatus(value);
 				}
 			});
 
 			settings.LMS_API.addListener("cmi.score.scaled", function(value){
-				if(settings.VISH_IFRAME_API.isConnected()){
-					settings.VISH_IFRAME_API.setScore(value*100);
+				if(settings.IFRAME_API.isConnected()){
+					settings.IFRAME_API.setScore(value*100);
 				}
 			});
 
 			settings.LMS_API.addListener("cmi.success_status", function(value){
-				if(settings.VISH_IFRAME_API.isConnected()){
-					settings.VISH_IFRAME_API.setSuccessStatus(value);
+				if(settings.IFRAME_API.isConnected()){
+					settings.IFRAME_API.setSuccessStatus(value);
 				}
 			});
 		}
@@ -385,4 +389,4 @@ function SCORM_Player(options){
 			}
 		}
 	};
-}
+};

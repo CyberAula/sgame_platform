@@ -70,6 +70,7 @@ en:
     title: "Title"
     thumbnail: "Avatar"
     untitled: "Untitled"
+    unknown: "Desconocido"
     update: "Update"
     username: "Username"
     register: "Sign up"

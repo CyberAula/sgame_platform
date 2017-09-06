@@ -60,6 +60,7 @@ es:
     title: "Título"
     thumbnail: "Avatar"
     untitled: "Sin título"
+    unknown: "Unknown"
     update: "Actualizar"
     username: "Nombre de usuario"
     register: "Regístrate"
