@@ -1,8 +1,8 @@
 class GamesController < ApplicationController
   before_filter :authenticate_user!, :only => [:new, :create, :edit, :update]
   before_filter :allow_iframe_requests
-  load_and_authorize_resource :except => :sgame_api
-  skip_authorization_check :only => :sgame_api
+  load_and_authorize_resource :except => [:sgame_api, :metadata]
+  skip_authorization_check :only => [:sgame_api]
 
  
   #############
@@ -116,6 +116,7 @@ class GamesController < ApplicationController
 
   def metadata
     game = Game.find_by_id(params[:id])
+    authorize! :show, game
     respond_to do |format|
       format.any {
         unless game.nil?
