@@ -23,7 +23,8 @@
 	<script type="text/javascript">
 		//SCORM URL
 		var scormpackageURL = "<%=scormPackage.lohreffull%>";
-		
+		var resourceURLs = <%=raw scormPackage.los.sort{|lo| -lo.resource_index}.map{|lo| lo.hreffull}%>;
+
 		// Create LMS API
 		var LMS_API;
 		<% if scormPackage.scorm_version == "1.2" %>

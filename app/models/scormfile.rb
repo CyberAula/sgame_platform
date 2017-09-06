@@ -37,48 +37,9 @@ class Scormfile < ActiveRecord::Base
     self.schema + " " + self.schema_version
   end
 
-
-  private
-
-  def fill_thumbnail_url
-    if self.thumbnail.exists?
-      new_thumbnail_url = self.thumbnail.url(:default, :timestamp => false)
-    else
-      new_thumbnail_url = "/assets/scormfile_icon.png"
-    end
-    self.update_column(:thumbnail_url, new_thumbnail_url) if self.thumbnail_url != new_thumbnail_url
-  end
-
-  def fill_package_params
-    begin
-      if self.file.queued_for_write[:original] and File.exists?(self.file.queued_for_write[:original].path)
-        zipFile = self.file.queued_for_write[:original]
-      else
-        zipFile = self.file
-      end
-      Scorm::Package.open(zipFile, :cleanup => true) do |pkg|
-        self.schema = pkg.manifest.schema
-        self.schema_version = pkg.manifest.schema_version
-        self.lohref = pkg.manifest.resources.first.href
-      end
-    rescue
-    end
-  end
-
-  def fill_scorm_version
-    if self.schema == "ADL SCORM" and !self.schema_version.blank?
-      if (self.schema_version.scan(/2004\s[\w]+\sEdition/).length > 0) or (self.schema_version == "CAM 1.3")
-        self.scorm_version = "2004"
-      else
-        self.scorm_version = self.schema_version
-      end
-    end
-    if self.schema.blank? and self.schema_version.blank?
-      #Some ATs create SCORM 1.2 Packages without specifying schema data
-      self.schema = "ADL SCORM"
-      self.schema_version = "1.2"
-      self.scorm_version = "1.2" 
-    end
+  def updateScormfile
+    self.unpackage
+    self.extract_los
   end
 
   def unpackage
@@ -123,9 +84,15 @@ class Scormfile < ActiveRecord::Base
     else
       zipFile = self.file
     end
+    currentLos = self.los
+    addedHrefs = []
     Scorm::Package.open(zipFile, :cleanup => false) do |pkg|
-      pkg.manifest.resources.each do |resource|
-        lo = Lo.new
+      pkg.manifest.resources.each_with_index do |resource,i|
+        if currentLos.find_by_href(resource.href).nil?
+          lo = Lo.new
+        else
+          lo = currentLos.find_by_href(resource.href)
+        end
         lo.container_type = self.class.name
         lo.container_id = self.id
         lo.standard = "SCORM"
@@ -139,11 +106,21 @@ class Scormfile < ActiveRecord::Base
         else
           lo.rdata = true
         end
+        lo.resource_index = i+1
         lo.href = resource.href
         lo.hreffull = SgamePlatform::Application.config.full_code_domain + "/code/scormfiles/" + self.id.to_s + "/" + lo.href
         lo.metadata = Scormfile.parse_metadata(resource.metadata)
         lo.save!
+        addedHrefs.push(lo.href)
       end
+    end
+    if addedHrefs.length > 0
+      losToDestroy = self.los.where("href not in (?)", addedHrefs)
+    else
+      losToDestroy = self.los
+    end
+    losToDestroy.each do |lo|
+      lo.destroy
     end
     self.update_column(:nscos, self.los.select{|lo| lo.lo_type == "sco"}.length)
     self.update_column(:nassets, self.los.select{|lo| lo.lo_type == "asset"}.length)
@@ -165,6 +142,50 @@ class Scormfile < ActiveRecord::Base
       field = field.gsub(/'/,"").gsub(/\"/,"") if field.is_a? String
     end
     field
+  end
+
+
+  private
+
+  def fill_package_params
+    begin
+      if self.file.queued_for_write[:original] and File.exists?(self.file.queued_for_write[:original].path)
+        zipFile = self.file.queued_for_write[:original]
+      else
+        zipFile = self.file
+      end
+      Scorm::Package.open(zipFile, :cleanup => true) do |pkg|
+        self.schema = pkg.manifest.schema
+        self.schema_version = pkg.manifest.schema_version
+        self.lohref = pkg.manifest.resources.first.href
+      end
+    rescue
+    end
+  end
+
+  def fill_scorm_version
+    if self.schema == "ADL SCORM" and !self.schema_version.blank?
+      if (self.schema_version.scan(/2004\s[\w]+\sEdition/).length > 0) or (self.schema_version == "CAM 1.3")
+        self.scorm_version = "2004"
+      else
+        self.scorm_version = self.schema_version
+      end
+    end
+    if self.schema.blank? and self.schema_version.blank?
+      #Some ATs create SCORM 1.2 Packages without specifying schema data
+      self.schema = "ADL SCORM"
+      self.schema_version = "1.2"
+      self.scorm_version = "1.2" 
+    end
+  end
+
+  def fill_thumbnail_url
+    if self.thumbnail.exists?
+      new_thumbnail_url = self.thumbnail.url(:default, :timestamp => false)
+    else
+      new_thumbnail_url = "/assets/scormfile_icon.png"
+    end
+    self.update_column(:thumbnail_url, new_thumbnail_url) if self.thumbnail_url != new_thumbnail_url
   end
 
   def remove_unpackaged_files
