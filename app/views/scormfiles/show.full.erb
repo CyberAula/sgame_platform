@@ -14,7 +14,8 @@
 		// console.log("Communication stablished with " + origin);
 		SCORM_IFRAME_API.registerCallback("getUser",function(params,origin){
 			return {
-				username: "<%= user_signed_in? ? current_user.name : t('dictionary.unknown') %>"
+				username: "<%= user_signed_in? ? current_user.name : t('dictionary.unknown') %>",
+				language: "<%= I18n.locale.to_s %>"
 			};
 		});
 		// SCORM_IFRAME_API.registerCallback("setScore",function(params,origin){
