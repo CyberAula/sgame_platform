@@ -8,6 +8,7 @@ class AddLos < ActiveRecord::Migration
       t.string  :schema_version
       t.string  :lo_type
       t.boolean :rdata
+      t.integer :resource_index
       t.string  :href
       t.string  :hreffull
       t.string  :metadata

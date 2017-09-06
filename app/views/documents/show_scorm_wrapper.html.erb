@@ -23,7 +23,8 @@
 	<script type="text/javascript">
 		//SCORM URL
 		var scormpackageURL = "<%=scormPackage.lohreffull%>";
-		
+		var scormResourceURLs = <%=raw scormPackage.los.sort{|lo| -lo.resource_index}.map{|lo| lo.hreffull}%>;
+
 		// Create LMS API
 		var LMS_API;
 		<% if scormPackage.scorm_version == "1.2" %>
@@ -35,7 +36,7 @@
 		<% end %>
 		
 		//Create SCORM player
-		var SCORM_Player = new SCORM_Player({debug: false, SCORM_VERSION: "<%=scormPackage.scorm_version%>", LMS_API: LMS_API, IFRAME_API: SCORM_IFRAME_API, SCORM_PACKAGE_URL: scormpackageURL });
+		var SCORM_Player = new SCORM_Player({debug: false, SCORM_VERSION: "<%=scormPackage.scorm_version%>", LMS_API: LMS_API, IFRAME_API: SCORM_IFRAME_API, SCORM_PACKAGE_URL: scormpackageURL, SCORM_RESOURCE_URLS: scormResourceURLs});
 
 		SCORM_Player.loadScormContent(function(){
 			// Scorm content loaded
