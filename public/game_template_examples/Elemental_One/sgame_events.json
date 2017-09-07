@@ -1,0 +1,9 @@
+[
+	{
+		"id": 1,
+		"title": "Powergem",
+		"description": "Event triggered when the player tries to grab a powergem",
+		"type": "block",
+		"frequency": "medium"
+	}
+]

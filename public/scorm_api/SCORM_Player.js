@@ -17,6 +17,7 @@ function SCORM_Player(options){
 		SCORM_RESOURCE_URLS: undefined,
 		NAVBAR: undefined,
 		LMS_API: undefined,
+		LOCALE: "en",
 		IFRAME_API: undefined
 	};
 
@@ -76,9 +77,14 @@ function SCORM_Player(options){
 						callback: function(origin){
 							debug("WAPP connnected with " + origin);
 							settings.IFRAME_API.getUser(function(user){
-								if((typeof user == "object")&&(typeof user.username == "string")&&(typeof settings.LMS_API != "undefined")){
-									if(typeof settings.LMS_API.setCMILMSValue == "function"){
-										settings.LMS_API.setCMILMSValue("learner_name",user.username);
+								if(typeof user == "object"){
+									if((typeof user.username == "string")&&(typeof settings.LMS_API != "undefined")){
+										if(typeof settings.LMS_API.setCMILMSValue == "function"){
+											settings.LMS_API.setCMILMSValue("learner_name",user.username);
+										}
+									}
+									if((typeof user.language == "string")&&(["en","es"].indexOf(user.language)!=-1)){
+										settings.LOCALE = user.language;
 									}
 								}
 								loadScormContentOnIframe(callback);
@@ -147,8 +153,22 @@ function SCORM_Player(options){
 	};
 
 	function createNavBar(){
-		var navbar = $('<div id="scormnavbar"><div id="scormnavbar_prev">Previous</div><div id="scormnavbar_title"></div><div id="scormnavbar_next">Next</div></div>');
+		var navbar = $('<div id="scormnavbar"><div id="scormnavbar_prev"></div><div id="scormnavbar_title"></div><div id="scormnavbar_next"></div></div>');
 		
+		var prevText;
+		var nextText;
+		switch(settings.LOCALE){
+			case "es":
+				prevText = "Anterior";
+				nextText = "Siguiente";
+				break;
+			default:
+				prevText = "Previous";
+				nextText = "Next";
+		}
+		$(navbar).find("#scormnavbar_prev").html(prevText);
+		$(navbar).find("#scormnavbar_next").html(nextText);
+
 		$(navbar).css("position","absolute");
 		$(navbar).css("bottom","0px");
 		$(navbar).css("height","6%");
@@ -158,6 +178,7 @@ function SCORM_Player(options){
 		$(navbar).find("#scormnavbar_title, #scormnavbar_prev, #scormnavbar_next").css("display","inline-block");
 		$(navbar).find("#scormnavbar_title, #scormnavbar_prev, #scormnavbar_next").css("position","absolute");
 		$(navbar).find("#scormnavbar_title, #scormnavbar_prev, #scormnavbar_next").css("top","30%");
+		$(navbar).find("#scormnavbar_title, #scormnavbar_prev, #scormnavbar_next").css("user-select","none");
 
 		$(navbar).find("#scormnavbar_prev, #scormnavbar_next").css("cursor","pointer");
 		$(navbar).find("#scormnavbar_prev, #scormnavbar_next").css("z-index",2);
