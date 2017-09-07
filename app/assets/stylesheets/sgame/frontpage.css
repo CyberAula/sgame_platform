@@ -71,73 +71,77 @@ div.frontpage_row1 div.col2 {
 		//text-align: left;
 	}
 	
-	div.frontpage_row2 div.b_color {
+	div.frontpage_row3 div.b_color {
 		max-height: 431px;
 		//min-height: 431px;
 	}
 }
 
-div.frontpage_row1 div.col2 video {
-	//width: 75%;
+div.frontpage_row2 {
+	text-align: center;
+}
+
+div.frontpage_row2 div.col2 video {
+	width: 100%;
 	border: 3px solid white;
 	margin-top: 50px;
 }
 
-div.frontpage_row2 {
+div.frontpage_row3 {
     margin: 105px 0 70px 0;
 	text-align: center;
 	font-size: 1.4em;
 }
 
-div.frontpage_row2 div.b_color {
+div.frontpage_row3 div.b_color {
 	background-color: #58ACFA;
 	border-radius: 10px;
 }
 
-div.frontpage_row2 div.b_color div.col-md-4 {
+div.frontpage_row3 div.b_color div.col-md-4 {
 	padding: 40px 0;
 }
 
-div.frontpage_row2 div.b_color div.col-md-4.col1, div.col-md-4.col2 {
+div.frontpage_row3 div.b_color div.col-md-4.col3_line {
 	border-right: 6px solid #046598;
 	padding-right: 20px;
 }
 
-div.frontpage_row2, div.frontpage_row3, div.frontpage_row4 {
+div.frontpage_row1, div.frontpage_row2, div.frontpage_row3, div.frontpage_row4, div.frontpage_row5 {
 	padding-left: 8%;
 	padding-right: 8%;
 }
 
-div.frontpage_row2 p{
+div.frontpage_row3 p{
 	text-align: center;
 }
 
-div.frontpage_row2 img.icon {
+div.frontpage_row3 img.icon {
 	//margin-right: 15px;
 	margin-bottom: 4px;
 	max-height: 120px;
 	max-width: 120px;
 }
 
-div.frontpage_row2 img.icon.gamepad {
+div.frontpage_row3 img.icon.gamepad {
     padding-top: 30px;
 }
 
-div.frontpage_row2 p.text_title, p.text_icon, div.frontpage_row2 p.text_title_glyphicon {
+div.frontpage_row3 p.text_title, p.text_icon, div.frontpage_row3 p.text_title_glyphicon {
 	font-size: 1.3em;
 	margin-left: 17px;
 }
 
-div.frontpage_row2 p.text_title {
+div.frontpage_row3 p.text_title {
 	font-size: 1.3em;
 	font-weight: bold;
 }
 
-div.frontpage_row2 p.text_title.title2 {
+div.frontpage_row3 p.text_title.title2 {
     padding-top: 21px;
 }
 
-div.frontpage_row2 p.text_description {
+div.frontpage_row3 p.text_description {
 	font-size: 1.1em;
 	margin-left: 50px;
 	margin-right: 45px;
@@ -145,11 +149,11 @@ div.frontpage_row2 p.text_description {
 	color: white;
 }
 
-div.frontpage_row2 p.text_description.description_1 {
-	padding-bottom: 50px;
+div.frontpage_row3 p.text_description.description_1 {
+	padding-bottom: 55px;
 }
 
-div.frontpage_row2 p.text_description.description_2 {
+div.frontpage_row3 p.text_description.description_2 {
 	padding-bottom: 80px;
 }
 
@@ -169,11 +173,11 @@ div.col4_line {
 	border-radius: 5px;
 } 
 
-div.row.frontpage_row4 {
+div.row.frontpage_row5 {
 	display: flex;
 }
 
-div.row.frontpage_row4 div.col-md-12.col5.games_grid {
+div.row.frontpage_row5 div.col-md-12.col5.games_grid {
 	justify-content: center;
 	margin-top: 35px;
 }
