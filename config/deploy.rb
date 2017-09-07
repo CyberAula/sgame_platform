@@ -35,6 +35,8 @@ ssh_options[:keys] = keys if keys
 set :application, "sgame_platform"
 set :user, username
 
+set :keep_releases, 2
+
 role :web, server_url # Your HTTP server, Apache/etc
 role :app, server_url # This may be the same as your `Web` server
 role :db,  server_url, :primary => true # This is where Rails migrations will run
