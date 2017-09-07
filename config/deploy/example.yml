@@ -1,0 +1,6 @@
+message: "Deploying the SGAME Platform"
+repository: git@github.com:ging/sgame_platform.git
+branch: master
+server_url: 127.0.0.1 #put here the server URL (e.g. example.com)
+username: ubuntu
+keys: /home/username/.ssh/ssh-keypair #remove this line if you don't want to use ssh keys
