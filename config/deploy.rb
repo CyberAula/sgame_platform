@@ -55,7 +55,6 @@ namespace(:deploy) do
   end
 
   task :fix_file_permissions do
-    # LOG
     run "#{try_sudo} touch #{release_path}/log/production.log"
     run "#{try_sudo} /bin/chmod 666 #{release_path}/log/production.log"
   end
@@ -63,6 +62,8 @@ namespace(:deploy) do
   task :link_files do
     run "ln -s #{shared_path}/database.yml #{release_path}/config/database.yml"
     run "ln -s #{shared_path}/application_config.yml #{release_path}/config/application_config.yml"
+    run "ln -s #{shared_path}/code #{release_path}/public/"
+    run "ln -s #{shared_path}/documents #{release_path}/"
   end
 
   task :precompile_sgame_assets do
