@@ -32,3 +32,6 @@ public/tmp/scorm/*
 public/code/scormfiles/*
 public/code/game_templates/*
 public/code/webapps/*
+
+config/deploy/*
+!config/deploy/example.yml

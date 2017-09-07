@@ -1,4 +1,6 @@
 namespace :sgame_platform do
+	#bundle exec rake sgame_platform:rebuild
+	#bundle exec rake sgame_platform:rebuild RAILS_ENV=production
 	task :rebuild do
 		desc "Rebuild..."
 			system "rake db:drop"

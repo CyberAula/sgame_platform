@@ -74,14 +74,14 @@ SGAME_DEMO = (function($,undefined){
 	};
 
 	var _createGamesCarrousel = function(){
-		// if(options.user_logged_in === true){
-		// 	var div = $("<div id='addGameButton'><a href='/game_templates/new'><p>Upload</p><img src='/assets/add_game.png'/></a></div>");
-		// 	$("#" + games_carrousel_id).append(div);
-		// }
 		$.each(catalog.games, function(i, game){
-			var div = $("<div itemid="+game.id+"><p>" + game.title + "</p><img src="+game.thumbnail_url+"/></div>");
+			var div = $("<div itemid="+game.id+"><p>" + game.title + "</p><img src='"+game.thumbnail_url+"'/></div>");
 			$("#" + games_carrousel_id).append(div);
 		});
+		if(options.user_logged_in === true){
+			var div = $("<div id='addGameButton'><a href='/game_templates/new' i18n-key-data-confirm='i.dialog_confirmation' i18n-key-data-confirm='i.dialog_confirmation' data-confirm='are you sure?' data-method='get'><p i18n-key='i.upload_game_template'>Upload</p><img src='/assets/add_game.png'/></a></div>");
+			$("#" + games_carrousel_id).append(div);
+		}
 		$("#" + games_carrousel_id).slick({
 			dots: true,
 			infinite: true,
@@ -96,11 +96,11 @@ SGAME_DEMO = (function($,undefined){
 
 	var _createScormfilesCarrousel = function(){
 		if(options.user_logged_in === true){
-			var div = $("<div id='addFileButton'><a i18n-key-data-confirm='i.dialog_confirmation' data-confirm='are you sure?' data-method='get' href='/documents/new'><p i18n-key='i.upload'>Upload</p><img src='/assets/add_file.png'/></a></div>");
+			var div = $("<div id='addFileButton'><a i18n-key-data-confirm='i.dialog_confirmation' data-confirm='are you sure?' data-method='get' href='/documents/new'><p i18n-key='i.upload_scormfile'>Upload</p><img src='/assets/add_file.png'/></a></div>");
 			$("#" + scormfiles_carrousel_id).append(div);
 		}
 		$.each(catalog.scormfiles, function(i, scormfile){
-			var div = $("<div itemid="+scormfile.id+"><p>" + scormfile.title + "</p><img src="+scormfile.thumbnail_url+"/></div>");
+			var div = $("<div itemid="+scormfile.id+"><p>" + scormfile.title + "</p><img src='"+scormfile.thumbnail_url+"'/></div>");
 			$("#" + scormfiles_carrousel_id).append(div);
 		});
 		$("#" + scormfiles_carrousel_id).slick({
