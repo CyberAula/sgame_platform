@@ -66,17 +66,6 @@ div.frontpage_row1 div.col2 {
 	text-align: center;
 }
 
-@media (min-width: 992px){
-	div.frontpage_row1 div.col2 {
-		//text-align: left;
-	}
-	
-	div.frontpage_row3 div.b_color {
-		max-height: 431px;
-		//min-height: 431px;
-	}
-}
-
 div.frontpage_row2 {
 	text-align: center;
 }
@@ -96,6 +85,7 @@ div.frontpage_row3 {
 div.frontpage_row3 div.b_color {
 	background-color: #58ACFA;
 	border-radius: 10px;
+	padding: 0;
 }
 
 div.frontpage_row3 div.b_color div.col-md-4 {
@@ -103,8 +93,9 @@ div.frontpage_row3 div.b_color div.col-md-4 {
 }
 
 div.frontpage_row3 div.b_color div.col-md-4.col3_line {
-	border-right: 6px solid #046598;
 	padding-right: 20px;
+	border-right: none;
+	border-bottom: 6px solid #046598;
 }
 
 div.frontpage_row1, div.frontpage_row2, div.frontpage_row3, div.frontpage_row4, div.frontpage_row5 {
@@ -149,12 +140,8 @@ div.frontpage_row3 p.text_description {
 	color: white;
 }
 
-div.frontpage_row3 p.text_description.description_1 {
-	padding-bottom: 55px;
-}
-
-div.frontpage_row3 p.text_description.description_2 {
-	padding-bottom: 80px;
+div.frontpage_row3 p.text_description.description_1, div.frontpage_row3 p.text_description.description_2 {
+	padding-bottom: 20px;
 }
 
 div.col4 {
@@ -168,11 +155,6 @@ div.col4_title > p.title {
 	font-weight: bold;
 }
 
-div.col4_line {
-	border-bottom: 3px solid white;
-	border-radius: 5px;
-} 
-
 div.row.frontpage_row5 {
 	display: flex;
 }
@@ -183,20 +165,27 @@ div.row.frontpage_row5 div.col-md-12.col5.games_grid {
 }
 
 
-/*div.frontpage_decoration {
-	margin-top: 8px;
-	position: relative;
-	width: 100%;
-	text-align: center;
+@media (min-width: 992px) {
+
+	div.frontpage_row3 div.b_color {
+		max-height: 431px;
+	}
+	
+	div.frontpage_row3 p.text_description.description_1 {
+		padding-bottom: 55px;
+	}
+
+	div.frontpage_row3 p.text_description.description_2 {
+		padding-bottom: 80px;
+	}
+	
+	div.frontpage_row3 div.b_color div.col-md-4.col3_line {
+	border-right: 6px solid #046598;
+	border-bottom: none;
+	}
+
+	div.col4_line {
+		border-bottom: 3px solid white;
+		border-radius: 5px;
+	} 
 }
-
-div.frontpage_decoration hr.frontpage_line {
-	border-bottom: 2px solid white;
-}
-
-div.frontpage_decoration span.glyphicon {
-	position: absolute;
-	font-size: 2.2em;
-	top: -9px;
-}*/
-
