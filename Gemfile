@@ -26,6 +26,7 @@ gem 'rmagick', '=2.13.2'
 gem 'pdf-reader', '= 1.3.3'
 gem 'font-awesome-sass', '4.7.0'
 gem 'cancancan', '~> 2.0'
+gem 'exception_notification', '=4.1.1'
 
 # $ export FORCE_LOCAL_SCORM=scormGemPath
 if ENV['FORCE_LOCAL_SCORM']

@@ -16,6 +16,7 @@
 
 config/database.yml
 config/application_config.yml
+config/initializers/exception_notification.rb
 
 # ignore documents folder
 /documents
