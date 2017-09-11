@@ -85,7 +85,9 @@ class ApplicationController < ActionController::Base
 	end
 
 	def extract_locale_from_webclient
-		client_locale = request.env['HTTP_ACCEPT_LANGUAGE'].scan(/^[a-z]{2}/).first
-		client_locale if Utils.valid_locale?(client_locale)
+		unless request.env['HTTP_ACCEPT_LANGUAGE'].nil?
+			client_locale = request.env['HTTP_ACCEPT_LANGUAGE'].scan(/^[a-z]{2}/).first
+			return (Utils.valid_locale?(client_locale) ? client_locale : nil)
+		end
 	end
 end

@@ -54,6 +54,8 @@ es:
       signed_up_but_locked: 'Te has registrado correctamente, pero tu cuenta está bloqueada.'
       updated: 'Actualizaste tu cuenta correctamente.'
       update_needs_confirmation: "Actualizaste tu cuenta correctamente, pero tenemos que revalidar tu email. Revisa tu correo para confirmar la dirección."
+    reset_password:
+      change_my_password: "Cambiar mi contraseña"
     sessions:
       close: "Cerrar sesión"
       logged: "Logueado como"
