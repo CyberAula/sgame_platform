@@ -59,11 +59,7 @@ div.frontpage_row1 div.col2 {
 	text-align: center;
 }
 
-div.frontpage_row2 {
-	text-align: center;
-}
-
-div.frontpage_row2 div.col2 video {
+div.frontpage_row1 div.col2 video {
 	width: 100%;
 	border: 3px solid white;
 	margin-top: 50px;
