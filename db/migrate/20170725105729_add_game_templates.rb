@@ -8,6 +8,8 @@ class AddGameTemplates < ActiveRecord::Migration
       t.string  :language
       t.text    :path
       t.boolean  :certified, :default => false
+      t.integer :height
+      t.integer :width
       t.timestamps
     end
 

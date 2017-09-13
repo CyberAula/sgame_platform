@@ -64,6 +64,8 @@ ActiveRecord::Schema.define(version: 20170725105744) do
     t.string   "language"
     t.text     "path"
     t.boolean  "certified",              default: false
+    t.integer  "height"
+    t.integer  "width"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "file_file_name"

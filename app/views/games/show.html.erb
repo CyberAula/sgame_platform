@@ -3,9 +3,10 @@
 <script>
 	//Prevent scrolling from iframe
 	try {
+		var gameOffsetTop = $("iframe.gameIframe").offset().top;
 		$(document).on('scroll', function(e){
 			if(document.activeElement.className == "gameIframe"){
-				window.scrollTo(0,0);
+				window.scrollTo(0,gameOffsetTop-15);
 			}
 		});
 	}catch(e){}

@@ -116,6 +116,7 @@ namespace :db do
 			:description=>"Pac-Man: The classic arcade game.",
 			:thumbnail=> File.open(File.join(Rails.root, 'public/game_template_examples/Pacman/thumbnail.png')),
 			:language => "en",
+			:height => 750,
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/game_template_examples/Pacman.zip'))
 

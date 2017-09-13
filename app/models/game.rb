@@ -54,6 +54,14 @@ class Game < ActiveRecord::Base
 		return "/assets/gamepad_black.png"
 	end
 
+	def height
+		self.template.height
+	end
+
+	def width
+		self.template.width
+	end
+
 	#
 	# Exportation to SCORM
 	#

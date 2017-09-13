@@ -1,9 +1,11 @@
 <% resourceClassName = resource.class.name.underscore %>
+<% resourceHeight = resource.respond_to?("height") ? resource.height : nil %>
+<% resourceHeight = [1250,resourceHeight].min if (!resourceHeight.nil? && resourceHeight > 0) %>
 
 <section id="resource_wrapper" class="row resource_wrapper_<%=resource.class.name.downcase%>">
   <h3><%= resource.title %></h3>
   <div class="resource_content_tools_wrapper col-md-9">
-    <div class="resource_content_wrapper">
+    <div class="resource_content_wrapper" style="<%=('height:' + resourceHeight.to_s + 'px') unless resourceHeight.nil? %>">
       <%= render :partial => (resourceClassName + '_show'), :locals  => { resourceClassName.to_sym => resource } %>
     </div>
     <div class="resource_tools_wrapper">
