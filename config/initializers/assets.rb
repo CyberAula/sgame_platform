@@ -12,6 +12,7 @@ Rails.application.config.assets.version = '1.0'
 
 Rails.application.config.assets.precompile += %w( ckeditor/ckeditor.js )
 Rails.application.config.assets.precompile += %w( vishEditor.js )
+Rails.application.config.assets.precompile += %w( vishEditor.min.js )
 Rails.application.config.assets.precompile += %w( vish_editor.css )
 Rails.application.config.assets.precompile += %w( VISH.IframeAPI.js )
 Rails.application.config.assets.precompile += %w( vishViewer.js )

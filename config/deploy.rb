@@ -64,6 +64,7 @@ namespace(:deploy) do
     run "ln -s #{shared_path}/application_config.yml #{release_path}/config/application_config.yml"
     run "ln -s #{shared_path}/code #{release_path}/public/"
     run "ln -s #{shared_path}/documents #{release_path}/"
+    run "ln -s #{shared_path}/exception_notification.rb #{release_path}/config/initializers"
   end
 
   task :precompile_sgame_assets do
