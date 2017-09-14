@@ -57,6 +57,16 @@ namespace(:deploy) do
   task :fix_file_permissions do
     run "#{try_sudo} touch #{release_path}/log/production.log"
     run "#{try_sudo} /bin/chmod 666 #{release_path}/log/production.log"
+    # TMP
+    run "/bin/chmod -R g+w #{release_path}/tmp"
+    sudo "/bin/chgrp -R www-data #{release_path}/tmp"
+    run "#{try_sudo} /bin/chmod -R 777 #{release_path}/public/tmp/json"
+    run "#{try_sudo} /bin/chmod -R 777 #{release_path}/public/tmp/scorm"
+    run "#{try_sudo} /bin/chmod -R 777 #{release_path}/public/tmp/qti"
+    run "#{try_sudo} /bin/chmod -R 777 #{release_path}/public/tmp/moodlequizxml"
+    # SCORM
+    run "#{try_sudo} /bin/chmod -R 777 #{release_path}/public/scorm/12"
+    run "#{try_sudo} /bin/chmod -R 777 #{release_path}/public/scorm/2004"
   end
 
   task :link_files do

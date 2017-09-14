@@ -17,7 +17,7 @@
 		presId = Integer(json["vishMetadata"]["id"]) rescue nil
 		draft = (json["vishMetadata"]["draft"]==="true") rescue true
 		unless presId.blank? or draft
-			presentation = Prseentation.find_by_id(presId)
+			presentation = Presentation.find_by_id(presId)
 			presentation = nil if presentation.nil? or presentation.draft
 		end
 	end %>
