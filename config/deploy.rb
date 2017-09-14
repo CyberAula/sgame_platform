@@ -41,9 +41,9 @@ role :web, server_url # Your HTTP server, Apache/etc
 role :app, server_url # This may be the same as your `Web` server
 role :db,  server_url, :primary => true # This is where Rails migrations will run
 
-after 'deploy:update_code', 'deploy:fix_file_permissions'
-after "deploy:fix_file_permissions", "deploy:link_files"
+after 'deploy:update_code', "deploy:link_files"
 after "deploy:link_files", "deploy:precompile_sgame_assets"
+after "deploy:precompile_sgame_assets", "deploy:fix_file_permissions"
 after "deploy:restart", "deploy:cleanup"
 
 namespace(:deploy) do
@@ -52,21 +52,6 @@ namespace(:deploy) do
   task :stop do ; end
   task :restart, :roles => :app, :except => { :no_release => true } do
     run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
-  end
-
-  task :fix_file_permissions do
-    run "#{try_sudo} touch #{release_path}/log/production.log"
-    run "#{try_sudo} /bin/chmod 666 #{release_path}/log/production.log"
-    # TMP
-    run "/bin/chmod -R g+w #{release_path}/tmp"
-    sudo "/bin/chgrp -R www-data #{release_path}/tmp"
-    run "#{try_sudo} /bin/chmod -R 777 #{release_path}/public/tmp/json"
-    run "#{try_sudo} /bin/chmod -R 777 #{release_path}/public/tmp/scorm"
-    run "#{try_sudo} /bin/chmod -R 777 #{release_path}/public/tmp/qti"
-    run "#{try_sudo} /bin/chmod -R 777 #{release_path}/public/tmp/moodlequizxml"
-    # SCORM
-    run "#{try_sudo} /bin/chmod -R 777 #{release_path}/public/scorm/12"
-    run "#{try_sudo} /bin/chmod -R 777 #{release_path}/public/scorm/2004"
   end
 
   task :link_files do
@@ -79,6 +64,23 @@ namespace(:deploy) do
 
   task :precompile_sgame_assets do
     run "cd #{release_path} && bundle exec \"rake assets:precompile --trace RAILS_ENV=production\""
+  end
+
+  task :fix_file_permissions do
+    run "#{try_sudo} touch #{release_path}/log/production.log"
+    run "#{try_sudo} /bin/chmod 666 #{release_path}/log/production.log"
+    # config.ru
+    sudo "/bin/chown www-data #{release_path}/config.ru"
+    # TMP
+    run "/bin/chmod -R g+w #{release_path}/tmp"
+    sudo "/bin/chgrp -R www-data #{release_path}/tmp"
+    run "#{try_sudo} /bin/chmod -R 777 #{release_path}/public/tmp/json"
+    run "#{try_sudo} /bin/chmod -R 777 #{release_path}/public/tmp/scorm"
+    run "#{try_sudo} /bin/chmod -R 777 #{release_path}/public/tmp/qti"
+    run "#{try_sudo} /bin/chmod -R 777 #{release_path}/public/tmp/moodlequizxml"
+    # SCORM
+    run "#{try_sudo} /bin/chmod -R 777 #{release_path}/public/scorm/12"
+    run "#{try_sudo} /bin/chmod -R 777 #{release_path}/public/scorm/2004"
   end
 
 end
