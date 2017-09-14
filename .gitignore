@@ -28,6 +28,9 @@ public/scorm/2004/presentations/*
 public/scorm/12/games/*
 public/scorm/2004/games/*
 public/tmp/scorm/*
+public/tmp/json/*
+public/tmp/qti/*
+public/tmp/moodlequizxml/*
 
 #Code
 public/code/scormfiles/*
