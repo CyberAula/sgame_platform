@@ -13,6 +13,10 @@ namespace :sgame_platform do
 			system "rm -rf documents/*"
 			system "rm -rf public/code/*"
 			system "rm -rf public/system/*"
+			system "rm -rf public/tmp/scorm/*"
+			system "rm -rf public/tmp/json/*"
+			system "rm -rf public/tmp/qti/*"
+			system "rm -rf public/tmp/moodlequizxml/*"
 			system "rake db:populate"
 		puts "Rebuild finish"
 	end
