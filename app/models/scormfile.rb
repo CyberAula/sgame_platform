@@ -15,8 +15,8 @@ class Scormfile < ActiveRecord::Base
   before_validation :fill_scorm_version
   after_destroy :remove_unpackaged_files
   after_destroy :remove_los
-  after_create :unpackage
   after_create :extract_los
+  after_create :unpackage
   after_save :fill_thumbnail_url
 
   validates_attachment_presence :file
@@ -38,44 +38,8 @@ class Scormfile < ActiveRecord::Base
   end
 
   def updateScormfile
-    self.unpackage
     self.extract_los
-  end
-
-  def unpackage
-    require "fileutils"
-
-    #Create folders
-    if SgamePlatform::Application.config.APP_CONFIG["code_path"].nil?
-      scormPackagesDirectoryPath = Rails.root.join('public', 'code', 'scormfiles').to_s
-    else
-      scormPackagesDirectoryPath = SgamePlatform::Application.config.APP_CONFIG["code_path"] + "/scormfiles"
-    end
-    FileUtils.mkdir_p(scormPackagesDirectoryPath)
-    loDirectoryPath = scormPackagesDirectoryPath + "/" + self.id.to_s
-    FileUtils.rm_rf(loDirectoryPath) if File.exists? loDirectoryPath
-
-    #Unpackage zip file
-    if self.file.queued_for_write[:original] and File.exists?(self.file.queued_for_write[:original].path)
-      zipFile = self.file.queued_for_write[:original]
-    else
-      zipFile = self.file
-    end
-    Scorm::Package.open(zipFile, :cleanup => true) do |pkg|
-      FileUtils.move pkg.path, loDirectoryPath
-    end
-
-    self.update_column(:lohreffull, SgamePlatform::Application.config.full_code_domain + "/code/scormfiles/" + self.id.to_s + "/" + self.lohref)
-
-    #Add SCORM Wrapper (scorm_wrapper.html)
-    scormWrapperFile = DocumentsController.new.render_to_string "show_scorm_wrapper.html.erb", :locals => {:scormPackage => self}, :layout => false
-    scormWrapperFilePath = loDirectoryPath + "/scorm_wrapper.html"
-    File.open(scormWrapperFilePath, "w"){|f| f << scormWrapperFile }
-    
-    #LO paths are saved as absolute paths when APP_CONFIG["code_path"] is defined
-    loDirectoryPathToSave = loDirectoryPath.dup
-    loDirectoryPathToSave.slice! (Rails.root.to_s+"/") if SgamePlatform::Application.config.APP_CONFIG["code_path"].nil?
-    self.update_column(:lopath, loDirectoryPathToSave)
+    self.unpackage
   end
 
   def extract_los
@@ -124,6 +88,42 @@ class Scormfile < ActiveRecord::Base
     end
     self.update_column(:nscos, self.los.select{|lo| lo.lo_type == "sco"}.length)
     self.update_column(:nassets, self.los.select{|lo| lo.lo_type == "asset"}.length)
+  end
+
+  def unpackage
+    require "fileutils"
+
+    #Create folders
+    if SgamePlatform::Application.config.APP_CONFIG["code_path"].nil?
+      scormPackagesDirectoryPath = Rails.root.join('public', 'code', 'scormfiles').to_s
+    else
+      scormPackagesDirectoryPath = SgamePlatform::Application.config.APP_CONFIG["code_path"] + "/scormfiles"
+    end
+    FileUtils.mkdir_p(scormPackagesDirectoryPath)
+    loDirectoryPath = scormPackagesDirectoryPath + "/" + self.id.to_s
+    FileUtils.rm_rf(loDirectoryPath) if File.exists? loDirectoryPath
+
+    #Unpackage zip file
+    if self.file.queued_for_write[:original] and File.exists?(self.file.queued_for_write[:original].path)
+      zipFile = self.file.queued_for_write[:original]
+    else
+      zipFile = self.file
+    end
+    Scorm::Package.open(zipFile, :cleanup => true) do |pkg|
+      FileUtils.move pkg.path, loDirectoryPath
+    end
+
+    self.update_column(:lohreffull, SgamePlatform::Application.config.full_code_domain + "/code/scormfiles/" + self.id.to_s + "/" + self.lohref)
+
+    #Add SCORM Wrapper (scorm_wrapper.html)
+    scormWrapperFile = DocumentsController.new.render_to_string "show_scorm_wrapper.html.erb", :locals => {:scormPackage => self}, :layout => false
+    scormWrapperFilePath = loDirectoryPath + "/scorm_wrapper.html"
+    File.open(scormWrapperFilePath, "w"){|f| f << scormWrapperFile }
+    
+    #LO paths are saved as absolute paths when APP_CONFIG["code_path"] is defined
+    loDirectoryPathToSave = loDirectoryPath.dup
+    loDirectoryPathToSave.slice! (Rails.root.to_s+"/") if SgamePlatform::Application.config.APP_CONFIG["code_path"].nil?
+    self.update_column(:lopath, loDirectoryPathToSave)
   end
 
   def self.parse_metadata(metadata)
