@@ -152,7 +152,7 @@ div.row.frontpage_row5 div.games_grid {
 
 div.games_grid div.item_box {
 	float: none;
-	height: 190px;
+	height: 210px;
 	width: 224px;
     border-radius: 10px;
     display: inline-block;
@@ -166,7 +166,7 @@ div.games_grid div.item_box div.item_icon {
 }
 
 div.games_grid div.item_box div.item_title {
-	height: 36px;
+	height: 56px;
 	font-weight: bold;
 }
 
