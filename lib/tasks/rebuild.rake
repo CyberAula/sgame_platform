@@ -10,6 +10,7 @@ namespace :sgame_platform do
 
 	#bundle exec rake sgame_platform:install
 	#bundle exec rake sgame_platform:install RAILS_ENV=production
+	#rvmsudo -H -u www-data bash -c 'bundle exec rake sgame_platform:install RAILS_ENV=production'
 	task :install do
 		desc "Install"
 		system "rake sgame_platform:reset"
