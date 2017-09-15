@@ -81,6 +81,9 @@ namespace(:deploy) do
     # SCORM
     run "#{try_sudo} /bin/chmod -R 777 #{release_path}/public/scorm/12"
     run "#{try_sudo} /bin/chmod -R 777 #{release_path}/public/scorm/2004"
+    # Other
+    run "#{try_sudo} /bin/chmod -R 777 #{release_path}/public/game_template_examples"
+    run "#{try_sudo} /bin/chmod 777 #{release_path}/db/schema.rb"
   end
 
 end
