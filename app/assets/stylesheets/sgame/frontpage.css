@@ -171,24 +171,19 @@ div.games_grid div.item_box div.item_title {
 }
 
 @media (min-width: 992px) {
-
 	div.frontpage_row3 div.b_color {
 		max-height: 431px;
 	}
-	
 	div.frontpage_row3 p.text_description.description_1 {
 		padding-bottom: 55px;
 	}
-
 	div.frontpage_row3 p.text_description.description_2 {
 		padding-bottom: 80px;
 	}
-	
 	div.frontpage_row3 div.b_color div.col-md-4.col3_line {
-	border-right: 6px solid #046598;
-	border-bottom: none;
+		border-right: 6px solid #046598;
+		border-bottom: none;
 	}
-
 	div.frontpage_row4 div.col4_line {
 		border-bottom: 3px solid white;
 		border-radius: 5px;

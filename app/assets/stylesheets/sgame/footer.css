@@ -8,6 +8,9 @@
 #footer div.col1 {
 	float: left;
 }
+#footer div.col2, div.col3, div.col4 {
+	float: right;
+}
 #footer div.col1 img {
 	height: 52px;
 	margin-top: 4px;
@@ -20,6 +23,11 @@
 #footer div.footer_dropdown {
 	margin-top: 5px;
 }
+
+#footer div.col3 div.footer_dropdown {
+	margin-top: 8px;
+}
+
 #footer div.footer_dropdown button.dropdown-toggle > div {
 	display: inline-block;
 	margin-top: 3px;
@@ -47,9 +55,38 @@
 	background: none;
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	text-shadow: none;
-	margin-left: 20px;
-	margin-right: 20px;
+	margin-left: 25px;
+	margin-right: 25px;
 }
 #footer div.footer_dropdown span.glyphicon{
 	margin-right: 15px;
+}
+
+#footer div.col4 div {
+	position: relative;
+	margin-top: 18px;
+	margin-left: 25px;
+	margin-right: 50px;
+}
+
+#footer div.col4 div a {
+	text-decoration: none;
+	font-size: 1.3em;
+}
+
+@media (max-width: 600px) {
+	#footer div.footer_dropdown button {
+		margin-left: 5px;
+		margin-right: 5px;
+	}
+	#footer div.col4 div {
+		margin-left: 5px;
+		margin-right: 5px;
+	}
+}
+
+@media (max-width: 460px) {
+	#footer div.col3 {
+		display: none;
+	}
 }
