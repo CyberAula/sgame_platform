@@ -143,7 +143,7 @@ namespace :db do
 			:game_template_id=>sokoban.id,
 			:title=>"Sokoban",
 			:description=>"Example of educational game based on Sokoban", 
-			:thumbnail=> File.open(File.join(Rails.root, 'public/game_thumbnails/devilAvatar.gif')),
+			:thumbnail=> File.open(File.join(Rails.root, 'public/game_thumbnails/devilAvatar.png')),
 			:certified => true
 
 		#Event mapping for sokobanInstance
@@ -261,7 +261,7 @@ namespace :db do
 		sfReciclaje = Scormfile.create! :owner_id => user.id,
 			:title  => "Reciclaje",
 			:description   => "Recurso educativo para aprender sobre los diferentes contenedores de reciclaje",
-			:thumbnail=> File.open(File.join(Rails.root, 'public/scorm_examples/reciclaje_thumbnail.jpg')),
+			:thumbnail=> File.open(File.join(Rails.root, 'public/scorm_examples/reciclaje_thumbnail.png')),
 			:language => "es",
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/scorm_examples/reciclaje.zip'))
@@ -424,7 +424,7 @@ namespace :db do
 			:game_template_id=>sokoban.id,
 			:title=>"Sokoban",
 			:description=>"Aprende a reciclar jugando a Sokoban", 
-			:thumbnail=> File.open(File.join(Rails.root, 'public/game_thumbnails/devilAvatar.gif')),
+			:thumbnail=> File.open(File.join(Rails.root, 'public/game_thumbnails/devilAvatar.png')),
 			:certified => true
 
 		#Event mapping for sokobanReciclaje
