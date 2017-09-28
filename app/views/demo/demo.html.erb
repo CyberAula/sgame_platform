@@ -50,5 +50,6 @@
 	<form id="demo_form" action="/demo/create" method="post" style="display:none">
 		<input type="hidden" name="game_template"></input>
 		<input type="hidden" name="scormfiles"></input>
+		<%= hidden_field_tag 'authenticity_token', form_authenticity_token %>
 	</form>
 </div>

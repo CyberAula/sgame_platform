@@ -52,10 +52,9 @@ class GameTemplate < ActiveRecord::Base
 				end
 			end			
 		end
-		if sgame_errors.length == 0
-			return true
-		else
-			return (errors[:base] + sgame_errors.uniq)
+		return true if sgame_errors.length == 0
+		sgame_errors.uniq.each do |e|
+			errors[:base] << e
 		end
 	end
 
