@@ -27,19 +27,13 @@
 
 		var configuration = {};
 
-		configuration["ImagesPath"] = "/images/";
-		configuration["StylesheetsPath"] = "/stylesheets/";
+		configuration["ImagesPath"] = "images/";
+		configuration["StylesheetsPath"] = "stylesheets/";
 
 		options["configuration"] = configuration;
 		options["developping"] = false;
 		
 		options["scorm"] = true;
-
-		<% if presentation %>
-			options["watermarkURL"] = "<%=presentation_url(presentation)%>";
-		<% else %>
-			options["watermarkURL"] = "<%=SgamePlatform::Application.config.full_domain%>";
-		<% end %>
 
 		var presentation = <%= raw json.to_json %>;
 
