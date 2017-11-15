@@ -1,0 +1,12 @@
+section.resource_wrapper_document div.resource_content_wrapper {
+	text-align: center;
+}
+
+section.resource_wrapper_document div.resource_content_wrapper img {
+	height: 85px;
+}
+
+div.item_box_document div.item_thumbnail div.item_thumbnail_img {
+	background-size: contain;
+	background-size: 40%;
+}

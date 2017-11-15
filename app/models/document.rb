@@ -67,7 +67,12 @@ class Document < ActiveRecord::Base
   end
 
   def fill_thumbnail_url
-    self.update_column(:thumbnail_url, self.thumbnail.url(:default, :timestamp => false)) if self.thumbnail.exists?
+    if self.thumbnail.exists?
+      new_thumbnail_url = self.thumbnail.url(:default, :timestamp => false)
+    else
+      new_thumbnail_url = "/assets/document_file_icon.png"
+    end
+    self.update_column(:thumbnail_url, new_thumbnail_url) if self.thumbnail_url != new_thumbnail_url
   end
 
 end
