@@ -930,7 +930,10 @@ SGAME.CORE = function() {
     _event_mapping = {};
     if(settings.lo_list) {
       for(var i = 0;i < settings.lo_list.length;i++) {
-        if(typeof settings.lo_list[i].id != "undefined") {
+        if(typeof settings.lo_list[i].url !== "undefined") {
+          settings.lo_list[i].url = SGAME.Utils.checkUrlProtocol(settings.lo_list[i].url)
+        }
+        if(typeof settings.lo_list[i].id !== "undefined") {
           _los[settings.lo_list[i].id] = settings.lo_list[i];
           _all_mapped_los.push({"id":settings.lo_list[i].id, "marked":false})
         }
@@ -1409,6 +1412,52 @@ SGAME.Utils = function() {
       head.appendChild(script)
     }
   };
-  return{init:init, getRandomElement:getRandomElement, loadScript:loadScript}
+  var _protocol = undefined;
+  var getProtocol = function() {
+    if(typeof _protocol !== "undefined") {
+      return _protocol
+    }
+    var protocol;
+    try {
+      protocol = document.location.protocol
+    }catch(e) {
+    }
+    if(typeof protocol === "string") {
+      var protocolMatch = protocol.match(/[\w]+/);
+      if(protocolMatch instanceof Array && typeof protocolMatch[0] === "string") {
+        protocol = protocolMatch[0]
+      }else {
+        protocol = undefined
+      }
+    }
+    if(typeof protocol === "string") {
+      _protocol = protocol
+    }else {
+      _protocol = "unknown"
+    }
+    return _protocol
+  };
+  var checkUrlProtocol = function(url) {
+    if(typeof url === "string") {
+      var protocolMatch = url.match(/^https?:\/\//);
+      if(protocolMatch instanceof Array && protocolMatch.length === 1) {
+        var urlProtocol = protocolMatch[0].replace("://", "");
+        var documentProtocol = SGAME.Utils.getProtocol();
+        if(urlProtocol !== documentProtocol) {
+          switch(documentProtocol) {
+            case "https":
+              url = "https" + url.replace(urlProtocol, "");
+              break;
+            case "http":
+              break;
+            default:
+              break
+          }
+        }
+      }
+    }
+    return url
+  };
+  return{init:init, getRandomElement:getRandomElement, loadScript:loadScript, getProtocol:getProtocol, checkUrlProtocol:checkUrlProtocol}
 }();
 
