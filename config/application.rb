@@ -71,7 +71,7 @@ module SgamePlatform
 
     config.subtype_classes_mime_types = {
       :picture => [:jpeg, :gif, :png, :bmp, :xcf],
-      :zipfile=> [:zip],
+      :zipfile=> [:zip, :xzip],
       :officedoc=> [:odt, :odp, :ods, :doc, :ppt, :xls, :rtf, :pdf]
     }
 

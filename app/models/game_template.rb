@@ -16,7 +16,7 @@ class GameTemplate < ActiveRecord::Base
 	after_save :fill_thumbnail_url
 
 	validates_attachment_presence :file
-	validates_attachment :file, content_type: { content_type: ["application/zip"] }
+	validates_attachment :file, content_type: { content_type: ["application/zip", "application/x-zip-compressed"] }
 	validates_presence_of :owner_id
 	validates_presence_of :title
 	validates_attachment :thumbnail, content_type: { content_type: ["image/jpeg", "image/gif", "image/png"] }
