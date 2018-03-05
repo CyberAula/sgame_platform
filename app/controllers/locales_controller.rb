@@ -12,10 +12,13 @@ class LocalesController < ActionController::Base
       current_user.save!
     end
     
-    #Needed due to devise bug on sign_up failure path
-    return redirect_to "/users/sign_up" if request.env["HTTP_REFERER"].present? and request.env["HTTP_REFERER"].ends_with?("/users")
-
-    redirect_to :back
+    if request.env["HTTP_REFERER"].present?
+      #Needed due to devise bug on sign_up failure path
+      return redirect_to "/users/sign_up" if request.env["HTTP_REFERER"].ends_with?("/users")
+      redirect_to :back
+    else
+      redirect_to "/"
+    end
   end
 
 end
