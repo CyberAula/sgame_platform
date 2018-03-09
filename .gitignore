@@ -39,3 +39,5 @@ public/code/webapps/*
 
 config/deploy/*
 !config/deploy/example.yml
+
+dumps/*
