@@ -102,7 +102,7 @@ module SgamePlatform
     # Enable the asset pipeline
     config.assets.enabled = true
 
-    #Recaptacha
+    #Recaptcha
     config.recaptcha = (config.APP_CONFIG["recaptcha"] && !config.APP_CONFIG["recaptcha"]["site_key"].blank? && !config.APP_CONFIG["recaptcha"]["secret_key"].blank?)
 
     if config.recaptcha

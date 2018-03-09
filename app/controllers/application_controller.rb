@@ -53,6 +53,13 @@ class ApplicationController < ActionController::Base
 					redirect_to view_context.home_path, alert: I18n.t("dictionary.errors.page_not_found")
 				end
 			}
+			format.full {
+				if request.path.include?("assets/") or request.xhr?
+					render :text => I18n.t("dictionary.errors.page_not_found"), :status => '404'
+				else
+					redirect_to view_context.home_path, alert: I18n.t("dictionary.errors.page_not_found")
+				end
+			}
 			format.json {
 				render json: I18n.t("dictionary.errors.page_not_found")
 			}
