@@ -1,0 +1,189 @@
+#sgame_at {
+  width: 100%;
+  height: auto;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+}
+
+#sgame_at * {
+  outline: none;
+}
+
+#sgame_at div[step] {
+  width: 100%;
+}
+
+#sgame_at div[step] div.stepTitle {
+  width: 100%;
+  background: black;
+}
+
+#sgame_at .game {
+  background: -moz-linear-gradient(left,  rgba(255,255,255,0) 0%, rgba(0,0,0,0.1) 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(255,255,255,0)), color-stop(100%,rgba(0,0,0,0.1))); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(left,  rgba(255,255,255,0) 0%,rgba(0,0,0,0.1) 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(left,  rgba(255,255,255,0) 0%,rgba(0,0,0,0.1) 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(left,  rgba(255,255,255,0) 0%,rgba(0,0,0,0.1) 100%); /* IE10+ */
+  background: linear-gradient(to right,  rgba(255,255,255,0) 0%,rgba(0,0,0,0.1) 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#1a000000',GradientType=1 ); /* IE6-9 */
+}
+
+#sgame_at .scormfiles {
+  background: -moz-linear-gradient(left,  rgba(0,0,0,0.1) 0%, rgba(255,255,255,0) 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(0,0,0,0.1)), color-stop(100%,rgba(255,255,255,0))); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(left,  rgba(0,0,0,0.1) 0%,rgba(255,255,255,0) 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(left,  rgba(0,0,0,0.1) 0%,rgba(255,255,255,0) 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(left,  rgba(0,0,0,0.1) 0%,rgba(255,255,255,0) 100%); /* IE10+ */
+  background: linear-gradient(to right,  rgba(0,0,0,0.1) 0%,rgba(255,255,255,0) 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1a000000', endColorstr='#00ffffff',GradientType=1 ); /* IE6-9 */
+}
+
+#sgame_at div.carrousel_wrapper {
+	height: 200px;
+	padding-top: 10px;
+	width: 100%;
+	padding-left: 7%;
+	padding-right: 7%;
+	background: rgba(255, 255, 255, 0.2);
+}
+
+#sgame_at ul.slick-dots li button:before {
+	color: white;
+	font-size: 11px;
+	top: 5px;
+}
+
+#sgame_at div.slick-slide {
+	height: 150px;
+	cursor: pointer;
+}
+
+#sgame_at div.slick-slide p {
+	font-size: 14px;
+	max-height: 20px;
+	max-width: 90%;
+	margin-left: 5%;
+	text-align: center;
+	overflow: hidden;
+}
+
+#sgame_at div.slick-slide img {
+	width: 90%;
+	min-width: 90%;
+	max-width: 90%;
+	margin-left: 5%;
+	height: 120px;
+	min-height: 120px;
+	max-height: 120px;
+	border: 2px solid black;
+  background-color: #ddd;
+}
+
+#sgame_at div.slick-slide a {
+  text-decoration: none;
+}
+
+#sgame_at div.game .selected {
+  margin-top: 20px;
+  height: 300px;
+  text-align: center;
+}
+
+#sgame_at div.game .selected img {
+  min-width: 400px;
+  min-height: 300px;
+  max-width: 400px;
+  max-height: 300px;
+}
+
+#sgame_at div.game .selected p {
+  padding: 5px;
+  padding-top: 10px;
+  font-size: 15px;
+  text-align: center;
+  font-family: Helvetica;
+  overflow: hidden;
+  max-height: 71px;
+}
+
+#sgame_at div.scormfiles div.selected {
+  height: 430px;
+}
+
+ul#scormfiles_list {
+  list-style-type: none;
+  padding: 0px 20px;
+  padding-right: 2px;
+  margin-left: 15px;
+  margin-top: 10px;
+  overflow: auto;
+  height: 100%;
+}
+
+ul#scormfiles_list li.scormfile_item {
+  height: 110px;
+  overflow: hidden;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+ul#scormfiles_list li.scormfile_item div.scormfile_item_c1 {
+  float: left;
+  width: 140px;
+}
+
+ul#scormfiles_list li.scormfile_item div.scormfile_item_c1 img.scormfile_item_thumbnail {
+  width: 100%;
+  height: 110px;
+  min-height: 110px;
+  max-height: 110px;
+  cursor: pointer;
+  border: 2px solid black;
+  background-color: #ddd;
+}
+
+ul#scormfiles_list li.scormfile_item div.scormfile_item_c2 {
+  padding: 15px;
+  font-size: 13px;
+  height: 110px;
+  width: 314px;
+  float: left;
+}
+
+ul#scormfiles_list li.scormfile_item div.scormfile_item_c3 {
+  float: right;
+  width: 30px;
+  height: 110px;
+  text-align: right;
+}
+
+ul#scormfiles_list li.scormfile_item div.scormfile_item_c3  button.remove_button {
+  background: none;
+  border: none;
+}
+
+ul#scormfiles_list li.scormfile_item div.scormfile_item_c3  button.remove_button span {
+  font-size: 16px;
+  margin-top: 2px;
+}
+
+#preview_scormfile {
+  padding: 0px;
+  margin: 0px;
+}
+
+#preview_scormfile iframe {
+  padding: 0px;
+  margin: 0px;
+}
+
+.fancybox-close-small:after {
+  color: white;
+  background: #046598;
+}
+
+.fancybox-close-small:hover:after {
+  color: white;
+  background: #007bbb;
+}

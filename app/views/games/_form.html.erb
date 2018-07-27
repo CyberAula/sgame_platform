@@ -1,3 +1,97 @@
+<%= javascript_include_tag "sgame_at" %>
+<%= javascript_include_tag "sgame_at_locales" %>
+<%= stylesheet_link_tag "sgame_at" %>
+
+<script type="text/javascript">
+	var game_templates;
+	var scormfiles;
+	var options;
+	$(document).ready(function(){
+		game_templates = <%=raw @game_templates.to_json%>;
+		scormfiles = <%=raw @scormfiles.to_json%>;
+		options = {};
+		options.user_logged_in = <%=raw user_signed_in?%>;
+		options.language = "<%=I18n.locale.to_s%>";
+		SGAME_AT.init(game_templates,scormfiles,options);
+	});
+</script>
+
+<div id="sgame_at">
+	<div step="1" class="game">
+		<div class="stepTitle">
+			<p><%=t("at.step1.title")%></p>
+		</div>
+		<div class="stepDescription">
+			<p><%=t("at.step1.description")%></p>
+		</div>
+		<div class="carrousel_wrapper">
+			<div id="games_carrousel"></div>
+		</div>
+		<div class="selected">
+			<img/>
+			<p></p>
+		</div>
+	</div>
+	<div step="2" class="scormfiles">
+		<div class="stepTitle">
+			<p><%=t("at.step2.title")%></p>
+		</div>
+		<div class="stepDescription">
+			<p><%=t("at.step2.description")%></p>
+		</div>
+		<div class="carrousel_wrapper">
+			<div id="scormfiles_carrousel"></div>
+		</div>
+		<div class="selected">
+			<ul id="scormfiles_list"></ul>
+		</div>
+	</div>
+	<div step="3" class="mapping">
+		<div class="stepTitle">
+			<p><%=t("at.step3.title")%></p>
+		</div>
+		<div class="stepDescription">
+			<p><%=t("at.step3.description")%></p>
+		</div>
+	</div>
+	<div step="4" class="demo_create">
+		<div class="stepTitle">
+			<p><%=t("at.step4.title")%></p>
+		</div>
+		<div class="stepDescription">
+			<p><%=t("at.step4.description")%></p>
+		</div>
+	</div>
+	<div step="5" class="demo_create">
+		<div class="stepTitle">
+			<p><%=t("at.step5.title")%></p>
+		</div>
+		<div class="stepDescription">
+			<p><%=t("at.step5.description")%></p>
+		</div>
+	</div>
+	<div step="6" class="demo_create">
+		<div class="stepTitle">
+			<p><%=t("at.step6.title")%></p>
+		</div>
+		<div class="stepDescription">
+			<p><%=t("at.step6.description")%></p>
+		</div>
+		<p class="createButton"><%=t("demo.create")%></p>
+		<p class="createButton"><%=t("demo.educational_game")%></p>
+	</div>
+	
+	<a id="preview_scormfile_fancybox" class="fancybox" style="display:none"></a>
+
+	<form id="demo_form" action="/demo/create" method="post" style="display:none">
+		<input type="hidden" name="game_template"></input>
+		<input type="hidden" name="scormfiles"></input>
+		<%= hidden_field_tag 'authenticity_token', form_authenticity_token %>
+	</form>
+
+</div>
+
+
 <div id="update_document_form_wrapper" class="document_form_wrapper">
 	<%= form_for game, url: {action: controller.action_name}, html: {class: "update_document_form document_form"} do |f| %>
 		<div class="field">

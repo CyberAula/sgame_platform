@@ -28,6 +28,27 @@ en:
               blank: "can't be blank"
             password:
               blank: "can't be blank"
+  at:
+    create: "Create educational game"
+    step1:
+      title: "Choose game template"
+      description: "Description1"
+    step2:
+      title: "Choose SCORM package"
+      description: "Description2"
+    step3:
+      title: "Step3"
+      description: "Description3"
+    step4:
+      title: "Step4"
+      description: "Description4"
+    step5:
+      title: "Step5"
+      description: "Description5"
+    step6:
+      title: "Step6"
+      description: "Description6"
+    update: "Update educational game"
   authorization:
     errors:
       generic: "You are not authorized to access this page"

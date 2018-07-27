@@ -40,6 +40,9 @@ class GamesController < ApplicationController
 
   def new
     @game = Game.new
+    @game_templates = (GameTemplate.where(:certified => true) + current_user.game_templates).uniq
+    @scormfiles = current_user.scormfiles
+    
     respond_to do |format|
       format.html { 
         render 
