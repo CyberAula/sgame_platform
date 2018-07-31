@@ -49,6 +49,20 @@ SGAME_AT = (function($,undefined){
 		});
 
 		//Fancyboxes
+		$("#preview_gt_fancybox").fancybox(
+			{
+				openEffect  : 'none',
+				closeEffect : 'none',
+				type: 'iframe',
+				scrolling : false,
+				autoSize : true,
+				beforeLoad: function(){
+				},
+				afterLoad: function(){
+				}
+			}
+		);
+
 		$("#preview_scormfile_fancybox").fancybox(
 			{
 				openEffect  : 'none',
@@ -115,6 +129,10 @@ SGAME_AT = (function($,undefined){
 		}
 		switch(step){
 			case 1:
+				$("#sgame_at .game .selected img.gthumbnail").click(function(){
+					_previewGameTemplate(catalog.games[$(this).attr("gtid")]);
+				});
+
 				$("#step1_confirmation").click(function(){
 					_onStep1Confirmation();
 				});
@@ -168,6 +186,7 @@ SGAME_AT = (function($,undefined){
 	var _selectGameTemplate = function(game){
 		current_preview_game = game;
 		$("#sgame_at .game .selected img.gthumbnail").attr("src",game.thumbnail_url);
+		$("#sgame_at .game .selected img.gthumbnail").attr("gtid",game.id);
 		$("#sgame_at .game .selected tr.gtitle td").html(game.title);
 		$("#sgame_at .game .selected tr.gdescription td").html(game.description);
 		$("#sgame_at .game .selected tr.glanguage td").html(game.language);
@@ -181,6 +200,12 @@ SGAME_AT = (function($,undefined){
 			var gEventDOM = "<tr class='geinstance'><td class='gename'>" + gEvent.title + "</td><td class='gedescription'>" + gEvent.description + "</td></tr>";
 			$(eventsTable).append(gEventDOM);
 		}
+	};
+
+	var _previewGameTemplate = function(gt){
+		var gtURL = "/game_templates/" + gt.id + ".full";
+		$("#preview_gt_fancybox").attr("href",gtURL);
+		$("#preview_gt_fancybox").trigger("click");
 	};
 
 	var _onStep1Confirmation = function(){
@@ -231,28 +256,28 @@ SGAME_AT = (function($,undefined){
 		var msgDescriptionResources = "";
 		if((scormfile.nscos > 0)&&(scormfile.assets > 0)){
 			if(scormfile.nscos > 1){
-				msgDescriptionResources += scormfile.nscos + " SCOs"
+				msgDescriptionResources += scormfile.nscos + " SCOs";
 			} else {
-				msgDescriptionResources += scormfile.nscos + " SCO"
+				msgDescriptionResources += scormfile.nscos + " SCO";
 			}
 			if(scormfile.nassets > 1){
-				msgDescriptionResources += " and " + scormfile.nassets + " assets"
+				msgDescriptionResources += " and " + scormfile.nassets + " assets";
 			} else {
-				msgDescriptionResources += " and " + scormfile.nassets + " asset"
+				msgDescriptionResources += " and " + scormfile.nassets + " asset";
 			}
 		} else {
 			if(scormfile.nscos > 0){
 				if(scormfile.nscos > 1){
-					msgDescriptionResources += scormfile.nscos + " SCOs"
+					msgDescriptionResources += scormfile.nscos + " SCOs";
 				} else {
-					msgDescriptionResources += scormfile.nscos + " SCO"
+					msgDescriptionResources += scormfile.nscos + " SCO";
 				}
 			}
 			if(scormfile.nassets > 0){
 				if(scormfile.nassets > 1){
-					msgDescriptionResources += scormfile.nassets + " assets"
+					msgDescriptionResources += scormfile.nassets + " assets";
 				} else {
-					msgDescriptionResources += scormfile.nassets + " asset"
+					msgDescriptionResources += scormfile.nassets + " asset";
 				}
 			}
 		}

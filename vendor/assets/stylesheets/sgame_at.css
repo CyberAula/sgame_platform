@@ -115,6 +115,7 @@
 #sgame_at div.game .selected img.gthumbnail {
   width: 100%;
   height: 225px;
+  cursor: pointer;
 }
 
 #sgame_at div.game .selected table {
