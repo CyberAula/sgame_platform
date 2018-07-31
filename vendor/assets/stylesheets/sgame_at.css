@@ -12,14 +12,31 @@
 
 #sgame_at div[step] {
   width: 100%;
+  margin-bottom: 30px;
+}
+
+#sgame_at div[step].disabled div.stepTitle {
+  cursor: default;
+  color: #aaa;
 }
 
 #sgame_at div[step] div.stepTitle {
   width: 100%;
   background: black;
+  cursor: pointer;
 }
 
-#sgame_at .game {
+#sgame_at div[step] div.stepTitle p {
+  font-size: 16px;
+  padding: 8px;
+}
+
+#sgame_at div[step] div.stepDescription p {
+  font-size: 14px;
+  color: #efefef;
+}
+
+#sgame_at .game, #sgame_at .scormfiles {
   background: -moz-linear-gradient(left,  rgba(255,255,255,0) 0%, rgba(0,0,0,0.1) 100%); /* FF3.6+ */
   background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(255,255,255,0)), color-stop(100%,rgba(0,0,0,0.1))); /* Chrome,Safari4+ */
   background: -webkit-linear-gradient(left,  rgba(255,255,255,0) 0%,rgba(0,0,0,0.1) 100%); /* Chrome10+,Safari5.1+ */
@@ -27,16 +44,6 @@
   background: -ms-linear-gradient(left,  rgba(255,255,255,0) 0%,rgba(0,0,0,0.1) 100%); /* IE10+ */
   background: linear-gradient(to right,  rgba(255,255,255,0) 0%,rgba(0,0,0,0.1) 100%); /* W3C */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#1a000000',GradientType=1 ); /* IE6-9 */
-}
-
-#sgame_at .scormfiles {
-  background: -moz-linear-gradient(left,  rgba(0,0,0,0.1) 0%, rgba(255,255,255,0) 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(0,0,0,0.1)), color-stop(100%,rgba(255,255,255,0))); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(left,  rgba(0,0,0,0.1) 0%,rgba(255,255,255,0) 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(left,  rgba(0,0,0,0.1) 0%,rgba(255,255,255,0) 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(left,  rgba(0,0,0,0.1) 0%,rgba(255,255,255,0) 100%); /* IE10+ */
-  background: linear-gradient(to right,  rgba(0,0,0,0.1) 0%,rgba(255,255,255,0) 100%); /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1a000000', endColorstr='#00ffffff',GradientType=1 ); /* IE6-9 */
 }
 
 #sgame_at div.carrousel_wrapper {
@@ -86,25 +93,57 @@
 
 #sgame_at div.game .selected {
   margin-top: 20px;
-  height: 300px;
+  margin-bottom: 20px;
+  display: inline-block;
+  width: 100%;
+}
+
+#sgame_at div.game .selected div.c1 {
+  width: 80%;
+  display: inline-block;
+  text-align: left;
+  border: 2px solid white;
+}
+
+#sgame_at div.game .selected div.c2 {
+  width: 19%;
+  display: inline-block;
+  float: right;
   text-align: center;
 }
 
-#sgame_at div.game .selected img {
-  min-width: 400px;
-  min-height: 300px;
-  max-width: 400px;
-  max-height: 300px;
+#sgame_at div.game .selected img.gthumbnail {
+  width: 100%;
+  height: 225px;
 }
 
-#sgame_at div.game .selected p {
-  padding: 5px;
-  padding-top: 10px;
-  font-size: 15px;
+#sgame_at div.game .selected table {
+  table-layout: auto;
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 13px;
+}
+
+#sgame_at div.game .selected table.gevents {
+  margin-top: 15px;
+}
+
+#sgame_at div.game .selected table.gmetadata th, #sgame_at div.game .selected table.gevents th.gename, #sgame_at div.game .selected table.gevents td.gename {
+  width: auto;
+  padding: 10px 25px 10px 15px;
+}
+
+#sgame_at div.game .selected table.gmetadata td, #sgame_at div.game .selected table.gevents td.gedescription {
+  width: 100%;
+  padding-left: 0px;
+}
+
+#sgame_at div.game .selected table.gevents tr.getitle th {
   text-align: center;
-  font-family: Helvetica;
-  overflow: hidden;
-  max-height: 71px;
+}
+
+#sgame_at div.game .selected table.gevents tr.geheader th {
+  white-space: nowrap;
 }
 
 #sgame_at div.scormfiles div.selected {
@@ -186,4 +225,10 @@ ul#scormfiles_list li.scormfile_item div.scormfile_item_c3  button.remove_button
 .fancybox-close-small:hover:after {
   color: white;
   background: #007bbb;
+}
+
+@media (max-width: 600px) {
+  #sgame_at div.game .selected table.gevents tr.geheader th {
+    white-space: normal;
+  }
 }

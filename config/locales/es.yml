@@ -74,6 +74,10 @@ es:
         generic_update: "El archivo no pudo ser actualizado"
     update: "Actualizar archivo"
     tabtitle: "Archivos"
+  events:
+    description: "Descripción del evento"
+    name: "Nombre del evento"
+    title: "Eventos"
   games:
     messages:
       success:
@@ -87,9 +91,9 @@ es:
       success:
         create: "La plantilla de juego ha sido subida con éxito"
         update: "La plantilla de juego ha sido actualizada con éxito"
-    new: "Subir plantilla"
-    tabtitle: "Plantillas"
-    update: "Actualizar plantilla"
+    new: "Subir plantilla de juego"
+    tabtitle: "Plantillas de juego"
+    update: "Actualizar plantilla de juego"
   files:
     tabtitle: "Archivos"
   frontpage:

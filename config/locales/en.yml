@@ -31,11 +31,13 @@ en:
   at:
     create: "Create educational game"
     step1:
-      title: "Choose game template"
-      description: "Description1"
+      title: "Choose a game template"
+      description: "First, you have to select a game template into which the learning objects will be integrated in order to create an educational game. A game template is an entertainment game that has included the SGAME API in order to show learning objects to the players when certain events are triggered. Game templates define the specific events whose triggering will cause a learning object to be shown as well as the rewards that players will receive when they succesfully complete one of these learning objects."
+      confirmation: "Select game template"
     step2:
-      title: "Choose SCORM package"
+      title: "Choose learning objects to integrate into the game"
       description: "Description2"
+      confirmation: "Confirm learning objects"
     step3:
       title: "Step3"
       description: "Description3"
@@ -105,6 +107,10 @@ en:
         generic_update: "File couldn't be updated"
     tabtitle: "Files"
     update: "Update file"
+  events:
+    description: "Event description"
+    name: "Event name"
+    title: "Events"
   games:
     messages:
       success:
@@ -118,9 +124,9 @@ en:
       success:
         create: "Game template has been succesfully uploaded"
         update: "Game template has been succesfully updated"
-    new: "Upload template"
-    tabtitle: "Templates"
-    update: "Update template"
+    new: "Upload game template"
+    tabtitle: "Game Templates"
+    update: "Update game template"
   files:
     tabtitle: "Files"
   frontpage:
