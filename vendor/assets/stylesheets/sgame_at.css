@@ -12,7 +12,7 @@
 
 #sgame_at div[step] {
   width: 100%;
-  margin-bottom: 30px;
+  margin-bottom: 35px;
 }
 
 #sgame_at div[step].disabled div.stepTitle {
@@ -31,9 +31,24 @@
   padding: 8px;
 }
 
+#sgame_at div[step] div.stepSubtitle {
+  width: 100%;
+  background: black;
+  margin-top: 20px;
+}
+
+#sgame_at div[step] div.stepSubtitle p {
+  font-size: 15px;
+  padding: 8px 8px 8px 16px;
+}
+
 #sgame_at div[step] div.stepDescription p {
   font-size: 14px;
   color: #efefef;
+}
+
+#sgame_at div[step] div.step_actions {
+  margin-top: 15px;
 }
 
 #sgame_at .game, #sgame_at .scormfiles {
@@ -91,131 +106,83 @@
   text-decoration: none;
 }
 
-#sgame_at div.game .selected {
+#sgame_at div[step] .selected {
   margin-top: 20px;
-  margin-bottom: 20px;
   display: inline-block;
   width: 100%;
 }
 
-#sgame_at div.game .selected div.c1 {
+#sgame_at div[step] .selected div.c1 {
   width: 80%;
   display: inline-block;
   text-align: left;
   border: 2px solid white;
 }
 
-#sgame_at div.game .selected div.c2 {
+#sgame_at div[step] .selected div.c2 {
   width: 19%;
   display: inline-block;
   float: right;
   text-align: center;
+  background: none;
 }
 
-#sgame_at div.game .selected img.gthumbnail {
-  width: 100%;
-  height: 225px;
-  cursor: pointer;
-}
-
-#sgame_at div.game .selected table {
-  table-layout: auto;
-  border-collapse: collapse;
-  width: 100%;
-  font-size: 13px;
-}
-
-#sgame_at div.game .selected table.gevents {
-  margin-top: 15px;
-}
-
-#sgame_at div.game .selected table.gmetadata th, #sgame_at div.game .selected table.gevents th.gename, #sgame_at div.game .selected table.gevents td.gename {
-  width: auto;
-  padding: 10px 25px 10px 15px;
-}
-
-#sgame_at div.game .selected table.gmetadata td, #sgame_at div.game .selected table.gevents td.gedescription {
-  width: 100%;
-  padding-left: 0px;
-}
-
-#sgame_at div.game .selected table.gevents tr.getitle th {
-  text-align: center;
-}
-
-#sgame_at div.game .selected table.gevents tr.geheader th {
-  white-space: nowrap;
-}
-
-#sgame_at div.scormfiles div.selected {
-  height: 430px;
-}
-
-ul#scormfiles_list {
-  list-style-type: none;
-  padding: 0px 20px;
-  padding-right: 2px;
-  margin-left: 15px;
-  margin-top: 10px;
-  overflow: auto;
-  height: 100%;
-}
-
-ul#scormfiles_list li.scormfile_item {
-  height: 110px;
-  overflow: hidden;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-ul#scormfiles_list li.scormfile_item div.scormfile_item_c1 {
-  float: left;
-  width: 140px;
-}
-
-ul#scormfiles_list li.scormfile_item div.scormfile_item_c1 img.scormfile_item_thumbnail {
-  width: 100%;
-  height: 110px;
-  min-height: 110px;
-  max-height: 110px;
-  cursor: pointer;
-  border: 2px solid black;
+#sgame_at div[step].scormfiles .selected div.c2 {
   background-color: #ddd;
 }
 
-ul#scormfiles_list li.scormfile_item div.scormfile_item_c2 {
-  padding: 15px;
-  font-size: 13px;
-  height: 110px;
-  width: 314px;
-  float: left;
-}
-
-ul#scormfiles_list li.scormfile_item div.scormfile_item_c3 {
-  float: right;
-  width: 30px;
-  height: 110px;
-  text-align: right;
-}
-
-ul#scormfiles_list li.scormfile_item div.scormfile_item_c3  button.remove_button {
+#sgame_at div[step] .selected img.thumbnail {
+  width: 100%;
+  height: 225px;
+  cursor: pointer;
+  margin-bottom: 0px;
   background: none;
   border: none;
 }
 
-ul#scormfiles_list li.scormfile_item div.scormfile_item_c3  button.remove_button span {
-  font-size: 16px;
-  margin-top: 2px;
+#sgame_at div[step] .selected table {
+  table-layout: auto;
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 13px;
+  margin-bottom: 5px;
 }
 
-#preview_scormfile {
-  padding: 0px;
-  margin: 0px;
+#sgame_at div.game .selected table.at_b, #sgame_at div.game .selected table.at_c {
+  margin-top: 10px;
 }
 
-#preview_scormfile iframe {
-  padding: 0px;
-  margin: 0px;
+#sgame_at .selected table.at_a th, #sgame_at .selected table.at_b th.name, #sgame_at .selected table.at_b td.name {
+  width: auto;
+  padding: 10px 25px 10px 15px;
+}
+
+#sgame_at .selected table.at_c th, #sgame_at .selected table.at_c td {
+  padding: 5px 5px 5px 5px;
+  text-align: center;
+}
+
+#sgame_at .selected table.at_c td.preview img, #sgame_at .selected table.at_c td.add img {
+  max-width: 20px;
+  max-height: 20px;
+  cursor: pointer;
+}
+
+#sgame_at .selected table.at_a td, #sgame_at .game .selected table.at_b tr.header th:nth-child(2) {
+  width: 100%;
+  padding-left: 0px;
+}
+
+#sgame_at .selected table.at_b tr.title th, #sgame_at .selected table.at_c tr.title th {
+  text-align: center;
+}
+
+#sgame_at .selected table.at_a tr th:nth-child(1), #sgame_at .selected table.at_b tr.header th, #sgame_at .selected table.at_c tr.header th {
+  white-space: nowrap;
+}
+
+#step2_addscormfile {
+  margin: 15px;
 }
 
 .fancybox-close-small:after {

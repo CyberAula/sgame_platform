@@ -30,6 +30,7 @@ es:
   dictionary:
     about: "About"
     are_you_sure: "¿Estás seguro?"
+    and: "y"
     back: "Volver"
     cancel: "Cancelar"
     delete: "Borrar"

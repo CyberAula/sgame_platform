@@ -9,13 +9,11 @@ SGAME_AT = (function($,undefined){
 
 	var stepsLoaded = [];
 
-	current_step = 1;
-	current_preview_game = {};
-	current_game = {};
-	current_scormfiles = [];
-
-	var games_carrousel_id = "games_carrousel";
-	var scormfiles_carrousel_id = "scormfiles_carrousel";
+	var current_step = 1;
+	var current_preview_game = {};
+	var current_game = {};
+	var current_preview_scormfile = {};
+	var current_los = [];
 
 
 	var init = function (game_templates,scormfiles,initOptions){
@@ -39,17 +37,16 @@ SGAME_AT = (function($,undefined){
 	};
 
 	var _loadEvents = function(){
-
 		//Step minify
 		$("#sgame_at div[step] div.stepTitle").click(function(event){
 			var step = $(this).parents("[step]").attr("step");
 			if(parseInt(step) <= current_step){
 			  _toggleStep($(this).parents("[step]").attr("step"));
 			}
-		});
+		});	
 
-		//Fancyboxes
-		$("#preview_gt_fancybox").fancybox(
+		//Preview URLs with iframes
+		$("#preview_iframe_fancybox").fancybox(
 			{
 				openEffect  : 'none',
 				closeEffect : 'none',
@@ -62,35 +59,6 @@ SGAME_AT = (function($,undefined){
 				}
 			}
 		);
-
-		$("#preview_scormfile_fancybox").fancybox(
-			{
-				openEffect  : 'none',
-				closeEffect : 'none',
-				type: 'iframe',
-				scrolling : false,
-				autoSize : true,
-				beforeLoad: function(){
-				},
-				afterLoad: function(){
-				}
-			}
-		);
-
-		// //Submit form
-		// $("#sgame_at .demo_create").click(function(event){
-		// 	if(current_scormfiles.length < 1){
-		// 		return _showSGAMEDialogWithSettings({"msg":_getTrans("i.error_no_scormfiles")}, false);
-		// 	}
-			
-		// 	var scormfiles_ids = [];
-		// 	$.each(current_scormfiles, function(i,scormfile){
-		// 		scormfiles_ids.push(scormfile.id);
-		// 	});
-		// 	$("#demo_form input[name='game_template']").val(current_game.id);
-		// 	$("#demo_form input[name='scormfiles']").val(scormfiles_ids);
-		// 	$("#demo_form").submit();
-		// });
 	};
 
 	var _finishStep = function(step){
@@ -129,16 +97,38 @@ SGAME_AT = (function($,undefined){
 		}
 		switch(step){
 			case 1:
-				$("#sgame_at .game .selected img.gthumbnail").click(function(){
+				$("#sgame_at .game .selected img.thumbnail").on("click",function(){
 					_previewGameTemplate(catalog.games[$(this).attr("gtid")]);
 				});
 
-				$("#step1_confirmation").click(function(){
+				$("#step1_confirmation").on("click",function(){
 					_onStep1Confirmation();
 				});
+
 				_createGamesCarrousel();
 				break;
 			case 2:
+				$(document).on('click', '#sgame_at .scormfiles .selected img.thumbnail', function(event) {
+					_previewScormfile(catalog.scormfiles[$(this).attr("sfid")]);
+				});
+
+				$(document).on('click', '#sgame_at .scormfiles .selected table.at_c td.preview img', function(event) {
+					var index = parseInt($(this).parents(".loinstance").find("td.index").html());
+					_previewLO(current_preview_scormfile.los[index-1]);
+				});
+
+				$(document).on('click', '#sgame_at .scormfiles .selected table.at_c td.add img', function(event) {
+					var index = parseInt($(this).parents(".loinstance").find("td.index").html());
+					var result = _addLO(current_preview_scormfile.los[index-1],current_preview_scormfile);
+					if(result === false){
+						return _showSGAMEDialogWithSettings({"msg":_getTrans("i.error_lo_already_added")}, false);
+					}
+				});
+
+				$(document).on('click', '#step2_addscormfile', function(event) {
+					_addScormfile(current_preview_scormfile);
+				});
+				
 				_createScormfilesCarrousel();
 				break;
 			default:
@@ -150,10 +140,10 @@ SGAME_AT = (function($,undefined){
 	//Step 1
 
 	var _createGamesCarrousel = function(){
-		if(options.user_logged_in === true){
-			var div = $("<div id='addGameButton'><a href='/game_templates/new' data-confirm='" + _getTrans("i.dialog_confirmation") + "' data-cancel-button='" + _getTrans("i.cancel") + "' data-method='get'><p>" + _getTrans("i.upload_game_template") + "</p><img src='/assets/add_game.png'/></a></div>");
-			$("#" + games_carrousel_id).append(div);
-		}
+		var div = $("<div id='addGameButton'><a href='/game_templates/new' data-confirm='" + _getTrans("i.dialog_confirmation") + "' data-cancel-button='" + _getTrans("i.cancel") + "' data-method='get'><p>" + _getTrans("i.upload_game_template") + "</p><img src='/assets/add_game.png'/></a></div>");
+		var games_carrousel_id = "games_carrousel";
+		$("#" + games_carrousel_id).append(div);
+		
 		$.each(catalog.games, function(i, game){
 			var div = $("<div itemid="+game.id+"><p>" + game.title + "</p><img src='"+game.thumbnail_url+"'/></div>");
 			$("#" + games_carrousel_id).append(div);
@@ -185,27 +175,45 @@ SGAME_AT = (function($,undefined){
 
 	var _selectGameTemplate = function(game){
 		current_preview_game = game;
-		$("#sgame_at .game .selected img.gthumbnail").attr("src",game.thumbnail_url);
-		$("#sgame_at .game .selected img.gthumbnail").attr("gtid",game.id);
-		$("#sgame_at .game .selected tr.gtitle td").html(game.title);
-		$("#sgame_at .game .selected tr.gdescription td").html(game.description);
-		$("#sgame_at .game .selected tr.glanguage td").html(game.language);
 
-		var eventsTable = $("#sgame_at .game .selected table.gevents");
-		$(eventsTable).find("tr.geinstance").remove();
+		//Fill metadata
+		var thumbnailDOM = $("#sgame_at .game .selected img.thumbnail");
+		if(typeof game.thumbnail_url !== "undefined"){
+			$(thumbnailDOM).attr("src",game.thumbnail_url);
+			$(thumbnailDOM).attr("gtid",game.id);
+			$(thumbnailDOM).show();
+		} else {
+			$(thumbnailDOM).hide();
+		}
+
+		$("#sgame_at .game .selected tr.title td").html(game.title);
+		$("#sgame_at .game .selected tr.description td").html(game.description);
+		$("#sgame_at .game .selected tr.language td").html(game.language);
+
+		//Fill events
+		var eventsTable = $("#sgame_at .game .selected table.at_b");
 		var gEvents = game.events;
 		var nEvents = gEvents.length;
-		for(var i=0; i<nEvents; i++){
-			var gEvent = gEvents[i];
-			var gEventDOM = "<tr class='geinstance'><td class='gename'>" + gEvent.title + "</td><td class='gedescription'>" + gEvent.description + "</td></tr>";
-			$(eventsTable).append(gEventDOM);
+
+		if(nEvents < 1){
+			$(eventsTable).hide();
+		} else {
+			$(eventsTable).find("tr.geinstance").remove();
+			for(var i=0; i<nEvents; i++){
+				var gEvent = gEvents[i];
+				var gEventDOM = "<tr class='geinstance'><td class='name'>" + gEvent.title + "</td><td class='description'>" + gEvent.description + "</td></tr>";
+				$(eventsTable).append(gEventDOM);
+			}
+			$(eventsTable).show();
 		}
+
+		$("#sgame_at .game .selected").show();
 	};
 
 	var _previewGameTemplate = function(gt){
 		var gtURL = "/game_templates/" + gt.id + ".full";
-		$("#preview_gt_fancybox").attr("href",gtURL);
-		$("#preview_gt_fancybox").trigger("click");
+		$("#preview_iframe_fancybox").attr("href",gtURL);
+		$("#preview_iframe_fancybox").trigger("click");
 	};
 
 	var _onStep1Confirmation = function(){
@@ -220,98 +228,143 @@ SGAME_AT = (function($,undefined){
 	//Step 2
 
 	var _createScormfilesCarrousel = function(){
-		if(options.user_logged_in === true){
-			var div = $("<div id='addFileButton'><a href='/documents/new' data-method='get' data-confirm='" + _getTrans("i.dialog_confirmation") + "' data-cancel-button='" + _getTrans("i.cancel") + "' data-method='get'><p>" + _getTrans("i.upload_scormfile") + "</p><img src='/assets/add_file.png'/></a></div>");
-			$("#" + scormfiles_carrousel_id).append(div);
-		}
-		$.each(catalog.scormfiles, function(i, scormfile){
-			var div = $("<div itemid="+scormfile.id+"><p>" + scormfile.title + "</p><img src='"+scormfile.thumbnail_url+"'/></div>");
+		var div = $("<div id='addFileButton'><a href='/documents/new' data-method='get' data-confirm='" + _getTrans("i.dialog_confirmation") + "' data-cancel-button='" + _getTrans("i.cancel") + "' data-method='get'><p>" + _getTrans("i.upload_scormfile") + "</p><img src='/assets/add_file.png'/></a></div>");
+		var scormfiles_carrousel_id = "scormfiles_carrousel";
+		$("#" + scormfiles_carrousel_id).append(div);
+		
+		$.each(catalog.scormfiles, function(i, sf){
+			var div = $("<div itemid=" + sf.id + "><p>" + sf.title + "</p><img src='" + sf.thumbnail_url + "'/></div>");
 			$("#" + scormfiles_carrousel_id).append(div);
 		});
 		_createCarousel(scormfiles_carrousel_id);
 		$("#" + scormfiles_carrousel_id + " div[itemid]").on("click", function(event){
-			_addScormfile(catalog.scormfiles[$(this).attr("itemid")]);
+			_selectScormfile(catalog.scormfiles[$(this).attr("itemid")]);
 		});
 	};
 
-	var _addScormfile = function(scormfile){
-		//Already added scormfile
-		if(current_scormfiles.indexOf(scormfile)!==-1){
-			return;
+	var _selectScormfile = function(sf){
+		current_preview_scormfile = sf;
+
+		//Fill metadata
+		var thumbnailDOM = $("#sgame_at .scormfiles .selected img.thumbnail");
+		if(typeof sf.thumbnail_url !== "undefined"){
+			$(thumbnailDOM).attr("src",sf.thumbnail_url);
+			$(thumbnailDOM).attr("sfid",sf.id);
+			$(thumbnailDOM).show();
+		} else {
+			$(thumbnailDOM).hide();
 		}
-		current_scormfiles.push(scormfile);
-
-		var li = $("<li itemid='"+scormfile.id+"' class='scormfile_item'>");
-		var scormfile_item_c1 = $("<div class='scormfile_item_c1'>");
-		var img = $("<img class='scormfile_item_thumbnail' src='"+scormfile.thumbnail_url+"' />");
-		$(img).click(function(){
-			_previewScormfile(catalog.scormfiles[$(this).parents("[itemid]").attr("itemid")]);
-		});
-		$(scormfile_item_c1).append(img);
-
-		var scormfile_item_c2 = $("<div class='scormfile_item_c2'>");
-		var description = $("<p class='scormfile_description'>"+scormfile.description+"</p>");
-		var descriptionb = $("<p class='scormfile_description_c'>" + scormfile.schema + " " + scormfile.schema_version + "</p>");
 		
-		var msgDescriptionResources = "";
-		if((scormfile.nscos > 0)&&(scormfile.assets > 0)){
-			if(scormfile.nscos > 1){
-				msgDescriptionResources += scormfile.nscos + " SCOs";
+		$("#sgame_at .scormfiles .selected tr.title td").html(sf.title);
+		$("#sgame_at .scormfiles .selected tr.description td").html(sf.description);
+		$("#sgame_at .scormfiles .selected tr.language td").html(sf.language);
+		$("#sgame_at .scormfiles .selected tr.version td").html(sf.schema + " " + sf.schema_version);
+
+		var nResources = "";
+		if((sf.nscos > 0)&&(sf.assets > 0)){
+			if(sf.nscos > 1){
+				nResources += sf.nscos + " SCOs";
 			} else {
-				msgDescriptionResources += scormfile.nscos + " SCO";
+				nResources += sf.nscos + " SCO";
 			}
-			if(scormfile.nassets > 1){
-				msgDescriptionResources += " and " + scormfile.nassets + " assets";
+			nResources += " " + _getTrans("i.and") + " ";
+			if(sf.nassets > 1){
+				nResources += sf.nassets + " assets";
 			} else {
-				msgDescriptionResources += " and " + scormfile.nassets + " asset";
+				nResources += sf.nassets + " asset";
 			}
 		} else {
-			if(scormfile.nscos > 0){
-				if(scormfile.nscos > 1){
-					msgDescriptionResources += scormfile.nscos + " SCOs";
+			if(sf.nscos > 0){
+				if(sf.nscos > 1){
+					nResources += sf.nscos + " SCOs";
 				} else {
-					msgDescriptionResources += scormfile.nscos + " SCO";
+					nResources += sf.nscos + " SCO";
 				}
 			}
-			if(scormfile.nassets > 0){
-				if(scormfile.nassets > 1){
-					msgDescriptionResources += scormfile.nassets + " assets";
+			if(sf.nassets > 0){
+				if(sf.nassets > 1){
+					nResources += sf.nassets + " assets";
 				} else {
-					msgDescriptionResources += scormfile.nassets + " asset";
+					nResources += sf.nassets + " asset";
 				}
 			}
 		}
-		var descriptionc = $("<p class='scormfile_description_b'>" + msgDescriptionResources + "</p>");
-		
-		$(scormfile_item_c2).append(description);
-		$(scormfile_item_c2).append(descriptionb);
-		$(scormfile_item_c2).append(descriptionc);
-		$(li).append(scormfile_item_c2);
+		$("#sgame_at .scormfiles .selected tr.nresources td").html(nResources);
 
-		var scormfile_item_c3 = $("<div class='scormfile_item_c3'>");
-		var removeButton = $("<button class='remove_button'><span class='glyphicon glyphicon-remove'></span></button>");
-		$(removeButton).click(function(event){
-	 		_removeScormfile(catalog.scormfiles[$(this).parents("li[itemid]").attr("itemid")]);
-		});
-		$(scormfile_item_c3).append(removeButton);
 
-		$(li).append(scormfile_item_c1);
-		$(li).append(scormfile_item_c2);
-		$(li).append(scormfile_item_c3);
+		//Fill LOs
+		var losTable = $("#sgame_at .scormfiles .selected table.at_c");
+		var sfLOs = sf.los;
+		var nLOs = sfLOs.length;
 
-		$("#scormfiles_list").append(li);
+		if(nLOs < 1){
+			$(losTable).hide();
+		} else {
+			$(losTable).find("tr.loinstance").remove();
+			for(var i=0; i<nLOs; i++){
+				var lo = sfLOs[i];
+				var loDOM = "<tr class='loinstance'><td class='index'>" + lo.resource_index + "</td><td class='type'>" + lo.lo_type + "</td><td class='preview'><img src='/assets/eye_icon.png'/></td><td class='add'><img src='/assets/plus.png'/></td></tr>";
+				$(losTable).append(loDOM);
+			}
+			$(losTable).show();
+		}
+
+		$("#sgame_at .scormfiles .selected").show();
 	};
 
-	var _removeScormfile = function(scormfile){
-		current_scormfiles.splice(current_scormfiles.indexOf(scormfile),1);
-		$("div.scormfiles #scormfiles_list li[itemid='" + scormfile.id + "']").remove();
+	var _previewScormfile = function(sf){
+		var sfURL = "/scormfiles/" + sf.id + ".full";
+		$("#preview_iframe_fancybox").attr("href",sfURL);
+		$("#preview_iframe_fancybox").trigger("click");
 	};
 
-	var _previewScormfile = function(scormfile){
-		var scormfileURL = "/scormfiles/" + scormfile.id + ".full";
-		$("#preview_scormfile_fancybox").attr("href",scormfileURL);
-		$("#preview_scormfile_fancybox").trigger("click");
+	var _previewLO = function(lo){
+		$("#preview_iframe_fancybox").attr("href",lo.hreffull);
+		$("#preview_iframe_fancybox").trigger("click");
 	};
+
+	var _addScormfile = function(sf){
+		var results = [];
+		var nLOs = sf.los.length;
+		for(var i=0; i<nLOs; i++){
+			results.push(_addLO(sf.los[i],sf));
+		}
+		if(results.indexOf(false)!==-1){
+			var errorMsg;
+			if(results.indexOf(true)===-1){
+				errorMsg = _getTrans("i.error_sf_already_added");
+			} else {
+				errorMsg = _getTrans("i.error_some_los_already_added");
+			}
+			return _showSGAMEDialogWithSettings({"msg":errorMsg}, false);
+		}
+	};
+
+	var _addLO = function(lo,sf){
+		var nLOs = current_los.length;
+		for(var i=0; i<nLOs; i++){
+			if(current_los[i].id === lo.id){
+				//LO already added
+				return false;
+			}
+		}
+
+		//Add LO
+		if(typeof lo.title === "undefined"){
+			//Include title
+			lo.title = sf.title + " (" + lo.resource_index + ")";
+		}
+		current_los.push(lo);
+		return true;
+	};
+
+	var _onStep2Confirmation = function(){
+		if(current_scormfiles.length < 1){
+			return _showSGAMEDialogWithSettings({"msg":_getTrans("i.error_no_scormfiles")}, false);
+		}
+		_finishStep("2");
+	};
+
 
 	/*
 	 * Locales

@@ -7,21 +7,24 @@
 	var options;
 	$(document).ready(function(){
 		SGAME_AT_Locales = {
-			"i.cancel"		: "<%= t("dictionary.cancel") %>",
-			"i.dialog_confirmation"		: "<%= t("dictionary.are_you_sure") %>",
-			"i.upload_game_template"	: "<%= t("game_templates.new") %>",
-			"i.upload_scormfile"		: "<%= t("documents.new") %>",
+			"i.and"								: "<%= t("dictionary.and") %>",
+			"i.cancel"							: "<%= t("dictionary.cancel") %>",
+			"i.dialog_confirmation"				: "<%= t("dictionary.are_you_sure") %>",
+			"i.upload_game_template"			: "<%= t("game_templates.new") %>",
+			"i.upload_scormfile"				: "<%= t("documents.new") %>",
+			"i.error_lo_already_added"  		: "<%= t("at.errors.lo_already_added") %>",
+			"i.error_sf_already_added"  		: "<%= t("at.errors.sf_already_added") %>",
+			"i.error_some_los_already_added"  	: "<%= t("at.errors.some_los_already_added") %>",
 		}
 		game_templates = <%=raw @game_templates.to_json( :include => [:events] )%>;
-		scormfiles = <%=raw @scormfiles.to_json%>;
+		scormfiles = <%=raw @scormfiles.to_json( :include => [:los] )%>;
 		options = {};
-		options.user_logged_in = <%=raw user_signed_in?%>;
-		options.language = "<%=I18n.locale.to_s%>";
 		SGAME_AT.init(game_templates,scormfiles,options);
 	});
 </script>
 
 <div id="sgame_at">
+	
 	<div step="1" class="game">
 		<div class="stepTitle">
 			<p>1. <%=t("at.step1.title")%></p>
@@ -33,34 +36,34 @@
 			<div class="carrousel_wrapper">
 				<div id="games_carrousel"></div>
 			</div>
-			<div class="selected">
-				<div class="r1 c1">		
-					<table class="gmetadata">
-						<tr class="gtitle">
+			<div class="selected" style="display:none">
+				<div class="r1 c1">
+					<table class="at_a">
+						<tr class="title">
 							<th><%= t("dictionary.title") %></th>
 							<td></td> 
 						</tr>
-						<tr class="gdescription">
+						<tr class="description">
 							<th><%= t("dictionary.description") %></th>
 							<td></td> 
 						</tr>
-						<tr class="glanguage">
+						<tr class="language">
 							<th><%= t("dictionary.language") %></th>
 							<td></td> 
 						</tr>
 					</table>
-					<table class="gevents">
-						<tr class="getitle">
+					<table class="at_b" style="display:none">
+						<tr class="title">
 							<th colspan="2"><%= t("events.title") %></th>
 						</tr>
-						<tr class="geheader">
-							<th class="gename"><%= t("events.name") %></th>
-							<th class="gedescription"><%= t("events.description") %></th>
+						<tr class="header">
+							<th class="name"><%= t("events.name") %></th>
+							<th class="description"><%= t("events.description") %></th>
 						</tr>
 					</table>
 				</div>
 				<div class="r1 c2">
-					<img class="gthumbnail"/>
+					<img class="thumbnail" title="<%= t('at.click_to_preview') %>" style="display:none"/>
 				</div>
 			</div>
 			<div class="step_actions">
@@ -68,7 +71,7 @@
 			</div>
 		</div>
 	</div>
-	<a id="preview_gt_fancybox" class="fancybox" style="display:none"></a>
+	
 	<div step="2" class="scormfiles disabled">
 		<div class="stepTitle">
 			<p>2. <%=t("at.step2.title")%></p>
@@ -77,18 +80,63 @@
 			<div class="stepDescription">
 				<p><%=t("at.step2.description")%></p>
 			</div>
+			<div class="stepSubtitle">
+				<p>2A. <%=t("at.step2.titleA")%></p>
+			</div>
 			<div class="carrousel_wrapper">
 				<div id="scormfiles_carrousel"></div>
 			</div>
-			<div class="selected">
-				<ul id="scormfiles_list"></ul>
+			<div class="selected" style="display:none">
+				<div class="r1 c1">		
+					<table class="at_a">
+						<tr class="title">
+							<th><%= t("dictionary.title") %></th>
+							<td></td> 
+						</tr>
+						<tr class="description">
+							<th><%= t("dictionary.description") %></th>
+							<td></td> 
+						</tr>
+						<tr class="language">
+							<th><%= t("dictionary.language") %></th>
+							<td></td> 
+						</tr>
+						<tr class="version">
+							<th><%= t("at.scorm_version") %></th>
+							<td></td> 
+						</tr>
+						<tr class="nresources">
+							<th><%= t("at.nresources") %></th>
+							<td></td> 
+						</tr>
+					</table>
+					<table class="at_c" style="display:none">
+						<tr class="title">
+							<th colspan="4"><%= t("los.title") %></th>
+						</tr>
+						<tr class="header">
+							<th class="index"><%= t("los.index") %></th>
+							<th class="type"><%= t("los.type") %></th>
+							<th class="preview"><%= t("dictionary.preview") %></th>
+							<th class="add"><%= t("dictionary.add") %> </th>
+						</tr>
+					</table>
+					<button id="step2_addscormfile" class="sgame_button"><%=t("at.step2.add_scormfile")%></button>
+				</div>
+				<div class="r1 c2">
+					<img class="thumbnail" title="<%= t('at.click_to_preview') %>" style="display:none"/>
+				</div>
+			</div>
+			<div class="stepSubtitle">
+				<p>2B. <%=t("at.step2.titleB")%></p>
 			</div>
 			<div class="step_actions">
 				<button id="step2_confirmation" class="sgame_button"><%=t("at.step2.confirmation")%></button>
 			</div>
 		</div>
 	</div>
-	<a id="preview_scormfile_fancybox" class="fancybox" style="display:none"></a>
+
+	<a id="preview_iframe_fancybox" class="fancybox" style="display:none"></a>
 </div>
 
 

@@ -29,14 +29,24 @@ en:
             password:
               blank: "can't be blank"
   at:
+    click_to_preview: "Click to preview"
     create: "Create educational game"
+    scorm_version: "SCORM version"
+    nresources: "Number of learning objects"
+    errors:
+      lo_already_added: "This learning object had already been selected"
+      some_los_already_added: "Some of the learning objects of this SCORM package had already been selected"
+      sf_already_added: "This SCORM package had already been selected"
     step1:
       title: "Choose a game template"
       description: "First, you have to select a game template into which the learning objects will be integrated in order to create an educational game. A game template is an entertainment game that has included the SGAME API in order to show learning objects to the players when certain events are triggered. Game templates define the specific events whose triggering will cause a learning object to be shown as well as the rewards that players will receive when they succesfully complete one of these learning objects."
       confirmation: "Select game template"
     step2:
       title: "Choose learning objects to integrate into the game"
+      titleA: "Choose SCORM packages"
+      titleB: "Check selected learning objects"
       description: "Description2"
+      add_scormfile: "Add all learning objects"
       confirmation: "Confirm learning objects"
     step3:
       title: "Step3"
@@ -62,6 +72,8 @@ en:
     educational_game: "educational game"
   dictionary:
     about: "About"
+    add: "Add"
+    and: "and"
     are_you_sure: "Are you sure?"
     back: "Back"
     cancel: "Cancel"
@@ -84,6 +96,7 @@ en:
     next: "Next"
     ok: "Ok"
     password: "Password"
+    preview: "Preview"
     relevance: "Relevance"
     remove: "Remove"
     save: "Save"
@@ -200,6 +213,12 @@ en:
     unlock_instructions: "Didn't receive unlock instructions?"
     unlock_instructions_resend: "Resend unlock instructions"
     username_or_email: "Username or Email"
+  los:
+    description: "Learning object description"
+    name: "Learning object name"
+    title: "Learning objects"
+    type: "Type"
+    index: "Index"
   presentations:
     new: "Create presentation"
     tabtitle: "Presentations"
