@@ -14,6 +14,7 @@ SGAME_AT = (function($,undefined){
 	var current_game = {};
 	var current_preview_scormfile = {};
 	var current_los = [];
+	var current_mapping = {};
 
 
 	var init = function (game_templates,scormfiles,initOptions){
@@ -144,6 +145,13 @@ SGAME_AT = (function($,undefined){
 				});
 
 				_createScormfilesCarrousel();
+				break;
+			case 3:
+				$("#step3_confirmation").on("click",function(){
+					_onStep3Confirmation();
+				});
+
+				_redrawMappingTable();
 				break;
 			default:
 				break;
@@ -445,7 +453,99 @@ SGAME_AT = (function($,undefined){
 		if(current_los.length < 1){
 			return _showSGAMEDialogWithSettings({"msg":_getTrans("i.error_no_los")}, false);
 		}
+		_redrawMappingTable();
 		_finishStep("2");
+	};
+
+	//Step 3
+
+	var _redrawMappingTable = function(){
+		var mappingTable = $("#sgame_at .mapping div.mapping_table_wrapper table");
+		var nEvents = current_game.events.length;
+		$(mappingTable).find("tr.eminstance").remove();
+
+		for(var i=0; i<nEvents; i++){
+			_addEventToMappingTable(current_game.events[i],mappingTable);
+		}
+
+		$(mappingTable).show();
+	};
+
+	var _addEventToMappingTable = function(event,mappingTable){
+		var emDOM = "<tr class='eminstance' eid='" + event.id + "'><td class='title'>" + event.title + "</td><td class='description'>" + event.description + "</td><td class='mapping'><select multiple='multiple'></select></td></tr>";
+		$(mappingTable).append(emDOM);
+
+		var select = $(mappingTable).find("tr.eminstance[eid='" + event.id + "'] td.mapping select");
+		var selectOptions = [{value:"", text:_getTrans("i.none"), selected: ((typeof current_mapping[event.id] !== "undefined")&&(current_mapping[event.id].indexOf("")!==-1))},{value: "*", text: _getTrans("i.all"), selected: ((typeof current_mapping[event.id] === "undefined")||(current_mapping[event.id].length===0))}];
+
+		for(var j=0; j<current_los.length; j++){
+			var lo = current_los[j];
+			var selected = ((typeof current_mapping[event.id] !== "undefined")&&(current_mapping[event.id].indexOf(lo.id)!==-1));
+			selectOptions.push({value:lo.id, text:lo.title, selected: selected});
+		}
+
+		for(var i=0; i<selectOptions.length; i++){
+			var option = selectOptions[i];
+			var selected = '';
+			if(option.selected === true){
+				selected = 'selected="selected"';
+			}
+			$(select).append('<option value="' + option.value + '" ' + selected + '>' + option.text + '</option>');
+		}
+
+		$(select).select2();
+
+		$(select).on('change.select2', function (e) {
+			if((typeof e.added !== "undefined")&&(typeof e.added.id !== "undefined")){
+				switch(e.added.id){
+					case "*":
+						//All
+						if (e.val.length > 1){
+							$(this).select2("val",["*"]);
+						}
+						break;
+					case "":
+						//None
+						if (e.val.length > 1){
+							$(this).select2("val",[""]);
+						}
+						break;
+					default:
+						//Other
+						var val = e.val;
+						var shouldChangeVal = false;
+						var iAll = val.indexOf("*");
+						if (iAll !== -1){
+							val.splice(iAll, 1);
+							shouldChangeVal = true;
+						}
+						var iNone = val.indexOf("");
+						if (iNone !== -1){
+							val.splice(iNone, 1);
+							shouldChangeVal = true;
+						}
+
+						if(shouldChangeVal === true){
+							$(this).select2("val",val);
+						}
+
+						break;
+				}
+			}
+			
+		});
+	};
+
+	var _onStep3Confirmation = function(){
+		var nEvents = current_game.events.length;
+		for(var i=0; i<nEvents; i++){
+			var eM = current_mapping[current_game.events[i].id];
+			if((typeof eM == "undefined")||(eM.length === 0)){
+				return _showSGAMEDialogWithSettings({"msg":_getTrans("i.error_invalid_mapping")}, false);
+			}
+		}
+
+		_finishStep("3");
 	};
 
 

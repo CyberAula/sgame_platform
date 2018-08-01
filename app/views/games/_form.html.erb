@@ -15,7 +15,10 @@
 			"i.error_lo_already_added"  		: "<%= t("at.errors.lo_already_added") %>",
 			"i.error_sf_already_added"  		: "<%= t("at.errors.sf_already_added") %>",
 			"i.error_some_los_already_added"  	: "<%= t("at.errors.some_los_already_added") %>",
-			"i.error_no_los"  	: "<%= t("at.errors.no_los") %>",
+			"i.error_no_los"  					: "<%= t("at.errors.no_los") %>",
+			"i.error_invalid_mapping"  			: "<%= t("at.errors.invalid_mapping") %>",
+			"i.all"  							: "<%= t("dictionary.all") %>",
+			"i.none"  							: "<%= t("dictionary.none") %>"
 		}
 		game_templates = <%=raw @game_templates.to_json( :include => [:events] )%>;
 		scormfiles = <%=raw @scormfiles.to_json( :include => [:los] )%>;
@@ -148,24 +151,37 @@
 		</div>
 	</div>
 
+	<div step="3" class="mapping disabled">
+		<div class="stepTitle">
+			<p>3. <%=t("at.step3.title")%></p>
+		</div>
+		<div class="stepContent stephidden" style="display:none">
+			<div class="stepDescription">
+				<p><%=t("at.step3.description")%></p>
+			</div>
+			<div class="mapping_table_wrapper">
+				<table class="at_c" style="display:none">
+					<tr class="header">
+						<th class="name"><%= t("events.name") %></th>
+						<th class="description"><%= t("events.description") %></th>
+						<th class="description"><%= t("events.lo") %></th>
+					</tr>
+				</table>
+			</div>
+			<div class="step_actions">
+				<button id="step3_confirmation" class="sgame_button"><%=t("at.step3.confirmation")%></button>
+			</div>
+		</div>
+	</div>
+
 	<a id="preview_iframe_fancybox" class="fancybox" style="display:none"></a>
 </div>
 
-
-<div id="update_document_form_wrapper" class="document_form_wrapper">
+<div id="update_document_form_wrapper" class="document_form_wrapper" style="display:none">
 	<%= form_for game, url: {action: controller.action_name}, html: {class: "update_document_form document_form"} do |f| %>
-		<div class="field">
-			<p class="form_legend"><%=t("dictionary.title")%></p>
-			<%= f.text_field :title, :maxlength => 60, :size => 70 %>
-		</div>
-		<div class="field">
-			<p class="form_legend"><%=t("dictionary.description")%></p>
-			<%= f.text_area :description, :cols => 73, :rows => 4, :maxlength => 280, :resize => "none" %>
-		</div>
-			<div class="actions">
-				<%= f.submit(t("games.update"), {class: "sgame_button"}) %>
-			</div>
-			<br/>
-			<%= link_to t("dictionary.back"), :back, :class=>"back_button" %>
+		<%= f.hidden_field :title %>
+		<%= f.hidden_field :description %>
 	<% end %>
 </div>
+
+<%= link_to t("dictionary.back"), :back, :class=>"back_button" %>

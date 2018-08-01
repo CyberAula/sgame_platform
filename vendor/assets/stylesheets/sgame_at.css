@@ -190,6 +190,14 @@
   font-size: 15px;
 }
 
+#sgame_at div[step="3"] div.mapping_table_wrapper td.mapping {
+  width: 50%;
+}
+
+#sgame_at div[step="3"] div.mapping_table_wrapper td.mapping div.select2-container-multi {
+  width: 100%;
+}
+
 .fancybox-close-small:after {
   color: white;
   background: #046598;
