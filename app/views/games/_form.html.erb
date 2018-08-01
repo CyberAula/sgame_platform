@@ -15,6 +15,7 @@
 			"i.error_lo_already_added"  		: "<%= t("at.errors.lo_already_added") %>",
 			"i.error_sf_already_added"  		: "<%= t("at.errors.sf_already_added") %>",
 			"i.error_some_los_already_added"  	: "<%= t("at.errors.some_los_already_added") %>",
+			"i.error_no_los"  	: "<%= t("at.errors.no_los") %>",
 		}
 		game_templates = <%=raw @game_templates.to_json( :include => [:events] )%>;
 		scormfiles = <%=raw @scormfiles.to_json( :include => [:los] )%>;
@@ -87,7 +88,7 @@
 				<div id="scormfiles_carrousel"></div>
 			</div>
 			<div class="selected" style="display:none">
-				<div class="r1 c1">		
+				<div class="r1 c1">
 					<table class="at_a">
 						<tr class="title">
 							<th><%= t("dictionary.title") %></th>
@@ -129,6 +130,17 @@
 			</div>
 			<div class="stepSubtitle">
 				<p>2B. <%=t("at.step2.titleB")%></p>
+			</div>
+			<div class="selected_los">
+				<p class="nolos"><%= t("at.no_selected_los") %></p>
+				<table class="at_c" style="display:none">
+					<tr class="header">
+						<th class="title"><%= t("los.title") %></th>
+						<th class="type"><%= t("los.type") %></th>
+						<th class="preview"><%= t("dictionary.preview") %></th>
+						<th class="remove"><%= t("dictionary.remove") %> </th>
+					</tr>
+				</table>
 			</div>
 			<div class="step_actions">
 				<button id="step2_confirmation" class="sgame_button"><%=t("at.step2.confirmation")%></button>

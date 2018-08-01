@@ -113,8 +113,8 @@ SGAME_AT = (function($,undefined){
 				});
 
 				$(document).on('click', '#sgame_at .scormfiles .selected table.at_c td.preview img', function(event) {
-					var index = parseInt($(this).parents(".loinstance").find("td.index").html());
-					_previewLO(current_preview_scormfile.los[index-1]);
+					var loId = parseInt($(this).parents("tr.loinstance[loid]").attr("loid"));
+					_previewLO(_findLoWithId(loId,current_preview_scormfile.los));
 				});
 
 				$(document).on('click', '#sgame_at .scormfiles .selected table.at_c td.add img', function(event) {
@@ -125,10 +125,24 @@ SGAME_AT = (function($,undefined){
 					}
 				});
 
+				$(document).on('click', '#sgame_at .scormfiles .selected_los table.at_c td.preview img', function(event) {
+					var loId = parseInt($(this).parents("tr.loinstance[loid]").attr("loid"));
+					_previewLO(_findLoWithId(loId,current_los));
+				});
+
+				$(document).on('click', '#sgame_at .scormfiles .selected_los table.at_c td.remove img', function(event) {
+					var loId = parseInt($(this).parents("[loid]").attr("loid"));
+					_removeLO(loId);
+				});
+
 				$(document).on('click', '#step2_addscormfile', function(event) {
 					_addScormfile(current_preview_scormfile);
 				});
-				
+
+				$("#step2_confirmation").on("click",function(){
+					_onStep2Confirmation();
+				});
+
 				_createScormfilesCarrousel();
 				break;
 			default:
@@ -137,18 +151,31 @@ SGAME_AT = (function($,undefined){
 	};
 
 
+	//Utils
+
+	var _findLoWithId = function(id,los){
+		var nLOs = los.length;
+		for(var i=0; i<nLOs; i++){
+			if(los[i].id===id){
+				return los[i];
+			}
+		}
+	};
+
+
 	//Step 1
 
 	var _createGamesCarrousel = function(){
-		var div = $("<div id='addGameButton'><a href='/game_templates/new' data-confirm='" + _getTrans("i.dialog_confirmation") + "' data-cancel-button='" + _getTrans("i.cancel") + "' data-method='get'><p>" + _getTrans("i.upload_game_template") + "</p><img src='/assets/add_game.png'/></a></div>");
 		var games_carrousel_id = "games_carrousel";
-		$("#" + games_carrousel_id).append(div);
-		
 		$.each(catalog.games, function(i, game){
 			var div = $("<div itemid="+game.id+"><p>" + game.title + "</p><img src='"+game.thumbnail_url+"'/></div>");
 			$("#" + games_carrousel_id).append(div);
 		});
+		var div = $("<div id='addGameButton'><a href='/game_templates/new' data-confirm='" + _getTrans("i.dialog_confirmation") + "' data-cancel-button='" + _getTrans("i.cancel") + "' data-method='get'><p>" + _getTrans("i.upload_game_template") + "</p><img src='/assets/add_game.png'/></a></div>");
+		$("#" + games_carrousel_id).prepend(div);
+
 		_createCarousel(games_carrousel_id);
+
 		$("#" + games_carrousel_id + " div[itemid]").on("click", function(event){
 			_selectGameTemplate(catalog.games[$(this).attr("itemid")]);
 		});
@@ -228,15 +255,16 @@ SGAME_AT = (function($,undefined){
 	//Step 2
 
 	var _createScormfilesCarrousel = function(){
-		var div = $("<div id='addFileButton'><a href='/documents/new' data-method='get' data-confirm='" + _getTrans("i.dialog_confirmation") + "' data-cancel-button='" + _getTrans("i.cancel") + "' data-method='get'><p>" + _getTrans("i.upload_scormfile") + "</p><img src='/assets/add_file.png'/></a></div>");
 		var scormfiles_carrousel_id = "scormfiles_carrousel";
-		$("#" + scormfiles_carrousel_id).append(div);
-		
 		$.each(catalog.scormfiles, function(i, sf){
 			var div = $("<div itemid=" + sf.id + "><p>" + sf.title + "</p><img src='" + sf.thumbnail_url + "'/></div>");
-			$("#" + scormfiles_carrousel_id).append(div);
+			$("#" + scormfiles_carrousel_id).prepend(div);
 		});
+		var div = $("<div id='addFileButton'><a href='/documents/new' data-method='get' data-confirm='" + _getTrans("i.dialog_confirmation") + "' data-cancel-button='" + _getTrans("i.cancel") + "' data-method='get'><p>" + _getTrans("i.upload_scormfile") + "</p><img src='/assets/add_file.png'/></a></div>");
+		$("#" + scormfiles_carrousel_id).prepend(div);
+
 		_createCarousel(scormfiles_carrousel_id);
+
 		$("#" + scormfiles_carrousel_id + " div[itemid]").on("click", function(event){
 			_selectScormfile(catalog.scormfiles[$(this).attr("itemid")]);
 		});
@@ -303,7 +331,7 @@ SGAME_AT = (function($,undefined){
 			$(losTable).find("tr.loinstance").remove();
 			for(var i=0; i<nLOs; i++){
 				var lo = sfLOs[i];
-				var loDOM = "<tr class='loinstance'><td class='index'>" + lo.resource_index + "</td><td class='type'>" + lo.lo_type + "</td><td class='preview'><img src='/assets/eye_icon.png'/></td><td class='add'><img src='/assets/plus.png'/></td></tr>";
+				var loDOM = "<tr class='loinstance' loid='" + lo.id + "'><td class='index'>" + lo.resource_index + "</td><td class='type'>" + lo.lo_type + "</td><td class='preview'><img src='/assets/eye_icon.png'/></td><td class='add'><img src='/assets/plus.png'/></td></tr>";
 				$(losTable).append(loDOM);
 			}
 			$(losTable).show();
@@ -355,19 +383,74 @@ SGAME_AT = (function($,undefined){
 			lo.title = sf.title + " (" + lo.resource_index + ")";
 		}
 		current_los.push(lo);
+
+		if(nLOs === 0){
+			_redrawLoTable();
+		} else {
+			_addLoToLoTable(lo);
+		}
+		
 		return true;
 	};
 
+	var _removeLO = function(loId){
+		var nLOs = current_los.length;
+		for(var i=0; i<nLOs; i++){
+			if(current_los[i].id === loId){
+				current_los.splice(i, 1);
+				if(nLOs === 1){
+					_redrawLoTable();
+				} else {
+					_removeLoFromLoTable(loId);
+				}
+			}
+		}
+	};
+
+	var _redrawLoTable = function(){
+		var loDiv = $("#sgame_at .scormfiles .selected_los");
+		var loTable = $(loDiv).find("table.at_c");
+		var nLOs = current_los.length;
+		if(nLOs <= 0){
+			$(loTable).hide();
+			$(loDiv).find(".nolos").show();
+			return;
+		}
+		$(loDiv).find(".nolos").hide();
+		$(loTable).find("tr.loinstance").remove();
+
+		for(var i=0; i<nLOs; i++){
+			_addLoToLoTable(current_los[i],loTable);
+		}
+
+		$(loTable).show();
+	};
+
+	var _addLoToLoTable = function(lo,loTable){
+		if(typeof loTable === "undefined"){
+			loTable = $("#sgame_at .scormfiles .selected_los table.at_c");
+		}
+		var loDOM = "<tr class='loinstance' loid='" + lo.id + "'><td class='title'>" + lo.title + "</td><td class='type'>" + lo.lo_type + "</td><td class='preview'><img src='/assets/eye_icon.png'/></td><td class='remove'><img src='/assets/remove.png'/></td></tr>";
+		$(loTable).append(loDOM);
+	};
+
+	var _removeLoFromLoTable = function(loId,loTable){
+		if(typeof loTable === "undefined"){
+			loTable = $("#sgame_at .scormfiles .selected_los table.at_c");
+		}
+		$(loTable).find("tr.loinstance[loid='" + loId + "']").remove();
+	};
+
 	var _onStep2Confirmation = function(){
-		if(current_scormfiles.length < 1){
-			return _showSGAMEDialogWithSettings({"msg":_getTrans("i.error_no_scormfiles")}, false);
+		if(current_los.length < 1){
+			return _showSGAMEDialogWithSettings({"msg":_getTrans("i.error_no_los")}, false);
 		}
 		_finishStep("2");
 	};
 
 
 	/*
-	 * Locales
+	 * I18n support
 	 */
 
 	 var _translateUI = function(){

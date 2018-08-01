@@ -140,7 +140,7 @@
   border: none;
 }
 
-#sgame_at div[step] .selected table {
+#sgame_at div[step] table {
   table-layout: auto;
   border-collapse: collapse;
   width: 100%;
@@ -148,41 +148,46 @@
   margin-bottom: 5px;
 }
 
-#sgame_at div.game .selected table.at_b, #sgame_at div.game .selected table.at_c {
+#sgame_at div.game table.at_b, #sgame_at div.game table.at_c {
   margin-top: 10px;
 }
 
-#sgame_at .selected table.at_a th, #sgame_at .selected table.at_b th.name, #sgame_at .selected table.at_b td.name {
+#sgame_at table.at_a th, #sgame_at table.at_b th.name, #sgame_at table.at_b td.name {
   width: auto;
   padding: 10px 25px 10px 15px;
 }
 
-#sgame_at .selected table.at_c th, #sgame_at .selected table.at_c td {
+#sgame_at table.at_c th, #sgame_at table.at_c td {
   padding: 5px 5px 5px 5px;
   text-align: center;
 }
 
-#sgame_at .selected table.at_c td.preview img, #sgame_at .selected table.at_c td.add img {
+#sgame_at table.at_c td.preview img, #sgame_at table.at_c td.add img, #sgame_at table.at_c td.remove img {
   max-width: 20px;
   max-height: 20px;
   cursor: pointer;
 }
 
-#sgame_at .selected table.at_a td, #sgame_at .game .selected table.at_b tr.header th:nth-child(2) {
+#sgame_at table.at_a td, #sgame_at .game table.at_b tr.header th:nth-child(2) {
   width: 100%;
   padding-left: 0px;
 }
 
-#sgame_at .selected table.at_b tr.title th, #sgame_at .selected table.at_c tr.title th {
+#sgame_at table.at_b tr.title th, #sgame_at table.at_c tr.title th {
   text-align: center;
 }
 
-#sgame_at .selected table.at_a tr th:nth-child(1), #sgame_at .selected table.at_b tr.header th, #sgame_at .selected table.at_c tr.header th {
+#sgame_at table.at_a tr th:nth-child(1), #sgame_at table.at_b tr.header th, #sgame_at table.at_c tr.header th {
   white-space: nowrap;
 }
 
 #step2_addscormfile {
   margin: 15px;
+}
+
+#sgame_at div[step="2"] p.nolos {
+  text-align: center;
+  font-size: 15px;
 }
 
 .fancybox-close-small:after {
@@ -196,7 +201,7 @@
 }
 
 @media (max-width: 600px) {
-  #sgame_at div.game .selected table.gevents tr.geheader th {
+  #sgame_at div.game table.gevents tr.geheader th {
     white-space: normal;
   }
 }
