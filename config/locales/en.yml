@@ -40,6 +40,8 @@ en:
       sf_already_added: "This SCORM package had already been selected"
       no_los: "You need to select at least one learning object to be integrated into the game"
       invalid_mapping: "A mapping should be specified for each game event"
+      title_missing: "You should specify a title for the game"
+      generic_metadata_missing: "You should specify mandatory metadata for the game"
     msgs:
       gt_change_confirmation: "If you select a new game template, the defined event mapping will be reset to default. Are you sure you want to select a new game template?"
     step1:
@@ -66,11 +68,17 @@ en:
         choice1: "Show the learning objects again."
         choice2: "Do not show the learning objects again."
     step5:
-      title: "Step5"
-      description: "Description5"
+      title: "Specify metadata for the game"
+      description: "In this step you should specify metadata (title, description, ...) for the educational game."
+      confirmation: "Confirm metadata"
+      metadata1:
+        title: "Title"
+      metadata2:
+        title: "Description"
     step6:
-      title: "Step6"
-      description: "Description6"
+      title: "Create the educational game"
+      description: "Click on the button below to finish the creation process."
+      confirmation: "Create educational game"
     update: "Update educational game"
   authorization:
     errors:

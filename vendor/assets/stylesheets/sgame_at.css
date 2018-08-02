@@ -42,6 +42,10 @@
   padding: 8px 8px 8px 16px;
 }
 
+#sgame_at div[step] div.stepDescription {
+  margin-bottom: 15px;
+}
+
 #sgame_at div[step] div.stepDescription p {
   font-size: 14px;
   color: #efefef;
@@ -51,7 +55,7 @@
   margin-top: 15px;
 }
 
-#sgame_at .game, #sgame_at .scormfiles {
+#sgame_at .game_template, #sgame_at .scormfiles {
   background: -moz-linear-gradient(left,  rgba(255,255,255,0) 0%, rgba(0,0,0,0.1) 100%); /* FF3.6+ */
   background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(255,255,255,0)), color-stop(100%,rgba(0,0,0,0.1))); /* Chrome,Safari4+ */
   background: -webkit-linear-gradient(left,  rgba(255,255,255,0) 0%,rgba(0,0,0,0.1) 100%); /* Chrome10+,Safari5.1+ */
@@ -148,7 +152,7 @@
   margin-bottom: 5px;
 }
 
-#sgame_at div.game table.at_b, #sgame_at div.game table.at_c {
+#sgame_at div.game_template table.at_b, #sgame_at div.game_template table.at_c {
   margin-top: 10px;
 }
 
@@ -168,7 +172,7 @@
   cursor: pointer;
 }
 
-#sgame_at table.at_a td, #sgame_at .game table.at_b tr.header th:nth-child(2) {
+#sgame_at table.at_a td, #sgame_at .game_template table.at_b tr.header th:nth-child(2) {
   width: 100%;
   padding-left: 0px;
 }
@@ -198,7 +202,6 @@
   width: 100%;
 }
 
-
 #sgame_at div[step="4"] div.sequencing_wrapper {
   font-size: 14px;
 }
@@ -207,6 +210,28 @@
   padding: 10px;
   margin-bottom: 20px;
   border: 2px solid white;
+}
+
+#sgame_at div[step="5"] div.metadata_wrapper div.metadata_field {
+  margin-bottom: 15px;
+}
+
+#sgame_at div[step="5"] div.metadata_wrapper div.metadata_field p.metadata_field_legend {
+  font-size: 15px;
+  color: white;
+  margin-bottom: 1px;
+}
+
+#sgame_at div[step="5"] div.metadata_wrapper div.metadata_field input, #sgame_at div[step="5"] div.metadata_wrapper div.metadata_field textarea {
+  color: black;
+  background-color: white;
+  padding: 5px;
+  font-size: 14px;
+  width: 100%;
+}
+
+#sgame_at div[step="5"] div.metadata_wrapper div.metadata_field textarea {
+  resize: none;
 }
 
 .fancybox-close-small:after {
@@ -220,7 +245,7 @@
 }
 
 @media (max-width: 600px) {
-  #sgame_at div.game table.gevents tr.geheader th {
+  #sgame_at div.game_template table.gevents tr.geheader th {
     white-space: normal;
   }
 }
