@@ -39,7 +39,9 @@ en:
       some_los_already_added: "Some of the learning objects of this SCORM package had already been selected"
       sf_already_added: "This SCORM package had already been selected"
       no_los: "You need to select at least one learning object to be integrated into the game"
-      invalid_mapping: "A mapping should be specified for each game event"  
+      invalid_mapping: "A mapping should be specified for each game event"
+    msgs:
+      gt_change_confirmation: "If you select a new game template, the defined event mapping will be reset to default. Are you sure you want to select a new game template?"
     step1:
       title: "Choose a game template"
       description: "First, you have to select a game template into which the learning objects will be integrated in order to create an educational game. A game template is an entertainment game that has included the SGAME API in order to show learning objects to the players when certain events are triggered. Game templates define the specific events whose triggering will cause a learning object to be shown as well as the rewards that players will receive when they succesfully complete one of these learning objects."

@@ -170,6 +170,15 @@ SGAME_AT = (function($,undefined){
 		}
 	};
 
+	var _getCurrentLoIds = function(){
+		var loIds = [];
+		var nLOs = current_los.length;
+		for(var i=0; i<nLOs; i++){
+			loIds.push(current_los[i].id);
+		}
+		return loIds;
+	};
+
 
 	//Step 1
 
@@ -255,7 +264,25 @@ SGAME_AT = (function($,undefined){
 		if((typeof current_preview_game == "undefined")||(typeof current_preview_game.id == "undefined")){
 			return _showSGAMEDialogWithSettings({"msg":_getTrans("i.error_no_game")}, false);
 		}
+
+		var newGameTemplate = (typeof current_game !== "undefined")&&(typeof current_game.id !== "undefined")&&(current_preview_game.id !== current_game.id);
+		if((newGameTemplate)&&(Object.keys(current_mapping).length > 0)){
+			return _showSGAMEDialogWithSettings({"msg": _getTrans("i.gt_change_confirmation")}, true, function(ok){
+				if(ok){
+					//New game template was selected
+					current_game = current_preview_game;
+					//Reset mapping
+					current_mapping = {};
+					_redrawMappingTable();
+					_finishStep("1");
+				} else {
+					return;
+				}
+			});
+		}
+		
 		current_game = current_preview_game;
+		
 		_finishStep("1");
 	};
 
@@ -411,8 +438,10 @@ SGAME_AT = (function($,undefined){
 				} else {
 					_removeLoFromLoTable(loId);
 				}
+				return true;
 			}
 		}
+		return false;
 	};
 
 	var _redrawLoTable = function(){
@@ -476,11 +505,11 @@ SGAME_AT = (function($,undefined){
 		$(mappingTable).append(emDOM);
 
 		var select = $(mappingTable).find("tr.eminstance[eid='" + event.id + "'] td.mapping select");
-		var selectOptions = [{value:"", text:_getTrans("i.none"), selected: ((typeof current_mapping[event.id] !== "undefined")&&(current_mapping[event.id].indexOf("")!==-1))},{value: "*", text: _getTrans("i.all"), selected: ((typeof current_mapping[event.id] === "undefined")||(current_mapping[event.id].length===0))}];
+		var selectOptions = [{value:"none", text:_getTrans("i.none"), selected: ((typeof current_mapping[event.id] !== "undefined")&&(current_mapping[event.id].indexOf("none")!==-1))},{value: "*", text: _getTrans("i.all"), selected: ((typeof current_mapping[event.id] === "undefined")||(current_mapping[event.id].length===0))}];
 
 		for(var j=0; j<current_los.length; j++){
 			var lo = current_los[j];
-			var selected = ((typeof current_mapping[event.id] !== "undefined")&&(current_mapping[event.id].indexOf(lo.id)!==-1));
+			var selected = ((typeof current_mapping[event.id] !== "undefined")&&(current_mapping[event.id].indexOf(lo.id + "")!==-1));
 			selectOptions.push({value:lo.id, text:lo.title, selected: selected});
 		}
 
@@ -504,10 +533,10 @@ SGAME_AT = (function($,undefined){
 							$(this).select2("val",["*"]);
 						}
 						break;
-					case "":
+					case "none":
 						//None
 						if (e.val.length > 1){
-							$(this).select2("val",[""]);
+							$(this).select2("val",["none"]);
 						}
 						break;
 					default:
@@ -519,7 +548,7 @@ SGAME_AT = (function($,undefined){
 							val.splice(iAll, 1);
 							shouldChangeVal = true;
 						}
-						var iNone = val.indexOf("");
+						var iNone = val.indexOf("none");
 						if (iNone !== -1){
 							val.splice(iNone, 1);
 							shouldChangeVal = true;
@@ -538,12 +567,31 @@ SGAME_AT = (function($,undefined){
 
 	var _onStep3Confirmation = function(){
 		var nEvents = current_game.events.length;
+		var currentLoIds = _getCurrentLoIds();
+		var mappingTable = $("#sgame_at .mapping div.mapping_table_wrapper table");
+
 		for(var i=0; i<nEvents; i++){
-			var eM = current_mapping[current_game.events[i].id];
+			//Build mapping
+			var eventId = current_game.events[i].id;
+			var eMDOM = $(mappingTable).find("tr.eminstance[eid='" + eventId + "']");
+			var idsMappedLOs = $(eMDOM).find("div.select2-container-multi").select2("val");
+
+			//idsMappedLOs
+			for(var j=0; j<idsMappedLOs.length; j++){
+				if((idsMappedLOs[j]==="*")||(idsMappedLOs[j]==="none")||(currentLoIds.indexOf(parseInt(idsMappedLOs[j]))!==-1)){
+					continue;
+				}
+				return _showSGAMEDialogWithSettings({"msg":_getTrans("i.error_invalid_mapping")}, false);
+			}
+
+			current_mapping[eventId] = idsMappedLOs;
+
+			//Check mapping
+			var eM = current_mapping[eventId];
 			if((typeof eM == "undefined")||(eM.length === 0)){
 				return _showSGAMEDialogWithSettings({"msg":_getTrans("i.error_invalid_mapping")}, false);
 			}
-		}
+		};
 
 		_finishStep("3");
 	};
