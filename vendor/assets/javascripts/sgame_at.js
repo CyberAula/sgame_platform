@@ -20,6 +20,8 @@ SGAME_AT = (function($,undefined){
 
 
 	var init = function (state,game_templates,scormfiles,initOptions){
+		_extendJS();
+
 		if(typeof initOptions == "object"){
 			options = initOptions;
 		}
@@ -70,6 +72,13 @@ SGAME_AT = (function($,undefined){
 		for(var i=0; i<current_step; i++){
 			_loadStep(i+1);
 		}
+	};
+
+	var _extendJS = function(){
+		String.prototype.replaceAll = function(find,replace){
+			var str = this;
+			return str.replace(new RegExp(find.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), replace);
+		};
 	};
 
 	var _loadEvents = function(){
@@ -724,8 +733,47 @@ SGAME_AT = (function($,undefined){
 	};
 
 	var _onCreateGame = function(){
-		//Send request to the SGAME platform in order to create the educational game
-		console.log("onCreateGame");
+		//Send request to the SGAME platform to create the educational game
+		var editor_data = _generateEditorData();
+		var game = {editor_data: editor_data};
+		// $("#game_form input[name='editor_data']").val(editor_data);
+		// $("#game_form").submit();
+		$.ajax({
+			url:'/games',
+			type:'POST',
+			dataType:'json',
+			data:{
+				game: game,
+				authenticity_token: options["authenticity_token"]
+			},
+			success:function(data){
+				_showSGAMEDialogWithSettings({"msg":_getTrans("i.success_creation")}, false, function(){
+					window.location.href = data.gamePath;
+				});
+			},
+			error:function(data){
+				console.log("error");
+				console.log(data);
+				if((typeof data.responseJSON !== "undefined")&&(typeof data.responseJSON.errorMsg === "string")){
+					var errorMsg = _getTrans("i.error_specific_create", {errorMsg: data.responseJSON.errorMsg});
+				} else {
+					var errorMsg = _getTrans("i.error_generic_create");
+				}
+				
+				_showSGAMEDialogWithSettings({"msg":errorMsg}, false);
+			}
+		});
+	};
+
+	var _generateEditorData = function(){
+		var editor_data = {};
+		editor_data.step = current_step;
+		editor_data.game_template = current_game_template;
+		editor_data.los = current_los;
+		editor_data.mapping = current_mapping;
+		editor_data.sequencing = current_sequencing;
+		editor_data.metadata = current_metadata;
+		return editor_data;
 	};
 
 
@@ -784,7 +832,7 @@ SGAME_AT = (function($,undefined){
 	/*
 	 * Replace params (if they are provided) in the translations keys. Example:
 	 * // "i.dtest"	: "Uploaded by #{name} via SGAME",
-	 * // VISH.I18n.getTrans("i.dtest", {name: "Demo"}) -> "Uploaded by Demo via SGAME"
+	 * // _getTrans("i.dtest", {name: "Demo"}) -> "Uploaded by Demo via SGAME"
 	 */
 	var _getTransWithParams = function(trans,params){
 		if(typeof params != "object"){

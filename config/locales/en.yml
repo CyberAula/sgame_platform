@@ -42,6 +42,8 @@ en:
       invalid_mapping: "A mapping should be specified for each game event"
       title_missing: "You should specify a title for the game"
       generic_metadata_missing: "You should specify mandatory metadata for the game"
+      generic_create: "There was an error and the game could not be created"
+      specific_create: "The game could not be created because the following error occurred: '#{errorMsg}'."
     msgs:
       gt_change_confirmation: "If you select a new game template, the defined event mapping will be reset to default. Are you sure you want to select a new game template?"
     step1:

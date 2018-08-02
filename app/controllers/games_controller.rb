@@ -61,43 +61,49 @@ class GamesController < ApplicationController
 
   def create
     params[:game].permit!
-    @game = Game.new(params[:excursion])
+    
+    @game = Game.new({:editor_data => params[:game][:editor_data].to_json})
+    @game.owner_id = current_user.id
 
-    if(params[:draft] and params[:draft] == "true")
+    if(params[:game][:draft] and params[:game][:draft] == "true")
       @game.draft = true
     else
       @game.draft = false
     end
-    @game.owner_id = current_user.id
-    @game.save!
 
-    published = (@game.draft===false)
-    # @game.afterPublish if published
+    #Fill game fields from editor_data
+    @game.fill_from_editor_data
 
+    @game.valid?
+
+
+    if @game.errors.blank? and @game.save
+      @game.create_mappings_from_editor_data
+    else
+      errorMsg = @game.errors.full_messages.to_sentence
+    end
+   
     respond_to do |format|
-      format.html {
-        redirect_to game_path(@game), notice: I18n.t("games.messages.success.create")
+      format.json {
+        if @game.persisted?
+          render :json => { 
+            :gamePath => game_path(@game),
+            :editPath => edit_game_path(@game),
+            :id => @game.id
+          },
+          :status => 200
+        else
+          render :json => { 
+            :errorMsg => errorMsg
+          },
+          :status => 400
+        end
       }
     end
   end
 
   def update
-    @game = Game.find_by_id(params[:id])
-    wasDraft = @game.draft
-    params[:game].permit! unless params[:game].blank?
-
-    respond_to do |format|
-      if @game.update_attributes(params[:game] || {})
-        published = (wasDraft===true and @game.draft===false)
-        # @game.afterPublish if published
-        format.html { redirect_to game_path(@game), notice: I18n.t("games.messages.success.update") }
-      else
-        format.html { 
-          flash.now[:alert] = I18n.t("games.messages.error.generic_update")
-          render action: "edit"
-        }
-      end
-    end
+    #TODO
   end
 
   def destroy
@@ -133,6 +139,13 @@ class GamesController < ApplicationController
         end
       }
     end
+  end
+
+
+  private
+
+  def game_params
+    params.require(:game).permit(:editor_data,:draft)
   end
 
 end

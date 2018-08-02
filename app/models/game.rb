@@ -21,6 +21,54 @@ class Game < ActiveRecord::Base
 	validates_presence_of :title
 	validates_attachment :thumbnail, content_type: { content_type: ["image/jpeg", "image/gif", "image/png"] }
 
+	
+	def fill_from_editor_data
+		data = JSON.parse(self.editor_data)
+		return if data.blank?
+
+		gt = nil
+		unless data["game_template"].blank?
+			gt = GameTemplate.find_by_id(data["game_template"]["id"].to_i) unless data["game_template"]["id"].blank?
+			self.game_template_id = gt.id unless gt.nil?
+		end
+
+		unless data["metadata"].blank?
+			self.title = data["metadata"]["title"] unless data["metadata"]["title"].blank?
+			self.description = data["metadata"]["description"] unless data["metadata"]["description"].blank?
+			self.thumbnail_url = data["metadata"]["thumbnail_url"] unless data["metadata"]["thumbnail_url"].blank?
+			self.thumbnail_url = gt.thumbnail_url if self.thumbnail_url.blank? and !gt.nil? and !gt.thumbnail_url.nil?
+		end
+
+		self.certified = false
+	end
+
+	def create_mappings_from_editor_data
+		data = JSON.parse(self.editor_data)
+		return "No mapping data" if data.blank? or data["mapping"].blank? or data["los"].blank?
+
+		self.mappings.destroy_all
+		#allLoIds = data["mapping"]
+
+		data["mapping"].each do |eventId,loIds|
+			if loIds.include?("*")
+				#Create mappings for all los
+				data["los"].each do |k,lo|
+					GameEventMapping.create! :game_id => self.id,
+						:game_template_event_id => eventId.to_i, 
+						:lo_id => lo["id"].to_i
+				end
+			elsif loIds.include?("none")
+				#Do nothing
+			else
+				loIds.each do |loId|
+					GameEventMapping.create! :game_id => self.id,
+						:game_template_event_id => eventId.to_i, 
+						:lo_id => loId.to_i
+				end
+			end
+		end
+	end
+
 	def settings
 		settings = Hash.new
 		settings["name"] = self.title;

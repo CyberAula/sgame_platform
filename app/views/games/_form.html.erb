@@ -18,18 +18,22 @@
 			"i.error_title_missing"				: "<%= t("at.errors.title_missing") %>",
 			"i.error_generic_metadata_missing"	: "<%= t("at.errors.generic_metadata_missing") %>",
 			"i.all"  							: "<%= t("dictionary.all") %>",
-			"i.none"  							: "<%= t("dictionary.none") %>"
+			"i.none"  							: "<%= t("dictionary.none") %>",
+			"i.success_creation"				: "<%= t("games.messages.success.create") %>",
+			"i.error_generic_create"			: "<%= t("at.errors.generic_create") %>",
+			"i.error_specific_create"			: "<%= t("at.errors.specific_create") %>"
 		}
 		var game_templates = <%=raw @game_templates.to_json( :include => [:events] )%>;
 		var scormfiles = <%=raw @scormfiles.to_json( :include => [:los] )%>;
 		var options = {};
+		options["authenticity_token"] = "<%= form_authenticity_token %>";
 		<% if @initial_state %>
 			var initial_state = <%=raw @initial_state.to_json%>;
 		<% else %>
 			var initial_state = {};
 		<% end %>
 
-		// Testing purposes
+		// //Testing purposes
 		// initial_state.game_template = game_templates[5];
 		// initial_state.los = scormfiles[1].los;
 		// initial_state.mapping = {};
@@ -41,7 +45,7 @@
 		// initial_state.metadata["title"] = "Test";
 		// initial_state.metadata["description"] = "Description";
 		// initial_state.step = 6;
-		
+
 		SGAME_AT.init(initial_state,game_templates,scormfiles,options);
 	});
 </script>
@@ -255,10 +259,10 @@
 	<a id="preview_iframe_fancybox" class="fancybox" style="display:none"></a>
 </div>
 
-<div id="update_document_form_wrapper" class="document_form_wrapper" style="display:none">
-	<%= form_for game, url: {action: controller.action_name}, html: {class: "update_document_form document_form"} do |f| %>
-		<%= f.hidden_field :title %>
-		<%= f.hidden_field :description %>
+<div id="game_form_wrapper" style="display:none">
+	<%= form_for game, html: {id: "game_form", class: "update_document_form document_form"} do |f| %>
+		<%= f.hidden_field :editor_data %>
+		<%= f.submit %>
 	<% end %>
 </div>
 
