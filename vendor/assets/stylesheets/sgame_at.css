@@ -198,6 +198,17 @@
   width: 100%;
 }
 
+
+#sgame_at div[step="4"] div.sequencing_wrapper {
+  font-size: 14px;
+}
+
+#sgame_at div[step="4"] div.sequencing_wrapper div.seq_opt {
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 2px solid white;
+}
+
 .fancybox-close-small:after {
   color: white;
   background: #046598;

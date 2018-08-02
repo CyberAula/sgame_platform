@@ -15,7 +15,7 @@ SGAME_AT = (function($,undefined){
 	var current_preview_scormfile = {};
 	var current_los = [];
 	var current_mapping = {};
-
+	var current_sequencing = {};
 
 	var init = function (game_templates,scormfiles,initOptions){
 		if(typeof initOptions == "object"){
@@ -152,6 +152,16 @@ SGAME_AT = (function($,undefined){
 				});
 
 				_redrawMappingTable();
+				break;
+			case 4:
+				//Sequencing option 1: repeat_los
+				if(typeof current_sequencing["repeat_los"] !== "undefined"){
+					$("#sgame_at div[step='4'] div.sequencing_wrapper input[name='sseq_opt1'][value='" + current_sequencing["repeat_los"] + "']").attr('checked',true);
+				}
+
+				$("#step4_confirmation").on("click",function(){
+					_onStep4Confirmation();
+				});
 				break;
 			default:
 				break;
@@ -594,6 +604,15 @@ SGAME_AT = (function($,undefined){
 		};
 
 		_finishStep("3");
+	};
+
+
+	//Step 4
+
+	var _onStep4Confirmation = function(){
+		//Sequencing option 1: repeat_los
+		current_sequencing["repeat_los"] = $("#sgame_at div[step='4'] div.sequencing_wrapper input[name='sseq_opt1']:checked").val();
+		_finishStep("4");
 	};
 
 

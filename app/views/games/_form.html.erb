@@ -175,6 +175,27 @@
 		</div>
 	</div>
 
+	<div step="4" class="sequencing disabled">
+		<div class="stepTitle">
+			<p>4. <%=t("at.step4.title")%></p>
+		</div>
+		<div class="stepContent stephidden" style="display:none">
+			<div class="stepDescription">
+				<p><%=t("at.step4.description")%></p>
+			</div>
+			<div class="sequencing_wrapper">
+				<div class="seq_opt">
+					<p><%=t("at.step4.opt1.title")%></p>
+					<input type="radio" name="sseq_opt1" value="true" checked> <%=t("at.step4.opt1.choice1")%><br>
+					<input type="radio" name="sseq_opt1" value="false"> <%=t("at.step4.opt1.choice2")%><br>
+				</div>
+			</div>
+			<div class="step_actions">
+				<button id="step4_confirmation" class="sgame_button"><%=t("at.step4.confirmation")%></button>
+			</div>
+		</div>
+	</div>
+
 	<a id="preview_iframe_fancybox" class="fancybox" style="display:none"></a>
 </div>
 

@@ -58,8 +58,13 @@ en:
       description: "Description3"
       confirmation: "Confirm mapping"
     step4:
-      title: "Step4"
-      description: "Description4"
+      title: "Sequencing options"
+      description: "In this step you can define sequencing options for the learning objects integrated in the game"
+      confirmation: "Confirm sequencing options"
+      opt1:
+        title: "When all the learning objects have been shown in the game:"
+        choice1: "Show the learning objects again."
+        choice2: "Do not show the learning objects again."
     step5:
       title: "Step5"
       description: "Description5"
