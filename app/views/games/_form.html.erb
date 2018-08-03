@@ -27,8 +27,8 @@
 		var scormfiles = <%=raw @scormfiles.to_json( :include => [:los] )%>;
 		var options = {};
 		options["authenticity_token"] = "<%= form_authenticity_token %>";
-		<% if @initial_state %>
-			var initial_state = <%=raw @initial_state.to_json%>;
+		<% unless @game.nil? or @game.editor_data.nil? %>
+			var initial_state = <%=raw @game.editor_data%>;
 		<% else %>
 			var initial_state = {};
 		<% end %>

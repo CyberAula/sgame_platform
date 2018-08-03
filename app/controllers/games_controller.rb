@@ -52,6 +52,9 @@ class GamesController < ApplicationController
 
   def edit
     @game = Game.find(params[:id])
+    @game_templates = (GameTemplate.where(:certified => true) + current_user.game_templates).uniq
+    @scormfiles = current_user.scormfiles
+
     respond_to do |format|
       format.html { 
         render 
@@ -62,31 +65,38 @@ class GamesController < ApplicationController
   def create
     params[:game].permit!
     
-    @game = Game.new({:editor_data => params[:game][:editor_data].to_json})
-    @game.owner_id = current_user.id
-    @game.draft = (params[:game][:draft] and params[:game][:draft] == "true")
+    @game = Game.new
+    
+    editor_data = JSON.parse(params[:game][:editor_data]).to_json rescue nil
+    if editor_data.nil?
+      errorMsg = I18n.t("at.errors.generic_create")
+    else
+      @game.editor_data = editor_data
+      @game.fill_from_editor_data #Fill game fields from editor_data
 
-    #Fill game fields from editor_data
-    @game.fill_from_editor_data
-    @game.valid?
+      @game.owner_id = current_user.id
+      @game.draft = (params[:game][:draft] and params[:game][:draft] == "true")
 
-    if @game.errors.blank?
-      if @game.validate_mappings_from_editor_data_for_new_games
-        if @game.save
-          #Game need to be saved before creating mappings because mappings need the game id
-          created_mappings = @game.create_mappings_from_editor_data
-          if created_mappings.blank?
-            @game.destroy
-            errorMsg = I18n.t("at.errors.invalid_mapping_server")
+      @game.valid?
+
+      if @game.errors.blank?
+        if @game.validate_mappings_from_editor_data_for_new_games
+          if @game.save
+            #Game need to be saved before creating mappings because mappings need the game id
+            created_mappings = @game.create_mappings_from_editor_data
+            if created_mappings.blank?
+              @game.destroy
+              errorMsg = I18n.t("at.errors.invalid_mapping_server")
+            end
+          else
+            errorMsg = I18n.t("at.errors.generic_create")
           end
         else
-          errorMsg = I18n.t("at.errors.generic_create")
+          errorMsg = I18n.t("at.errors.invalid_mapping_server")
         end
       else
-        errorMsg = I18n.t("at.errors.invalid_mapping_server")
-      end
-    else
-      errorMsg = @game.errors.full_messages.to_sentence
+        errorMsg = @game.errors.full_messages.to_sentence
+      end 
     end
    
     respond_to do |format|

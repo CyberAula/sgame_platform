@@ -13,7 +13,7 @@ SGAME_AT = (function($,undefined){
 	var current_preview_game = {};
 	var current_game_template = {};
 	var current_preview_scormfile = {};
-	var current_los = [];
+	var current_los = {};
 	var current_mapping = {};
 	var current_sequencing = {};
 	var current_metadata = {};
@@ -40,7 +40,7 @@ SGAME_AT = (function($,undefined){
 		if(typeof state !== "undefined"){
 			//Load initial state
 			if(typeof state.step !== "undefined"){
-				current_step = state.step;
+				current_step = parseInt(state.step);
 			}
 			if(typeof state.game_template !== "undefined"){
 				current_game_template = state.game_template;
@@ -175,8 +175,8 @@ SGAME_AT = (function($,undefined){
 				});
 
 				$(document).on('click', '#sgame_at .scormfiles .selected table.at_c td.preview img', function(event) {
-					var loId = parseInt($(this).parents("tr.loinstance[loid]").attr("loid"));
-					_previewLO(_findLoWithId(loId,current_preview_scormfile.los));
+					var loId = $(this).parents("tr.loinstance[loid]").attr("loid");
+					_previewLO(current_los[loId]);
 				});
 
 				$(document).on('click', '#sgame_at .scormfiles .selected table.at_c td.add img', function(event) {
@@ -188,12 +188,12 @@ SGAME_AT = (function($,undefined){
 				});
 
 				$(document).on('click', '#sgame_at .scormfiles .selected_los table.at_c td.preview img', function(event) {
-					var loId = parseInt($(this).parents("tr.loinstance[loid]").attr("loid"));
-					_previewLO(_findLoWithId(loId,current_los));
+					var loId = $(this).parents("tr.loinstance[loid]").attr("loid");
+					_previewLO(current_los[loId]);
 				});
 
 				$(document).on('click', '#sgame_at .scormfiles .selected_los table.at_c td.remove img', function(event) {
-					var loId = parseInt($(this).parents("[loid]").attr("loid"));
+					var loId = $(this).parents("[loid]").attr("loid");
 					_removeLO(loId);
 				});
 
@@ -248,27 +248,6 @@ SGAME_AT = (function($,undefined){
 			default:
 				break;
 		}
-	};
-
-
-	//Utils
-
-	var _findLoWithId = function(id,los){
-		var nLOs = los.length;
-		for(var i=0; i<nLOs; i++){
-			if(los[i].id===id){
-				return los[i];
-			}
-		}
-	};
-
-	var _getCurrentLoIds = function(){
-		var loIds = [];
-		var nLOs = current_los.length;
-		for(var i=0; i<nLOs; i++){
-			loIds.push(current_los[i].id);
-		}
-		return loIds;
 	};
 
 
@@ -504,18 +483,15 @@ SGAME_AT = (function($,undefined){
 	};
 
 	var _addLO = function(lo){
-		var nLOs = current_los.length;
-		for(var i=0; i<nLOs; i++){
-			if(current_los[i].id === lo.id){
-				//LO already added
-				return false;
-			}
+		if(typeof current_los[lo.id] !== "undefined"){
+			//LO already added
+			return false;
 		}
 
 		//Add LO
-		current_los.push(lo);
+		current_los[lo.id] = lo;
 
-		if(nLOs === 0){
+		if(Object.keys(current_los).length === 1){
 			_redrawLoTable();
 		} else {
 			_addLoToLoTable(lo);
@@ -525,25 +501,25 @@ SGAME_AT = (function($,undefined){
 	};
 
 	var _removeLO = function(loId){
-		var nLOs = current_los.length;
-		for(var i=0; i<nLOs; i++){
-			if(current_los[i].id === loId){
-				current_los.splice(i, 1);
-				if(nLOs === 1){
-					_redrawLoTable();
-				} else {
-					_removeLoFromLoTable(loId);
-				}
-				return true;
-			}
+		if(typeof current_los[loId] === "undefined"){
+			return false;
 		}
-		return false;
+
+		delete current_los[loId];
+
+		if(Object.keys(current_los).length === 0){
+			_redrawLoTable();
+		} else {
+			_removeLoFromLoTable(loId);
+		}
+		return true;
 	};
 
 	var _redrawLoTable = function(){
 		var loDiv = $("#sgame_at .scormfiles .selected_los");
 		var loTable = $(loDiv).find("table.at_c");
-		var nLOs = current_los.length;
+		var loIds = Object.keys(current_los);
+		var nLOs = loIds.length;
 		if(nLOs <= 0){
 			$(loTable).hide();
 			$(loDiv).find(".nolos").show();
@@ -553,7 +529,7 @@ SGAME_AT = (function($,undefined){
 		$(loTable).find("tr.loinstance").remove();
 
 		for(var i=0; i<nLOs; i++){
-			_addLoToLoTable(current_los[i],loTable);
+			_addLoToLoTable(current_los[loIds[i]],loTable);
 		}
 
 		$(loTable).show();
@@ -580,7 +556,7 @@ SGAME_AT = (function($,undefined){
 	};
 
 	var _onStep2Confirmation = function(){
-		if(current_los.length < 1){
+		if(Object.keys(current_los).length < 1){
 			return _showSGAMEDialogWithSettings({"msg":_getTrans("i.error_no_los")}, false);
 		}
 		_redrawMappingTable();
@@ -608,8 +584,10 @@ SGAME_AT = (function($,undefined){
 		var select = $(mappingTable).find("tr.eminstance[eid='" + event.id + "'] td.mapping select");
 		var selectOptions = [{value:"none", text:_getTrans("i.none"), selected: ((typeof current_mapping[event.id] !== "undefined")&&(current_mapping[event.id].indexOf("none")!==-1))},{value: "*", text: _getTrans("i.all"), selected: ((typeof current_mapping[event.id] === "undefined")||(current_mapping[event.id].length===0)||(current_mapping[event.id].indexOf("*")!==-1))}];
 
-		for(var j=0; j<current_los.length; j++){
-			var lo = current_los[j];
+		var loIds = Object.keys(current_los);
+		var nLOs = loIds.length;
+		for(var j=0; j<nLOs; j++){
+			var lo = current_los[loIds[j]];
 			var selected = ((typeof current_mapping[event.id] !== "undefined")&&(current_mapping[event.id].indexOf(lo.id + "")!==-1));
 			selectOptions.push({value:lo.id, text:lo.title, selected: selected});
 		}
@@ -668,7 +646,7 @@ SGAME_AT = (function($,undefined){
 
 	var _onStep3Confirmation = function(){
 		var nEvents = current_game_template.events.length;
-		var currentLoIds = _getCurrentLoIds();
+		var currentLoIds = Object.keys(current_los);
 		var mappingTable = $("#sgame_at .mapping div.mapping_table_wrapper table");
 
 		for(var i=0; i<nEvents; i++){
@@ -679,7 +657,7 @@ SGAME_AT = (function($,undefined){
 
 			//idsMappedLOs
 			for(var j=0; j<idsMappedLOs.length; j++){
-				if((idsMappedLOs[j]==="*")||(idsMappedLOs[j]==="none")||(currentLoIds.indexOf(parseInt(idsMappedLOs[j]))!==-1)){
+				if((idsMappedLOs[j]==="*")||(idsMappedLOs[j]==="none")||(currentLoIds.indexOf(idsMappedLOs[j])!==-1)){
 					continue;
 				}
 				return _showSGAMEDialogWithSettings({"msg":_getTrans("i.error_invalid_mapping")}, false);
@@ -773,7 +751,7 @@ SGAME_AT = (function($,undefined){
 		editor_data.mapping = current_mapping;
 		editor_data.sequencing = current_sequencing;
 		editor_data.metadata = current_metadata;
-		return editor_data;
+		return JSON.stringify(editor_data);
 	};
 
 

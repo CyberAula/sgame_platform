@@ -2,7 +2,7 @@ namespace :db do
 
 	#bundle exec rake db:populate
 	task :populate => :environment do
-		desc "Populate database for SGAME Platform"
+		desc "Populate database for SGAME Platform in a development environment"
 		t1 = Time.now
 
 		#1: Create demo user
