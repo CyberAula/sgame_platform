@@ -64,21 +64,27 @@ class GamesController < ApplicationController
     
     @game = Game.new({:editor_data => params[:game][:editor_data].to_json})
     @game.owner_id = current_user.id
-
-    if(params[:game][:draft] and params[:game][:draft] == "true")
-      @game.draft = true
-    else
-      @game.draft = false
-    end
+    @game.draft = (params[:game][:draft] and params[:game][:draft] == "true")
 
     #Fill game fields from editor_data
     @game.fill_from_editor_data
-
     @game.valid?
 
-
-    if @game.errors.blank? and @game.save
-      @game.create_mappings_from_editor_data
+    if @game.errors.blank?
+      if @game.validate_mappings_from_editor_data_for_new_games
+        if @game.save
+          #Game need to be saved before creating mappings because mappings need the game id
+          created_mappings = @game.create_mappings_from_editor_data
+          if created_mappings.blank?
+            @game.destroy
+            errorMsg = I18n.t("at.errors.invalid_mapping_server")
+          end
+        else
+          errorMsg = I18n.t("at.errors.generic_create")
+        end
+      else
+        errorMsg = I18n.t("at.errors.invalid_mapping_server")
+      end
     else
       errorMsg = @game.errors.full_messages.to_sentence
     end

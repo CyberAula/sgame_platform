@@ -40,6 +40,7 @@ en:
       sf_already_added: "This SCORM package had already been selected"
       no_los: "You need to select at least one learning object to be integrated into the game"
       invalid_mapping: "A mapping should be specified for each game event"
+      invalid_mapping_server: "Event mapping is not valid"
       title_missing: "You should specify a title for the game"
       generic_metadata_missing: "You should specify mandatory metadata for the game"
       generic_create: "There was an error and the game could not be created"

@@ -43,30 +43,46 @@ class Game < ActiveRecord::Base
 	end
 
 	def create_mappings_from_editor_data
-		data = JSON.parse(self.editor_data)
-		return "No mapping data" if data.blank? or data["mapping"].blank? or data["los"].blank?
+		mappings = get_mapping_instances_from_editor_data
+		return nil if mappings.blank?
 
-		self.mappings.destroy_all
-		#allLoIds = data["mapping"]
+		self.mappings.destroy_all unless mappings.blank? #Destroy old mappings if new mappings have been defined
+
+		mappings.select{|m| m.save } #save and return created mappings
+	end
+
+	def get_mapping_instances_from_editor_data(new_game=false)
+		data = JSON.parse(self.editor_data)
+		return nil if data.blank? or data["mapping"].blank? or data["los"].blank?
+
+		mappings = []
 
 		data["mapping"].each do |eventId,loIds|
+			loIds = [loIds] unless loIds.is_a? Array
 			if loIds.include?("*")
 				#Create mappings for all los
 				data["los"].each do |k,lo|
-					GameEventMapping.create! :game_id => self.id,
-						:game_template_event_id => eventId.to_i, 
-						:lo_id => lo["id"].to_i
+					mappings.push(GameEventMapping.new(:game_id => self.id, :game_template_event_id => eventId.to_i, :lo_id => lo["id"].to_i))
 				end
 			elsif loIds.include?("none")
 				#Do nothing
 			else
 				loIds.each do |loId|
-					GameEventMapping.create! :game_id => self.id,
-						:game_template_event_id => eventId.to_i, 
-						:lo_id => loId.to_i
+					mappings.push(GameEventMapping.new(:game_id => self.id,:game_template_event_id => eventId.to_i,:lo_id => loId.to_i))
 				end
 			end
 		end
+
+		mappings.each do |gEventMapping|
+			gEventMapping.skip_game_id_validation = true if new_game
+			gEventMapping.valid?
+		end
+
+		mappings.select{|m| m.errors.blank?} #Get valid mappings
+	end
+
+	def validate_mappings_from_editor_data_for_new_games
+		!get_mapping_instances_from_editor_data(true).blank?
 	end
 
 	def settings
