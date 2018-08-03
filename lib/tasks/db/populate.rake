@@ -278,7 +278,7 @@ namespace :db do
 			:title  => "Math Pack 1",
 			:description   => "Pack de recursos educativos para aprender matemáticas: sumas, restas, multiplicaciones, etc.",
 			:thumbnail=> File.open(File.join(Rails.root, 'public/scorm_examples/maths_pack1_thumbnail.jpg')),
-			:language => "en",
+			:language => "es",
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/scorm_examples/maths_pack1.zip'))
 
