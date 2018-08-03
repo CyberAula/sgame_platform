@@ -50,6 +50,19 @@ namespace :fix do
     printTitle("Task finished")
   end
 
+  #Usage
+  #Development:   bundle exec rake fix:createEditorData
+  #In production: bundle exec rake fix:createEditorData RAILS_ENV=production
+  task :createEditorData => :environment do
+    printTitle("Creating data for the SGAME authoring tool for editing the game templates")
+
+    Game.where("editor_data is NULL").each do |g|
+      g.create_editor_data
+    end
+
+    printTitle("Task finished")
+  end
+
   ####################
   #Task Utils
   ####################

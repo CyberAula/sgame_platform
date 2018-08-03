@@ -228,6 +228,9 @@ namespace :db do
 				:lo_id => lo_id
 		end
 
+		#Create editor data
+		Rake::Task["fix:createEditorData"].invoke
+
 		puts "Populate finished"
 		t2 = Time.now - t1
 		puts "Elapsed time:" + t2.to_s
@@ -540,6 +543,9 @@ namespace :db do
 				:game_template_event_id => pacman.events.first.id, 
 				:lo_id => lo_id
 		end
+
+		#Create editor data
+		Rake::Task["fix:createEditorData"].invoke
 
 		puts "Populate finished"
 		t2 = Time.now - t1

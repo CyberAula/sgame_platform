@@ -28,6 +28,7 @@ class DemoController < ApplicationController
 						:game_template_event_id => @game_template.events.first.id, 
 						:lo_id => lo_id
 					end
+					gameInstance.create_editor_data
 				end
 			end
 		end

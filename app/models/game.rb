@@ -13,7 +13,6 @@ class Game < ActiveRecord::Base
 
 	before_validation :fill_language
 	after_save :fill_thumbnail_url
-	after_save :create_editor_data_after_save
 	after_create :add_metadata_to_editor_data
 	after_destroy :remove_scorms
 
@@ -583,7 +582,7 @@ class Game < ActiveRecord::Base
 		editor_data["metadata"]["id"] = self.id
 		editor_data["metadata"]["title"] = self.title unless self.title.blank?
 		editor_data["metadata"]["description"] = self.description unless self.description.blank?
-				
+		
 		self.update_column :editor_data, editor_data.to_json
 	end
 
@@ -595,11 +594,6 @@ class Game < ActiveRecord::Base
 
 	def fill_thumbnail_url
 		self.update_column(:thumbnail_url, self.thumbnail.url(:default, :timestamp => false)) if self.thumbnail.exists?
-	end
-
-	def create_editor_data_after_save
-		return unless self.editor_data.blank?
-		self.create_editor_data
 	end
 
 	def add_metadata_to_editor_data

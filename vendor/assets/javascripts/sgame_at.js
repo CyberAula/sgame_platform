@@ -182,7 +182,11 @@ SGAME_AT = (function($,undefined){
 
 				$(document).on('click', '#sgame_at .scormfiles .selected table.at_c td.preview img', function(event) {
 					var loId = $(this).parents("tr.loinstance[loid]").attr("loid");
-					_previewLO(current_los[loId]);
+					for(var i=0; i<current_preview_scormfile.los.length; i++){
+						if((current_preview_scormfile.los[i].id + "") === loId){
+							_previewLO(current_preview_scormfile.los[i]);
+						}
+					}
 				});
 
 				$(document).on('click', '#sgame_at .scormfiles .selected table.at_c td.add img', function(event) {
@@ -768,7 +772,7 @@ SGAME_AT = (function($,undefined){
 		editor_data.mapping = current_mapping;
 		editor_data.sequencing = current_sequencing;
 		editor_data.metadata = current_metadata;
-		
+
 		return JSON.stringify(editor_data);
 	};
 
