@@ -13,7 +13,7 @@ class Game < ActiveRecord::Base
 
 	before_validation :fill_language
 	after_save :fill_thumbnail_url
-	after_save :create_editor_data
+	after_save :create_editor_data_after_save
 	after_create :add_metadata_to_editor_data
 	after_destroy :remove_scorms
 
@@ -126,6 +126,10 @@ class Game < ActiveRecord::Base
 
 	def width
 		self.template.width
+	end
+
+	def scormfiles
+		Scormfile.find(self.los.where("container_type='Scormfile'").uniq.pluck(:container_id))
 	end
 
 	#
@@ -545,6 +549,43 @@ class Game < ActiveRecord::Base
 		myxml
 	end
 
+	def create_editor_data
+		editor_data = {}
+
+		editor_data["sgame_at_version"] = "1.0"
+		editor_data["step"] = 6
+
+		editor_data["game_template"] = JSON.parse(self.template.to_json( :include => [:events] ))
+		
+		editor_data["los"] = {}	
+		JSON.parse(self.los.to_json).each { |lo|
+			editor_data["los"][lo["id"]] = lo
+		}
+
+		editor_data["mapping"] = {}
+		self.mappings.each { |m|
+			editor_data["mapping"][m.game_template_event_id] = [] if editor_data["mapping"][m.game_template_event_id].blank?
+			editor_data["mapping"][m.game_template_event_id].push(m.lo_id);
+		}
+		self.template.events.each { |e|
+			m = editor_data["mapping"][e.id]
+			if m.blank?
+				editor_data["mapping"][e.id] = ["none"]
+			elsif m.length === editor_data["los"].length
+				editor_data["mapping"][e.id] = ["*"]
+			end
+		}
+
+		editor_data["sequencing"] = {}
+		editor_data["sequencing"]["repeat_los"] = true;
+		
+		editor_data["metadata"] = {}
+		editor_data["metadata"]["id"] = self.id
+		editor_data["metadata"]["title"] = self.title unless self.title.blank?
+		editor_data["metadata"]["description"] = self.description unless self.description.blank?
+				
+		self.update_column :editor_data, editor_data.to_json
+	end
 
 	private
 
@@ -556,8 +597,9 @@ class Game < ActiveRecord::Base
 		self.update_column(:thumbnail_url, self.thumbnail.url(:default, :timestamp => false)) if self.thumbnail.exists?
 	end
 
-	def create_editor_data
-		#TODO
+	def create_editor_data_after_save
+		return unless self.editor_data.blank?
+		self.create_editor_data
 	end
 
 	def add_metadata_to_editor_data

@@ -53,11 +53,15 @@ class GamesController < ApplicationController
   def edit
     @game = Game.find(params[:id])
     @game_templates = (GameTemplate.where(:certified => true) + current_user.game_templates).uniq
-    @scormfiles = current_user.scormfiles
+    @scormfiles = (current_user.scormfiles + @game.scormfiles).uniq
 
     respond_to do |format|
-      format.html { 
-        render 
+      format.html {
+        if @game.editor_data.blank?
+          redirect_to user_path(current_user), notice: "This game has no editor data, it cannot be edited."
+        else
+          render
+        end
       }
     end
   end

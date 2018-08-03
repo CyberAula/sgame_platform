@@ -1,4 +1,6 @@
 SGAME_AT = (function($,undefined){
+	var VERSION = "1.0";
+
 	var options = {};
 
 	var locales;
@@ -758,12 +760,15 @@ SGAME_AT = (function($,undefined){
 
 	var _generateEditorData = function(){
 		var editor_data = {};
+		editor_data.sgame_at_version = VERSION;
 		editor_data.step = current_step;
+
 		editor_data.game_template = current_game_template;
 		editor_data.los = current_los;
 		editor_data.mapping = current_mapping;
 		editor_data.sequencing = current_sequencing;
 		editor_data.metadata = current_metadata;
+		
 		return JSON.stringify(editor_data);
 	};
 
