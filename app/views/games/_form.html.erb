@@ -20,31 +20,22 @@
 			"i.all"  							: "<%= t("dictionary.all") %>",
 			"i.none"  							: "<%= t("dictionary.none") %>",
 			"i.success_creation"				: "<%= t("games.messages.success.create") %>",
+			"i.success_update"					: "<%= t("games.messages.success.update") %>",
 			"i.error_generic_create"			: "<%= t("at.errors.generic_create") %>",
-			"i.error_specific_create"			: "<%= t("at.errors.specific_create") %>"
+			"i.error_specific_create"			: "<%= t("at.errors.specific_create") %>",
+			"i.error_generic_update"			: "<%= t("at.errors.generic_update") %>",
+			"i.error_specific_update"			: "<%= t("at.errors.specific_update") %>"
 		}
 		var game_templates = <%=raw @game_templates.to_json( :include => [:events] )%>;
 		var scormfiles = <%=raw @scormfiles.to_json( :include => [:los] )%>;
 		var options = {};
 		options["authenticity_token"] = "<%= form_authenticity_token %>";
-		<% unless @game.nil? or @game.editor_data.nil? %>
+		<% editMode = (!@game.nil? and !@game.editor_data.nil?) %>
+		<% if editMode %>
 			var initial_state = <%=raw @game.editor_data%>;
 		<% else %>
 			var initial_state = {};
 		<% end %>
-
-		//Testing purposes
-		// initial_state.game_template = game_templates[5];
-		// initial_state.los = scormfiles[1].los;
-		// initial_state.mapping = {};
-		// // initial_state.mapping[initial_state.game_template.events[0].id] = ["none"];
-		// initial_state.mapping[initial_state.game_template.events[0].id] = [initial_state.los[0].id];
-		// initial_state.sequencing = {};
-		// initial_state.sequencing["repeat_los"] = false;
-		// initial_state.metadata = {};
-		// initial_state.metadata["title"] = "Test";
-		// initial_state.metadata["description"] = "Description";
-		// initial_state.step = 6;
 
 		SGAME_AT.init(initial_state,game_templates,scormfiles,options);
 	});
@@ -251,7 +242,7 @@
 				<p><%=t("at.step6.description")%></p>
 			</div>
 			<div class="step_actions">
-				<button id="step6_confirmation" class="sgame_button"><%=t("at.step6.confirmation")%></button>
+				<button id="step6_confirmation" class="sgame_button"><%= editMode ? t("at.step6.confirmation_update") : t("at.step6.confirmation")%></button>
 			</div>
 		</div>
 	</div>

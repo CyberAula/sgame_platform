@@ -119,7 +119,52 @@ class GamesController < ApplicationController
   end
 
   def update
-    #TODO
+    params[:game].permit!
+
+    @game = Game.find(params[:id])
+
+    errorMsg = nil
+
+    editor_data = JSON.parse(params[:game][:editor_data]).to_json rescue nil
+    if editor_data.nil?
+      errorMsg = I18n.t("at.errors.generic_update")
+    else
+      @game.editor_data = editor_data
+      @game.fill_from_editor_data #Fill game fields from editor_data
+
+      @game.draft = (params[:game][:draft] and params[:game][:draft] == "true")
+
+      @game.valid?
+
+      if @game.errors.blank?
+        created_mappings = @game.create_mappings_from_editor_data
+        if created_mappings.blank?
+          errorMsg = I18n.t("at.errors.invalid_mapping_server")
+        else
+          errorMsg = I18n.t("at.errors.generic_create") unless @game.save
+        end
+      else
+        errorMsg = @game.errors.full_messages.to_sentence
+      end 
+    end
+
+    respond_to do |format|
+      format.json {
+        if errorMsg.nil?
+          render :json => { 
+            :gamePath => game_path(@game),
+            :editPath => edit_game_path(@game),
+            :id => @game.id
+          },
+          :status => 200
+        else
+          render :json => { 
+            :errorMsg => errorMsg
+          },
+          :status => 400
+        end
+      }
+    end
   end
 
   def destroy

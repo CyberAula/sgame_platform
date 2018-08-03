@@ -8,9 +8,11 @@ SGAME_AT = (function($,undefined){
 	catalog.scormfiles = {};
 
 	var stepsLoaded = [];
+	var editMode = false;
 
+	//Application state (Editor data in the SGAME platform)
 	var current_step = 1;
-	var current_preview_game = {};
+	var current_preview_game_template = {};
 	var current_game_template = {};
 	var current_preview_scormfile = {};
 	var current_los = {};
@@ -37,7 +39,9 @@ SGAME_AT = (function($,undefined){
 			catalog.scormfiles[scormfile.id] = scormfile;
 		});
 
-		if(typeof state !== "undefined"){
+		if((typeof state === "object")&&(Object.keys(state).length>0)){
+			editMode = true;
+
 			//Load initial state
 			if(typeof state.step !== "undefined"){
 				current_step = parseInt(state.step);
@@ -711,33 +715,42 @@ SGAME_AT = (function($,undefined){
 	};
 
 	var _onCreateGame = function(){
-		//Send request to the SGAME platform to create the educational game
+		
 		var editor_data = _generateEditorData();
 		var game = {editor_data: editor_data};
-		// $("#game_form input[name='editor_data']").val(editor_data);
-		// $("#game_form").submit();
+
+		if(editMode){
+			//Send request to the SGAME platform to edit an existing educational game
+			var url = '/games/' + current_metadata["id"];
+			var type = 'PUT';
+		} else {
+			//Send request to the SGAME platform to create a new educational game
+			var url = '/games';
+			var type = 'POST';
+		}
+
 		$.ajax({
-			url:'/games',
-			type:'POST',
+			url:url,
+			type:type,
 			dataType:'json',
 			data:{
 				game: game,
 				authenticity_token: options["authenticity_token"]
 			},
 			success:function(data){
-				_showSGAMEDialogWithSettings({"msg":_getTrans("i.success_creation")}, false, function(){
+				var keySuccessMsg = (editMode ? "i.success_update" : "i.success_creation");
+				_showSGAMEDialogWithSettings({"msg":_getTrans(keySuccessMsg)}, false, function(){
 					window.location.href = data.gamePath;
 				});
 			},
 			error:function(data){
-				console.log("error");
-				console.log(data);
 				if((typeof data.responseJSON !== "undefined")&&(typeof data.responseJSON.errorMsg === "string")){
-					var errorMsg = _getTrans("i.error_specific_create", {errorMsg: data.responseJSON.errorMsg});
+					var keySpecificErrorMsg = (editMode ? "i.error_specific_update" : "i.error_specific_create");
+					var errorMsg = _getTrans(keySpecificErrorMsg, {errorMsg: data.responseJSON.errorMsg});
 				} else {
-					var errorMsg = _getTrans("i.error_generic_create");
+					var keyGenericErrorMsg = (editMode ? "i.error_generic_update" : "i.error_generic_create");
+					var errorMsg = _getTrans(keyGenericErrorMsg);
 				}
-				
 				_showSGAMEDialogWithSettings({"msg":errorMsg}, false);
 			}
 		});

@@ -30,7 +30,6 @@ en:
               blank: "can't be blank"
   at:
     click_to_preview: "Click to preview"
-    create: "Create educational game"
     scorm_version: "SCORM version"
     nresources: "Number of learning objects"
     no_selected_los: "You have not selected any learning object yet"
@@ -45,6 +44,8 @@ en:
       generic_metadata_missing: "You should specify mandatory metadata for the game"
       generic_create: "There was an error and the game could not be created"
       specific_create: "The game could not be created because the following error occurred: '#{errorMsg}'."
+      generic_update: "There was an error and the game could not be updated"
+      specific_update: "The game could not be updated because the following error occurred: '#{errorMsg}'."
     msgs:
       gt_change_confirmation: "If you select a new game template, the defined event mapping will be reset to default. Are you sure you want to select a new game template?"
     step1:
@@ -82,6 +83,7 @@ en:
       title: "Create the educational game"
       description: "Click on the button below to finish the creation process."
       confirmation: "Create educational game"
+      confirmation_update: "Edit educational game"
     update: "Update educational game"
   authorization:
     errors:

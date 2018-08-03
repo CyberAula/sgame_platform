@@ -13,6 +13,8 @@ class Game < ActiveRecord::Base
 
 	before_validation :fill_language
 	after_save :fill_thumbnail_url
+	after_save :create_editor_data
+	after_create :add_metadata_to_editor_data
 	after_destroy :remove_scorms
 
 	validates_presence_of :game_template_id
@@ -546,12 +548,26 @@ class Game < ActiveRecord::Base
 
 	private
 
+	def fill_language
+		self.language = self.template.language if self.language.nil? and !self.template.nil?
+	end
+
 	def fill_thumbnail_url
 		self.update_column(:thumbnail_url, self.thumbnail.url(:default, :timestamp => false)) if self.thumbnail.exists?
 	end
 
-	def fill_language
-		self.language = self.template.language if self.language.nil? and !self.template.nil?
+	def create_editor_data
+		#TODO
+	end
+
+	def add_metadata_to_editor_data
+		new_editor_data = JSON.parse(self.editor_data) rescue nil
+		return if new_editor_data.nil?
+
+		new_editor_data["metadata"] = {} if new_editor_data["metadata"].blank?
+		new_editor_data["metadata"]["id"] = self.id
+
+		self.update_column :editor_data, new_editor_data.to_json
 	end
 	
 end
