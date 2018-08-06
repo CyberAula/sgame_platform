@@ -1,46 +1,9 @@
+<%= render :partial => "sgame_at_locales" %>
 <%= javascript_include_tag "sgame_at" %>
 <%= stylesheet_link_tag "sgame_at" %>
 
 <script type="text/javascript">
 	$(document).ready(function(){
-		SGAME_AT_Locales = {
-			"i.and"										: "<%= t("dictionary.and") %>",
-			"i.cancel"									: "<%= t("dictionary.cancel") %>",
-			"i.other"									: "<%= t("dictionary.other") %>",
-			"i.unspecified"								: "<%= t("dictionary.unspecified") %>",
-			"i.dialog_confirmation"						: "<%= t("dictionary.are_you_sure") %>",
-			"i.gt_change_confirmation"					: "<%= t("at.msgs.gt_change_confirmation") %>",
-			"i.upload_game_template"					: "<%= t("game_templates.new") %>",
-			"i.upload_scormfile"						: "<%= t("documents.new") %>",
-			"i.error_lo_already_added"  				: "<%= t("at.errors.lo_already_added") %>",
-			"i.error_sf_already_added"  				: "<%= t("at.errors.sf_already_added") %>",
-			"i.error_some_los_already_added"  			: "<%= t("at.errors.some_los_already_added") %>",
-			"i.error_no_los"  							: "<%= t("at.errors.no_los") %>",
-			"i.error_invalid_mapping"  					: "<%= t("at.errors.invalid_mapping") %>",
-			"i.error_title_missing"						: "<%= t("at.errors.title_missing") %>",
-			"i.error_generic_metadata_missing"			: "<%= t("at.errors.generic_metadata_missing") %>",
-			"i.all"  									: "<%= t("dictionary.all") %>",
-			"i.none"  									: "<%= t("dictionary.none") %>",
-			"i.success_creation"						: "<%= t("games.messages.success.create") %>",
-			"i.success_update"							: "<%= t("games.messages.success.update") %>",
-			"i.error_generic_create"					: "<%= t("at.errors.generic_create") %>",
-			"i.error_specific_create"					: "<%= t("at.errors.specific_create") %>",
-			"i.error_generic_update"					: "<%= t("at.errors.generic_update") %>",
-			"i.error_specific_update"					: "<%= t("at.errors.specific_update") %>",
-			"i.event_type_new_item"						: "<%= t("at.event_type.new_item") %>",
-			"i.event_type_extra_life"					: "<%= t("at.event_type.extra_life") %>",
-			"i.event_type_block"						: "<%= t("at.event_type.block") %>",
-			"i.event_frequency_high"					: "<%= t("at.event_frequency.high") %>",
-			"i.event_frequency_medium"					: "<%= t("at.event_frequency.medium") %>",
-			"i.event_frequency_low"						: "<%= t("at.event_frequency.low") %>",
-			"i.event_frequency_one-shot"				: "<%= t("at.event_frequency.one-shot") %>",
-			"i.event_frequency_skill-dependent"			: "<%= t("at.event_frequency.skill-dependent") %>",
-			"i.event_frequency_skill-dependent_high"	: "<%= t("at.event_frequency.skill-dependent_high") %>",
-			"i.event_frequency_skill-dependent_medium"	: "<%= t("at.event_frequency.skill-dependent_medium") %>",
-			"i.event_frequency_skill-dependent_low"		: "<%= t("at.event_frequency.skill-dependent_low") %>",
-			"i.language_en"								: "<%= t("languages.en") %>",
-			"i.language_es"								: "<%= t("languages.es") %>"
-		}
 		var game_templates = <%=raw @game_templates.to_json%>;
 		var scormfiles = <%=raw @scormfiles.to_json%>;
 		var options = {};
@@ -98,7 +61,7 @@
 					</table>
 				</div>
 				<div class="r1 c2">
-					<img class="thumbnail" title="<%= t('at.click_to_preview') %>" style="display:none"/>
+					<img class="thumbnail" title="<%= t('at.msgs.click_to_preview') %>" style="display:none"/>
 				</div>
 			</div>
 			<div class="step_actions">
@@ -137,21 +100,21 @@
 							<td></td> 
 						</tr>
 						<tr class="version">
-							<th><%= t("at.scorm_version") %></th>
+							<th><%= t("at.msgs.scorm_version") %></th>
 							<td></td> 
 						</tr>
 						<tr class="nresources">
-							<th><%= t("at.nresources") %></th>
+							<th><%= t("at.msgs.nresources") %></th>
 							<td></td> 
 						</tr>
 					</table>
 					<table class="at_c" style="display:none">
 						<tr class="title">
-							<th colspan="4"><%= t("los.title") %></th>
+							<th colspan="4"><%= t("at.los.title") %></th>
 						</tr>
 						<tr class="header">
-							<th class="index"><%= t("los.index") %></th>
-							<th class="type"><%= t("los.type") %></th>
+							<th class="index"><%= t("at.los.index") %></th>
+							<th class="type"><%= t("at.los.type") %></th>
 							<th class="preview"><%= t("dictionary.preview") %></th>
 							<th class="add"><%= t("dictionary.add") %> </th>
 						</tr>
@@ -159,18 +122,18 @@
 					<button id="step2_addscormfile" class="sgame_button"><%=t("at.step2.add_scormfile")%></button>
 				</div>
 				<div class="r1 c2">
-					<img class="thumbnail" title="<%= t('at.click_to_preview') %>" style="display:none"/>
+					<img class="thumbnail" title="<%= t('at.msgs.click_to_preview') %>" style="display:none"/>
 				</div>
 			</div>
 			<div class="stepSubtitle">
 				<p>2B. <%=t("at.step2.titleB")%></p>
 			</div>
 			<div class="selected_los">
-				<p class="nolos"><%= t("at.no_selected_los") %></p>
+				<p class="nolos"><%= t("at.msgs.no_selected_los") %></p>
 				<table class="at_c" style="display:none">
 					<tr class="header">
-						<th class="title"><%= t("los.title") %></th>
-						<th class="type"><%= t("los.type") %></th>
+						<th class="title"><%= t("at.los.title") %></th>
+						<th class="type"><%= t("at.los.type") %></th>
 						<th class="preview"><%= t("dictionary.preview") %></th>
 						<th class="remove"><%= t("dictionary.remove") %> </th>
 					</tr>

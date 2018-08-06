@@ -1,14 +1,4 @@
 en:
-  i18n:
-    transliterate:
-      rule:
-        ª: "ª"
-        º: "º"
-        ´: "´"
-        ?: "?"
-        ¿: "¿"
-        ¡: "¡"
-        ́ : ""
   account:
     cancel: "Cancel my account"
     edit: "Edit account"
@@ -29,27 +19,23 @@ en:
             password:
               blank: "can't be blank"
   at:
-    click_to_preview: "Click to preview"
-    scorm_version: "SCORM version"
-    nresources: "Number of learning objects"
-    no_selected_los: "You have not selected any learning object yet"
     errors:
-      lo_already_added: "This learning object had already been selected"
-      some_los_already_added: "Some of the learning objects of this SCORM package had already been selected"
-      sf_already_added: "This SCORM package had already been selected"
-      no_los: "You need to select at least one learning object to be integrated into the game"
-      invalid_mapping: "A mapping should be specified for each game event"
-      invalid_mapping_server: "Event mapping is not valid"
-      title_missing: "You should specify a title for the game"
-      generic_metadata_missing: "You should specify mandatory metadata for the game"
-      generic_create: "There was an error and the game could not be created"
-      specific_create: "The game could not be created because the following error occurred: '#{errorMsg}'."
-      generic_update: "There was an error and the game could not be updated"
-      specific_update: "The game could not be updated because the following error occurred: '#{errorMsg}'."
+      generic_create: "There was an error and the game could not be created."
+      generic_update: "There was an error and the game could not be updated."
+      generic_metadata_missing: "You should specify mandatory metadata for the game."
+      invalid_mapping: "A mapping should be specified for each game event."
+      invalid_mapping_server: "Event mapping is not valid."
+      lo_already_added: "This learning object had already been selected."
+      no_los: "You need to select at least one learning object to be integrated into the game."
+      sf_already_added: "This SCORM package had already been selected."
+      some_los_already_added: "Some of the learning objects of this SCORM package had already been selected."
+      specific_create: "The game could not be created because the following error occurred: '#{errorMsg}'"
+      specific_update: "The game could not be updated because the following error occurred: '#{errorMsg}'"
+      title_missing: "You should specify a title for the game."
     event_type:
-      "new_item": "New item"
-      "extra_life": "Extra life"
       "block": "Blocking"
+      "extra_life": "Extra life"
+      "new_item": "New item"
     event_frequency:
       "high": "High"
       "medium": "Medium"
@@ -59,26 +45,36 @@ en:
       "skill-dependent_high": "Skill-dependent (Generally high)"
       "skill-dependent_medium": "Skill-dependent (Generally medium)"
       "skill-dependent_low": "Skill-dependent (Generally low)"
+    los:
+      description: "Learning object description"
+      index: "Index"
+      name: "Learning object name"
+      title: "Learning objects"
+      type: "Type"
     msgs:
+      click_to_preview: "Click to preview"
       gt_change_confirmation: "If you select a new game template, the defined event mapping will be reset to default. Are you sure you want to select a new game template?"
+      nresources: "Number of learning objects"
+      no_selected_los: "You have not selected any learning object yet"
+      scorm_version: "SCORM version"
     step1:
       title: "Choose a game template"
-      description: "First, you have to select a game template into which the learning objects will be integrated in order to create an educational game. A game template is an entertainment game that has included the SGAME API in order to show learning objects to the players when certain events are triggered. Game templates define the specific events whose triggering will cause a learning object to be shown as well as the rewards that players will receive when they succesfully complete one of these learning objects."
+      description: "First, you have to select a game template into which the learning objects will be integrated in order to create the educational game. A game template is an entertainment game that has included the SGAME API in order to show learning objects to the players when certain events are triggered. Game templates define the specific events whose triggering will cause a learning object to be shown as well as the rewards that players will receive when they succesfully complete one of these learning objects. After chossing a game template, you should click on the 'Select game template' button to advance to the next step."
       confirmation: "Select game template"
     step2:
       title: "Choose learning objects to integrate into the game"
       titleA: "Choose SCORM packages"
       titleB: "Check selected learning objects"
-      description: "Description2"
+      description: "In this step you should select all the learning objects that will be integrated into the game template in order to create the educational game. First, you should choose a SCORM package. If you have no packages to select, you can upload a new SCORM package by clicking on the 'Upload file' button or create a new learning object with an online authoring tool by clicking on the '+' simbol of the header and selecting 'Create presentation'. After selecting a SCORM package, you will be able to select any learning object contained in that package. You can select all the learning objects of a package by clicking on the 'Add all learning objects' button as well as select only some learning objects by clicking on the 'plus' icon placed at the right side of each row of the learning object table. Learning objects from different SCORM packages can be added. Once all learning objects have been selected, you should review them and click on the 'Confirm learning objects' button to advance to the next step."
       add_scormfile: "Add all learning objects"
       confirmation: "Confirm learning objects"
     step3:
       title: "Map learning objects with game events"
-      description: "Description3"
+      description: "In this step you should associate each event of the game (chosen in step 1) with the learning objects selected in the previous step. One or more learning objects can be mapped (i.e. associated) to a same game event. For each event, besides selecting learning objects, you can select two additional options: 'All' (all learning objects will be mapped to that event) and 'None' (no learning object will be mapped to that event)."
       confirmation: "Confirm mapping"
     step4:
-      title: "Sequencing options"
-      description: "In this step you can define sequencing options for the learning objects integrated in the game"
+      title: "Specify sequencing options"
+      description: "In this step you can define sequencing options for the learning objects integrated in the game."
       confirmation: "Confirm sequencing options"
       opt1:
         title: "After showing a learning object in the game:"
@@ -105,10 +101,9 @@ en:
         title: "Description"
     step7:
       title: "Create the educational game"
-      description: "Click on the button below to finish the creation process."
+      description: "Click on the button below to finish the creation process. After creating the educational game, you will be redirect to a page in which you will be able to play it. In that page, you will be able to come back to this editor by clicking on the 'edit' icon and change any setting of the game."
       confirmation: "Create educational game"
       confirmation_update: "Edit educational game"
-    update: "Update educational game"
   authorization:
     errors:
       generic: "You are not authorized to access this page"
@@ -174,9 +169,11 @@ en:
     update: "Update file"
   events:
     description: "Event description"
+    frequency: "Frequency"
+    lo: "Mapped learning objects"
     name: "Event name"
     title: "Events"
-    lo: "Mapped learning objects"
+    type: "Type"
   games:
     messages:
       success:
@@ -267,12 +264,6 @@ en:
     unlock_instructions: "Didn't receive unlock instructions?"
     unlock_instructions_resend: "Resend unlock instructions"
     username_or_email: "Username or Email"
-  los:
-    description: "Learning object description"
-    name: "Learning object name"
-    title: "Learning objects"
-    type: "Type"
-    index: "Index"
   presentations:
     new: "Create presentation"
     tabtitle: "Presentations"
@@ -294,4 +285,13 @@ en:
       view_metadata: "View metadata"
   scormfiles:
     tabtitle: "SCORM Packages"
-    
+  i18n:
+    transliterate:
+      rule:
+        ª: "ª"
+        º: "º"
+        ´: "´"
+        ?: "?"
+        ¿: "¿"
+        ¡: "¡"
+        ́ : ""  

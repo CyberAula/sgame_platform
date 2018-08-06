@@ -140,7 +140,8 @@
   height: 225px;
   cursor: pointer;
   margin-bottom: 0px;
-  background: none;
+  background-color: #ddd;
+  padding: 0px;
   border: none;
 }
 

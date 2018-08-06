@@ -18,6 +18,92 @@ es:
               blank: "no puede estar en blanco"
             password:
               blank: "no puede estar en blanco"
+  at:
+    errors:
+      generic_create: "Ocurrió un error y el juego no pudo ser creado."
+      generic_update: "Ocurrió un error y el juego no pudo ser actualizado."
+      generic_metadata_missing: "Debes especificar los metadatos obligatorios para el juego."
+      invalid_mapping: "Debes especificar un mapeo por cada evento del juego."
+      invalid_mapping_server: "El mapeo de eventos no es válido."
+      lo_already_added: "Este objeto de aprendizaje ya había sido seleccionado."
+      no_los: "Necesitas seleccionar al menos un objeto de aprendizaje para ser integrado en el juego."
+      sf_already_added: "Este paquete SCORM ya había sido seleccionado."
+      some_los_already_added: "Algunos de los objetos de aprendizaje de este paquete SCORM ya habían sido seleccionados."
+      specific_create: "El juego no pudo ser creado porque ocurrió el siguiente error: '#{errorMsg}'"
+      specific_update: "El juego no pudo ser actualizado porque ocurrió el siguiente error: '#{errorMsg}'"
+      title_missing: "Debes especificar un título para el juego"
+    event_type:
+      "block": "Bloqueante"
+      "extra_life": "Vida extra"
+      "new_item": "Nuevo objeto"
+    event_frequency:
+      "high": "Alta"
+      "medium": "Media"
+      "low": "Baja"
+      "one-shot": "Único"
+      "skill-dependent": "Dependiente de la habilidad"
+      "skill-dependent_high": "Dependiente de la habilidad (Generalmente alta)"
+      "skill-dependent_medium": "Dependiente de la habilidad (Generalmente media)"
+      "skill-dependent_low": "Dependiente de la habilidad (Generalmente baja)"
+    los:
+      description: "Descripción del objeto de aprendizaje"
+      index: "Índice"
+      name: "Nombre del objeto de aprendizaje"
+      title: "Objetos de aprendizaje"
+      type: "Tipo"
+    msgs:
+      click_to_preview: "Haz clic para previsualizar"
+      gt_change_confirmation: "Si seleccionas una nueva plantilla de juego, el mapeo de eventos definido se resetará. ¿Estás seguro de que quieres seleccionar una nueva plantilla de juego?"
+      nresources: "Número de objetos de aprendizaje"
+      no_selected_los: "No has seleccionado ningún objeto de aprendizaje todavía"
+      scorm_version: "Versión SCORM"
+    step1:
+      title: "Elige una plantilla de juego"
+      description: "En primer lugar tienes que seleccionar una plantilla de juego en la cual integrar objetos de aprendizaje a fin de crear el juego educativo. Una plantilla de juego es un juego de entretenimiento que ha incluido la API de SGAME a fin de mostrar objetos de aprendizaje a los jugadores cuando se desencadenan determinados eventos. Las plantillas de juego definen los eventos específicos cuyo desencadenamiento causará que se muestre un objeto de aprendizaje así como las recompensas que los jugadores recibirán cuando completen con éxito uno de esos objetos de aprendizaje. Después de elegir una plantilla de juego, debes pulsar sobre el botón 'Seleccionar plantilla de juego' para avanzar al siguiente paso."
+      confirmation: "Seleccionar plantilla de juego"
+    step2:
+      title: "Elige objetos de aprendizaje para integrar en el juego"
+      titleA: "Elige paquetes SCORM"
+      titleB: "Revisa los objetos de aprendizaje seleccionados"
+      description: "En este paso debes seleccionar todos los objetos de aprendizaje que serán integrados en la plantilla de juego a fin de crear el juego educativo. Primero tienes que elegir un paquete SCORM. Si no tienes ningún paquete SCORM que seleccionar, puedes subir un nuevo paquete SCORM haciendo clic en el botón 'Subir archivo' o crear un nuevo objeto de aprendizaje con una herramienta de creación online haciendo clic en el icono '+' de la cabecera y seleccionando 'Crear presentación'. Después de seleccionar un paquete SCORM, podrás seleccionar cualquier objeto de aprendizaje contenido en ese paquete. Puedes seleccionar todos los objetos de aprendizaje de un paquete pulsando sobre el botón 'Añadir todos los objetos de aprendizaje' así como seleccionar solo algunos pulsando sobre el icono '+' situado al lado derecho de cada fila de la tabla de objetos de aprendizaje. Es posible añadir objetos de aprendizaje pertenecientes a diferentes paquetes SCORM. Una vez que todos los objetos de aprendizaje hayan sido seleccionados, debes revisarlos y hacer clic en el botón 'Confirmar objetos de aprendizaje' para avanzar al siguiente paso."
+      add_scormfile: "Añadir todos los objetos de aprendizaje"
+      confirmation: "Confirmar objetos de aprendizaje"
+    step3:
+      title: "Mapea los objetos de aprendizaje con eventos del juego"
+      description: "En este paso debes asociar cada evento del juego (elegido en el paso 1) con los objetos de aprendizaje seleccionados en el paso anterior. Se pueden mapear (es decir, asociar) uno o más objetos de aprendizaje a un mismo evento de juego. Por cada evento, además de seleccionar objetos de aprendizaje, hay dos opciones adicionales: 'Todos' (todos los objetos de aprendizaje serán mapeados a ese evento) y 'Ninguno' (ningún objeto de aprendizaje será mapeado a ese evento)."
+      confirmation: "Confirmar mapeo"
+    step4:
+      title: "Especificar opciones de secuenciación"
+      description: "En este paso puedes definir opciones de secuenciación para los objetos de aprendizaje integrados en el juego."
+      confirmation: "Confirmar opciones de secuenciación"
+      opt1:
+        title: "Después de mostrar un objeto de aprendizaje en el juego:"
+        choice1: "El juego puede mostrar ese objeto de aprendizaje otra vez."
+        choice2: "El juego puede mostrar ese objeto de aprendizaje otra vez solo si no ha sido consumido con éxito."
+        choice3: "El juego no mostará ese objeto de aprendizaje otra vez."
+    step5:
+      title: "Especifica ajustes para el juego"
+      description: "En este paso puedes especificar diferentes ajustes para el juego educativo."
+      confirmation: "Confirmar ajustes"
+      opt1:
+        title: "Notificar al jugador de que los objetivos educativos del juego han sido logrados:"
+        choice1: "Cuando el juego no pueda mostrar más objetos de aprendizaje."
+        choice2: "Cuando el juego haya mostrado todos los objetos de aprendizaje."
+        choice3: "Cuando el jugador haya consumido con éxito todos los objetos de aprendizaje."
+        choice4: "Nunca."
+    step6:
+      title: "Especificar metadatos para el juego"
+      description: "En este paso debes especificar metadatos (título, descripción, ...) para el juego educativo."
+      confirmation: "Confirmar metadatos"
+      metadata1:
+        title: "Título"
+      metadata2:
+        title: "Descripción"
+    step7:
+      title: "Crear el juego educativo"
+      description: "Haz clic en el botón de abajo para finalizar el proceso de creación. Después de crear el juego, serás redirigido a una nueva página en la cual podrás jugar a él. En esa página también podrás volver a este editor haciendo clic en el icono 'edición' y modificar cualquier ajuste del juego."
+      confirmation: "Crear juego educativo"
+      confirmation_update: "Editar juego educativo"
   authorization:
     errors:
       generic: "No estás autorizado a acceder a esta página"
@@ -29,6 +115,9 @@ es:
     educational_game: "juego educativo"
   dictionary:
     about: "About"
+    add: "Añadir"
+    all: "Todos"
+    and: "y"
     are_you_sure: "¿Estás seguro?"
     and: "y"
     back: "Volver"
@@ -50,8 +139,10 @@ es:
     language: "Idioma"
     login: "Inicia sesión"
     next: "Siguiente"
+    none: "Ninguno"
     ok: "Ok"
     password: "Contraseña"
+    preview: "Previsualizar"
     relevance: "Relevancia"
     remove: "Borrar"
     save: "Salvar"
@@ -78,8 +169,11 @@ es:
     tabtitle: "Archivos"
   events:
     description: "Descripción del evento"
+    frequency: "Frecuencia"
+    lo: "Objetos de aprendizaje mapeados"
     name: "Nombre del evento"
     title: "Eventos"
+    type: "Tipo" 
   games:
     messages:
       success:
