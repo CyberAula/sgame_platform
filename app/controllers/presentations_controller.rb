@@ -33,6 +33,9 @@ class PresentationsController < ApplicationController
       format.full {
         render :layout => 'veditor'
       }
+      format.sgame {
+        render :layout => 'veditor'
+      }
       format.json {
         render :json => @presentation.json
       }

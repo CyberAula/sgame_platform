@@ -40,9 +40,9 @@ class GamesController < ApplicationController
 
   def new
     @game = Game.new
-    @game_templates = (GameTemplate.where(:certified => true) + current_user.game_templates).uniq
-    @scormfiles = current_user.scormfiles
-    
+    @game_templates = (GameTemplate.where(:certified => true) + current_user.game_templates).uniq.as_json(:include => [:events])
+    @scormfiles = current_user.scormfiles.as_json(:include => [:los]) + current_user.presentations.map{|p| p.as_scormfile}
+
     respond_to do |format|
       format.html { 
         render 
@@ -52,8 +52,8 @@ class GamesController < ApplicationController
 
   def edit
     @game = Game.find(params[:id])
-    @game_templates = (GameTemplate.where(:certified => true) + current_user.game_templates).uniq
-    @scormfiles = (current_user.scormfiles + @game.scormfiles).uniq
+    @game_templates = (GameTemplate.where(:certified => true) + current_user.game_templates).uniq.as_json(:include => [:events])
+    @scormfiles = (current_user.scormfiles + @game.scormfiles).uniq.as_json(:include => [:los]) + current_user.presentations.map{|p| p.as_scormfile}
 
     respond_to do |format|
       format.html {

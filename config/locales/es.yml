@@ -144,6 +144,7 @@ es:
     ro: "Rumano"
     ru: "Ruso"
     sr: "Serbio"
+    independent: "Independiente del idioma"
   login:
     confirmation_instructions: "¿No has recibido las instrucciones de confirmación?"
     confirmation_instructions_resend: "Reenviar instrucciones para confirmar cuenta"

@@ -11,6 +11,7 @@ SGAME_AT = (function($,undefined){
 
 	var stepsLoaded = [];
 	var editMode = false;
+	var supportedLanguages = ["en","es"];
 	var supportedEventTypes = ["new_item","extra_life","block"];
 	var supportedEventFrequencies = ["high","medium","low","one-shot","skill-dependent","skill-dependent_high","skill-dependent_medium","skill-dependent_low"];
 
@@ -91,6 +92,12 @@ SGAME_AT = (function($,undefined){
 			var str = this;
 			return str.replace(new RegExp(find.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), replace);
 		};
+
+		if (!String.prototype.startsWith) {
+			String.prototype.startsWith = function(search, pos) {
+				return this.substr(!pos || pos < 0 ? 0 : +pos, search.length) === search;
+			};
+		}
 	};
 
 	var _loadEvents = function(){
@@ -336,7 +343,9 @@ SGAME_AT = (function($,undefined){
 
 		$("#sgame_at .game_template .selected tr.title td").html(gt.title);
 		$("#sgame_at .game_template .selected tr.description td").html(gt.description);
-		$("#sgame_at .game_template .selected tr.language td").html(_getTrans("i.language_" + gt.language));
+
+		var language = (supportedLanguages.indexOf(gt.language) !== -1) ? _getTrans("i.language_" + gt.language) : _getTrans("i.unspecified");
+		$("#sgame_at .game_template .selected tr.language td").html(language);
 
 		//Fill events
 		var eventsTable = $("#sgame_at .game_template .selected table.at_b");
@@ -426,7 +435,9 @@ SGAME_AT = (function($,undefined){
 		
 		$("#sgame_at .scormfiles .selected tr.title td").html(sf.title);
 		$("#sgame_at .scormfiles .selected tr.description td").html(sf.description);
-		$("#sgame_at .scormfiles .selected tr.language td").html(_getTrans("i.language_" + sf.language));
+
+		var language = (supportedLanguages.indexOf(sf.language) !== -1) ? _getTrans("i.language_" + sf.language) : _getTrans("i.unspecified");
+		$("#sgame_at .scormfiles .selected tr.language td").html(language);
 		$("#sgame_at .scormfiles .selected tr.version td").html(sf.schema + " " + sf.schema_version);
 
 		var nResources = "";
@@ -482,7 +493,12 @@ SGAME_AT = (function($,undefined){
 	};
 
 	var _previewScormfile = function(sf){
-		var sfURL = "/scormfiles/" + sf.id + ".full";
+		if(typeof sf["preview_url"] === "string"){
+			//For resources that act like scormfiles
+			var sfURL = sf["preview_url"];
+		} else {
+			var sfURL = "/scormfiles/" + sf.id + ".full";
+		}
 		$("#preview_iframe_fancybox").attr("href",sfURL);
 		$("#preview_iframe_fancybox").trigger("click");
 	};

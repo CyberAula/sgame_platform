@@ -241,6 +241,7 @@ en:
     ro: "Romanian"
     ru: "Russian"
     sr: "Serbian"
+    independent: "Language independent"
   login:
     confirmation_instructions: "Didn't receive confirmation instructions?"
     confirmation_instructions_resend: "Resend confirmation instructions"

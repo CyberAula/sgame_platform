@@ -1,0 +1,30 @@
+<%= javascript_include_tag 've_sgame_locales' %>
+<%= render :partial => 'presentations/vish_viewer.full' %>
+
+<script>
+	options = {};
+	var configuration = {};
+
+	configuration["ImagesPath"] = "/assets/";
+	configuration["StylesheetsPath"] = "/assets/";
+
+	// Locales
+	configuration["defaultLanguage"] = "en";
+	configuration["locales"] = VE_SGAME_Locales;
+
+	options["configuration"] = configuration;
+	options["developping"] = false;
+
+	options["scorm"] = true;
+
+	//Environment data
+	options["environment"] = {
+		name: "<%= SgamePlatform::Application.config.name %>"
+	}
+
+	var presentation = <%= raw @presentation.json %>;
+
+	function start(){
+		VISH.Viewer.init(options,presentation);
+	}
+</script>

@@ -29,6 +29,24 @@ class Presentation < ActiveRecord::Base
     json
   end
 
+  def as_scormfile
+    sf = self.as_json( :include => [:los])
+
+    sf["id"] = "presentation_" + self.id.to_s
+    sf["schema"] = "ADL SCORM"
+    sf["schema_version"] = "2004 4th Edition"
+    sf["scorm_version"] = "2004"
+    sf["nassets"] = 0
+    sf["nscos"] = 1
+    sf["preview_url"] = lo_path(sf["los"][0]["id"], :format => :sgame) rescue presentation_url(self, :format => :full)
+
+    sf["los"].each do |lo|
+      lo["container_id"] = sf["id"]
+    end
+
+    sf
+  end
+
 
   ####################
   ## SCORM Management
@@ -690,13 +708,14 @@ class Presentation < ActiveRecord::Base
     end
     lo.container_type = self.class.name
     lo.container_id = self.id
+    lo.resource_index = 1
     lo.standard = "SCORM"
     lo.standard_version = "2004"
     lo.schema_version = "2004 4th Edition"
     lo.lo_type = "sco"
     lo.rdata = VishEditorUtils.reportData?(JSON.parse(self.json))
-    lo.href = self.id.to_s + ".full"
-    lo.hreffull = SgamePlatform::Application.config.full_domain + presentation_path(self, :format => "full")
+    lo.href = self.id.to_s + ".sgame"
+    lo.hreffull = SgamePlatform::Application.config.full_domain + presentation_path(self, :format => "sgame")
     lo.metadata = JSON.parse(self.json)
     lo.save!
   end

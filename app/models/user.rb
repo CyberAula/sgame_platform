@@ -20,4 +20,5 @@ class User < ActiveRecord::Base
 	def files
 		self.documents + self.scormfiles
 	end
+
 end
