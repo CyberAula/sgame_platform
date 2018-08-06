@@ -1,9 +1,9 @@
 [
 	{
 		"id": 1,
-		"title": "Extra live",
+		"title": "Extra life",
 		"description": "Event triggered when a ghost catches the player",
 		"type": "extra_life",
-		"frequency": "medium"
+		"frequency": "skill-dependent_low"
 	}
 ]

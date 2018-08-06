@@ -11,6 +11,8 @@ SGAME_AT = (function($,undefined){
 
 	var stepsLoaded = [];
 	var editMode = false;
+	var supportedEventTypes = ["new_item","extra_life","block"];
+	var supportedEventFrequencies = ["high","medium","low","one-shot","skill-dependent","skill-dependent_high","skill-dependent_medium","skill-dependent_low"];
 
 	//Application state (Editor data in the SGAME platform)
 	var current_step = 1;
@@ -334,7 +336,7 @@ SGAME_AT = (function($,undefined){
 
 		$("#sgame_at .game_template .selected tr.title td").html(gt.title);
 		$("#sgame_at .game_template .selected tr.description td").html(gt.description);
-		$("#sgame_at .game_template .selected tr.language td").html(gt.language);
+		$("#sgame_at .game_template .selected tr.language td").html(_getTrans("i.language_" + gt.language));
 
 		//Fill events
 		var eventsTable = $("#sgame_at .game_template .selected table.at_b");
@@ -347,7 +349,9 @@ SGAME_AT = (function($,undefined){
 			$(eventsTable).find("tr.geinstance").remove();
 			for(var i=0; i<nEvents; i++){
 				var gEvent = gEvents[i];
-				var gEventDOM = "<tr class='geinstance'><td class='name'>" + gEvent.title + "</td><td class='description'>" + gEvent.description + "</td></tr>";
+				var event_type = ((typeof gEvent.event_type === "undefined" || (supportedEventTypes.indexOf(gEvent.event_type) === -1)) ? _getTrans("i.unspecified") : _getTrans("i.event_type_" + gEvent.event_type));
+				var event_frequency =((typeof gEvent.frequency === "undefined" || (supportedEventFrequencies.indexOf(gEvent.frequency) === -1)) ? _getTrans("i.unspecified") : _getTrans("i.event_frequency_" + gEvent.frequency));
+				var gEventDOM = "<tr class='geinstance'><td class='name'>" + gEvent.title + "</td><td class='description'>" + gEvent.description + "</td><td class='type'>" + event_type + "</td><td class='frequency'>" + event_frequency + "</td></tr>";
 				$(eventsTable).append(gEventDOM);
 			}
 			$(eventsTable).show();
@@ -422,7 +426,7 @@ SGAME_AT = (function($,undefined){
 		
 		$("#sgame_at .scormfiles .selected tr.title td").html(sf.title);
 		$("#sgame_at .scormfiles .selected tr.description td").html(sf.description);
-		$("#sgame_at .scormfiles .selected tr.language td").html(sf.language);
+		$("#sgame_at .scormfiles .selected tr.language td").html(_getTrans("i.language_" + sf.language));
 		$("#sgame_at .scormfiles .selected tr.version td").html(sf.schema + " " + sf.schema_version);
 
 		var nResources = "";
@@ -601,8 +605,10 @@ SGAME_AT = (function($,undefined){
 		$(mappingTable).show();
 	};
 
-	var _addEventToMappingTable = function(event,mappingTable){
-		var emDOM = "<tr class='eminstance' eid='" + event.id + "'><td class='title'>" + event.title + "</td><td class='description'>" + event.description + "</td><td class='mapping'><select multiple='multiple'></select></td></tr>";
+	var _addEventToMappingTable = function(event,mappingTable){	
+		var event_type = ((typeof event.event_type === "undefined" || (supportedEventTypes.indexOf(event.event_type) === -1)) ? _getTrans("i.unspecified") : _getTrans("i.event_type_" + event.event_type));
+		var event_frequency =((typeof event.frequency === "undefined" || (supportedEventFrequencies.indexOf(event.frequency) === -1)) ? _getTrans("i.unspecified") : _getTrans("i.event_frequency_" + event.frequency));
+		var emDOM = "<tr class='eminstance' eid='" + event.id + "'><td class='title'>" + event.title + "</td><td class='description'>" + event.description + "</td><td class='type'>" + event_type + "</td><td class='frequency'>" + event_frequency + "</td><td class='mapping'><select multiple='multiple'></select></td></tr>";
 		$(mappingTable).append(emDOM);
 
 		var select = $(mappingTable).find("tr.eminstance[eid='" + event.id + "'] td.mapping select");

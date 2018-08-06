@@ -7,8 +7,11 @@ class GameTemplateEvent < ActiveRecord::Base
 	validates_presence_of :id_in_game
 
 	def fill_with_json_event(event)
-		self.title = event["title"]
-		self.description = event["description"]
-		self.id_in_game = event["id"]
+		self.title = event["title"] unless event["title"].blank?
+		self.id_in_game = event["id"] unless event["id"].blank?
+
+		self.description = event["description"] unless event["description"].blank?
+		self.event_type = event["type"] unless event["type"].blank?
+		self.frequency = event["frequency"] unless event["frequency"].blank?
 	end
 end

@@ -46,6 +46,19 @@ en:
       specific_create: "The game could not be created because the following error occurred: '#{errorMsg}'."
       generic_update: "There was an error and the game could not be updated"
       specific_update: "The game could not be updated because the following error occurred: '#{errorMsg}'."
+    event_type:
+      "new_item": "New item"
+      "extra_life": "Extra life"
+      "block": "Blocking"
+    event_frequency:
+      "high": "High"
+      "medium": "Medium"
+      "low": "Low"
+      "one-shot": "One shot"
+      "skill-dependent": "Skill-dependent"
+      "skill-dependent_high": "Skill-dependent (Generally high)"
+      "skill-dependent_medium": "Skill-dependent (Generally medium)"
+      "skill-dependent_low": "Skill-dependent (Generally low)"
     msgs:
       gt_change_confirmation: "If you select a new game template, the defined event mapping will be reset to default. Are you sure you want to select a new game template?"
     step1:
@@ -132,6 +145,7 @@ en:
     next: "Next"
     none: "None"
     ok: "Ok"
+    other: "Other"
     password: "Password"
     preview: "Preview"
     relevance: "Relevance"
@@ -143,7 +157,8 @@ en:
     title: "Title"
     thumbnail: "Avatar"
     untitled: "Untitled"
-    unknown: "Desconocido"
+    unknown: "Unknown"
+    unspecified: "Unspecified"
     update: "Update"
     username: "Username"
     register: "Sign up"

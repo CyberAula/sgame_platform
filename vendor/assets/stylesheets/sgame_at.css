@@ -152,6 +152,11 @@
   margin-bottom: 5px;
 }
 
+#sgame_at div[step] table tr th, #sgame_at div[step] table tr td {
+  margin-right: 15px;
+  margin-left: 15px;
+}
+
 #sgame_at div.game_template table.at_b, #sgame_at div.game_template table.at_c {
   margin-top: 10px;
 }
@@ -183,6 +188,18 @@
 
 #sgame_at table.at_a tr th:nth-child(1), #sgame_at table.at_b tr.header th, #sgame_at table.at_c tr.header th {
   white-space: nowrap;
+}
+
+#sgame_at table.at_b td.name {
+  min-width: 150px;
+}
+
+#sgame_at table.at_b td.type {
+  min-width: 100px;
+}
+
+#sgame_at table.at_b td.frequency {
+  min-width: 150px;
 }
 
 #step2_addscormfile {

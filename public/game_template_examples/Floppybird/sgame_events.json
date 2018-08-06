@@ -1,9 +1,9 @@
 [
 	{
 		"id": 1,
-		"title": "Extra live",
+		"title": "Extra life",
 		"description": "Event triggered when the bird touches a pipe",
 		"type": "extra_life",
-		"frequency": "high"
+		"frequency": "skill-dependent_high"
 	}
 ]

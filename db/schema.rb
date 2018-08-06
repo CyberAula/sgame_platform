@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180802111353) do
+ActiveRecord::Schema.define(version: 20180806090941) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,6 +54,8 @@ ActiveRecord::Schema.define(version: 20180802111353) do
     t.string   "metadata"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "event_type"
+    t.string   "frequency"
   end
 
   create_table "game_templates", force: :cascade do |t|
