@@ -73,7 +73,7 @@ es:
       description: "En este paso debes asociar cada evento del juego (elegido en el paso 1) con los objetos de aprendizaje seleccionados en el paso anterior. Se pueden mapear (es decir, asociar) uno o más objetos de aprendizaje a un mismo evento de juego. Por cada evento, además de seleccionar objetos de aprendizaje, hay dos opciones adicionales: 'Todos' (todos los objetos de aprendizaje serán mapeados a ese evento) y 'Ninguno' (ningún objeto de aprendizaje será mapeado a ese evento)."
       confirmation: "Confirmar mapeo"
     step4:
-      title: "Especificar opciones de secuenciación"
+      title: "Especifica opciones de secuenciación"
       description: "En este paso puedes definir opciones de secuenciación para los objetos de aprendizaje integrados en el juego."
       confirmation: "Confirmar opciones de secuenciación"
       opt1:
@@ -92,7 +92,7 @@ es:
         choice3: "Cuando el jugador haya consumido con éxito todos los objetos de aprendizaje."
         choice4: "Nunca."
     step6:
-      title: "Especificar metadatos para el juego"
+      title: "Especifica metadatos para el juego"
       description: "En este paso debes especificar metadatos (título, descripción, ...) para el juego educativo."
       confirmation: "Confirmar metadatos"
       metadata1:
