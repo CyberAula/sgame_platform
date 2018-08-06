@@ -20,6 +20,7 @@ SGAME_AT = (function($,undefined){
 	var current_los = {};
 	var current_mapping = {};
 	var current_sequencing = {};
+	var current_settings = {};
 	var current_metadata = {};
 
 
@@ -66,6 +67,9 @@ SGAME_AT = (function($,undefined){
 			}
 			if(typeof state.sequencing !== "undefined"){
 				current_sequencing = state.sequencing;
+			}
+			if(typeof state.settings !== "undefined"){
+				current_settings = state.settings;
 			}
 			if(typeof state.metadata !== "undefined"){
 				current_metadata = state.metadata;
@@ -227,9 +231,9 @@ SGAME_AT = (function($,undefined){
 				_redrawMappingTable();
 				break;
 			case 4:
-				//Sequencing option 1: repeat_los
-				if(typeof current_sequencing["repeat_los"] !== "undefined"){
-					$("#sgame_at div[step='4'] div.sequencing_wrapper input[name='seq_opt1'][value='" + current_sequencing["repeat_los"] + "']").attr('checked',true);
+				//Sequencing option 1: repeat_lo
+				if(typeof current_sequencing["repeat_lo"] !== "undefined"){
+					$("#sgame_at div[step='4'] div.options_wrapper input[name='seq_opt1'][value='" + current_sequencing["repeat_lo"] + "']").attr('checked',true);
 				}
 
 				$("#step4_confirmation").on("click",function(){
@@ -237,22 +241,31 @@ SGAME_AT = (function($,undefined){
 				});
 				break;
 			case 5:
-				//Title
-				if(typeof current_metadata["title"] === "string"){
-					$("#sgame_at div[step='5'] div.metadata_wrapper input[name='metadata_field1']").val(current_metadata["title"]);
+				//Setting option 1: completion_notification
+				if(typeof current_settings["completion_notification"] !== "undefined"){
+					$("#sgame_at div[step='5'] div.options_wrapper input[name='set_opt1'][value='" + current_settings["completion_notification"] + "']").attr('checked',true);
 				}
-				//Description
-				if(typeof current_metadata["description"] === "string"){
-					$("#sgame_at div[step='5'] div.metadata_wrapper textarea[name='metadata_field2']").val(current_metadata["description"]);
-				}
-
 				$("#step5_confirmation").on("click",function(){
 					_onStep5Confirmation();
 				});
 				break;
 			case 6:
+				//Title
+				if(typeof current_metadata["title"] === "string"){
+					$("#sgame_at div[step='6'] div.metadata_wrapper input[name='metadata_field1']").val(current_metadata["title"]);
+				}
+				//Description
+				if(typeof current_metadata["description"] === "string"){
+					$("#sgame_at div[step='6'] div.metadata_wrapper textarea[name='metadata_field2']").val(current_metadata["description"]);
+				}
+
 				$("#step6_confirmation").on("click",function(){
 					_onStep6Confirmation();
+				});
+				break;
+			case 7:
+				$("#step7_confirmation").on("click",function(){
+					_onStep7Confirmation();
 				});
 				break;
 			default:
@@ -689,8 +702,8 @@ SGAME_AT = (function($,undefined){
 	//Step 4
 
 	var _onStep4Confirmation = function(){
-		//Sequencing option 1: repeat_los
-		current_sequencing["repeat_los"] = $("#sgame_at div[step='4'] div.sequencing_wrapper input[name='seq_opt1']:checked").val();
+		//Sequencing option 1: repeat_lo
+		current_sequencing["repeat_lo"] = $("#sgame_at div[step='4'] div.options_wrapper input[name='seq_opt1']:checked").val();
 		_finishStep("4");
 	};
 
@@ -698,16 +711,8 @@ SGAME_AT = (function($,undefined){
 	//Step 5
 
 	var _onStep5Confirmation = function(){
-		//Title
-		current_metadata["title"] = $("#sgame_at div[step='5'] div.metadata_wrapper input[name='metadata_field1']").val();
-		//Description
-		current_metadata["description"] = $("#sgame_at div[step='5'] div.metadata_wrapper textarea[name='metadata_field2']").val();
-
-		//Validation
-		if((typeof current_metadata["title"] !== "string")||(current_metadata["title"].trim() === "")){
-			return _showSGAMEDialogWithSettings({"msg":_getTrans("i.error_title_missing")}, false);
-		}
-
+		//Settings option 1: completion_notification
+		current_settings["completion_notification"] = $("#sgame_at div[step='5'] div.options_wrapper input[name='set_opt1']:checked").val();
 		_finishStep("5");
 	};
 
@@ -715,8 +720,24 @@ SGAME_AT = (function($,undefined){
 	//Step 6
 
 	var _onStep6Confirmation = function(){
-		//Final validation. TODO
+		//Title
+		current_metadata["title"] = $("#sgame_at div[step='6'] div.metadata_wrapper input[name='metadata_field1']").val();
+		//Description
+		current_metadata["description"] = $("#sgame_at div[step='6'] div.metadata_wrapper textarea[name='metadata_field2']").val();
 
+		//Validation
+		if((typeof current_metadata["title"] !== "string")||(current_metadata["title"].trim() === "")){
+			return _showSGAMEDialogWithSettings({"msg":_getTrans("i.error_title_missing")}, false);
+		}
+
+		_finishStep("6");
+	};
+
+
+	//Step 7
+
+	var _onStep7Confirmation = function(){
+		//Final validation. TODO
 		_onCreateGame();
 	};
 
@@ -771,6 +792,7 @@ SGAME_AT = (function($,undefined){
 		editor_data.los = current_los;
 		editor_data.mapping = current_mapping;
 		editor_data.sequencing = current_sequencing;
+		editor_data.settings = current_settings;
 		editor_data.metadata = current_metadata;
 
 		return JSON.stringify(editor_data);

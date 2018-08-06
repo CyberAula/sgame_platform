@@ -196,11 +196,12 @@
 			<div class="stepDescription">
 				<p><%=t("at.step4.description")%></p>
 			</div>
-			<div class="sequencing_wrapper">
-				<div class="seq_opt">
-					<p class="seq_opt_legend"><%=t("at.step4.opt1.title")%></p>
-					<input type="radio" name="seq_opt1" value="true" checked> <%=t("at.step4.opt1.choice1")%><br>
-					<input type="radio" name="seq_opt1" value="false"> <%=t("at.step4.opt1.choice2")%><br>
+			<div class="options_wrapper">
+				<div class="option_wrapper">
+					<p class="options_legend"><%=t("at.step4.opt1.title")%></p>
+					<input type="radio" name="seq_opt1" value="repeat" checked> <%=t("at.step4.opt1.choice1")%><br>
+					<input type="radio" name="seq_opt1" value="repeat_unless_consumed"> <%=t("at.step4.opt1.choice2")%><br>
+					<input type="radio" name="seq_opt1" value="no_repeat"> <%=t("at.step4.opt1.choice3")%><br>
 				</div>
 			</div>
 			<div class="step_actions">
@@ -209,7 +210,7 @@
 		</div>
 	</div>
 
-	<div step="5" class="metadata disabled">
+	<div step="5" class="settings disabled">
 		<div class="stepTitle">
 			<p>5. <%=t("at.step5.title")%></p>
 		</div>
@@ -217,14 +218,13 @@
 			<div class="stepDescription">
 				<p><%=t("at.step5.description")%></p>
 			</div>
-			<div class="metadata_wrapper">
-				<div class="metadata_field">
-					<p class="metadata_field_legend"><%=t("at.step5.metadata1.title")%></p>
-					<input maxlength="60" size="70" type="text" name="metadata_field1">
-				</div>
-				<div class="metadata_field">
-					<p class="metadata_field_legend"><%=t("at.step5.metadata2.title")%></p>
-					<textarea cols="73" rows="4" maxlength="280" resize="none" name="metadata_field2"></textarea>
+			<div class="options_wrapper">
+				<div class="option_wrapper">
+					<p class="options_legend"><%=t("at.step5.opt1.title")%></p>
+					<input type="radio" name="set_opt1" value="no_more_los" checked> <%=t("at.step5.opt1.choice1")%><br>
+					<input type="radio" name="set_opt1" value="all_los_consumed"> <%=t("at.step5.opt1.choice2")%><br>
+					<input type="radio" name="set_opt1" value="all_los_succesfully_consumed"> <%=t("at.step5.opt1.choice3")%><br>
+					<input type="radio" name="set_opt1" value="never"> <%=t("at.step5.opt1.choice4")%><br>
 				</div>
 			</div>
 			<div class="step_actions">
@@ -241,8 +241,32 @@
 			<div class="stepDescription">
 				<p><%=t("at.step6.description")%></p>
 			</div>
+			<div class="metadata_wrapper">
+				<div class="metadata_field">
+					<p class="metadata_field_legend"><%=t("at.step6.metadata1.title")%></p>
+					<input maxlength="60" size="70" type="text" name="metadata_field1">
+				</div>
+				<div class="metadata_field">
+					<p class="metadata_field_legend"><%=t("at.step6.metadata2.title")%></p>
+					<textarea cols="73" rows="4" maxlength="280" resize="none" name="metadata_field2"></textarea>
+				</div>
+			</div>
 			<div class="step_actions">
-				<button id="step6_confirmation" class="sgame_button"><%= editMode ? t("at.step6.confirmation_update") : t("at.step6.confirmation")%></button>
+				<button id="step6_confirmation" class="sgame_button"><%=t("at.step6.confirmation")%></button>
+			</div>
+		</div>
+	</div>
+
+	<div step="7" class="creation disabled">
+		<div class="stepTitle">
+			<p>7. <%=t("at.step7.title")%></p>
+		</div>
+		<div class="stepContent stephidden" style="display:none">
+			<div class="stepDescription">
+				<p><%=t("at.step7.description")%></p>
+			</div>
+			<div class="step_actions">
+				<button id="step7_confirmation" class="sgame_button"><%= editMode ? t("at.step7.confirmation_update") : t("at.step7.confirmation")%></button>
 			</div>
 		</div>
 	</div>

@@ -202,27 +202,27 @@
   width: 100%;
 }
 
-#sgame_at div[step="4"] div.sequencing_wrapper {
+#sgame_at div.options_wrapper {
   font-size: 14px;
 }
 
-#sgame_at div[step="4"] div.sequencing_wrapper div.seq_opt {
+#sgame_at div.options_wrapper div.option_wrapper {
   padding: 10px;
   margin-bottom: 20px;
   border: 2px solid white;
 }
 
-#sgame_at div[step="5"] div.metadata_wrapper div.metadata_field {
+#sgame_at div[step="6"] div.metadata_wrapper div.metadata_field {
   margin-bottom: 15px;
 }
 
-#sgame_at div[step="5"] div.metadata_wrapper div.metadata_field p.metadata_field_legend {
+#sgame_at div[step="6"] div.metadata_wrapper div.metadata_field p.metadata_field_legend {
   font-size: 15px;
   color: white;
   margin-bottom: 1px;
 }
 
-#sgame_at div[step="5"] div.metadata_wrapper div.metadata_field input, #sgame_at div[step="5"] div.metadata_wrapper div.metadata_field textarea {
+#sgame_at div[step="6"] div.metadata_wrapper div.metadata_field input, #sgame_at div[step="6"] div.metadata_wrapper div.metadata_field textarea {
   color: black;
   background-color: white;
   padding: 5px;
@@ -230,7 +230,7 @@
   width: 100%;
 }
 
-#sgame_at div[step="5"] div.metadata_wrapper div.metadata_field textarea {
+#sgame_at div[step="6"] div.metadata_wrapper div.metadata_field textarea {
   resize: none;
 }
 

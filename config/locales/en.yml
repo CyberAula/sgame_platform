@@ -68,10 +68,21 @@ en:
       description: "In this step you can define sequencing options for the learning objects integrated in the game"
       confirmation: "Confirm sequencing options"
       opt1:
-        title: "When all the learning objects have been shown in the game:"
-        choice1: "Show the learning objects again."
-        choice2: "Do not show the learning objects again."
+        title: "After showing a learning object in the game:"
+        choice1: "The game can show that learning object again."
+        choice2: "The game can show that learning object again only if it has not been successfully consumed."
+        choice3: "The game will not show that learning object again."
     step5:
+      title: "Specify settings for the game"
+      description: "In this step you can specify different settings for the educational game."
+      confirmation: "Confirm settings"
+      opt1:
+        title: "Notify the player that the educational objectives of the game have been achieved:"
+        choice1: "When the game cannot show more learning objects."
+        choice2: "When the game has shown all learning objects."
+        choice3: "When the player has succesfully consumed all learning objects."
+        choice4: "Never."
+    step6:
       title: "Specify metadata for the game"
       description: "In this step you should specify metadata (title, description, ...) for the educational game."
       confirmation: "Confirm metadata"
@@ -79,7 +90,7 @@ en:
         title: "Title"
       metadata2:
         title: "Description"
-    step6:
+    step7:
       title: "Create the educational game"
       description: "Click on the button below to finish the creation process."
       confirmation: "Create educational game"
@@ -150,7 +161,7 @@ en:
     description: "Event description"
     name: "Event name"
     title: "Events"
-    lo: "Mapped learning object"
+    lo: "Mapped learning objects"
   games:
     messages:
       success:

@@ -552,7 +552,7 @@ class Game < ActiveRecord::Base
 		editor_data = {}
 
 		editor_data["sgame_at_version"] = "1.0"
-		editor_data["step"] = 6
+		editor_data["step"] = "7"
 
 		editor_data["game_template"] = JSON.parse(self.template.to_json( :include => [:events] ))
 		
@@ -576,8 +576,11 @@ class Game < ActiveRecord::Base
 		}
 
 		editor_data["sequencing"] = {}
-		editor_data["sequencing"]["repeat_los"] = true;
+		editor_data["sequencing"]["repeat_lo"] = "repeat";
 		
+		editor_data["current_settings"] = {}
+		editor_data["current_settings"]["completion_notification"] = "never";
+
 		editor_data["metadata"] = {}
 		editor_data["metadata"]["id"] = self.id
 		editor_data["metadata"]["title"] = self.title unless self.title.blank?
