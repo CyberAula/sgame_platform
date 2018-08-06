@@ -24,6 +24,7 @@ SgamePlatform::Application.routes.draw do
   resources :scormfiles
   match '/documents/:id/download' => 'documents#download', :via => :get
   match '/scormfiles/:id/download' => 'scormfiles#download', :via => :get
+  resources :los, only: [:show]
   resources :games
   match '/games/:id/metadata' => 'games#metadata', :via => :get
   resources :game_templates

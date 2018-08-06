@@ -32,6 +32,10 @@ class Lo < ActiveRecord::Base
 		self.container.owner
 	end
 
+	def owner_id
+		self.owner.id
+	end
+
 	def sgame_metadata
 		smetadata = Hash.new
 		smetadata["id"] = self.id
@@ -41,6 +45,12 @@ class Lo < ActiveRecord::Base
 		# smetadata["lom_metadata"] = self.metadata #TODO. fix metadata parsing
 		smetadata["lom_metadata"] = "{}"
 		return smetadata
+	end
+
+	def readable_title
+		title = self.container.title rescue nil
+		title += "(" + self.resource_index.to_s + ")" unless self.resource_index.nil?
+		title
 	end
 
 

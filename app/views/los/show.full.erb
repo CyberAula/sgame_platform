@@ -1,0 +1,46 @@
+<html>
+<head>
+	<title><%=@lo.readable_title%></title>
+	<meta charset="utf-8">
+	<script type="text/javascript">
+		var protocol = (document.location.protocol==="file:" ? "http:" : document.location.protocol);
+		<%
+			resources = ["/scorm_api/jquery-3.2.1.min.js","/scorm_api/SCORM_Player.js","/scorm_api/scorm_iframe_api.js"]
+			case @lo.standard_version
+			when "1.2"
+				resources.push("/scorm_api/Local_API_SCORM_12.js");
+			when "2004"
+				resources.push("/scorm_api/Local_API_1484_11.js");
+			else
+			end
+		%>
+		<% resources.each do |resource| %>
+			document.write(unescape("%3Cscript src='" + protocol + "//<%=SgamePlatform::Application.config.domain + resource%>' type='text/javascript'%3E%3C/script%3E"));
+		<% end %>
+	</script>
+</head>
+<body>
+	<script type="text/javascript">
+		//SCORM URL
+		var scormpackageURL = "<%=@lo.hreffull%>";
+		var scormResourceURLs = [scormpackageURL];
+
+		// Create LMS API
+		var LMS_API;
+		<% if @lo.standard_version == "1.2" %>
+			var API = new Local_API_SCORM_12({debug: false});
+			LMS_API = API;
+		<% elsif @lo.standard_version == "2004" %>
+			var API_1484_11 = new Local_API_1484_11({debug: false});
+			LMS_API = API_1484_11;
+		<% end %>
+		
+		//Create SCORM player
+		var SCORM_Player = new SCORM_Player({debug: false, SCORM_VERSION: "<%=@lo.standard_version%>", LMS_API: LMS_API, IFRAME_API: SCORM_IFRAME_API, SCORM_PACKAGE_URL: scormpackageURL, SCORM_RESOURCE_URLS: scormResourceURLs});
+
+		SCORM_Player.loadScormContent(function(){
+			// Scorm content loaded
+		});
+	</script>
+</body>
+</html>

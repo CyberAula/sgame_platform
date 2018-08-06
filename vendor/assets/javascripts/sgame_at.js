@@ -484,7 +484,8 @@ SGAME_AT = (function($,undefined){
 	};
 
 	var _previewLO = function(lo){
-		$("#preview_iframe_fancybox").attr("href",lo.hreffull);
+		var loURL = "/los/" + lo.id + ".full";
+		$("#preview_iframe_fancybox").attr("href",loURL);
 		$("#preview_iframe_fancybox").trigger("click");
 	};
 
