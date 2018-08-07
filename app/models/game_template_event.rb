@@ -14,4 +14,14 @@ class GameTemplateEvent < ActiveRecord::Base
 		self.event_type = event["type"] unless event["type"].blank?
 		self.frequency = event["frequency"] unless event["frequency"].blank?
 	end
+
+	def sgame_metadata
+		metadata = Hash.new
+		metadata["id"] = self.id_in_game.to_s
+		metadata["title"] = self.title unless self.title.blank?
+		metadata["description"] = self.description unless self.description.blank?
+		metadata["type"] = self.event_type unless self.event_type.blank?
+		metadata["frequency"] = self.frequency unless self.frequency.blank?
+		metadata
+	end
 end

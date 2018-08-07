@@ -86,33 +86,45 @@ class Game < ActiveRecord::Base
 		!get_mapping_instances_from_editor_data(true).blank?
 	end
 
-	def settings
-		settings = Hash.new
-		settings["name"] = self.title;
-		settings["description"] = self.description;
-		settings["thumbnail"] = self.thumbnail_url;
-		settings["lo_list"] = self.los_sgame_metadata;
-		settings["event_mapping"] = [];
-		self.events.each do |event|
-			#Get LOs mapped to this event
-			los = []
-			self.mappings.where(:game_template_event_id => event.id).each do |mapping|
-				if mapping.lo_id == -2
-					los.push("*");
-				else
-					los.push(mapping.lo_id);
-				end
-			end
-			mapping = Hash.new;
-			mapping["event_id"] = event.id_in_game;
-			mapping["los_id"] = los.uniq;
-			settings["event_mapping"].push(mapping);
-		end
-		return settings
-	end
+	def create_editor_data
+		editor_data = {}
 
-	def los_sgame_metadata
-		self.los.map{|lo| lo.sgame_metadata}
+		editor_data["sgame_at_version"] = "1.0"
+		editor_data["step"] = "7"
+
+		editor_data["game_template"] = JSON.parse(self.template.to_json( :include => [:events] ))
+		
+		editor_data["los"] = {}	
+		JSON.parse(self.los.to_json).each { |lo|
+			editor_data["los"][lo["id"]] = lo
+		}
+
+		editor_data["mapping"] = {}
+		self.mappings.each { |m|
+			editor_data["mapping"][m.game_template_event_id] = [] if editor_data["mapping"][m.game_template_event_id].blank?
+			editor_data["mapping"][m.game_template_event_id].push(m.lo_id)
+		}
+		self.template.events.each { |e|
+			m = editor_data["mapping"][e.id]
+			if m.blank?
+				editor_data["mapping"][e.id] = ["none"]
+			elsif m.length === editor_data["los"].length
+				editor_data["mapping"][e.id] = ["*"]
+			end
+		}
+
+		editor_data["sequencing"] = {}
+		editor_data["sequencing"]["repeat_lo"] = "repeat"
+		
+		editor_data["current_settings"] = {}
+		editor_data["current_settings"]["completion_notification"] = "never"
+
+		editor_data["metadata"] = {}
+		editor_data["metadata"]["id"] = self.id
+		editor_data["metadata"]["title"] = self.title unless self.title.blank?
+		editor_data["metadata"]["description"] = self.description unless self.description.blank?
+		
+		self.update_column :editor_data, editor_data.to_json
 	end
 
 	def mini_thumbnail_url
@@ -129,6 +141,46 @@ class Game < ActiveRecord::Base
 
 	def scormfiles
 		Scormfile.find(self.los.where("container_type='Scormfile'").uniq.pluck(:container_id))
+	end
+
+	#
+	# Methods used by the SGAME API
+	#
+
+	def settings
+		settings = Hash.new
+
+		editor_data = JSON.parse(self.editor_data) rescue {}
+		
+		#Game metadata
+		settings["game_metadata"] = {}
+		settings["game_metadata"]["title"] = self.title
+		settings["game_metadata"]["id"] = self.id.to_s
+		settings["game_metadata"]["description"] = self.description
+		settings["game_metadata"]["thumbnail"] = self.thumbnail_url
+
+		#Learning objects
+		settings["los"] = {}
+		self.los.each do |lo|
+			settings["los"][lo.id.to_s] = lo.sgame_metadata
+		end
+
+		#Event Mapping
+		settings["events"] = {}
+		settings["event_mapping"] = {}
+		mappings = self.mappings
+		self.events.each do |event|
+			settings["events"][event.id_in_game.to_s] = event.sgame_metadata
+			settings["event_mapping"][event.id_in_game.to_s] = mappings.where(:game_template_event_id => event.id).map{|m| m.lo_id.to_s}.uniq
+		end
+
+		#Sequencing options
+		settings["sequencing"] = editor_data["sequencing"].blank? ? {} : editor_data["sequencing"]
+
+		#Game settings
+		settings["game_settings"] = editor_data["settings"].blank? ? {} : editor_data["settings"]
+
+		return settings
 	end
 
 	#
@@ -184,7 +236,7 @@ class Game < ActiveRecord::Base
 		#SCORM schema
 		schemaDirs.push("#{Rails.root}/public/schemas/SCORM_" + version)
 		#LOM schema
-		schemaFiles.push("#{Rails.root}/public/schemas/lom/lom.xsd");
+		schemaFiles.push("#{Rails.root}/public/schemas/lom/lom.xsd")
 
 		schemaDirs.each do |dir|
 		  Utils.zip_folder(t.path,dir)
@@ -548,46 +600,6 @@ class Game < ActiveRecord::Base
 		myxml
 	end
 
-	def create_editor_data
-		editor_data = {}
-
-		editor_data["sgame_at_version"] = "1.0"
-		editor_data["step"] = "7"
-
-		editor_data["game_template"] = JSON.parse(self.template.to_json( :include => [:events] ))
-		
-		editor_data["los"] = {}	
-		JSON.parse(self.los.to_json).each { |lo|
-			editor_data["los"][lo["id"]] = lo
-		}
-
-		editor_data["mapping"] = {}
-		self.mappings.each { |m|
-			editor_data["mapping"][m.game_template_event_id] = [] if editor_data["mapping"][m.game_template_event_id].blank?
-			editor_data["mapping"][m.game_template_event_id].push(m.lo_id);
-		}
-		self.template.events.each { |e|
-			m = editor_data["mapping"][e.id]
-			if m.blank?
-				editor_data["mapping"][e.id] = ["none"]
-			elsif m.length === editor_data["los"].length
-				editor_data["mapping"][e.id] = ["*"]
-			end
-		}
-
-		editor_data["sequencing"] = {}
-		editor_data["sequencing"]["repeat_lo"] = "repeat";
-		
-		editor_data["current_settings"] = {}
-		editor_data["current_settings"]["completion_notification"] = "never";
-
-		editor_data["metadata"] = {}
-		editor_data["metadata"]["id"] = self.id
-		editor_data["metadata"]["title"] = self.title unless self.title.blank?
-		editor_data["metadata"]["description"] = self.description unless self.description.blank?
-		
-		self.update_column :editor_data, editor_data.to_json
-	end
 
 	private
 

@@ -38,7 +38,7 @@ class Lo < ActiveRecord::Base
 
 	def sgame_metadata
 		smetadata = Hash.new
-		smetadata["id"] = self.id
+		smetadata["id"] = self.id.to_s
 		smetadata["url"] = self.hreffull
 		smetadata["scorm_type"] = self.lo_type
 		smetadata["scorm_version"] = self.standard_version

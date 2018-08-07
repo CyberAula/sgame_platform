@@ -854,7 +854,7 @@ function Local_API_1484_11(options) {
   };
   return{init:init, loadSettings:loadSettings, triggerLO:triggerLO, showLO:showLO, showRandomLO:showRandomLO, closeLO:closeLO}
 }();
-SGAME.VERSION = "0.4";
+SGAME.VERSION = "0.5";
 SGAME.AUTHORS = "Aldo Gordillo, Enrique Barra";
 SGAME.URL = "https://github.com/ging/sgame_platform";
 SGAME.Debugger = function() {
@@ -906,15 +906,17 @@ SGAME.API = function() {
   return{init:init, requestLOMetadata:requestLOMetadata}
 }();
 SGAME.CORE = function() {
-  var _settings = {};
-  var _los = {};
-  var _all_mapped_los = [];
-  var _event_mapping = {};
+  var _options = {};
   var _togglePauseFunction = undefined;
+  var _settings = {};
+  var supportedRepeatLo = ["repeat", "repeat_unless_successfully_consumed", "no_repeat"];
+  var supportedCompletionNotification = ["no_more_los", "all_los_consumed", "all_los_succesfully_consumed", "never"];
+  var _final_screen_shown = false;
   SGAME.Debugger.init(true);
   var init = function(options) {
     SGAME.Debugger.log("SGAME init with options ");
     SGAME.Debugger.log(options);
+    _options = options;
     if(options) {
       if(typeof options.togglePause === "function") {
         _togglePauseFunction = options.togglePause
@@ -925,51 +927,75 @@ SGAME.CORE = function() {
     SGAME.Debugger.log("SGAME load settings ");
     SGAME.Debugger.log(settings);
     _settings = settings;
-    _los = {};
-    _all_mapped_los = [];
-    _event_mapping = {};
-    if(settings.lo_list) {
-      for(var i = 0;i < settings.lo_list.length;i++) {
-        if(typeof settings.lo_list[i].url !== "undefined") {
-          settings.lo_list[i].url = SGAME.Utils.checkUrlProtocol(settings.lo_list[i].url)
-        }
-        if(typeof settings.lo_list[i].id !== "undefined") {
-          _los[settings.lo_list[i].id] = settings.lo_list[i];
-          _all_mapped_los.push({"id":settings.lo_list[i].id, "marked":false})
-        }
+    if(typeof _settings["game_metadata"] === undefined) {
+      _settings["game_metadata"] = {}
+    }
+    if(typeof _settings["los"] === undefined) {
+      _settings["los"] = {}
+    }
+    if(typeof _settings["events"] === undefined) {
+      _settings["events"] = {}
+    }
+    if(typeof _settings["event_mapping"] === undefined) {
+      _settings["event_mapping"] = {}
+    }
+    if(typeof _settings["sequencing"] === undefined) {
+      _settings["sequencing"] = {};
+      if(supportedRepeatLo.indexOf(_settings["sequencing"]["repeat_lo"]) !== -1) {
+        _settings["sequencing"]["repeat_lo"] = "repeat"
       }
     }
-    if(settings.event_mapping) {
-      for(var i = 0;i < settings.event_mapping.length;i++) {
-        var eMapping = settings.event_mapping[i];
-        _event_mapping[eMapping.event_id] = {};
-        _event_mapping[eMapping.event_id].los = [];
-        for(var j = 0;j < eMapping.los_id.length;j++) {
-          _event_mapping[eMapping.event_id].los.push({id:eMapping.los_id[j], marked:false})
+    if(typeof _settings["game_settings"] === undefined) {
+      _settings["game_settings"] = {};
+      if(supportedCompletionNotification.indexOf(_settings["game_settings"]["completion_notification"]) !== -1) {
+        _settings["game_settings"]["completion_notification"] = "never"
+      }
+    }
+    if(typeof _settings["los"] === "object") {
+      var lo_ids = Object.keys(_settings["los"]);
+      var nLOs = lo_ids.length;
+      for(var i = 0;i < nLOs;i++) {
+        if(typeof _settings["los"][lo_ids[i]].url !== "undefined") {
+          _settings["los"][lo_ids[i]].url = SGAME.Utils.checkUrlProtocol(_settings["los"][lo_ids[i]].url)
         }
+        _settings["los"][lo_ids[i]]["can_be_shown"] = true;
+        _settings["los"][lo_ids[i]]["shown"] = false;
+        _settings["los"][lo_ids[i]]["nshown"] = 0;
+        _settings["los"][lo_ids[i]]["succesfully_consumed"] = false
       }
     }
   };
   var triggerLO = function(event_id, callback) {
+    var los_mapped = [];
     var los_candidate = [];
-    if(typeof _event_mapping[event_id] != "undefined") {
-      los_candidate = _event_mapping[event_id].los
-    }
-    if(los_candidate && (los_candidate instanceof Array && los_candidate.length > 0)) {
-      if(_containWildcard(los_candidate)) {
-        var rRobinResult = _roundRobinChoice(_all_mapped_los);
-        _all_mapped_los = rRobinResult.los
-      }else {
-        var rRobinResult = _roundRobinChoice(los_candidate);
-        _event_mapping[event_id].los = rRobinResult.los
-      }
-      if(typeof rRobinResult.lo != "undefined") {
-        showLO(_los[rRobinResult.lo.id], callback)
-      }else {
-        if(typeof callback == "function") {
-          callback(null, null)
+    var mapped_los_ids = _settings["event_mapping"][event_id];
+    var n_mapped_los_ids = mapped_los_ids.length;
+    if(typeof mapped_los_ids !== "undefined" && typeof n_mapped_los_ids === "number") {
+      for(var i = 0;i < n_mapped_los_ids;i++) {
+        if(mapped_los_ids[i] === "*") {
+          los_mapped = _getAllLoArray();
+          break
+        }
+        if(typeof _settings["los"][mapped_los_ids[i]] !== "undefined") {
+          los_mapped.push(_settings["los"][mapped_los_ids[i]])
         }
       }
+    }
+    var nLosMapped = los_mapped.length;
+    if(nLosMapped.length < 1) {
+      if(typeof callback == "function") {
+        callback(null, null)
+      }
+      return
+    }
+    for(var j = 0;j < nLosMapped;j++) {
+      if(los_mapped[j]["can_be_shown"] === true) {
+        los_candidate.push(los_mapped[j])
+      }
+    }
+    if(los_candidate && (los_candidate instanceof Array && los_candidate.length > 0)) {
+      selectedLO = _selectLoFromCandidates(los_candidate);
+      showLO(selectedLO, callback)
     }else {
       if(typeof callback == "function") {
         callback(null, null)
@@ -977,23 +1003,40 @@ SGAME.CORE = function() {
     }
   };
   var showLO = function(lo, callback) {
-    if(typeof lo != "object" || typeof lo["url"] != "string") {
+    if(typeof lo !== "object" || typeof lo["url"] !== "string") {
       if(typeof callback == "function") {
         callback(null, null)
       }
       return
     }
+    _settings["los"][lo["id"]]["shown"] = true;
+    _settings["los"][lo["id"]]["nshown"] += 1;
     _togglePause();
     SGAME.Fancybox.create({lo:lo}, function(report) {
-      if(typeof callback == "function") {
-        callback(report.success, report)
+      _settings["los"][lo["id"]]["succesfully_consumed"] = report.success;
+      switch(_settings["sequencing"]["repeat_lo"]) {
+        case "repeat":
+          break;
+        case "repeat_unless_successfully_consumed":
+          _settings["los"][lo["id"]]["can_be_shown"] = _settings["los"][lo["id"]]["succesfully_consumed"] !== true;
+          break;
+        case "no_repeat":
+          _settings["los"][lo["id"]]["can_be_shown"] = false;
+          break;
+        default:
+          break
       }
-      _togglePause()
+      _checkFinalScreen(function() {
+        if(typeof callback == "function") {
+          callback(report.success, report)
+        }
+        _togglePause()
+      })
     })
   };
   var showRandomLO = function(callback) {
-    SGAME.API.requestLOMetadata(undefined, function(metadata) {
-      showLO(metadata, callback)
+    SGAME.API.requestLOMetadata(undefined, function(lo_metadata) {
+      showLO(lo_metadata, callback)
     }, function() {
       if(typeof callback == "function") {
         callback(null, null)
@@ -1008,34 +1051,86 @@ SGAME.CORE = function() {
       _togglePauseFunction()
     }
   };
-  var _containWildcard = function(los_array) {
-    for(var i = 0;i < los_array.length;i++) {
-      if(los_array[i].id === "*") {
-        return true
+  var _checkFinalScreen = function(callback) {
+    if(_shouldShowFinalScreen() !== true) {
+      if(typeof callback === "function") {
+        callback(false)
       }
-    }
-    return false
-  };
-  var _roundRobinChoice = function(los) {
-    var selectedLO;
-    var candidate_los = [];
-    for(var i = 0;i < los.length;i++) {
-      if(los[i].marked === false) {
-        candidate_los.push(los[i])
-      }
-    }
-    if(candidate_los.length > 0) {
-      selectedLO = SGAME.Utils.getRandomElement(candidate_los)
     }else {
-      for(var i = 0;i < los.length;i++) {
-        los[i].marked = false
+      _showFinalScreen(callback)
+    }
+  };
+  var _shouldShowFinalScreen = function() {
+    if(_final_screen_shown === true) {
+      return false
+    }
+    switch(_settings["game_settings"]["completion_notification"]) {
+      case "no_more_los":
+        var lo_ids = Object.keys(_settings["los"]);
+        var nLOs = lo_ids.length;
+        for(var i = 0;i < nLOs;i++) {
+          if(_settings["los"][lo_ids[i]]["can_be_shown"] === true) {
+            return false
+          }
+        }
+        return true;
+      case "all_los_consumed":
+        var lo_ids = Object.keys(_settings["los"]);
+        var nLOs = lo_ids.length;
+        for(var i = 0;i < nLOs;i++) {
+          if(_settings["los"][lo_ids[i]]["shown"] === false) {
+            return false
+          }
+        }
+        return true;
+      case "all_los_succesfully_consumed":
+        var lo_ids = Object.keys(_settings["los"]);
+        var nLOs = lo_ids.length;
+        for(var i = 0;i < nLOs;i++) {
+          if(_settings["los"][lo_ids[i]]["succesfully_consumed"] === false) {
+            return false
+          }
+        }
+        return true;
+      case "never":
+        return false;
+      default:
+        return false
+    }
+  };
+  var _showFinalScreen = function(callback) {
+    _final_screen_shown = true;
+    alert("Final screen");
+    if(typeof callback === "function") {
+      callback(true)
+    }
+  };
+  var _selectLoFromCandidates = function(los_candidate) {
+    var filtered_candidates = [];
+    var nShownMin;
+    for(var i = 0;i < los_candidate.length;i++) {
+      if(typeof nShownMin === "undefined") {
+        nShownMin = los_candidate[i]["nshown"]
       }
-      selectedLO = SGAME.Utils.getRandomElement(los)
+      if(los_candidate[i]["nshown"] < nShownMin) {
+        nShownMin = los_candidate[i]["nshown"];
+        filtered_candidates = []
+      }
+      if(nShownMin === los_candidate[i]["nshown"]) {
+        filtered_candidates.push(los_candidate[i])
+      }
     }
-    if(typeof selectedLO != "undefined") {
-      los[los.indexOf(selectedLO)].marked = true
+    return SGAME.Utils.getRandomElement(filtered_candidates)
+  };
+  var _getAllLoArray = function() {
+    var all_los = [];
+    var all_lo_ids = Object.keys(_settings["los"]);
+    for(var i = 0;i < all_lo_ids.length;i++) {
+      if(typeof _settings["los"][all_lo_ids[i]] !== "undefined") {
+        all_los.push(_settings["los"][all_lo_ids[i]])
+      }
     }
-    return{lo:selectedLO, los:los}
+    return all_los
   };
   return{init:init, loadSettings:loadSettings, triggerLO:triggerLO, showLO:showLO, showRandomLO:showRandomLO, closeLO:closeLO}
 }();
@@ -1157,10 +1252,12 @@ SGAME.Fancybox = function(undefined) {
   var closeCurrentFancybox = function() {
     _removeCurrentFancybox();
     var report = SGAME.Observer.stop();
-    if(typeof _currentOnCloseCallback === "function") {
-      _currentOnCloseCallback(report)
-    }
-    _currentOnCloseCallback = undefined
+    setTimeout(function() {
+      if(typeof _currentOnCloseCallback === "function") {
+        _currentOnCloseCallback(report)
+      }
+      _currentOnCloseCallback = undefined
+    }, 50)
   };
   return{init:init, create:create, closeCurrentFancybox:closeCurrentFancybox}
 }();

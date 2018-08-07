@@ -107,7 +107,7 @@ class Presentation < ActiveRecord::Base
     schemaDirs.push("#{Rails.root}/public/schemas/SCORM_" + version)
     #LOM schema
     # schemaDirs.push("#{Rails.root}/public/schemas/lom")
-    schemaFiles.push("#{Rails.root}/public/schemas/lom/lom.xsd");
+    schemaFiles.push("#{Rails.root}/public/schemas/lom/lom.xsd")
     
     schemaDirs.each do |dir|
       Utils.zip_folder(t.path,dir)

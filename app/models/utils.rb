@@ -25,14 +25,14 @@ class Utils
     protocolMatch = url.scan(/^https?:\/\//)
     return url if protocolMatch.blank?
 
-    urlProtocol = protocolMatch[0].sub(":\/\/","");
-    clientProtocol = clientProtocol.sub(":\/\/","");
+    urlProtocol = protocolMatch[0].sub(":\/\/","")
+    clientProtocol = clientProtocol.sub(":\/\/","")
 
     if (urlProtocol != clientProtocol)
       case(clientProtocol)
         when "https"
           #Try to load HTTP url over HTTPs
-          url = "https" + url.sub(urlProtocol,""); #replace first
+          url = "https" + url.sub(urlProtocol,"") #replace first
         when "http"
           #Try to load HTTPs url over HTTP. Do nothing.
         else
