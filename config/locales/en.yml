@@ -33,7 +33,7 @@ en:
       specific_update: "The game could not be updated because the following error occurred: '#{errorMsg}'"
       title_missing: "You should specify a title for the game."
     event_type:
-      "block": "Blocking"
+      "blocking": "Blocking"
       "extra_life": "Extra life"
       "new_item": "New item"
     event_frequency:
@@ -59,7 +59,7 @@ en:
       scorm_version: "SCORM version"
     step1:
       title: "Choose a game template"
-      description: "First, you have to select a game template into which the learning objects will be integrated in order to create the educational game. A game template is an entertainment game that has included the SGAME API in order to show learning objects to the players when certain events are triggered. Game templates define the specific events whose triggering will cause a learning object to be shown as well as the rewards that players will receive when they succesfully complete one of these learning objects. After chossing a game template, you should click on the 'Select game template' button to advance to the next step."
+      description: "First, you have to select a game template into which the learning objects will be integrated in order to create the educational game. A game template is an entertainment game that has included the SGAME API in order to show learning objects to the players when certain events are triggered. Game templates define the specific events whose triggering will cause a learning object to be shown as well as the rewards that players will receive when they successfully complete one of these learning objects. After chossing a game template, you should click on the 'Select game template' button to advance to the next step."
       confirmation: "Select game template"
     step2:
       title: "Choose learning objects to integrate into the game"
@@ -89,8 +89,13 @@ en:
         title: "Notify the player that the educational objectives of the game have been achieved:"
         choice1: "When the game cannot show more learning objects."
         choice2: "When the game has shown all learning objects."
-        choice3: "When the player has succesfully consumed all learning objects."
+        choice3: "When the player has successfully consumed all learning objects."
         choice4: "Never."
+      opt2:
+        title: "When a game event that should show a learning object is triggered but no more learning objects can be shown:"
+        choice1: "The game should act as if the player had successfully consumed the learning object."
+        choice2: "The game should act as if the player had not consumed the learning object successfully."
+        choice3: "The game should act as if the player had not consumed the learning object successfully unless if the event is of type blocking."
     step6:
       title: "Specify metadata for the game"
       description: "In this step you should specify metadata (title, description, ...) for the educational game."
@@ -161,8 +166,8 @@ en:
     new: "Upload file"
     messages:
       success:
-        create: "File has been succesfully uploaded"
-        update: "File has been succesfully updated"
+        create: "File has been successfully uploaded"
+        update: "File has been successfully updated"
       error:
         generic_update: "File couldn't be updated"
     tabtitle: "Files"
@@ -177,16 +182,16 @@ en:
   games:
     messages:
       success:
-        create: "Game has been succesfully created"
-        update: "Game has been succesfully updated"
+        create: "Game has been successfully created"
+        update: "Game has been successfully updated"
     new: "Create game"
     tabtitle: "Games"
     update: "Update game"
   game_templates:
     messages:
       success:
-        create: "Game template has been succesfully uploaded"
-        update: "Game template has been succesfully updated"
+        create: "Game template has been successfully uploaded"
+        update: "Game template has been successfully updated"
     new: "Upload game template"
     tabtitle: "Game Templates"
     update: "Update game template"

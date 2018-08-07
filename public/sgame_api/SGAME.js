@@ -911,6 +911,7 @@ SGAME.CORE = function() {
   var _settings = {};
   var supportedRepeatLo = ["repeat", "repeat_unless_successfully_consumed", "no_repeat"];
   var supportedCompletionNotification = ["no_more_los", "all_los_consumed", "all_los_succesfully_consumed", "never"];
+  var supportedBehaviourWhenNoMoreLOs = ["success", "failure", "failure_unless_blocking"];
   var _final_screen_shown = false;
   SGAME.Debugger.init(true);
   var init = function(options) {
@@ -950,6 +951,9 @@ SGAME.CORE = function() {
       if(supportedCompletionNotification.indexOf(_settings["game_settings"]["completion_notification"]) !== -1) {
         _settings["game_settings"]["completion_notification"] = "never"
       }
+      if(supportedBehaviourWhenNoMoreLOs.indexOf(_settings["game_settings"]["behaviour_when_no_more_los"]) !== -1) {
+        _settings["game_settings"]["behaviour_when_no_more_los"] = "failure_unless_blocking"
+      }
     }
     if(typeof _settings["los"] === "object") {
       var lo_ids = Object.keys(_settings["los"]);
@@ -984,7 +988,8 @@ SGAME.CORE = function() {
     var nLosMapped = los_mapped.length;
     if(nLosMapped.length < 1) {
       if(typeof callback == "function") {
-        callback(null, null)
+        var report = _getReportWhenNoLOs(event_id);
+        callback(report.success, report)
       }
       return
     }
@@ -998,7 +1003,8 @@ SGAME.CORE = function() {
       showLO(selectedLO, callback)
     }else {
       if(typeof callback == "function") {
-        callback(null, null)
+        var report = _getReportWhenNoLOs(event_id);
+        callback(report.success, report)
       }
     }
   };
@@ -1131,6 +1137,26 @@ SGAME.CORE = function() {
       }
     }
     return all_los
+  };
+  var _getReportWhenNoLOs = function(event_id) {
+    return{lo_metadata:undefined, time:undefined, scorm_success_status:undefined, scorm_scaled_score:undefined, scorm_completion_status:undefined, scorm_progress_measure:undefined, success:_getSuccessWhenNoLOs(event_id)}
+  };
+  var _getSuccessWhenNoLOs = function(event_id) {
+    switch(_settings["game_settings"]["behaviour_when_no_more_los"]) {
+      case "success":
+        return true;
+      case "failure":
+        return false;
+      case "failure_unless_blocking":
+        var event = _settings["events"][event_id];
+        if(typeof event === "undefined" || event.type !== "blocking") {
+          return false
+        }
+        return true;
+      default:
+        return false;
+        break
+    }
   };
   return{init:init, loadSettings:loadSettings, triggerLO:triggerLO, showLO:showLO, showRandomLO:showRandomLO, closeLO:closeLO}
 }();

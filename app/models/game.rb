@@ -118,6 +118,7 @@ class Game < ActiveRecord::Base
 		
 		editor_data["current_settings"] = {}
 		editor_data["current_settings"]["completion_notification"] = "never"
+		editor_data["current_settings"]["behaviour_when_no_more_los"] = "failure_unless_blocking"
 
 		editor_data["metadata"] = {}
 		editor_data["metadata"]["id"] = self.id

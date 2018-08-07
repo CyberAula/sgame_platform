@@ -3,7 +3,7 @@
 		"id": 1,
 		"title": "Powergem",
 		"description": "Event triggered when the player tries to grab a powergem",
-		"type": "block",
+		"type": "blocking",
 		"frequency": "medium"
 	}
 ]

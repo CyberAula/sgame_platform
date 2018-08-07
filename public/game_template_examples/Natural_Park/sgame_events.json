@@ -3,7 +3,7 @@
 		"id": 1,
 		"title": "Gardener Event",
 		"description": "Event triggered when the player talks to the gardener",
-		"type": "block",
+		"type": "blocking",
 		"frequency": "one-shot"
 	}
 ]

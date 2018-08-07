@@ -12,7 +12,7 @@ SGAME_AT = (function($,undefined){
 	var stepsLoaded = [];
 	var editMode = false;
 	var supportedLanguages = ["en","es"];
-	var supportedEventTypes = ["new_item","extra_life","block"];
+	var supportedEventTypes = ["new_item","extra_life","blocking"];
 	var supportedEventFrequencies = ["high","medium","low","one-shot","skill-dependent","skill-dependent_high","skill-dependent_medium","skill-dependent_low"];
 
 	//Application state (Editor data in the SGAME platform)
@@ -253,6 +253,10 @@ SGAME_AT = (function($,undefined){
 				//Setting option 1: completion_notification
 				if(typeof current_settings["completion_notification"] !== "undefined"){
 					$("#sgame_at div[step='5'] div.options_wrapper input[name='set_opt1'][value='" + current_settings["completion_notification"] + "']").attr('checked',true);
+				}
+				//Setting option 2: behaviour when no more learning objects can be shown
+				if(typeof current_settings["behaviour_when_no_more_los"] !== "undefined"){
+					$("#sgame_at div[step='5'] div.options_wrapper input[name='set_opt2'][value='" + current_settings["behaviour_when_no_more_los"] + "']").attr('checked',true);
 				}
 				$("#step5_confirmation").on("click",function(){
 					_onStep5Confirmation();
@@ -736,6 +740,9 @@ SGAME_AT = (function($,undefined){
 	var _onStep5Confirmation = function(){
 		//Settings option 1: completion_notification
 		current_settings["completion_notification"] = $("#sgame_at div[step='5'] div.options_wrapper input[name='set_opt1']:checked").val();
+		//Setting option 2: behaviour when no more learning objects can be shown
+		current_settings["behaviour_when_no_more_los"] = $("#sgame_at div[step='5'] div.options_wrapper input[name='set_opt2']:checked").val();
+
 		_finishStep("5");
 	};
 

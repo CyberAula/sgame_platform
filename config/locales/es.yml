@@ -33,7 +33,7 @@ es:
       specific_update: "El juego no pudo ser actualizado porque ocurrió el siguiente error: '#{errorMsg}'"
       title_missing: "Debes especificar un título para el juego"
     event_type:
-      "block": "Bloqueante"
+      "blocking": "Bloqueante"
       "extra_life": "Vida extra"
       "new_item": "Nuevo objeto"
     event_frequency:
@@ -91,6 +91,11 @@ es:
         choice2: "Cuando el juego haya mostrado todos los objetos de aprendizaje."
         choice3: "Cuando el jugador haya consumido con éxito todos los objetos de aprendizaje."
         choice4: "Nunca."
+      opt2:
+        title: "Cuando se desencadene un evento de juego que deba mostrar un objeto de aprendizaje pero no se puedan mostrar más objetos de aprendizaje:"
+        choice1: "El juego deberá actuar como si el jugador hubiera consumido con éxito el objeto de aprendizaje."
+        choice2: "El juego deberá actuar como si el jugador no hubiera consumido con éxito el objeto de aprendizaje."
+        choice3: "El juego deberá actuar como si el jugador no hubiera consumido con éxito el objeto de aprendizaje a menos que el evento sea de tipo bloqueante."
     step6:
       title: "Especifica metadatos para el juego"
       description: "En este paso debes especificar metadatos (título, descripción, ...) para el juego educativo."
