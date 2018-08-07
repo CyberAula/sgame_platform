@@ -148,7 +148,7 @@ class Game < ActiveRecord::Base
 	# Methods used by the SGAME API
 	#
 
-	def settings
+	def settings(current_user=nil)
 		settings = Hash.new
 
 		editor_data = JSON.parse(self.editor_data) rescue {}
@@ -180,6 +180,7 @@ class Game < ActiveRecord::Base
 
 		#Game settings
 		settings["game_settings"] = editor_data["settings"].blank? ? {} : editor_data["settings"]
+		settings["game_settings"]["completion_notification_text"] = I18n.t("at.msgs.educational_objectives_achieved", :locale => (current_user.nil? ? I18n.locale : (Utils.valid_locale?(current_user.ui_language) ? current_user.ui_language : :en)))
 
 		return settings
 	end

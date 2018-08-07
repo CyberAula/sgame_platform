@@ -53,6 +53,7 @@ en:
       type: "Type"
     msgs:
       click_to_preview: "Click to preview"
+      educational_objectives_achieved: "Congratulations. You have achieved the objectives of this educational game. You may close this window or continue playing."
       gt_change_confirmation: "If you select a new game template, the defined event mapping will be reset to default. Are you sure you want to select a new game template?"
       nresources: "Number of learning objects"
       no_selected_los: "You have not selected any learning object yet"

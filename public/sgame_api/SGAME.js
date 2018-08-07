@@ -912,7 +912,9 @@ SGAME.CORE = function() {
   var supportedRepeatLo = ["repeat", "repeat_unless_successfully_consumed", "no_repeat"];
   var supportedCompletionNotification = ["no_more_los", "all_los_consumed", "all_los_succesfully_consumed", "never"];
   var supportedBehaviourWhenNoMoreLOs = ["success", "failure", "failure_unless_blocking"];
+  var _los_can_be_shown = false;
   var _final_screen_shown = false;
+  var _final_screen_text = "Congratulations. You have achieved the objectives of this educational game. You may close this window or continue playing.";
   SGAME.Debugger.init(true);
   var init = function(options) {
     SGAME.Debugger.log("SGAME init with options ");
@@ -928,32 +930,35 @@ SGAME.CORE = function() {
     SGAME.Debugger.log("SGAME load settings ");
     SGAME.Debugger.log(settings);
     _settings = settings;
-    if(typeof _settings["game_metadata"] === undefined) {
+    if(typeof _settings["game_metadata"] === "undefined") {
       _settings["game_metadata"] = {}
     }
-    if(typeof _settings["los"] === undefined) {
+    if(typeof _settings["los"] === "undefined") {
       _settings["los"] = {}
     }
-    if(typeof _settings["events"] === undefined) {
+    if(typeof _settings["events"] === "undefined") {
       _settings["events"] = {}
     }
-    if(typeof _settings["event_mapping"] === undefined) {
+    if(typeof _settings["event_mapping"] === "undefined") {
       _settings["event_mapping"] = {}
     }
-    if(typeof _settings["sequencing"] === undefined) {
-      _settings["sequencing"] = {};
-      if(supportedRepeatLo.indexOf(_settings["sequencing"]["repeat_lo"]) !== -1) {
-        _settings["sequencing"]["repeat_lo"] = "repeat"
-      }
+    if(typeof _settings["sequencing"] === "undefined") {
+      _settings["sequencing"] = {}
     }
-    if(typeof _settings["game_settings"] === undefined) {
-      _settings["game_settings"] = {};
-      if(supportedCompletionNotification.indexOf(_settings["game_settings"]["completion_notification"]) !== -1) {
-        _settings["game_settings"]["completion_notification"] = "never"
-      }
-      if(supportedBehaviourWhenNoMoreLOs.indexOf(_settings["game_settings"]["behaviour_when_no_more_los"]) !== -1) {
-        _settings["game_settings"]["behaviour_when_no_more_los"] = "failure_unless_blocking"
-      }
+    if(supportedRepeatLo.indexOf(_settings["sequencing"]["repeat_lo"]) === -1) {
+      _settings["sequencing"]["repeat_lo"] = "repeat"
+    }
+    if(typeof _settings["game_settings"] === "undefined") {
+      _settings["game_settings"] = {}
+    }
+    if(supportedCompletionNotification.indexOf(_settings["game_settings"]["completion_notification"]) === -1) {
+      _settings["game_settings"]["completion_notification"] = "never"
+    }
+    if(supportedBehaviourWhenNoMoreLOs.indexOf(_settings["game_settings"]["behaviour_when_no_more_los"]) === -1) {
+      _settings["game_settings"]["behaviour_when_no_more_los"] = "failure_unless_blocking"
+    }
+    if(typeof _settings["game_settings"]["completion_notification_text"] === "string") {
+      _final_screen_text = _settings["game_settings"]["completion_notification_text"]
     }
     if(typeof _settings["los"] === "object") {
       var lo_ids = Object.keys(_settings["los"]);
@@ -965,7 +970,8 @@ SGAME.CORE = function() {
         _settings["los"][lo_ids[i]]["can_be_shown"] = true;
         _settings["los"][lo_ids[i]]["shown"] = false;
         _settings["los"][lo_ids[i]]["nshown"] = 0;
-        _settings["los"][lo_ids[i]]["succesfully_consumed"] = false
+        _settings["los"][lo_ids[i]]["succesfully_consumed"] = false;
+        _los_can_be_shown = true
       }
     }
   };
@@ -1015,9 +1021,9 @@ SGAME.CORE = function() {
       }
       return
     }
+    _togglePause();
     _settings["los"][lo["id"]]["shown"] = true;
     _settings["los"][lo["id"]]["nshown"] += 1;
-    _togglePause();
     SGAME.Fancybox.create({lo:lo}, function(report) {
       _settings["los"][lo["id"]]["succesfully_consumed"] = report.success;
       switch(_settings["sequencing"]["repeat_lo"]) {
@@ -1032,6 +1038,8 @@ SGAME.CORE = function() {
         default:
           break
       }
+      _checkLOsToShow();
+      report["more_los"] = _los_can_be_shown;
       _checkFinalScreen(function() {
         if(typeof callback == "function") {
           callback(report.success, report)
@@ -1057,6 +1065,17 @@ SGAME.CORE = function() {
       _togglePauseFunction()
     }
   };
+  var _checkLOsToShow = function() {
+    var lo_ids = Object.keys(_settings["los"]);
+    var nLOs = lo_ids.length;
+    for(var i = 0;i < nLOs;i++) {
+      if(_settings["los"][lo_ids[i]]["can_be_shown"] === true) {
+        _los_can_be_shown = true;
+        return
+      }
+    }
+    _los_can_be_shown = false
+  };
   var _checkFinalScreen = function(callback) {
     if(_shouldShowFinalScreen() !== true) {
       if(typeof callback === "function") {
@@ -1072,14 +1091,7 @@ SGAME.CORE = function() {
     }
     switch(_settings["game_settings"]["completion_notification"]) {
       case "no_more_los":
-        var lo_ids = Object.keys(_settings["los"]);
-        var nLOs = lo_ids.length;
-        for(var i = 0;i < nLOs;i++) {
-          if(_settings["los"][lo_ids[i]]["can_be_shown"] === true) {
-            return false
-          }
-        }
-        return true;
+        return _los_can_be_shown === false;
       case "all_los_consumed":
         var lo_ids = Object.keys(_settings["los"]);
         var nLOs = lo_ids.length;
@@ -1106,10 +1118,11 @@ SGAME.CORE = function() {
   };
   var _showFinalScreen = function(callback) {
     _final_screen_shown = true;
-    alert("Final screen");
-    if(typeof callback === "function") {
-      callback(true)
-    }
+    SGAME.Fancybox.create({dialog:true, msg:_final_screen_text}, function() {
+      if(typeof callback === "function") {
+        callback(true)
+      }
+    })
   };
   var _selectLoFromCandidates = function(los_candidate) {
     var filtered_candidates = [];
@@ -1139,7 +1152,7 @@ SGAME.CORE = function() {
     return all_los
   };
   var _getReportWhenNoLOs = function(event_id) {
-    return{lo_metadata:undefined, time:undefined, scorm_success_status:undefined, scorm_scaled_score:undefined, scorm_completion_status:undefined, scorm_progress_measure:undefined, success:_getSuccessWhenNoLOs(event_id)}
+    return{lo_metadata:undefined, time:undefined, scorm_success_status:undefined, scorm_scaled_score:undefined, scorm_completion_status:undefined, scorm_progress_measure:undefined, success:_getSuccessWhenNoLOs(event_id), more_los:_los_can_be_shown}
   };
   var _getSuccessWhenNoLOs = function(event_id) {
     switch(_settings["game_settings"]["behaviour_when_no_more_los"]) {
@@ -1164,16 +1177,22 @@ var API;
 var API_1484_11;
 SGAME.Fancybox = function(undefined) {
   var _currentFancybox = undefined;
+  var _currentFancyboxMode = undefined;
   var _currentOnCloseCallback = undefined;
   var init = function() {
   };
   var create = function(options, onCloseCallback) {
     _removeCurrentFancybox();
     _currentOnCloseCallback = onCloseCallback;
+    var mode = typeof options !== "undefined" && options.dialog === true ? "dialog" : "lo";
     var width = 850;
     var height = 650;
-    var lo = {};
-    var url;
+    if(mode === "lo") {
+      var lo = {};
+      var url
+    }else {
+      var dialogMsg = ""
+    }
     if(options) {
       if(options.width) {
         width = options.width
@@ -1181,31 +1200,39 @@ SGAME.Fancybox = function(undefined) {
       if(options.height) {
         height = options.height
       }
-      if(options.lo) {
-        lo = options.lo
-      }
-      if(typeof lo["url"] == "string") {
-        url = lo["url"]
+      if(mode === "lo") {
+        if(options.lo) {
+          lo = options.lo;
+          if(typeof lo["url"] === "string") {
+            url = lo["url"]
+          }
+        }
+      }else {
+        if(typeof options.msg == "string") {
+          dialogMsg = options.msg
+        }
       }
     }
     var maxHeight = window.innerHeight - 8;
     var maxWidth = window.innerWidth - 8;
     height = Math.min(height, maxHeight);
     width = Math.min(width, maxWidth);
-    if(typeof url != "string" || typeof lo.scorm_type == "undefined") {
-      return
-    }
-    var SCORM_API = undefined;
-    API = undefined;
-    API_1484_11 = undefined;
-    if(lo.scorm_type === "sco") {
-      if(lo.scorm_version === "1.2") {
-        API = new Local_API_SCORM_12({debug:SGAME.Debugger.isDebugging()});
-        SCORM_API = API
-      }else {
-        if(lo.scorm_version === "2004") {
-          API_1484_11 = new Local_API_1484_11({debug:SGAME.Debugger.isDebugging()});
-          SCORM_API = API_1484_11
+    if(mode === "lo") {
+      if(typeof url != "string" || typeof lo.scorm_type == "undefined") {
+        return
+      }
+      var SCORM_API = undefined;
+      API = undefined;
+      API_1484_11 = undefined;
+      if(lo.scorm_type === "sco") {
+        if(lo.scorm_version === "1.2") {
+          API = new Local_API_SCORM_12({debug:SGAME.Debugger.isDebugging()});
+          SCORM_API = API
+        }else {
+          if(lo.scorm_version === "2004") {
+            API_1484_11 = new Local_API_1484_11({debug:SGAME.Debugger.isDebugging()});
+            SCORM_API = API_1484_11
+          }
         }
       }
     }
@@ -1214,7 +1241,7 @@ SGAME.Fancybox = function(undefined) {
     fancybox.style.height = height + "px";
     fancybox.style.maxWidth = maxWidth + "px";
     fancybox.style.maxHeight = maxHeight + "px";
-    fancybox.style.overflow = "hidden";
+    fancybox.style.overflow = mode === "log" ? "hidden" : "auto";
     fancybox.style.background = "white";
     fancybox.style.position = "absolute";
     fancybox.style.top = 0;
@@ -1238,32 +1265,53 @@ SGAME.Fancybox = function(undefined) {
       closeCurrentFancybox()
     };
     fancybox.appendChild(closeButton);
-    var trafficLight = document.createElement("img");
-    trafficLight.id = "trafficLight";
-    trafficLight.src = "/assets/sgame/trafficLight/trafficLight_red.png";
-    trafficLight.style.width = "45px";
-    trafficLight.style.height = "40px";
-    trafficLight.style.padding = "5px";
-    trafficLight.style.position = "absolute";
-    trafficLight.style.left = "0px";
-    trafficLight.style.top = "0px";
-    fancybox.appendChild(trafficLight);
-    var iframe = document.createElement("iframe");
-    iframe.src = url;
-    iframe.style.width = "94%";
-    iframe.style.height = "94%";
-    iframe.style.marginLeft = "3%";
-    iframe.style.marginTop = "3%";
-    iframe.style.overflow = "hidden";
-    iframe.style.overflowY = "auto";
-    iframe.scrolling = "yes";
-    iframe.style.frameBorder = "0";
-    iframe.style.borderStyle = "none";
-    iframe.setAttribute("allowfullscreen", "false");
-    fancybox.appendChild(iframe);
+    if(mode === "lo") {
+      var trafficLight = document.createElement("img");
+      trafficLight.id = "trafficLight";
+      trafficLight.src = "/assets/sgame/trafficLight/trafficLight_red.png";
+      trafficLight.style.width = "45px";
+      trafficLight.style.height = "40px";
+      trafficLight.style.padding = "5px";
+      trafficLight.style.position = "absolute";
+      trafficLight.style.left = "0px";
+      trafficLight.style.top = "0px";
+      fancybox.appendChild(trafficLight);
+      var iframe = document.createElement("iframe");
+      iframe.src = url;
+      iframe.style.width = "94%";
+      iframe.style.height = "94%";
+      iframe.style.marginLeft = "3%";
+      iframe.style.marginTop = "3%";
+      iframe.style.overflow = "hidden";
+      iframe.style.overflowY = "auto";
+      iframe.scrolling = "yes";
+      iframe.style.frameBorder = "0";
+      iframe.style.borderStyle = "none";
+      iframe.setAttribute("allowfullscreen", "false");
+      fancybox.appendChild(iframe)
+    }else {
+      var dialog = document.createElement("p");
+      dialog.id = "dialog";
+      dialog.innerHTML = dialogMsg;
+      dialog.style.padding = "15px";
+      dialog.style.marginTop = "30px";
+      dialog.style.marginBottom = "20px";
+      dialog.style.marginRight = "20px";
+      dialog.style.marginLeft = "20px";
+      dialog.style.textAlign = "center";
+      dialog.style.fontSize = "24px";
+      dialog.style.position = "relative";
+      dialog.style.cursor = "default";
+      dialog.style.color = "#000";
+      dialog.style.fontFamily = "initial";
+      fancybox.appendChild(dialog)
+    }
     _currentFancybox = fancybox;
+    _currentFancyboxMode = mode;
     document.body.appendChild(fancybox);
-    SGAME.Observer.start(iframe, lo, SCORM_API)
+    if(mode === "lo") {
+      SGAME.Observer.start(iframe, lo, SCORM_API)
+    }
   };
   var _removeCurrentFancybox = function() {
     if(typeof _currentFancybox == "undefined") {
@@ -1271,18 +1319,31 @@ SGAME.Fancybox = function(undefined) {
     }
     _currentFancybox.style.display = "none";
     _currentFancybox.parentNode.removeChild(_currentFancybox);
+    if(_currentFancyboxMode === "lo") {
+      API = undefined;
+      API_1484_11 = undefined
+    }
     _currentFancybox = undefined;
-    API = undefined;
-    API_1484_11 = undefined
+    _currentFancyboxMode = undefined
   };
   var closeCurrentFancybox = function() {
+    if(typeof _currentFancybox == "undefined") {
+      return
+    }
+    var closedFancyboxMode = _currentFancyboxMode;
     _removeCurrentFancybox();
-    var report = SGAME.Observer.stop();
+    var callbackResult;
+    if(closedFancyboxMode === "lo") {
+      callbackResult = SGAME.Observer.stop()
+    }else {
+      callbackResult = true
+    }
+    var currentOnCloseCallback = _currentOnCloseCallback;
+    _currentOnCloseCallback = undefined;
     setTimeout(function() {
-      if(typeof _currentOnCloseCallback === "function") {
-        _currentOnCloseCallback(report)
+      if(typeof currentOnCloseCallback === "function") {
+        currentOnCloseCallback(callbackResult)
       }
-      _currentOnCloseCallback = undefined
     }, 50)
   };
   return{init:init, create:create, closeCurrentFancybox:closeCurrentFancybox}

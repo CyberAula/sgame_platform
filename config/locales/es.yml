@@ -53,6 +53,7 @@ es:
       type: "Tipo"
     msgs:
       click_to_preview: "Haz clic para previsualizar"
+      educational_objectives_achieved: "Enhorabuena. Has logrado los objetivos de este juego educativo. Puedes cerrar esta ventana o seguir jugando."
       gt_change_confirmation: "Si seleccionas una nueva plantilla de juego, el mapeo de eventos definido se resetará. ¿Estás seguro de que quieres seleccionar una nueva plantilla de juego?"
       nresources: "Número de objetos de aprendizaje"
       no_selected_los: "No has seleccionado ningún objeto de aprendizaje todavía"

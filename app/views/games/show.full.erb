@@ -1,5 +1,5 @@
 <script>
-	var settings = JSON.parse('<%=@game.settings.to_json.html_safe%>');
+	var settings = JSON.parse('<%=@game.settings(user_signed_in? ? current_user : nil).to_json.html_safe%>');
 	$(document).ready(function(){
 		$("#game").load(function(){
 			try {
