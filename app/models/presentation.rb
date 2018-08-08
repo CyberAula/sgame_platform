@@ -137,15 +137,15 @@ class Presentation < ActiveRecord::Base
     t.close
   end
 
-  def self.generate_scorm_manifest(version,ejson,presentation,options={})
+  def self.generate_scorm_manifest(version,pjson,presentation,options={})
     version = "2004" unless version.is_a? String and ["12","2004"].include?(version)
 
     #Get manifest resource identifier and LOM identifier
     if presentation and !presentation.id.nil?
       identifier = presentation.id.to_s
       lomIdentifier = Rails.application.routes.url_helpers.presentation_url(:id => presentation.id)
-    elsif (ejson["vishMetadata"] and ejson["vishMetadata"]["id"])
-      identifier = ejson["vishMetadata"]["id"].to_s
+    elsif (pjson["vishMetadata"] and pjson["vishMetadata"]["id"])
+      identifier = pjson["vishMetadata"]["id"].to_s
       lomIdentifier = "urn:SGAME:" + identifier
     else    
       identifier = "TmpSCORM_" + Time.now.to_i.to_s
@@ -195,13 +195,13 @@ class Presentation < ActiveRecord::Base
         myxml.schema("ADL SCORM")
         myxml.schemaversion(manifestContent["schemaVersion"])
         #Add LOM metadata
-        Presentation.generate_LOM_metadata(ejson,presentation,{:target => myxml, :id => lomIdentifier, :LOMschema => (options[:LOMschema]) ? options[:LOMschema] : "custom", :scormVersion => version})
+        Presentation.generate_LOM_metadata(pjson,presentation,{:target => myxml, :id => lomIdentifier, :LOMschema => (options[:LOMschema]) ? options[:LOMschema] : "custom", :scormVersion => version})
       end
 
       myxml.organizations('default'=>"defaultOrganization") do
         myxml.organization('identifier'=>"defaultOrganization") do
-          if ejson["title"]
-            myxml.title(ejson["title"])
+          if pjson["title"]
+            myxml.title(pjson["title"])
           else
             myxml.title("Untitled")
           end
@@ -213,8 +213,8 @@ class Presentation < ActiveRecord::Base
             itemOptions["isvisible"] = "true"
           end
           myxml.item(itemOptions) do
-            if ejson["title"]
-              myxml.title(ejson["title"])
+            if pjson["title"]
+              myxml.title(pjson["title"])
             else
               myxml.title("Untitled")
             end
@@ -246,7 +246,7 @@ class Presentation < ActiveRecord::Base
 
     end    
 
-    return myxml
+    myxml
   end
 
 
@@ -256,8 +256,7 @@ class Presentation < ActiveRecord::Base
   ####################
 
   # Metadata based on LOM (Learning Object Metadata) standard
-  # LOM final draft: http://ltsc.ieee.org/wg12/files/LOM_1484_12_1_v1_Final_Draft.pdf
-  def self.generate_LOM_metadata(ejson, presentation, options={})
+  def self.generate_LOM_metadata(pjson, presentation, options={})
     _LOMschema = "custom"
 
     supportedLOMSchemas = ["custom","loose","SGAME"]
@@ -318,8 +317,8 @@ class Presentation < ActiveRecord::Base
       presentationInstance = nil
       if presentation
         presentationInstance = presentation
-      elsif ejson["vishMetadata"] and ejson["vishMetadata"]["id"]
-        presentationInstance = Presentation.find_by_id(ejson["vishMetadata"]["id"])
+      elsif pjson["vishMetadata"] and pjson["vishMetadata"]["id"]
+        presentationInstance = Presentation.find_by_id(pjson["vishMetadata"]["id"])
         presentationInstance = nil unless presentationInstance.public?
       end
 
@@ -330,7 +329,7 @@ class Presentation < ActiveRecord::Base
       end
 
       #Language (LO language and metadata language)
-      loLanguage = Lom.getLoLanguage(ejson["language"], _LOMschema)
+      loLanguage = Lom.getLoLanguage(pjson["language"], _LOMschema)
       if loLanguage.nil?
         loLanOpts = {}
       else
@@ -340,8 +339,8 @@ class Presentation < ActiveRecord::Base
 
       #Author name
       authorName = nil
-      if ejson["author"] and ejson["author"]["name"]
-        authorName = ejson["author"]["name"]
+      if pjson["author"] and pjson["author"]["name"]
+        authorName = pjson["author"]["name"]
       elsif (!presentation.nil? and !presentation.owner.nil? and !presentation.owner.name.nil?)
         authorName = presentation.owner.name
       end
@@ -357,8 +356,8 @@ class Presentation < ActiveRecord::Base
 
       #VE version
       atVersion = ""
-      if ejson["VEVersion"]
-        atVersion = "v." + ejson["VEVersion"] + " "
+      if pjson["VEVersion"]
+        atVersion = "v." + pjson["VEVersion"] + " "
       end
       atVersion = atVersion + "(http://github.com/ging/vish_editor)"
 
@@ -379,8 +378,8 @@ class Presentation < ActiveRecord::Base
         end
 
         myxml.title do
-          if ejson["title"]
-            myxml.string(ejson["title"], loLanOpts)
+          if pjson["title"]
+            myxml.string(pjson["title"], loLanOpts)
           else
             myxml.string("Untitled", :language=> metadataLanguage)
           end
@@ -391,32 +390,32 @@ class Presentation < ActiveRecord::Base
         end
         
         myxml.description do
-          if ejson["description"]
-            myxml.string(ejson["description"], loLanOpts)
-          elsif ejson["title"]
-            myxml.string(ejson["title"] + ". Web Presentation provided by " + SgamePlatform::Application.config.full_domain + ".", :language=> metadataLanguage)
+          if pjson["description"]
+            myxml.string(pjson["description"], loLanOpts)
+          elsif pjson["title"]
+            myxml.string(pjson["title"] + ". Web Presentation provided by " + SgamePlatform::Application.config.full_domain + ".", :language=> metadataLanguage)
           else
             myxml.string("Web Presentation provided by " + SgamePlatform::Application.config.full_domain + ".", :language=> metadataLanguage)
           end
         end
-        if ejson["tags"] && ejson["tags"].kind_of?(Array)
-          ejson["tags"].each do |tag|
+        if pjson["tags"] && pjson["tags"].kind_of?(Array)
+          pjson["tags"].each do |tag|
             myxml.keyword do
               myxml.string(tag.to_s, loLanOpts)
             end
           end
         end
         #Add subjects as additional keywords
-        if ejson["subject"]
-          if ejson["subject"].kind_of?(Array)
-            ejson["subject"].each do |subject|
+        if pjson["subject"]
+          if pjson["subject"].kind_of?(Array)
+            pjson["subject"].each do |subject|
               myxml.keyword do
                 myxml.string(subject, loLanOpts)
               end 
             end
-          elsif ejson["subject"].kind_of?(String)
+          elsif pjson["subject"].kind_of?(String)
             myxml.keyword do
-                myxml.string(ejson["subject"], loLanOpts)
+                myxml.string(pjson["subject"], loLanOpts)
             end
           end
         end
@@ -437,7 +436,7 @@ class Presentation < ActiveRecord::Base
         end
         myxml.status do
           myxml.source("LOMv1.0")
-          if ejson["vishMetadata"] and ejson["vishMetadata"]["draft"]==="true"
+          if pjson["vishMetadata"] and pjson["vishMetadata"]["draft"]==="true"
             myxml.value("draft")
           else
             myxml.value("final")
@@ -521,7 +520,7 @@ class Presentation < ActiveRecord::Base
         end
         myxml.otherPlatformRequirements do
           otherPlatformRequirements = "HTML5-compliant web browser"
-          if ejson["VEVersion"]
+          if pjson["VEVersion"]
             otherPlatformRequirements += " and ViSH Viewer " + atVersion
           end
           otherPlatformRequirements += "."
@@ -553,7 +552,7 @@ class Presentation < ActiveRecord::Base
             myxml.value("slide")
           end
         end
-        presentationElements = VishEditorUtils.getElementTypes(ejson) rescue []
+        presentationElements = VishEditorUtils.getElementTypes(pjson) rescue []
         if presentationElements.include?("text") and !Lom.getLearningResourceType("narrative text", _LOMschema).nil?
           myxml.learningResourceType do
             myxml.source("LOMv1.0")
@@ -574,32 +573,32 @@ class Presentation < ActiveRecord::Base
           myxml.source("LOMv1.0")
           myxml.value("learner")
         end
-        _LOMcontext = Lom.readableContext(ejson["context"], _LOMschema)
+        _LOMcontext = Lom.readableContext(pjson["context"], _LOMschema)
         if _LOMcontext
           myxml.context do
             myxml.source("LOMv1.0")
             myxml.value(_LOMcontext)
           end
         end
-        if ejson["age_range"]
+        if pjson["age_range"]
           myxml.typicalAgeRange do
-            myxml.string(ejson["age_range"], :language=> metadataLanguage)
+            myxml.string(pjson["age_range"], :language=> metadataLanguage)
           end
         end
-        if ejson["difficulty"]
+        if pjson["difficulty"]
           myxml.difficulty do
             myxml.source("LOMv1.0")
-            myxml.value(ejson["difficulty"])
+            myxml.value(pjson["difficulty"])
           end
         end
-        if ejson["TLT"]
+        if pjson["TLT"]
           myxml.typicalLearningTime do
-            myxml.duration(ejson["TLT"])
+            myxml.duration(pjson["TLT"])
           end
         end
-        if ejson["educational_objectives"]
+        if pjson["educational_objectives"]
           myxml.description do
-            myxml.string(ejson["educational_objectives"], loLanOpts)
+            myxml.string(pjson["educational_objectives"], loLanOpts)
           end
         end
         if loLanguage
@@ -618,8 +617,8 @@ class Presentation < ActiveRecord::Base
         end
         myxml.description do
           license = ""
-          unless ejson["license"].nil? or ejson["license"]["name"].blank?
-            license = "License: '" + ejson["license"]["name"] + "'. "
+          unless pjson["license"].nil? or pjson["license"]["name"].blank?
+            license = "License: '" + pjson["license"]["name"] + "'. "
           end
           myxml.string(license + "For additional information or questions regarding copyright, distribution and reproduction, visit " + SgamePlatform::Application.config.full_domain + "/terms_of_use .", :language=> metadataLanguage)
         end
@@ -628,6 +627,26 @@ class Presentation < ActiveRecord::Base
     end
 
     myxml
+  end
+
+  # Metadata based on LOM (Learning Object Metadata) standard in JSON format
+  def self.generate_LOM_metadata_json(pjson, presentation, options={})
+    xml_metadata = generate_scorm_manifest("2004",pjson,presentation,options)
+    xml_doc = REXML::Document.new(xml_metadata.target!)
+    metadata_el = REXML::XPath.first(xml_doc.root, '/manifest/metadata')
+    return {} if metadata_el.nil?
+
+    lom_el = REXML::XPath.first(metadata_el, 'lom') || REXML::XPath.first(metadata_el, 'lom:lom')
+    return {} if lom_el.nil?
+    
+    begin
+      #Generate metadata with the SCORM gem
+      metadata = Scorm::Metadata.from_xml(lom_el)
+      json_metadata = JSON.parse((YAML.load(YAML.dump(metadata))).to_json)
+      return Scormfile.adapt_json_metadata(json_metadata)
+    rescue
+      return {}
+    end
   end
 
 
@@ -701,11 +720,7 @@ class Presentation < ActiveRecord::Base
   end
 
   def extract_los
-    if self.los.blank?
-      lo = Lo.new
-    else
-      lo = self.los.first
-    end
+    lo = self.los.blank? ? Lo.new : self.los.first
     lo.container_type = self.class.name
     lo.container_id = self.id
     lo.resource_index = 1
@@ -713,10 +728,11 @@ class Presentation < ActiveRecord::Base
     lo.standard_version = "2004"
     lo.schema_version = "2004 4th Edition"
     lo.lo_type = "sco"
-    lo.rdata = VishEditorUtils.reportData?(JSON.parse(self.json))
+    pjson = JSON.parse(self.json)
+    lo.rdata = VishEditorUtils.reportData?(pjson)
     lo.href = self.id.to_s + ".sgame"
     lo.hreffull = SgamePlatform::Application.config.full_domain + presentation_path(self, :format => "sgame")
-    lo.metadata = JSON.parse(self.json)
+    lo.metadata = Presentation.generate_LOM_metadata_json(pjson,self,{}).to_json
     lo.save!
   end
   
