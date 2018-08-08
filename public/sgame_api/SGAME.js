@@ -1185,8 +1185,19 @@ SGAME.Fancybox = function(undefined) {
     _removeCurrentFancybox();
     _currentOnCloseCallback = onCloseCallback;
     var mode = typeof options !== "undefined" && options.dialog === true ? "dialog" : "lo";
-    var width = 850;
-    var height = 650;
+    var ar = 4 / 3;
+    var minMargin = 0.05;
+    var width;
+    var height;
+    var maxWidth = window.innerWidth * (1 - 2 * minMargin);
+    var maxHeight = window.innerHeight * (1 - 2 * minMargin);
+    if(maxHeight * ar > maxWidth) {
+      width = maxWidth;
+      height = width / ar
+    }else {
+      height = maxHeight;
+      width = height * ar
+    }
     if(mode === "lo") {
       var lo = {};
       var url
@@ -1213,10 +1224,6 @@ SGAME.Fancybox = function(undefined) {
         }
       }
     }
-    var maxHeight = window.innerHeight - 8;
-    var maxWidth = window.innerWidth - 8;
-    height = Math.min(height, maxHeight);
-    width = Math.min(width, maxWidth);
     if(mode === "lo") {
       if(typeof url != "string" || typeof lo.scorm_type == "undefined") {
         return
@@ -1241,7 +1248,7 @@ SGAME.Fancybox = function(undefined) {
     fancybox.style.height = height + "px";
     fancybox.style.maxWidth = maxWidth + "px";
     fancybox.style.maxHeight = maxHeight + "px";
-    fancybox.style.overflow = mode === "log" ? "hidden" : "auto";
+    fancybox.style.overflow = mode === "lo" ? "hidden" : "auto";
     fancybox.style.background = "white";
     fancybox.style.position = "absolute";
     fancybox.style.top = 0;
@@ -1255,8 +1262,9 @@ SGAME.Fancybox = function(undefined) {
     fancybox.style.marginTop = marginTop + "px";
     var closeButton = document.createElement("img");
     closeButton.src = "/assets/sgame/close.png";
-    closeButton.style.width = "25px";
-    closeButton.style.height = "25px";
+    var closeButtonDimension = Math.max(25, Math.floor(height * 0.05));
+    closeButton.style.width = closeButtonDimension + "px";
+    closeButton.style.height = closeButtonDimension + "px";
     closeButton.style.padding = "5px";
     closeButton.style.cursor = "pointer";
     closeButton.style.position = "absolute";
@@ -1269,21 +1277,30 @@ SGAME.Fancybox = function(undefined) {
       var trafficLight = document.createElement("img");
       trafficLight.id = "trafficLight";
       trafficLight.src = "/assets/sgame/trafficLight/trafficLight_red.png";
-      trafficLight.style.width = "45px";
-      trafficLight.style.height = "40px";
-      trafficLight.style.padding = "5px";
+      var trafficLightHeight = Math.max(40, Math.floor(height * 0.085));
+      var trafficLightWidth = Math.max(30, Math.floor(trafficLightHeight * 0.75));
+      trafficLight.style.height = trafficLightHeight + "px";
+      trafficLight.style.width = trafficLightWidth + "px";
+      trafficLight.style.padding = "4px";
       trafficLight.style.position = "absolute";
       trafficLight.style.left = "0px";
       trafficLight.style.top = "0px";
+      trafficLight.style.background = "#fff";
+      trafficLight.style.borderRadius = "0px 0px 20px 0px";
+      trafficLight.style.borderRight = "2px solid black";
+      trafficLight.style.borderBottom = "2px solid black";
       fancybox.appendChild(trafficLight);
       var iframe = document.createElement("iframe");
       iframe.src = url;
-      iframe.style.width = "94%";
-      iframe.style.height = "94%";
-      iframe.style.marginLeft = "3%";
-      iframe.style.marginTop = "3%";
-      iframe.style.overflow = "hidden";
-      iframe.style.overflowY = "auto";
+      var iframeMarginTop = Math.ceil(Math.max(closeButtonDimension, trafficLightHeight)) + 4;
+      var iframeMarginBottom = Math.floor(height * 0.02);
+      var iframeMarginLeft = Math.floor(width * 0.02);
+      var iframeMarginRight = iframeMarginLeft;
+      iframe.style.marginLeft = iframeMarginLeft + "px";
+      iframe.style.marginTop = iframeMarginTop + "px";
+      iframe.style.width = Math.max(0, width - iframeMarginLeft - iframeMarginRight) + "px";
+      iframe.style.height = Math.max(0, height - iframeMarginTop - iframeMarginBottom) + "px";
+      iframe.style.overflow = "auto";
       iframe.scrolling = "yes";
       iframe.style.frameBorder = "0";
       iframe.style.borderStyle = "none";
