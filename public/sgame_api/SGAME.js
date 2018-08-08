@@ -971,6 +971,7 @@ SGAME.CORE = function() {
         _settings["los"][lo_ids[i]]["shown"] = false;
         _settings["los"][lo_ids[i]]["nshown"] = 0;
         _settings["los"][lo_ids[i]]["succesfully_consumed"] = false;
+        _settings["los"][lo_ids[i]]["acts_as_asset"] = _settings["los"][lo_ids[i]]["scorm_type"] === "asset" || _settings["los"][lo_ids[i]]["scorm_type"] === "sco" && _settings["los"][lo_ids[i]]["report_data"] === false;
         _los_can_be_shown = true
       }
     }
@@ -1388,7 +1389,7 @@ SGAME.Observer = function(undefined) {
     _SCORM_API = SCORM_API;
     _loadEvents();
     SGAME.TrafficLight.changeColor("red");
-    if(_current_lo.scorm_type == "asset") {
+    if(_current_lo.acts_as_asset === true) {
       var requiredTime = _getRequiredTime(_current_lo);
       SGAME.TrafficLight.setUpBlink("yellow", requiredTime * 0.5 - 0.5, requiredTime * 0.5);
       SGAME.TrafficLight.changeColor("green", requiredTime)
@@ -1406,7 +1407,7 @@ SGAME.Observer = function(undefined) {
     scorm_progress_measure = undefined
   };
   var _loadEvents = function() {
-    if(_current_lo.scorm_type == "sco" && typeof _SCORM_API != "undefined") {
+    if(_current_lo.acts_as_asset === false && typeof _SCORM_API !== "undefined") {
       _SCORM_API.addListener("cmi.success_status", function(value) {
         scorm_success_status = value;
         if(scorm_success_status === "passed") {
@@ -1464,14 +1465,10 @@ SGAME.Observer = function(undefined) {
     if(metadata.educational) {
       if(metadata.educational.typicalLearningTime) {
         if(metadata.educational.typicalLearningTime.duration) {
-          if(metadata.educational.typicalLearningTime.duration.langstrings) {
-            if(metadata.educational.typicalLearningTime.duration.langstrings["x-none"]) {
-              var TLT = metadata.educational.typicalLearningTime.duration.langstrings["x-none"];
-              var parsedTLT = iso8601Parser.getDuration(TLT);
-              if(parsedTLT) {
-                return parsedTLT
-              }
-            }
+          var TLT = metadata.educational.typicalLearningTime.duration;
+          var parsedTLT = iso8601Parser.getDuration(TLT);
+          if(parsedTLT) {
+            return parsedTLT
           }
         }
       }
@@ -1480,10 +1477,10 @@ SGAME.Observer = function(undefined) {
   };
   var _getRequiredTime = function(lo) {
     var defaultTime = 15;
-    var maximumTime = 60;
+    var maximumTime = 120;
     var alfa = 0.5;
     var TLT = _getTypicalLearningTime(lo["lom_metadata"]);
-    if(!TLT) {
+    if(!TLT || TLT <= 0) {
       return defaultTime
     }
     return Math.min(alfa * TLT, maximumTime)

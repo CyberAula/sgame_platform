@@ -42,6 +42,7 @@ class Lo < ActiveRecord::Base
 		smetadata["url"] = self.hreffull
 		smetadata["scorm_type"] = self.lo_type
 		smetadata["scorm_version"] = self.standard_version
+		smetadata["report_data"] = (smetadata["scorm_type"] == "sco" and self.rdata != false)
 		smetadata["lom_metadata"] = JSON.parse(self.metadata) rescue {}
 		return smetadata
 	end

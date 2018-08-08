@@ -727,9 +727,9 @@ class Presentation < ActiveRecord::Base
     lo.standard = "SCORM"
     lo.standard_version = "2004"
     lo.schema_version = "2004 4th Edition"
-    lo.lo_type = "sco"
     pjson = JSON.parse(self.json)
     lo.rdata = VishEditorUtils.reportData?(pjson)
+    lo.lo_type = (lo.rdata===true ? "sco" : "asset")
     lo.href = self.id.to_s + ".sgame"
     lo.hreffull = SgamePlatform::Application.config.full_domain + presentation_path(self, :format => "sgame")
     lo.metadata = Presentation.generate_LOM_metadata_json(pjson,self,{}).to_json
