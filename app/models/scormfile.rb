@@ -73,7 +73,16 @@ class Scormfile < ActiveRecord::Base
         lo.resource_index = i+1
         lo.href = resource.href
         lo.hreffull = SgamePlatform::Application.config.full_code_domain + "/code/scormfiles/" + self.id.to_s + "/" + lo.href
-        lo.metadata = Scormfile.parse_metadata(resource.metadata)
+
+        loMetadata = {}
+        if !resource.metadata.blank?
+          loMetadata = resource.metadata
+        elsif (i===0 && pkg.manifest && !pkg.manifest.metadata.blank? && pkg.manifest.resources.length === 1)
+          loMetadata = pkg.manifest.metadata
+        end
+        loMetadata = Scormfile.parse_metadata(loMetadata)
+        lo.metadata = loMetadata.nil? ? {}.to_json : loMetadata
+        
         lo.save!
         addedHrefs.push(lo.href)
       end
@@ -127,19 +136,35 @@ class Scormfile < ActiveRecord::Base
   end
 
   def self.parse_metadata(metadata)
-    metadata = YAML.dump(metadata)
-    metadata = JSON.parse({}.merge(YAML.load(metadata)).to_json) rescue nil
-    return nil if metadata.nil?
-    parse_metadata_field(metadata)
+    json_metadata = JSON.parse((YAML.load(YAML.dump(metadata))).to_json) rescue nil
+    return nil if json_metadata.nil?
+    adapt_json_metadata(json_metadata).to_json rescue nil
   end
 
-  def self.parse_metadata_field(field)
+  def self.adapt_json_metadata(field)
     if field.is_a? Hash
-      field.keys.each do |key|
-        field[key] = parse_metadata_field(field[key])
+      keys = field.keys
+      if keys.include?("langstrings") and field["langstrings"].is_a? Hash
+        lKeys = field["langstrings"].keys
+        if lKeys.blank?
+          field = ""
+        elsif lKeys.length === 1
+          field = field["langstrings"][lKeys[0]]
+        elsif
+          #Multiple langstrings
+          if keys.include?("default_lang") and !field["langstrings"][field["default_lang"]].blank?
+            field = field["langstrings"][field["default_lang"]]
+          else
+            field = field["langstrings"][lKeys[0]]
+          end
+        end 
+      elsif keys.include?("string")
+        field = adapt_json_metadata(field["string"])
+      else
+        keys.each do |key|
+          field[key] = adapt_json_metadata(field[key])
+        end
       end
-    else
-      field = field.gsub(/'/,"").gsub(/\"/,"") if field.is_a? String
     end
     field
   end

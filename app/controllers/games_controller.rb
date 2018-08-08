@@ -15,12 +15,14 @@ class GamesController < ApplicationController
 
   def show
     @game = Game.find(params[:id])
-    @suggestions = RecommenderSystem.suggestions({:n => 6, :lo_profile => @game.profile, :settings => {:preselection_filter_by_resource_types => ["Game"]}})
+    
     respond_to do |format|
       format.html {
+        @suggestions = RecommenderSystem.suggestions({:n => 6, :lo_profile => @game.profile, :settings => {:preselection_filter_by_resource_types => ["Game"]}})
         render
       }
       format.full {
+        @game_settings = @game.settings(user_signed_in? ? current_user : nil)
         render :layout => 'game'
       }
       format.json {
