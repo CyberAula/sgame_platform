@@ -38,7 +38,7 @@ class Presentation < ActiveRecord::Base
     sf["scorm_version"] = "2004"
     sf["nassets"] = 0
     sf["nscos"] = 1
-    sf["preview_url"] = lo_path(sf["los"][0]["id"], :format => :sgame) rescue presentation_url(self, :format => :full)
+    sf["preview_url"] = lo_path(sf["los"][0]["id"], :format => :full) rescue presentation_url(self, :format => :full)
 
     sf["los"].each do |lo|
       lo["container_id"] = sf["id"]
