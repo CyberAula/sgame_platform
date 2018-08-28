@@ -909,13 +909,13 @@ SGAME.CORE = function() {
   var _options = {};
   var _togglePauseFunction = undefined;
   var _settings = {};
+  var _settings_loaded = false;
   var supportedRepeatLo = ["repeat", "repeat_unless_successfully_consumed", "no_repeat"];
   var supportedCompletionNotification = ["no_more_los", "all_los_consumed", "all_los_succesfully_consumed", "never"];
   var supportedBehaviourWhenNoMoreLOs = ["success", "failure", "failure_unless_blocking"];
   var _los_can_be_shown = false;
   var _final_screen_shown = false;
   var _final_screen_text = "Congratulations. You have achieved the objectives of this educational game. You may close this window or continue playing.";
-  SGAME.Debugger.init(true);
   var init = function(options) {
     SGAME.Debugger.log("SGAME init with options ");
     SGAME.Debugger.log(options);
@@ -929,6 +929,10 @@ SGAME.CORE = function() {
   var loadSettings = function(settings) {
     SGAME.Debugger.log("SGAME load settings ");
     SGAME.Debugger.log(settings);
+    _settings_loaded = true;
+    _loadSettings(settings)
+  };
+  var _loadSettings = function(settings) {
     _settings = settings;
     if(typeof _settings["game_metadata"] === "undefined") {
       _settings["game_metadata"] = {}
@@ -980,21 +984,23 @@ SGAME.CORE = function() {
     var los_mapped = [];
     var los_candidate = [];
     var mapped_los_ids = _settings["event_mapping"][event_id];
-    var n_mapped_los_ids = mapped_los_ids.length;
-    if(typeof mapped_los_ids !== "undefined" && typeof n_mapped_los_ids === "number") {
-      for(var i = 0;i < n_mapped_los_ids;i++) {
-        if(mapped_los_ids[i] === "*") {
-          los_mapped = _getAllLoArray();
-          break
-        }
-        if(typeof _settings["los"][mapped_los_ids[i]] !== "undefined") {
-          los_mapped.push(_settings["los"][mapped_los_ids[i]])
+    if(typeof mapped_los_ids !== "undefined") {
+      var n_mapped_los_ids = mapped_los_ids.length;
+      if(typeof n_mapped_los_ids === "number") {
+        for(var i = 0;i < n_mapped_los_ids;i++) {
+          if(mapped_los_ids[i] === "*") {
+            los_mapped = _getAllLoArray();
+            break
+          }
+          if(typeof _settings["los"][mapped_los_ids[i]] !== "undefined") {
+            los_mapped.push(_settings["los"][mapped_los_ids[i]])
+          }
         }
       }
     }
     var nLosMapped = los_mapped.length;
     if(nLosMapped.length < 1) {
-      if(typeof callback == "function") {
+      if(typeof callback === "function") {
         var report = _getReportWhenNoLOs(event_id);
         callback(report.success, report)
       }
@@ -1009,7 +1015,7 @@ SGAME.CORE = function() {
       selectedLO = _selectLoFromCandidates(los_candidate);
       showLO(selectedLO, callback)
     }else {
-      if(typeof callback == "function") {
+      if(typeof callback === "function") {
         var report = _getReportWhenNoLOs(event_id);
         callback(report.success, report)
       }
@@ -1017,7 +1023,7 @@ SGAME.CORE = function() {
   };
   var showLO = function(lo, callback) {
     if(typeof lo !== "object" || typeof lo["url"] !== "string") {
-      if(typeof callback == "function") {
+      if(typeof callback === "function") {
         callback(null, null)
       }
       return
@@ -1042,7 +1048,7 @@ SGAME.CORE = function() {
       _checkLOsToShow();
       report["more_los"] = _los_can_be_shown;
       _checkFinalScreen(function() {
-        if(typeof callback == "function") {
+        if(typeof callback === "function") {
           callback(report.success, report)
         }
         _togglePause()
@@ -1053,7 +1059,7 @@ SGAME.CORE = function() {
     SGAME.API.requestLOMetadata(undefined, function(lo_metadata) {
       showLO(lo_metadata, callback)
     }, function() {
-      if(typeof callback == "function") {
+      if(typeof callback === "function") {
         callback(null, null)
       }
     })
@@ -1172,6 +1178,13 @@ SGAME.CORE = function() {
         break
     }
   };
+  var _loadInitialSettings = function() {
+    if(_settings_loaded === false) {
+      _loadSettings({})
+    }
+  };
+  SGAME.Debugger.init(true);
+  _loadInitialSettings();
   return{init:init, loadSettings:loadSettings, triggerLO:triggerLO, showLO:showLO, showRandomLO:showRandomLO, closeLO:closeLO}
 }();
 var API;
