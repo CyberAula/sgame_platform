@@ -203,11 +203,17 @@ SGAME_AT = (function($,undefined){
 				});
 
 				$(document).on('click', '#sgame_at .scormfiles .selected table.at_c td.add img', function(event) {
-					var index = parseInt($(this).parents(".loinstance").find("td.index").html());
-					var result = _addLO(current_preview_scormfile.los[index-1]);
-					if(result === false){
-						return _showSGAMEDialogWithSettings({"msg":_getTrans("i.error_lo_already_added")}, false);
+					var loId = $(this).parents("tr.loinstance[loid]").attr("loid");
+					for(var i=0; i<current_preview_scormfile.los.length; i++){
+						if((current_preview_scormfile.los[i].id + "") === loId){
+							var result = _addLO(current_preview_scormfile.los[i]);
+							if(result === false){
+								return _showSGAMEDialogWithSettings({"msg":_getTrans("i.error_lo_already_added")}, false);
+							}
+							return;
+						}
 					}
+					return _showSGAMEDialogWithSettings({"msg": "Learning Object not found"}, false);
 				});
 
 				$(document).on('click', '#sgame_at .scormfiles .selected_los table.at_c td.preview img', function(event) {

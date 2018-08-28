@@ -53,19 +53,14 @@ class Scormfile < ActiveRecord::Base
     addedHrefs = []
     Scorm::Package.open(zipFile, :cleanup => false) do |pkg|
       pkg.manifest.resources.each_with_index do |resource,i|
-        if currentLos.find_by_href(resource.href).nil?
-          lo = Lo.new
-        else
-          lo = currentLos.find_by_href(resource.href)
-        end
+        lo = currentLos.find_by_href(resource.href)
+        lo = Lo.new if lo.nil?
         lo.container_type = self.class.name
         lo.container_id = self.id
         lo.standard = "SCORM"
         lo.standard_version = self.scorm_version
         lo.schema_version = self.schema_version
-        if ["sco","asset"].include? resource.scorm_type
-          lo.lo_type = resource.scorm_type
-        end
+        lo.lo_type = resource.scorm_type if ["sco","asset"].include? resource.scorm_type
         lo.rdata = (lo.lo_type == "sco" and self.rdata)
         lo.resource_index = i+1
         lo.href = resource.href
@@ -79,7 +74,7 @@ class Scormfile < ActiveRecord::Base
         end
         loMetadata = Scormfile.parse_metadata(loMetadata)
         lo.metadata = loMetadata.nil? ? {}.to_json : loMetadata
-        
+
         lo.save!
         addedHrefs.push(lo.href)
       end
@@ -89,9 +84,11 @@ class Scormfile < ActiveRecord::Base
     else
       losToDestroy = self.los
     end
+
     losToDestroy.each do |lo|
       lo.destroy
     end
+
     self.update_column(:nscos, self.los.select{|lo| lo.lo_type == "sco"}.length)
     self.update_column(:nassets, self.los.select{|lo| lo.lo_type == "asset"}.length)
   end
