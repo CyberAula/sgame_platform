@@ -63,6 +63,57 @@ namespace :fix do
     printTitle("Task finished")
   end
 
+  #Usage
+  #Development:   bundle exec rake fix:updateGameTemplates
+  #In production: bundle exec rake fix:updateGameTemplates RAILS_ENV=production
+  task :updateGameTemplates => :environment do
+    printTitle("Updating game templates")
+
+    system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/Onslaught_Arena.zip')
+    Utils.zip_folder(File.join(Rails.root, 'public/game_template_examples/Onslaught_Arena.zip'),File.join(Rails.root, 'public/game_template_examples/Onslaught_Arena'))
+    gt = GameTemplate.find_by_title("Onslaught Arena")
+    gt.file = File.open(File.join(Rails.root, 'public/game_template_examples/Onslaught_Arena.zip'))
+    gt.save!
+
+    system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/Floppybird.zip')
+    Utils.zip_folder(File.join(Rails.root, 'public/game_template_examples/Floppybird.zip'),File.join(Rails.root, 'public/game_template_examples/Floppybird'))
+    gt = GameTemplate.find_by_title("Floppy Bird")
+    gt.file = File.open(File.join(Rails.root, 'public/game_template_examples/Floppybird.zip'))
+    gt.save!
+
+    system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/Elemental_One.zip')
+    Utils.zip_folder(File.join(Rails.root, 'public/game_template_examples/Elemental_One.zip'),File.join(Rails.root, 'public/game_template_examples/Elemental_One'))
+    gt = GameTemplate.find_by_title("Elemental One")
+    gt.file = File.open(File.join(Rails.root, 'public/game_template_examples/Elemental_One.zip'))
+    gt.save!
+
+    system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/Pacman.zip')
+    Utils.zip_folder(File.join(Rails.root, 'public/game_template_examples/Pacman.zip'),File.join(Rails.root, 'public/game_template_examples/Pacman'))
+    gt = GameTemplate.find_by_title("Pac-Man")
+    gt.file = File.open(File.join(Rails.root, 'public/game_template_examples/Pacman.zip'))
+    gt.save!
+
+    system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/Sokoban.zip')
+    Utils.zip_folder(File.join(Rails.root, 'public/game_template_examples/Sokoban.zip'),File.join(Rails.root, 'public/game_template_examples/Sokoban'))
+    gt = GameTemplate.find_by_title("Sokoban")
+    gt.file = File.open(File.join(Rails.root, 'public/game_template_examples/Sokoban.zip'))
+    gt.save!
+
+    system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/Natural_Park.zip')
+    Utils.zip_folder(File.join(Rails.root, 'public/game_template_examples/Natural_Park.zip'),File.join(Rails.root, 'public/game_template_examples/Natural_Park'))
+    gt = GameTemplate.find_by_title("Natural Park")
+    gt.file = File.open(File.join(Rails.root, 'public/game_template_examples/Natural_Park.zip'))
+    gt.save!
+
+    system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/Space_Invaders.zip')
+    Utils.zip_folder(File.join(Rails.root, 'public/game_template_examples/Space_Invaders.zip'),File.join(Rails.root, 'public/game_template_examples/Space_Invaders'))
+    gt = GameTemplate.find_by_title("Space Invaders")
+    gt.file = File.open(File.join(Rails.root, 'public/game_template_examples/Space_Invaders.zip'))
+    gt.save!
+    
+    printTitle("Task finished")
+  end
+
   ####################
   #Task Utils
   ####################

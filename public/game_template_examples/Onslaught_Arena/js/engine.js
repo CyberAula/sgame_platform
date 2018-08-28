@@ -1914,14 +1914,19 @@ proto.getObjectSGAME = function (o,o2) {
 		return;
 	}
 
-	this.togglePause();
+	var callTogglePause = SGAME.losCanBeShown();
+	if(callTogglePause){
+		this.togglePause();
+	}
 	this.keyboard.clearKeys();
 	var that = this;
 	
 	setTimeout(function(){
 		SGAME.triggerLO(1,function(pass){
 			setTimeout(function(){
-				that.togglePause();
+				if(callTogglePause){
+					that.togglePause();
+				}
 				that.keyboard.clearKeys();
 
 				if(!pass){

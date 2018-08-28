@@ -699,7 +699,8 @@
         var preloadbar, loaded, menubackground, logo, occluder, map, tileset, surface, background, backbackground, player, goal, clouds, items, backgroundItems, blocks, theme, musicdone, transitioning, gotoNext, isDone, sfx = {}, elemEmitters = {}, cursors, elemButton, acquireButton, dropButton;
         function boot() {
             //onLoad
-            SGAME.init({});
+            SGAME.init({"behaviour_when_no_more_los": "success"});
+
             game.physics.collideSpriteVsTilemapLayer = extensions.createSlopedTilemapCollider(cfg.UPWARD_SLOPE_TILES, cfg.DOWNWARD_SLOPE_TILES);
             game.input.maxPointers = 1;
             Main.boot = function() {};

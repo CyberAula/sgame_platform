@@ -835,24 +835,27 @@ function Local_API_1484_11(options) {
 }
 ;SGAME = function() {
   var init = function(options) {
-    SGAME.CORE.init(options)
+    return SGAME.CORE.init(options)
   };
   var loadSettings = function(settings) {
-    SGAME.CORE.loadSettings(settings)
+    return SGAME.CORE.loadSettings(settings)
   };
   var triggerLO = function(event_id, callback) {
-    SGAME.CORE.triggerLO(event_id, callback)
+    return SGAME.CORE.triggerLO(event_id, callback)
   };
   var showLO = function(lo, callback) {
-    SGAME.CORE.showLO(lo, callback)
+    return SGAME.CORE.showLO(lo, callback)
   };
   var showRandomLO = function(callback) {
-    SGAME.CORE.showRandomLO(callback)
+    return SGAME.CORE.showRandomLO(callback)
   };
   var closeLO = function() {
-    SGAME.CORE.closeLO()
+    return SGAME.CORE.closeLO()
   };
-  return{init:init, loadSettings:loadSettings, triggerLO:triggerLO, showLO:showLO, showRandomLO:showRandomLO, closeLO:closeLO}
+  var losCanBeShown = function() {
+    return SGAME.CORE.losCanBeShown()
+  };
+  return{init:init, loadSettings:loadSettings, triggerLO:triggerLO, showLO:showLO, showRandomLO:showRandomLO, closeLO:closeLO, losCanBeShown:losCanBeShown}
 }();
 SGAME.VERSION = "0.5";
 SGAME.AUTHORS = "Aldo Gordillo, Enrique Barra";
@@ -1067,6 +1070,9 @@ SGAME.CORE = function() {
   var closeLO = function() {
     SGAME.Fancybox.closeCurrentFancybox()
   };
+  var losCanBeShown = function() {
+    return _los_can_be_shown
+  };
   var _togglePause = function() {
     if(typeof _togglePauseFunction === "function") {
       _togglePauseFunction()
@@ -1162,13 +1168,28 @@ SGAME.CORE = function() {
     return{lo_metadata:undefined, time:undefined, scorm_success_status:undefined, scorm_scaled_score:undefined, scorm_completion_status:undefined, scorm_progress_measure:undefined, success:_getSuccessWhenNoLOs(event_id), more_los:_los_can_be_shown}
   };
   var _getSuccessWhenNoLOs = function(event_id) {
-    switch(_settings["game_settings"]["behaviour_when_no_more_los"]) {
+    var _setting;
+    if(_settings_loaded && typeof _settings["game_settings"]["behaviour_when_no_more_los"] !== "undefined") {
+      _setting = _settings["game_settings"]["behaviour_when_no_more_los"]
+    }else {
+      if(typeof _options["behaviour_when_no_more_los"] !== "undefined") {
+        _setting = _options["behaviour_when_no_more_los"]
+      }else {
+        if(typeof _settings["game_settings"]["behaviour_when_no_more_los"] !== "undefined") {
+          _setting = _settings["game_settings"]["behaviour_when_no_more_los"]
+        }
+      }
+    }
+    return _getSuccessWhenNoLOsForSetting(_setting, event_id)
+  };
+  var _getSuccessWhenNoLOsForSetting = function(setting, event_id) {
+    switch(setting) {
       case "success":
         return true;
       case "failure":
         return false;
       case "failure_unless_blocking":
-        var event = _settings["events"][event_id];
+        var event = _getEventMetadata(event_id);
         if(typeof event === "undefined" || event.type !== "blocking") {
           return false
         }
@@ -1178,6 +1199,17 @@ SGAME.CORE = function() {
         break
     }
   };
+  var _getEventMetadata = function(event_id) {
+    if(typeof _settings["events"][event_id] !== "undefined") {
+      return _settings["events"][event_id]
+    }else {
+      if(typeof _options["events"] === "object" && typeof _options["events"][event_id] !== "undefined") {
+        return _options["events"][event_id]
+      }else {
+        return{}
+      }
+    }
+  };
   var _loadInitialSettings = function() {
     if(_settings_loaded === false) {
       _loadSettings({})
@@ -1185,7 +1217,7 @@ SGAME.CORE = function() {
   };
   SGAME.Debugger.init(true);
   _loadInitialSettings();
-  return{init:init, loadSettings:loadSettings, triggerLO:triggerLO, showLO:showLO, showRandomLO:showRandomLO, closeLO:closeLO}
+  return{init:init, loadSettings:loadSettings, triggerLO:triggerLO, showLO:showLO, showRandomLO:showRandomLO, closeLO:closeLO, losCanBeShown:losCanBeShown}
 }();
 var API;
 var API_1484_11;

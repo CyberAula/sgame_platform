@@ -28,9 +28,8 @@
 	
 	<script>
 		window.onload = function(){
-			SGAME.init({togglePause : function(){
-				// console.log("togglePause");
-			}});
+			//Pause function is handled internally by the game
+			SGAME.init({"behaviour_when_no_more_los": "success"});
 		}
 	</script>
 </body>

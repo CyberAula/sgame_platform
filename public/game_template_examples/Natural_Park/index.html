@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Impact Game</title>
+	<title>Natural Park</title>
 	<style type="text/css">
 		html,body {
 			background-color: #FFF;
@@ -32,12 +32,21 @@
 	<div id="event-router"></div>
 </body>
 <script type="text/javascript">		
-       //document.addEventListener("DOMContentLoaded", init, false);
+       document.addEventListener("DOMContentLoaded", init, false);
       //method to know the position of mouse click (used to determine the position of the fence)
       function init()
       {
-        var canvas = document.getElementById("canvas");
-        canvas.addEventListener("mousedown", getPosition, false);
+        var events = {};
+        events[1] = {
+          "id": 1,
+          "title": "Gardener Event",
+          "description": "Event triggered when the player talks to the gardener",
+          "type": "blocking",
+          "frequency": "one-shot"
+        }
+        SGAME.init({"events": events, "behaviour_when_no_more_los": "failure_unless_blocking"});
+        // var canvas = document.getElementById("canvas");
+        // canvas.addEventListener("mousedown", getPosition, false);
       }
 
       function getPosition(event)
