@@ -291,6 +291,7 @@ en:
       view_metadata: "View metadata"
   scormfiles:
     tabtitle: "SCORM Packages"
+    rdata: "The SCOs contained in this SCORM package report data"
   i18n:
     transliterate:
       rule:

@@ -26,6 +26,14 @@ div.document_form_wrapper p.form_legend {
 	margin-bottom: 1px;
 }
 
+div.document_form_wrapper p.form_legend_checkbox {
+	font-size: 1.4em;
+}
+
+div.document_form_wrapper p.form_legend_checkbox input[type="checkbox"]{
+	margin-right: 5px;
+}
+
 div.document_form_wrapper div.actions {
 	margin-top: 25px;
 }

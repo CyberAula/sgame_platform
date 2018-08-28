@@ -9,15 +9,15 @@ class Scormfile < ActiveRecord::Base
                     :url => '/:class/:id.:extension',
                     :path => ':rails_root/documents/:class/:id_partition/:filename.:extension'
   has_attached_file :thumbnail,
-    :styles => SgamePlatform::Application.config.thumbnail_styles
+                    :styles => SgamePlatform::Application.config.thumbnail_styles
 
   before_validation :fill_package_params, :only => [:create]
   before_validation :fill_scorm_version
+  before_save :check_changes
+  after_save :fill_thumbnail_url
+  after_save :updateScormfileIfNeeded
   after_destroy :remove_unpackaged_files
   after_destroy :remove_los
-  after_create :extract_los
-  after_create :unpackage
-  after_save :fill_thumbnail_url
 
   validates_attachment_presence :file
   validates_attachment :file, content_type: { content_type: ["application/zip","application/x-zip-compressed"] }
@@ -28,6 +28,7 @@ class Scormfile < ActiveRecord::Base
   validates_inclusion_of :scorm_version, in: ["1.2","2004"], :allow_blank => false, :message => "Invalid SCORM version. Only SCORM 1.2 and 2004 are supported"
   validates_presence_of :schema, :message => "Invalid SCORM package. Schema is not defined."
   validates_presence_of :schema_version, :message => "Invalid SCORM package. Schema version is not defined."
+
 
   def url_full
     SgamePlatform::Application.config.full_code_domain + "/code/scormfiles/" + self.id.to_s + "/scorm_wrapper.html"
@@ -65,11 +66,7 @@ class Scormfile < ActiveRecord::Base
         if ["sco","asset"].include? resource.scorm_type
           lo.lo_type = resource.scorm_type
         end
-        if lo.lo_type == "asset"
-          lo.rdata = false
-        else
-          lo.rdata = true
-        end
+        lo.rdata = (lo.lo_type == "sco" and self.rdata)
         lo.resource_index = i+1
         lo.href = resource.href
         lo.hreffull = SgamePlatform::Application.config.full_code_domain + "/code/scormfiles/" + self.id.to_s + "/" + lo.href
@@ -204,6 +201,11 @@ class Scormfile < ActiveRecord::Base
     end
   end
 
+  def check_changes
+    @scormfile_has_changes = (self.file.dirty? or self.rdata_changed?)
+    true
+  end
+
   def fill_thumbnail_url
     if self.thumbnail.exists?
       new_thumbnail_url = self.thumbnail.url(:default, :timestamp => false)
@@ -211,6 +213,10 @@ class Scormfile < ActiveRecord::Base
       new_thumbnail_url = "/assets/scormfile_icon.png"
     end
     self.update_column(:thumbnail_url, new_thumbnail_url) if self.thumbnail_url != new_thumbnail_url
+  end
+
+  def updateScormfileIfNeeded
+    self.updateScormfile if @scormfile_has_changes
   end
 
   def remove_unpackaged_files

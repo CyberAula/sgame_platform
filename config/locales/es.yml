@@ -291,3 +291,4 @@ es:
       view_metadata: "Ver metadatos"
   scormfiles:
     tabtitle: "Paquetes SCORM"
+    rdata: "Los SCOs contenidos en este paquete SCORM reportan datos"

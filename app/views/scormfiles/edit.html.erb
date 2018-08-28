@@ -8,6 +8,9 @@
 			<p class="form_legend"><%=t("dictionary.description")%></p>
 			<%= f.text_area :description, :cols => 73, :rows => 4, :maxlength => 280, :resize => "none" %>
 		</div>
+		<div class="field">
+			<p class="form_legend form_legend_checkbox"><%= f.check_box :rdata %><%=t("scormfiles.rdata")%>.</p>
+		</div>
 		<div class="actions">
 			<%= f.submit(t("documents.update"), {class: "sgame_button"}) %>
 		</div>
