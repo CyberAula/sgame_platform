@@ -34,8 +34,8 @@ en:
       title_missing: "You should specify a title for the game."
     event_type:
       "blocking": "Blocking"
-      "extra_life": "Extra life"
-      "new_item": "New item"
+      "damage": "Damage"
+      "reward": "Reward"
     event_frequency:
       "high": "High"
       "medium": "Medium"

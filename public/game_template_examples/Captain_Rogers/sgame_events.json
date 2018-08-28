@@ -1,0 +1,16 @@
+[
+	{
+		"id": 1,
+		"title": "Asteroid",
+		"description": "Event triggered when the ship collides with an asteroid",
+		"type": "damage",
+		"frequency": "skill-dependent_high"
+	},
+	{
+		"id": 2,
+		"title": "Shield",
+		"description": "Event triggered when the player tries to get an item to increase the ship's shield",
+		"type": "reward",
+		"frequency": "skill-dependent_medium"
+	}
+]

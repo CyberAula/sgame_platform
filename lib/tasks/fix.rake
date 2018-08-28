@@ -110,6 +110,12 @@ namespace :fix do
     gt = GameTemplate.find_by_title("Space Invaders")
     gt.file = File.open(File.join(Rails.root, 'public/game_template_examples/Space_Invaders.zip'))
     gt.save!
+
+    system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/Captain_Rogers.zip')
+    Utils.zip_folder(File.join(Rails.root, 'public/game_template_examples/Captain_Rogers.zip'),File.join(Rails.root, 'public/game_template_examples/Captain_Rogers'))
+    gt = GameTemplate.find_by_title("Captain Rogers")
+    gt.file = File.open(File.join(Rails.root, 'public/game_template_examples/Captain_Rogers.zip'))
+    gt.save!
     
     printTitle("Task finished")
   end

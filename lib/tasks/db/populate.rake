@@ -551,4 +551,32 @@ namespace :db do
 		t2 = Time.now - t1
 		puts "Elapsed time:" + t2.to_s
 	end
+
+	#bundle exec rake db:install_wave2
+	task :install_wave2 => :environment do
+		desc "Populate database for SGAME Platform (Wave 2)"
+		t1 = Time.now
+
+		#1: Get Demo user
+		#1: Create demo user
+		user = User.find_by_email("demo@sgame.dit.upm.es")
+
+		#2: Create SCORM packages and Learning Objects
+
+		#3: Create game templates
+		# Events of the game templates are created based on the sgame_events_json.json file
+		system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/Captain_Rogers.zip')
+		Utils.zip_folder(File.join(Rails.root, 'public/game_template_examples/Captain_Rogers.zip'),File.join(Rails.root, 'public/game_template_examples/Captain_Rogers'))
+		cRogers = GameTemplate.create! :owner_id => user.id,
+			:title=>"Captain Rogers",
+			:description=>"It's simple, yet very engaging game about brave Captain Rogers and his escape through an asteroid field. Tap the screen to fly up, release to fly down. Collect the stars and shields, avoid asteroids and mines. Grab the bomb to blow up everything on screen!", 
+			:thumbnail=> File.open(File.join(Rails.root, 'public/game_template_examples/Captain_Rogers/thumbnail.png')),
+			:language => "en",
+			:certified => true,
+			:file =>  File.open(File.join(Rails.root, 'public/game_template_examples/Captain_Rogers.zip'))
+
+		puts "Populate finished"
+		t2 = Time.now - t1
+		puts "Elapsed time:" + t2.to_s
+	end
 end

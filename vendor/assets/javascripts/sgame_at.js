@@ -12,7 +12,7 @@ SGAME_AT = (function($,undefined){
 	var stepsLoaded = [];
 	var editMode = false;
 	var supportedLanguages = ["en","es"];
-	var supportedEventTypes = ["new_item","extra_life","blocking"];
+	var supportedEventTypes = ["reward","damage","blocking"];
 	var supportedEventFrequencies = ["high","medium","low","one-shot","skill-dependent","skill-dependent_high","skill-dependent_medium","skill-dependent_low"];
 
 	//Application state (Editor data in the SGAME platform)

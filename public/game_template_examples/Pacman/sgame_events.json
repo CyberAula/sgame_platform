@@ -3,7 +3,7 @@
 		"id": 1,
 		"title": "Extra life",
 		"description": "Event triggered when a ghost catches the player",
-		"type": "extra_life",
+		"type": "reward",
 		"frequency": "skill-dependent_low"
 	}
 ]

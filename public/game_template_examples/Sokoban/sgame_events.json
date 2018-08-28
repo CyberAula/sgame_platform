@@ -3,7 +3,7 @@
 		"id": 1,
 		"title": "Extra life",
 		"description": "Event triggered when the devil catches the player",
-		"type": "extra_life",
+		"type": "reward",
 		"frequency": "skill-dependent"
 	}
 ]

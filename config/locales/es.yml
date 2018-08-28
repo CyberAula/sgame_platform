@@ -34,8 +34,8 @@ es:
       title_missing: "Debes especificar un título para el juego"
     event_type:
       "blocking": "Bloqueante"
-      "extra_life": "Vida extra"
-      "new_item": "Nuevo objeto"
+      "damage": "Perjudicial"
+      "reward": "Recompensa"
     event_frequency:
       "high": "Alta"
       "medium": "Media"
