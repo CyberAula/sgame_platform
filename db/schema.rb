@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180828072945) do
+ActiveRecord::Schema.define(version: 20180828145118) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -112,9 +112,10 @@ ActiveRecord::Schema.define(version: 20180828072945) do
     t.string   "href"
     t.string   "hreffull"
     t.string   "metadata"
-    t.boolean  "certified",        default: false
+    t.boolean  "certified",           default: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "resource_identifier"
   end
 
   create_table "pdfps", force: :cascade do |t|

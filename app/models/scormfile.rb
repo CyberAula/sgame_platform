@@ -53,8 +53,9 @@ class Scormfile < ActiveRecord::Base
     addedHrefs = []
     Scorm::Package.open(zipFile, :cleanup => false) do |pkg|
       pkg.manifest.resources.each_with_index do |resource,i|
-        lo = currentLos.find_by_href(resource.href)
+        lo = currentLos.find_by_resource_identifier(resource.id)
         lo = Lo.new if lo.nil?
+        lo.resource_identifier = resource.id
         lo.container_type = self.class.name
         lo.container_id = self.id
         lo.standard = "SCORM"

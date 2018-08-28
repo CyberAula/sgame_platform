@@ -3,6 +3,7 @@ class Lo < ActiveRecord::Base
 
 	before_validation :fill_certified
 
+	validates_presence_of :resource_identifier
 	validates_presence_of :container_type
 	validates_presence_of :container_id
 	validate :container_validation

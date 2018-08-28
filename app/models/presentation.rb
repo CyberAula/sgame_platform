@@ -721,6 +721,7 @@ class Presentation < ActiveRecord::Base
 
   def extract_los
     lo = self.los.blank? ? Lo.new : self.los.first
+    lo.resource_identifier = "resource_" + self.id.to_s
     lo.container_type = self.class.name
     lo.container_id = self.id
     lo.resource_index = 1
