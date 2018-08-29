@@ -578,8 +578,19 @@ namespace :db do
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/game_template_examples/Captain_Rogers.zip'))
 
+		system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/Circus.zip')
+		Utils.zip_folder(File.join(Rails.root, 'public/game_template_examples/Circus.zip'),File.join(Rails.root, 'public/game_template_examples/Circus'))
+		cCircus = GameTemplate.create! :owner_id => user.id,
+			:title=>"Circus Charly",
+			:description=>"Circus Charly is an arcade platform game in which the player controls a clown who has to avoid obstacles such as fire rings", 
+			:thumbnail=> File.open(File.join(Rails.root, 'public/game_template_examples/Circus/thumbnail.png')),
+			:language => "en",
+			:certified => true,
+			:file =>  File.open(File.join(Rails.root, 'public/game_template_examples/Circus.zip'))
+
 		puts "Populate finished"
 		t2 = Time.now - t1
 		puts "Elapsed time:" + t2.to_s
 	end
+
 end

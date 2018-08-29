@@ -119,6 +119,14 @@ namespace :fix do
       gt.file = File.open(File.join(Rails.root, 'public/game_template_examples/Captain_Rogers.zip'))
       gt.save!
     end
+
+    system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/Circus.zip')
+    Utils.zip_folder(File.join(Rails.root, 'public/game_template_examples/Circus.zip'),File.join(Rails.root, 'public/game_template_examples/Circus'))
+    gt = GameTemplate.find_by_title("Circus Charly")
+    unless gt.nil?
+      gt.file = File.open(File.join(Rails.root, 'public/game_template_examples/Circus.zip'))
+      gt.save!
+    end
     
     printTitle("Task finished")
   end

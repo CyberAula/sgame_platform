@@ -1,0 +1,16 @@
+[
+	{
+		"id": 1,
+		"title": "Flaming ring",
+		"description": "Event triggered when the clown touches a flaming ring in stage 1",
+		"type": "damage",
+		"frequency": "skill-dependent_high"
+	},
+	{
+		"id": 2,
+		"title": "Monkey",
+		"description": "Event triggered when the clown touches a monkey in stage 2",
+		"type": "damage",
+		"frequency": "skill-dependent_high"
+	}
+]
