@@ -97,6 +97,7 @@ en:
         choice1: "The game should act as if the player had successfully consumed the learning object."
         choice2: "The game should act as if the player had not consumed the learning object successfully."
         choice3: "The game should act as if the player had not consumed the learning object successfully unless if the event is of type blocking."
+        choice4: "The game should act as if the player had consumed the learning object successfully unless if the event is of type damage."
     step6:
       title: "Specify metadata for the game"
       description: "In this step you should specify metadata (title, description, ...) for the educational game."

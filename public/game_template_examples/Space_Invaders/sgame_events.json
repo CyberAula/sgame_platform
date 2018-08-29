@@ -3,7 +3,7 @@
 		"id": 1,
 		"title": "Extra life",
 		"description": "Event triggered when the player loses a life",
-		"type": "reward",
+		"type": "damage",
 		"frequency": "skill-dependent_low"
 	}
 ]

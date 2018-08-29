@@ -544,6 +544,9 @@ namespace :db do
 				:lo_id => lo_id
 		end
 
+		#Wave 2
+		Rake::Task["db:install_wave2"].invoke
+
 		#Create editor data
 		Rake::Task["fix:createEditorData"].invoke
 

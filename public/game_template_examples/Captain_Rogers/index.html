@@ -48,26 +48,26 @@
 	</div>
 	<img src="media/img/screen-rotate.png" id="portrait" />
 	<script type="text/javascript">		
-       document.addEventListener("DOMContentLoaded", init, false);
-      function init(){
-        var events = {
-        	"1": {
-				"id": 1,
-				"title": "Asteroid",
-				"description": "Event triggered when the ship collides with an asteroid",
-				"type": "damage",
-				"frequency": "skill-dependent_high"
-			},
-			"2": {
-				"id": 2,
-				"title": "Shield",
-				"description": "Event triggered when the player tries to get an item to increase the ship's shield",
-				"type": "reward",
-				"frequency": "skill-dependent_medium"
-			}
-        };
-        SGAME.init({"events": events, "behaviour_when_no_more_los": "failure_unless_blocking"});
-      }
+		document.addEventListener("DOMContentLoaded", init, false);
+		function init(){
+			var events = {
+				"1": {
+					"id": 1,
+					"title": "Asteroid",
+					"description": "Event triggered when the ship collides with an asteroid",
+					"type": "damage",
+					"frequency": "skill-dependent_high"
+				},
+				"2": {
+					"id": 2,
+					"title": "Shield",
+					"description": "Event triggered when the player tries to get an item to increase the ship's shield",
+					"type": "reward",
+					"frequency": "skill-dependent_medium"
+				}
+			};
+			SGAME.init({"events": events, "behaviour_when_no_more_los": "success_unless_damage"});
+		}
 	</script>	
 </body>
 </html>

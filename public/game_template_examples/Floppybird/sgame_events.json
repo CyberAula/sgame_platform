@@ -3,7 +3,7 @@
 		"id": 1,
 		"title": "Extra life",
 		"description": "Event triggered when the bird touches a pipe",
-		"type": "reward",
+		"type": "damage",
 		"frequency": "skill-dependent_high"
 	}
 ]

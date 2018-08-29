@@ -97,6 +97,7 @@ es:
         choice1: "El juego deberá actuar como si el jugador hubiera consumido con éxito el objeto de aprendizaje."
         choice2: "El juego deberá actuar como si el jugador no hubiera consumido con éxito el objeto de aprendizaje."
         choice3: "El juego deberá actuar como si el jugador no hubiera consumido con éxito el objeto de aprendizaje a menos que el evento sea de tipo bloqueante."
+        choice4: "El juego deberá actuar como si el jugador hubiera consumido con éxito el objeto de aprendizaje a menos que el evento sea de tipo perjudicial."
     step6:
       title: "Especifica metadatos para el juego"
       description: "En este paso debes especificar metadatos (título, descripción, ...) para el juego educativo."

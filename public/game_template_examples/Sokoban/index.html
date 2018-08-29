@@ -29,6 +29,8 @@
     
         
    <script type="text/javascript">
+       SGAME.init({"behaviour_when_no_more_los": "failure"});
+       
        document.sokobanGame = new Game();
        document.sokobanGame.Run();
        $("div#dialog").dialog(

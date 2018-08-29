@@ -29,7 +29,16 @@
 	<script>
 		window.onload = function(){
 			//Pause function is handled internally by the game
-			SGAME.init({"behaviour_when_no_more_los": "success"});
+			var events = {
+				"1": {
+					"id": 1,
+					"title": "Extra weapon",
+					"description": "Event triggered when the player tries to get a new weapon",
+					"type": "reward",
+					"frequency": "high"
+				}
+			};
+			SGAME.init({"events": events, "behaviour_when_no_more_los": "success"});
 		}
 	</script>
 </body>

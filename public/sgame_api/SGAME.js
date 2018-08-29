@@ -915,7 +915,8 @@ SGAME.CORE = function() {
   var _settings_loaded = false;
   var supportedRepeatLo = ["repeat", "repeat_unless_successfully_consumed", "no_repeat"];
   var supportedCompletionNotification = ["no_more_los", "all_los_consumed", "all_los_succesfully_consumed", "never"];
-  var supportedBehaviourWhenNoMoreLOs = ["success", "failure", "failure_unless_blocking"];
+  var supportedBehaviourWhenNoMoreLOs = ["success", "failure", "success_unless_damage", "failure_unless_blocking"];
+  var supportedEventTypes = ["reward", "damage", "blocking", "no-effect"];
   var _los_can_be_shown = false;
   var _final_screen_shown = false;
   var _final_screen_text = "Congratulations. You have achieved the objectives of this educational game. You may close this window or continue playing.";
@@ -962,7 +963,7 @@ SGAME.CORE = function() {
       _settings["game_settings"]["completion_notification"] = "never"
     }
     if(supportedBehaviourWhenNoMoreLOs.indexOf(_settings["game_settings"]["behaviour_when_no_more_los"]) === -1) {
-      _settings["game_settings"]["behaviour_when_no_more_los"] = "failure_unless_blocking"
+      _settings["game_settings"]["behaviour_when_no_more_los"] = "success_unless_damage"
     }
     if(typeof _settings["game_settings"]["completion_notification_text"] === "string") {
       _final_screen_text = _settings["game_settings"]["completion_notification_text"]
@@ -1188,6 +1189,12 @@ SGAME.CORE = function() {
         return true;
       case "failure":
         return false;
+      case "success_unless_damage":
+        var event = _getEventMetadata(event_id);
+        if(typeof event !== "undefined" && event.type === "damage") {
+          return false
+        }
+        return true;
       case "failure_unless_blocking":
         var event = _getEventMetadata(event_id);
         if(typeof event === "undefined" || event.type !== "blocking") {

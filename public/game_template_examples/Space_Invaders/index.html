@@ -20,9 +20,12 @@
 	<body>
 		<script>
 			window.onload = function(){
-				SGAME.init({togglePause : function(){
-					togglePause();
-				}});
+				SGAME.init({
+					togglePause : function(){
+						togglePause();
+					},
+					"behaviour_when_no_more_los": "failure"
+				});
 			}
 		</script>
 	</body>
