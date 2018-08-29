@@ -1,8 +1,8 @@
 [
 	{
 		"id": 1,
-		"title": "Extra life",
-		"description": "Event triggered when the player loses a life",
+		"title": "Life",
+		"description": "Event triggered when the player loses a life. If the player successfully consumes the presented learning object, he/she will be rewarded with a new life.",
 		"type": "damage",
 		"frequency": "skill-dependent_low"
 	}

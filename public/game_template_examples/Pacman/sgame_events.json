@@ -1,8 +1,8 @@
 [
 	{
 		"id": 1,
-		"title": "Extra life",
-		"description": "Event triggered when a ghost catches the player",
+		"title": "Ghost",
+		"description": "Event triggered when a ghost catches the player. Players who successfully consume a learning object will be rewarded with an extra life that will allow them to continue playing.",
 		"type": "damage",
 		"frequency": "skill-dependent_low"
 	}

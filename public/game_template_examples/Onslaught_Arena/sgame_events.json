@@ -1,8 +1,8 @@
 [
 	{
 		"id": 1,
-		"title": "Extra weapon",
-		"description": "Event triggered when the player tries to get a new weapon",
+		"title": "New weapon",
+		"description": "Event triggered when the player tries to get a new weapon. The player will only get the new weapon by successfully consuming the presented learning object.",
 		"type": "reward",
 		"frequency": "high"
 	}

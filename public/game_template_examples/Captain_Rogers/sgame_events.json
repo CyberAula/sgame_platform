@@ -2,14 +2,14 @@
 	{
 		"id": 1,
 		"title": "Asteroid",
-		"description": "Event triggered when the ship collides with an asteroid",
+		"description": "Event triggered when the ship collides with an asteroid. If the player successfully consumes a learning object, the ship's shield will not suffer any damage.",
 		"type": "damage",
 		"frequency": "skill-dependent_high"
 	},
 	{
 		"id": 2,
 		"title": "Shield",
-		"description": "Event triggered when the player tries to get an item to increase the ship's shield",
+		"description": "Event triggered when the player tries to get an item to increase the ship's shield. The player will only get the item by successfully completing the presented learning object.",
 		"type": "reward",
 		"frequency": "skill-dependent_medium"
 	}

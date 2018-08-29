@@ -2,14 +2,14 @@
 	{
 		"id": 1,
 		"title": "Flaming ring",
-		"description": "Event triggered when the clown touches a flaming ring in stage 1",
+		"description": "Event triggered when the clown touches a flaming ring in stage 1. Players who successfully consume a learning object will be rewarded with an extra life that will allow them to continue playing.",
 		"type": "damage",
 		"frequency": "skill-dependent_high"
 	},
 	{
 		"id": 2,
 		"title": "Monkey",
-		"description": "Event triggered when the clown touches a monkey in stage 2",
+		"description": "Event triggered when the clown touches a monkey in stage 2. Players who successfully consume a learning object will be rewarded with an extra life that will allow them to continue playing.",
 		"type": "damage",
 		"frequency": "skill-dependent_high"
 	}

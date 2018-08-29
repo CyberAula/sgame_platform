@@ -2,7 +2,7 @@
 	{
 		"id": 1,
 		"title": "Powergem",
-		"description": "Event triggered when the player tries to grab a powergem",
+		"description": "Event triggered when the player tries to grab a powergem. Players will only get the powergem (which is required to advance in the game) if they successfully complete the presented learning object.",
 		"type": "blocking",
 		"frequency": "medium"
 	}

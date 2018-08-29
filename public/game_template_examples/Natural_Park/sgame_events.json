@@ -1,8 +1,8 @@
 [
 	{
 		"id": 1,
-		"title": "Gardener Event",
-		"description": "Event triggered when the player talks to the gardener",
+		"title": "Gardener",
+		"description": "Event triggered when the player talks to the gardener. In order to advance in the game, players need to successfully consume the presented learning object.",
 		"type": "blocking",
 		"frequency": "one-shot"
 	}

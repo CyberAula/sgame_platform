@@ -1,8 +1,8 @@
 [
 	{
 		"id": 1,
-		"title": "Extra life",
-		"description": "Event triggered when the devil catches the player",
+		"title": "Devil",
+		"description": "Event triggered when the devil catches the player. In order to continue playing, the player needs to successfully consume the presented learning object. Otherwise, the player should retry the game.",
 		"type": "damage",
 		"frequency": "skill-dependent"
 	}
