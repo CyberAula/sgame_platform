@@ -985,8 +985,27 @@ SGAME.CORE = function() {
     }
   };
   var triggerLO = function(event_id, callback) {
+    var los_mapped = _getMappedLOs(event_id);
+    if(los_mapped.length < 1) {
+      if(typeof callback === "function") {
+        var report = _getReportWhenNoLOs(event_id);
+        callback(report.success, report)
+      }
+      return
+    }
+    var los_candidate = _getCandidateLOsFromMappedLOs(los_mapped);
+    if(los_candidate.length > 0) {
+      selectedLO = _selectLoFromCandidates(los_candidate);
+      showLO(selectedLO, callback)
+    }else {
+      if(typeof callback === "function") {
+        var report = _getReportWhenNoLOs(event_id);
+        callback(report.success, report)
+      }
+    }
+  };
+  var _getMappedLOs = function(event_id) {
     var los_mapped = [];
-    var los_candidate = [];
     var mapped_los_ids = _settings["event_mapping"][event_id];
     if(typeof mapped_los_ids !== "undefined") {
       var n_mapped_los_ids = mapped_los_ids.length;
@@ -1002,28 +1021,20 @@ SGAME.CORE = function() {
         }
       }
     }
+    return los_mapped
+  };
+  var _getCandidateLOsFromMappedLOs = function(los_mapped) {
+    var los_candidate = [];
     var nLosMapped = los_mapped.length;
-    if(nLosMapped.length < 1) {
-      if(typeof callback === "function") {
-        var report = _getReportWhenNoLOs(event_id);
-        callback(report.success, report)
-      }
-      return
-    }
-    for(var j = 0;j < nLosMapped;j++) {
-      if(los_mapped[j]["can_be_shown"] === true) {
-        los_candidate.push(los_mapped[j])
+    for(var i = 0;i < nLosMapped;i++) {
+      if(los_mapped[i]["can_be_shown"] === true) {
+        los_candidate.push(los_mapped[i])
       }
     }
-    if(los_candidate && (los_candidate instanceof Array && los_candidate.length > 0)) {
-      selectedLO = _selectLoFromCandidates(los_candidate);
-      showLO(selectedLO, callback)
-    }else {
-      if(typeof callback === "function") {
-        var report = _getReportWhenNoLOs(event_id);
-        callback(report.success, report)
-      }
-    }
+    return los_candidate
+  };
+  var _getCandidateLOs = function(event_id) {
+    return _getCandidateLOsFromMappedLOs(_getMappedLOs(event_id))
   };
   var showLO = function(lo, callback) {
     if(typeof lo !== "object" || typeof lo["url"] !== "string") {
@@ -1071,8 +1082,14 @@ SGAME.CORE = function() {
   var closeLO = function() {
     SGAME.Fancybox.closeCurrentFancybox()
   };
-  var losCanBeShown = function() {
-    return _los_can_be_shown
+  var losCanBeShown = function(event_id) {
+    if(_los_can_be_shown === false) {
+      return false
+    }
+    if(typeof event_id === "undefined") {
+      return _los_can_be_shown
+    }
+    return _getCandidateLOs(event_id).length > 0
   };
   var _togglePause = function() {
     if(typeof _togglePauseFunction === "function") {

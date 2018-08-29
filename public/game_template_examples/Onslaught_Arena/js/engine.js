@@ -1914,7 +1914,7 @@ proto.getObjectSGAME = function (o,o2) {
 		return;
 	}
 
-	var callTogglePause = SGAME.losCanBeShown();
+	var callTogglePause = SGAME.losCanBeShown(1);
 	if(callTogglePause){
 		this.togglePause();
 	}
