@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <title>Sudoku JS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8" />
+
+  <link rel="stylesheet" href="jquery.mobile-1.4.5.min.css" />
+  <script type="text/javascript" src="jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="jquery.mobile-1.4.5.min.js"></script>
+
+  <script src="/SGAME.js"></script>
+  <script type="text/javascript" src="sudoku.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="ionic/ionicons.min.css">
+
+  </head>
+
+  <body onload="init();" onclick="elsewhere();">
+    <!-- Start of the page -->
+    <div data-role="page" id="home">
+
+      <div role="main" class="ui-content">
+
+        <h1>Sudoku JS</h1>
+
+        <div class="table">
+        <table id="grid"></table>
+        </div>
+
+        <div class="table panel">
+        <table id="digits">
+            <tr>
+                <td id="digit-0" class="digit"></td>
+                <td id="digit-1" class="digit">1</td>
+                <td id="digit-2" class="digit">2</td>
+                <td id="digit-3" class="digit">3</td>
+                <td id="digit-4" class="digit">4</td>
+                <td id="digit-null"></td>
+                <td id="digit-solve" class="digit">
+                  <li id="but_solve_number" title="Solve number" class="ion-help" data-pack="default" onclick="solveCurrentSquare();"></li>
+                </td>
+            </tr>
+            <tr>
+                <td id="digit-5" class="digit">5</td>
+                <td id="digit-6" class="digit">6</td>
+                <td id="digit-7" class="digit">7</td>
+                <td id="digit-8" class="digit">8</td>
+                <td id="digit-9" class="digit">9</td>
+                <td id="digit-null"></td>
+                <td id="digit-null"></td>
+            </tr>
+        </table>
+        </div>
+
+        <div class="panel">
+            <ul id="buttons1">
+                <li id="but1" title="Make an hypothesis" class="ion-fork-repo" data-pack="default" onclick="hypothesis1();"></li>
+                <li id="but2" title="Validate hypothesis" class="ion-pull-request" data-pack="default" onclick="hypothesis2();"></li>
+                <li id="but3" title="Rule out hypothesis" class="ion-android-close" data-pack="android" onclick="hypothesis3();"></li>
+            </ul>
+        </div>
+        <div>
+            <ul id="buttons2">
+                <li title="Restart same grid" class="ion-android-refresh" data-pack="android" onclick='$( "#restart" ).popup( "open" );'></li>
+                <li title="Generate a new grid" class="ion-code-working" data-pack="default" onclick='$( "#newGrid" ).popup( "open" );'></li>
+                <li title="Show help" class="ion-map" data-pack="default" onclick='$( "#help" ).popup( "open" );'></li>
+            </ul>
+        </div>
+
+      </div>
+
+      <div data-role="popup" id ="waiting" class="ui-content" data-theme="b" data-overlay-theme="b">
+        <p>generating a new grid…</p>
+      </div>
+
+      <div data-role="popup" id ="newGrid" class="ui-content"
+          data-theme="b" data-overlay-theme="b">
+          <h2>Select level:</h2>
+          <ul>
+              <li onclick="newRandomGrid(72);">Easy</li>
+              <li onclick="newRandomGrid(96);">Medium</li>
+              <li onclick="newRandomGrid(128);">Difficult</li>
+              <li onclick="newRandomGrid(192);">Insane</li>
+          </ul>
+      </div>
+
+      <div data-role="popup" id ="restart" class="ui-content"
+          data-theme="b" data-overlay-theme="b">
+          <h2>Restart game?</h2>
+          <ul>
+              <li onclick='restart();$( "#restart" ).popup( "close" );'>yes</li>
+              <li id="cancel" onclick='$( "#restart" ).popup( "close" );'>cancel</li>
+          </ul>
+      </div>
+
+      <div data-role="popup" id ="help" class="ui-content"
+          data-theme="b" data-overlay-theme="b">
+          <h2>Help</h2>
+          <p>Main symbols</p>
+          <ul>
+                <li class="ion-fork-repo" data-pack="default"></li>
+                <li class="help">make an hypothesis</li>
+                <li class="ion-pull-request" data-pack="default"></li>
+                <li class="help">validate hypothesis</li>
+                <li class="ion-android-close" data-pack="android"></li>
+                <li class="help">rule out hypothesis</li>
+                <li class="ion-android-refresh" data-pack="android"></li>
+                <li class="help">restart same grid</li>
+                <li class="ion-code-working" data-pack="default"></li>
+                <li class="help">generate a new grid</li>
+          </ul>
+          <h3 id="check" class="helpButton" onclick='_check();$( "#help" ).popup( "close" );'>Show wrong answers</h3>
+      </div>
+
+    </div>
+    <!-- End of the page -->
+
+  </body>
+</html>

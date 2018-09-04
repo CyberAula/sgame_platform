@@ -1,0 +1,9 @@
+[
+	{
+		"id": 1,
+		"title": "Solve square",
+		"description": "Event triggered when the player requests the solution of a square. 1. If the player consumes a learning object with success the solution of the square will be provided.",
+		"type": "reward",
+		"frequency": "skill-dependent"
+	}
+]

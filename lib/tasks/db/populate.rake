@@ -588,6 +588,16 @@ namespace :db do
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/game_template_examples/Circus.zip'))
 
+		system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/SudokuJS.zip')
+		Utils.zip_folder(File.join(Rails.root, 'public/game_template_examples/SudokuJS.zip'),File.join(Rails.root, 'public/game_template_examples/SudokuJS'))
+		cCircus = GameTemplate.create! :owner_id => user.id,
+			:title=>"Sudoku",
+			:description=>"Sudoku description", 
+			:thumbnail=> File.open(File.join(Rails.root, 'public/game_template_examples/SudokuJS/thumbnail.png')),
+			:language => "en",
+			:certified => true,
+			:file =>  File.open(File.join(Rails.root, 'public/game_template_examples/SudokuJS.zip'))
+
 		puts "Populate finished"
 		t2 = Time.now - t1
 		puts "Elapsed time:" + t2.to_s
