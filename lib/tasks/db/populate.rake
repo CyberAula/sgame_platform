@@ -595,6 +595,13 @@ namespace :db do
 		user = User.find_by_email("demo@sgame.dit.upm.es")
 
 		#2: Create SCORM packages and Learning Objects
+		mathQuiz = Scormfile.create! :owner_id => user.id,
+			:title  => "MathQuiz",
+			:description   => "Pack de aplicaciones interactivas para aprender matemáticas: sumas, restas, multiplicaciones y divisiones. Las preguntas se generan de forma aleatoria. Este pack incluye aplicaciones que generan preguntas de diferentes tipos y niveles.",
+			:thumbnail=> File.open(File.join(Rails.root, 'public/scorm_examples/MathQuiz_thumbnail.png')),
+			:language => "es",
+			:certified => true,
+			:file =>  File.open(File.join(Rails.root, 'public/scorm_examples/MathQuiz_pack1.zip'))
 
 		#3: Create game templates
 		# Events of the game templates are created based on the sgame_events_json.json file
@@ -627,6 +634,22 @@ namespace :db do
 			:language => "en",
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/game_template_examples/SudokuJS.zip'))
+
+		#4: Create games
+		floppybirdMathQuiz = Game.create! :owner_id => user.id,
+		:game_template_id=>GameTemplate.find_by_title("Floppy Bird").id,
+		:title=>"Aprende matemáticas con Floppy Bird (II)",
+		:description=>"Juego educativo basado en Floppy Bird y la aplicación MathQuiz para aprender matemáticas", 
+		:thumbnail=> File.open(File.join(Rails.root, 'public/game_thumbnails/floppyMathQuiz.png')),
+		:language => "es",
+		:certified => true
+	
+		#Event mapping for floppybirdMathQuiz
+		((mathQuiz.los).map{|lo| lo.id}).uniq.each do |lo_id|
+			GameEventMapping.create! :game_id => floppybirdMathQuiz.id, 
+				:game_template_event_id => floppybirdMathQuiz.template.events.first.id, 
+				:lo_id => lo_id
+		end
 
 		puts "Populate finished"
 		t2 = Time.now - t1
