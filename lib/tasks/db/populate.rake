@@ -597,7 +597,7 @@ namespace :db do
 		#2: Create SCORM packages and Learning Objects
 		mathQuiz = Scormfile.create! :owner_id => user.id,
 			:title  => "MathQuiz",
-			:description   => "Pack de aplicaciones interactivas para aprender matemáticas: sumas, restas, multiplicaciones y divisiones. Las preguntas se generan de forma aleatoria. Este pack incluye aplicaciones que generan preguntas de diferentes tipos y niveles.",
+			:description   => "Pack de aplicaciones interactivas para aprender matemáticas: sumas, restas, multiplicaciones, divisiones, potencias y raíces. Las preguntas se generan de forma aleatoria. Este pack incluye aplicaciones que generan preguntas de diferentes tipos y niveles de dificultad.",
 			:thumbnail=> File.open(File.join(Rails.root, 'public/scorm_examples/MathQuiz_thumbnail.png')),
 			:language => "es",
 			:certified => true,
