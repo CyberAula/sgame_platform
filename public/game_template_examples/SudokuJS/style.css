@@ -117,25 +117,37 @@ li {
     font-size: 24px;
     width: auto;
 }
-
-#help ul {
-    width: 250px; 
+#help {
+  min-width: 300px;
 }
-.help {
+p.help {
     font-size: 14px;
     width: 160px;
     text-align: left;
-    top: -8px;
-}
-#help p {
-    font-weight: bold;
-    text-align: left;
-    margin-top: 18px;
-    margin-bottom: 8px;
-    font-size: 16px;
+    top: -2px;
+    margin-left: 20px;
 }
 .helpButton {
     color: #FF6;
     padding-bottom: 6px;
     cursor: pointer;
+}
+
+span.ion-icon {
+  font-size: 30px;
+}
+
+#check_dialog p {
+  text-align: left;
+}
+
+#check_wrong_answers {
+  cursor: pointer;
+}
+
+td.gridCell[clickable="0"]{
+  cursor: default;
+}
+td.gridCell[clickable="1"]{
+  cursor: pointer;
 }

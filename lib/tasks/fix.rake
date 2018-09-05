@@ -127,6 +127,14 @@ namespace :fix do
       gt.file = File.open(File.join(Rails.root, 'public/game_template_examples/Circus.zip'))
       gt.save!
     end
+
+    system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/SudokuJS.zip')
+    Utils.zip_folder(File.join(Rails.root, 'public/game_template_examples/SudokuJS.zip'),File.join(Rails.root, 'public/game_template_examples/SudokuJS'))
+    gt = GameTemplate.find_by_title("Sudoku")
+    unless gt.nil?
+      gt.file = File.open(File.join(Rails.root, 'public/game_template_examples/SudokuJS.zip'))
+      gt.save!
+    end
     
     printTitle("Task finished")
   end

@@ -590,9 +590,9 @@ namespace :db do
 
 		system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/SudokuJS.zip')
 		Utils.zip_folder(File.join(Rails.root, 'public/game_template_examples/SudokuJS.zip'),File.join(Rails.root, 'public/game_template_examples/SudokuJS'))
-		cCircus = GameTemplate.create! :owner_id => user.id,
+		sudoku = GameTemplate.create! :owner_id => user.id,
 			:title=>"Sudoku",
-			:description=>"Sudoku description", 
+			:description=>"Sudoku is a logic-based puzzle game in which players have to fill a 9×9 grid with digits so that each column, each row, and each of the nine 3×3 subgrids that compose the grid contains all of the digits from 1 to 9. The game provides a partially completed grid, which has a single solution.", 
 			:thumbnail=> File.open(File.join(Rails.root, 'public/game_template_examples/SudokuJS/thumbnail.png')),
 			:language => "en",
 			:certified => true,

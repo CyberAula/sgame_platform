@@ -2,7 +2,14 @@
 	{
 		"id": 1,
 		"title": "Solve square",
-		"description": "Event triggered when the player requests the solution of a square. 1. If the player consumes a learning object with success the solution of the square will be provided.",
+		"description": "Event triggered when the player requests the solution of a square. If the player consumes a learning object with success the solution of the square will be provided.",
+		"type": "reward",
+		"frequency": "skill-dependent"
+	},
+	{
+		"id": 2,
+		"title": "Check wrong answers",
+		"description": "Event triggered when the player requests to view the wrong answers when checking the Sudoku solution. If the player consumes a learning object with success all wrong answers will be highlighted.",
 		"type": "reward",
 		"frequency": "skill-dependent"
 	}

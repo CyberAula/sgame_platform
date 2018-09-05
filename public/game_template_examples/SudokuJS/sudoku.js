@@ -53,7 +53,9 @@ function updateGrid() {
 }
 
 function init() {
-    SGAME.init({"behaviour_when_no_more_los": "success"}); //TODO: change to failure
+    SGAME.init({"behaviour_when_no_more_los": "failure"});
+
+    loadEvents();
 
     var i, j;
     var tbl = document.getElementById("grid");
@@ -98,6 +100,18 @@ function init() {
     document.getElementById("but3").style.color="#B8B8B8";
 
     setTimeout(function() { getRandomGrid(96); }, 250);
+}
+
+function loadEvents(){
+    $(document).on("click", "#button_solve_number", function(event) { 
+        event.stopPropagation();
+        solveCurrentSquare();
+    });
+    $(document).on("click", "#check_wrong_answers", function(event) { 
+        event.stopPropagation();
+        _check();
+        $("#check_dialog").popup("close");
+    });
 }
 
 function allowed(A, y,x) {
@@ -213,7 +227,8 @@ function _getRandomGrid2(nlevel) {
 }
 
 function _getRandomGrid(nlevel) {
-    console.log(_getRandomGrid2(nlevel));
+    var output = _getRandomGrid2(nlevel);
+    //console.log(output);
     updateGrid();
     for(i=0;i<9;i++) {
         for(j=0;j<9;j++) {
@@ -251,6 +266,14 @@ function clickCell(cell) {
         curY = y;
         curX = x;
         cell.style.backgroundColor = "#BBB";
+
+        // digit-solve
+        var showDigitSolveButton = (SGAME.losCanBeShown(1) || SGAME.successWhenNoLOs(1));
+        if(showDigitSolveButton){
+            $("#digit-solve").show();
+        } else {
+            $("#digit-solve").hide();
+        }
         document.getElementById("digits").style.display = "inline-block";
         document.getElementById("buttons1").style.display = "none";
         var a = allowed(T, y, x);
@@ -277,7 +300,9 @@ function clickCell(cell) {
                 digits[i].style.cursor="pointer";
             }
         }
-    } else elsewhere();
+    } else { 
+        elsewhere(); 
+    }
 }
 
 function hypothesis1() {
@@ -290,7 +315,7 @@ function hypothesis1() {
 }
 function hypothesis2() {
     var i;
-    console.log(hyps);
+    //console.log(hyps);
     for(i=0;i<hyps.length;i++) hyps[i].style.color = col1;
     hyps = []
     hyp = false;
@@ -300,7 +325,7 @@ function hypothesis2() {
 }
 function hypothesis3() {
     var i;
-    console.log(hyps);
+    //console.log(hyps);
     for(i=0;i<hyps.length;i++) {
         hyps[i].innerHTML = "";
         var y = Number(hyps[i].getAttribute("y"));
@@ -330,8 +355,8 @@ function restart() {
 
 }
 function newRandomGrid(nlevel) {
-    $( "#newGrid" ).popup( "close" );
-    setTimeout(function() { getRandomGrid(nlevel); }, 250);
+    $("#newGrid").popup( "close" );
+    setTimeout(function(){ getRandomGrid(nlevel); }, 250);
 }
 
 function solve() {
@@ -376,19 +401,56 @@ function solveCurrentSquare() {
 function solveSquare(i,j) {
     SGAME.triggerLO(1,function(pass){
         if(pass){
-            setCell(i,j, Tsol[i][j]);
+            T[i][j] = Tsol[i][j];
+            setCell(i,j, T[i][j]);
+            Tref[i][j].style.color = "#B8B8B8";
+            Tref[i][j].setAttribute("clickable", 0);
+            Tref[i][j].style.backgroundColor = "";
         }
     });
 }
-function checkCurrentSquare(){
-    checkSquare(curY,curX);
-}
-function checkSquare(i,j){
-    if (T[i][j] != 0) {
-        if (T[i][j] != Tsol[i][j]) {
-            Tref[i][j].style.backgroundColor = "#FBB";
-        } else {
-            Tref[i][j].style.backgroundColor = "green";
+function isFilled() {
+    for(i=0;i<9;i++) {
+        for(j=0;j<9;j++) {
+            if (T[i][j] === 0) {
+                return false;
+            }
         }
     }
+    return true;
+}
+function isSolved() {
+    for(i=0;i<9;i++) {
+        for(j=0;j<9;j++) {
+            if (T[i][j] != Tsol[i][j]) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+function loadCheckDialog(){
+    var showWrongAnswers = false;
+    var message;
+    if(isFilled()){
+        if(isSolved()){
+            message = "Sudoku solution is correct.";
+        } else {
+            message = "Sudoku solution is not correct.";
+            showWrongAnswers = true;
+        }
+    } else {
+        message = "Sudoku is not completely filled.";
+        showWrongAnswers = true;
+    }
+
+    showWrongAnswers = showWrongAnswers && (SGAME.losCanBeShown(2) || SGAME.successWhenNoLOs(2));
+
+    if(showWrongAnswers){
+        $("#wrong_answers").show();
+    } else {
+        $("#wrong_answers").hide();
+    }
+
+    $("#check_message").html(message);
 }

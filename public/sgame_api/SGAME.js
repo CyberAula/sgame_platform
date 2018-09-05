@@ -852,10 +852,16 @@ function Local_API_1484_11(options) {
   var closeLO = function() {
     return SGAME.CORE.closeLO()
   };
+  var getSettings = function() {
+    return SGAME.CORE.getSettings()
+  };
   var losCanBeShown = function() {
     return SGAME.CORE.losCanBeShown()
   };
-  return{init:init, loadSettings:loadSettings, triggerLO:triggerLO, showLO:showLO, showRandomLO:showRandomLO, closeLO:closeLO, losCanBeShown:losCanBeShown}
+  var successWhenNoLOs = function() {
+    return SGAME.CORE.successWhenNoLOs()
+  };
+  return{init:init, loadSettings:loadSettings, triggerLO:triggerLO, showLO:showLO, showRandomLO:showRandomLO, closeLO:closeLO, getSettings:getSettings, losCanBeShown:losCanBeShown, successWhenNoLOs:successWhenNoLOs}
 }();
 SGAME.VERSION = "0.5";
 SGAME.AUTHORS = "Aldo Gordillo, Enrique Barra";
@@ -1082,6 +1088,9 @@ SGAME.CORE = function() {
   var closeLO = function() {
     SGAME.Fancybox.closeCurrentFancybox()
   };
+  var getSettings = function(event_id) {
+    return _settings
+  };
   var losCanBeShown = function(event_id) {
     if(_los_can_be_shown === false) {
       return false
@@ -1090,6 +1099,9 @@ SGAME.CORE = function() {
       return _los_can_be_shown
     }
     return _getCandidateLOs(event_id).length > 0
+  };
+  var successWhenNoLOs = function(event_id) {
+    return _getSuccessWhenNoLOs(event_id)
   };
   var _togglePause = function() {
     if(typeof _togglePauseFunction === "function") {
@@ -1241,7 +1253,7 @@ SGAME.CORE = function() {
   };
   SGAME.Debugger.init(true);
   _loadInitialSettings();
-  return{init:init, loadSettings:loadSettings, triggerLO:triggerLO, showLO:showLO, showRandomLO:showRandomLO, closeLO:closeLO, losCanBeShown:losCanBeShown}
+  return{init:init, loadSettings:loadSettings, triggerLO:triggerLO, showLO:showLO, showRandomLO:showRandomLO, closeLO:closeLO, getSettings:getSettings, losCanBeShown:losCanBeShown, successWhenNoLOs:successWhenNoLOs}
 }();
 var API;
 var API_1484_11;

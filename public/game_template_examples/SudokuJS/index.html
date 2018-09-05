@@ -23,7 +23,7 @@
 
       <div role="main" class="ui-content">
 
-        <h1>Sudoku JS</h1>
+        <h1>Sudoku</h1>
 
         <div class="table">
         <table id="grid"></table>
@@ -39,7 +39,7 @@
                 <td id="digit-4" class="digit">4</td>
                 <td id="digit-null"></td>
                 <td id="digit-solve" class="digit">
-                  <li id="but_solve_number" title="Solve number" class="ion-help" data-pack="default" onclick="solveCurrentSquare();"></li>
+                  <li id="button_solve_number" title="Solve square" class="ion-android-bulb" data-pack="default"></li>
                 </td>
             </tr>
             <tr>
@@ -59,13 +59,14 @@
                 <li id="but1" title="Make an hypothesis" class="ion-fork-repo" data-pack="default" onclick="hypothesis1();"></li>
                 <li id="but2" title="Validate hypothesis" class="ion-pull-request" data-pack="default" onclick="hypothesis2();"></li>
                 <li id="but3" title="Rule out hypothesis" class="ion-android-close" data-pack="android" onclick="hypothesis3();"></li>
+                <li title="Show help" class="ion-help" data-pack="default" onclick='$("#help").popup("open");'></li>
             </ul>
         </div>
         <div>
             <ul id="buttons2">
+                <li title="Check solution" class="ion-android-checkbox-outline" data-pack="android" onclick='loadCheckDialog(); $("#check_dialog").popup("open");'></li>
                 <li title="Restart same grid" class="ion-android-refresh" data-pack="android" onclick='$( "#restart" ).popup( "open" );'></li>
-                <li title="Generate a new grid" class="ion-code-working" data-pack="default" onclick='$( "#newGrid" ).popup( "open" );'></li>
-                <li title="Show help" class="ion-map" data-pack="default" onclick='$( "#help" ).popup( "open" );'></li>
+                <li title="Generate a new grid" class="ion-crop" data-pack="default" onclick='$( "#newGrid" ).popup( "open" );'></li>
             </ul>
         </div>
 
@@ -75,19 +76,52 @@
         <p>generating a new grid…</p>
       </div>
 
-      <div data-role="popup" id ="newGrid" class="ui-content"
-          data-theme="b" data-overlay-theme="b">
-          <h2>Select level:</h2>
-          <ul>
-              <li onclick="newRandomGrid(72);">Easy</li>
-              <li onclick="newRandomGrid(96);">Medium</li>
-              <li onclick="newRandomGrid(128);">Difficult</li>
-              <li onclick="newRandomGrid(192);">Insane</li>
-          </ul>
+      <div data-role="popup" id ="help" class="ui-content" data-theme="b" data-overlay-theme="b">
+          <h2>Help</h2>
+          <table>
+            <tr>
+                <td><span class="ion-icon ion-fork-repo" data-pack="default"></span></td>
+                <td><p class="help">make an hypothesis</p></td>
+            </tr>
+            <tr>
+                <td><span class="ion-icon ion-pull-request" data-pack="default"></span></td>
+                <td><p class="help">validate hypothesis</p></td>
+            </tr>
+            <tr>
+                <td><span class="ion-icon ion-android-close" data-pack="android"></span></td>
+                <td><p class="help">rule out hypothesis</p></td>
+            </tr>
+            <tr>
+                <td><span class="ion-icon ion-android-checkbox-outline" data-pack="android"></span></td>
+                <td><p class="help">check Sudoku solution</p></td>
+            </tr>
+            <tr>
+                <td><span class="ion-icon ion-android-refresh" data-pack="android"></span></td>
+                <td><p class="help">restart same grid</p></td>
+            </tr>
+            <tr>
+                <td><span class="ion-icon ion-crop" data-pack="default"></span></td>
+                <td><p class="help">generate a new grid</p></td>
+            </tr>
+            <tr>
+                <td><span class="ion-icon ion-android-bulb" data-pack="default"></span></td>
+                <td><p class="help">solve the selected square</p></td>
+            </tr>
+        </table>
       </div>
 
-      <div data-role="popup" id ="restart" class="ui-content"
-          data-theme="b" data-overlay-theme="b">
+      <div data-role="popup" id ="check_dialog" class="ui-content" data-theme="b" data-overlay-theme="b">
+          <h2>Check solution</h2><br/>
+          <p id="check_message"></p><br/>
+          <div id="wrong_answers" style="display:none">
+            <p onclick='_check();$("#check_dialog").popup("close");'>Need help?</p>
+            <p id="check_wrong_answers">You can <span style="font-weight:bold">check the wrong answers</span> by clicking here.</p>
+            <p>The background of those squares with wrong answers will turn red.</p>
+            <p>If after checking wrong answers, there is no square with red background, that means that all numbers are correct.</p>
+          </div>
+      </div>
+
+      <div data-role="popup" id ="restart" class="ui-content" data-theme="b" data-overlay-theme="b">
           <h2>Restart game?</h2>
           <ul>
               <li onclick='restart();$( "#restart" ).popup( "close" );'>yes</li>
@@ -95,23 +129,14 @@
           </ul>
       </div>
 
-      <div data-role="popup" id ="help" class="ui-content"
-          data-theme="b" data-overlay-theme="b">
-          <h2>Help</h2>
-          <p>Main symbols</p>
+      <div data-role="popup" id ="newGrid" class="ui-content" data-theme="b" data-overlay-theme="b">
+          <h2>Select level:</h2>
           <ul>
-                <li class="ion-fork-repo" data-pack="default"></li>
-                <li class="help">make an hypothesis</li>
-                <li class="ion-pull-request" data-pack="default"></li>
-                <li class="help">validate hypothesis</li>
-                <li class="ion-android-close" data-pack="android"></li>
-                <li class="help">rule out hypothesis</li>
-                <li class="ion-android-refresh" data-pack="android"></li>
-                <li class="help">restart same grid</li>
-                <li class="ion-code-working" data-pack="default"></li>
-                <li class="help">generate a new grid</li>
+              <li onclick="newRandomGrid(72);">Easy</li>
+              <li onclick="newRandomGrid(96);">Medium</li>
+              <li onclick="newRandomGrid(128);">Difficult</li>
+              <li onclick="newRandomGrid(192);">Insane</li>
           </ul>
-          <h3 id="check" class="helpButton" onclick='_check();$( "#help" ).popup( "close" );'>Show wrong answers</h3>
       </div>
 
     </div>
