@@ -122,6 +122,36 @@ namespace :db do
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/game_template_examples/Pacman.zip'))
 
+		system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/Captain_Rogers.zip')
+		Utils.zip_folder(File.join(Rails.root, 'public/game_template_examples/Captain_Rogers.zip'),File.join(Rails.root, 'public/game_template_examples/Captain_Rogers'))
+		cRogers = GameTemplate.create! :owner_id => user.id,
+			:title=>"Captain Rogers",
+			:description=>"It's simple, yet very engaging game about brave Captain Rogers and his escape through an asteroid field. Tap the screen to fly up, release to fly down. Collect the stars and shields, avoid asteroids and mines. Grab the bomb to blow up everything on screen!", 
+			:thumbnail=> File.open(File.join(Rails.root, 'public/game_template_examples/Captain_Rogers/thumbnail.png')),
+			:language => "en",
+			:certified => true,
+			:file =>  File.open(File.join(Rails.root, 'public/game_template_examples/Captain_Rogers.zip'))
+
+		system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/Circus.zip')
+		Utils.zip_folder(File.join(Rails.root, 'public/game_template_examples/Circus.zip'),File.join(Rails.root, 'public/game_template_examples/Circus'))
+		cCircus = GameTemplate.create! :owner_id => user.id,
+			:title=>"Circus Charly",
+			:description=>"Circus Charly is an arcade platform game in which the player controls a clown who has to avoid obstacles such as fire rings", 
+			:thumbnail=> File.open(File.join(Rails.root, 'public/game_template_examples/Circus/thumbnail.png')),
+			:language => "en",
+			:certified => true,
+			:file =>  File.open(File.join(Rails.root, 'public/game_template_examples/Circus.zip'))
+
+		system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/SudokuJS.zip')
+		Utils.zip_folder(File.join(Rails.root, 'public/game_template_examples/SudokuJS.zip'),File.join(Rails.root, 'public/game_template_examples/SudokuJS'))
+		sudoku = GameTemplate.create! :owner_id => user.id,
+			:title=>"Sudoku",
+			:description=>"Sudoku is a logic-based puzzle game in which players have to fill a 9×9 grid with digits so that each column, each row, and each of the nine 3×3 subgrids that compose the grid contains all of the digits from 1 to 9. The game provides a partially completed grid, which has a single solution.", 
+			:thumbnail=> File.open(File.join(Rails.root, 'public/game_template_examples/SudokuJS/thumbnail.png')),
+			:language => "en",
+			:certified => true,
+			:file =>  File.open(File.join(Rails.root, 'public/game_template_examples/SudokuJS.zip'))
+
 		#4: Create games
 		#With oArena template
 		oArenaInstance = Game.create! :owner_id => user.id,
