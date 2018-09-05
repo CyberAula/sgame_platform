@@ -855,11 +855,11 @@ function Local_API_1484_11(options) {
   var getSettings = function() {
     return SGAME.CORE.getSettings()
   };
-  var losCanBeShown = function() {
-    return SGAME.CORE.losCanBeShown()
+  var losCanBeShown = function(event_id) {
+    return SGAME.CORE.losCanBeShown(event_id)
   };
-  var successWhenNoLOs = function() {
-    return SGAME.CORE.successWhenNoLOs()
+  var successWhenNoLOs = function(event_id) {
+    return SGAME.CORE.successWhenNoLOs(event_id)
   };
   return{init:init, loadSettings:loadSettings, triggerLO:triggerLO, showLO:showLO, showRandomLO:showRandomLO, closeLO:closeLO, getSettings:getSettings, losCanBeShown:losCanBeShown, successWhenNoLOs:successWhenNoLOs}
 }();
@@ -1088,7 +1088,7 @@ SGAME.CORE = function() {
   var closeLO = function() {
     SGAME.Fancybox.closeCurrentFancybox()
   };
-  var getSettings = function(event_id) {
+  var getSettings = function() {
     return _settings
   };
   var losCanBeShown = function(event_id) {
