@@ -603,6 +603,14 @@ namespace :db do
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/scorm_examples/MathQuiz_pack1.zip'))
 
+		interactivePeriodicTable = Scormfile.create! :owner_id => user.id,
+			:title  => "Tabla Periódica Interactiva",
+			:description   => "Aplicación interactiva para aprender la tabla periódica.",
+			:thumbnail=> File.open(File.join(Rails.root, 'public/scorm_examples/tabla_periodica_interactiva_thumbnail.png')),
+			:language => "es",
+			:certified => true,
+			:file =>  File.open(File.join(Rails.root, 'public/scorm_examples/tabla_periodica_interactiva.zip'))
+
 		#3: Create game templates
 		# Events of the game templates are created based on the sgame_events_json.json file
 		system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/Captain_Rogers.zip')
@@ -648,6 +656,21 @@ namespace :db do
 		((mathQuiz.los).map{|lo| lo.id}).uniq.each do |lo_id|
 			GameEventMapping.create! :game_id => floppybirdMathQuiz.id, 
 				:game_template_event_id => floppybirdMathQuiz.template.events.first.id, 
+				:lo_id => lo_id
+		end
+
+		floppybirdIPeriodicTable = Game.create! :owner_id => user.id,
+		:game_template_id=>GameTemplate.find_by_title("Floppy Bird").id,
+		:title=>"Aprende la tabla periódica con Floppy Bird (II)",
+		:description=>"Juego educativo basado en Floppy Bird para aprender los elementos de la tabla periódica mediante una aplicación interactiva.", 
+		:thumbnail=> File.open(File.join(Rails.root, 'public/game_template_examples/Floppybird/thumbnail.png')),
+		:language => "es",
+		:certified => true
+
+		#Event mapping for floppybirdInteractivePeriodicTable
+		((interactivePeriodicTable.los).map{|lo| lo.id}).uniq.each do |lo_id|
+			GameEventMapping.create! :game_id => floppybirdIPeriodicTable.id, 
+				:game_template_event_id => floppybirdIPeriodicTable.template.events.first.id, 
 				:lo_id => lo_id
 		end
 
