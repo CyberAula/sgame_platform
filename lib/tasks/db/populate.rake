@@ -619,6 +619,14 @@ namespace :db do
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/scorm_examples/MapQuiz.zip'))
 
+		phishingDetector = Scormfile.create! :owner_id => user.id,
+			:title  => "Detector de Phishing",
+			:description   => "Aplicación interactiva para aprender a detectar páginas web no fiables para lograr una navegación segura por Internet.",
+			:thumbnail=> File.open(File.join(Rails.root, 'public/scorm_examples/phishing_thumbnail.png')),
+			:language => "es",
+			:certified => true,
+			:file =>  File.open(File.join(Rails.root, 'public/scorm_examples/Phishing.zip'))
+
 		#3: Create game templates
 		# Events of the game templates are created based on the sgame_events_json.json file
 		system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/Captain_Rogers.zip')
@@ -675,7 +683,6 @@ namespace :db do
 		:language => "es",
 		:certified => true
 
-		#Event mapping for floppybirdInteractivePeriodicTable
 		((interactivePeriodicTable.los).map{|lo| lo.id}).uniq.each do |lo_id|
 			GameEventMapping.create! :game_id => floppybirdIPeriodicTable.id, 
 				:game_template_event_id => floppybirdIPeriodicTable.template.events.first.id, 
@@ -691,13 +698,13 @@ namespace :db do
 		:language => "es",
 		:certified => true
 
-		#Event mapping for cRogersMathQuiz
 		GameEventMapping.create! :game_id => cRogersMathQuiz.id,
 					:game_template_event_id => cRogers.events.find_by_id_in_game(1).id,
 					:lo_id => mathQuiz.los.find_by_resource_identifier("RescormBoilerplate_resource1").id
 		GameEventMapping.create! :game_id => cRogersMathQuiz.id,
 					:game_template_event_id => cRogers.events.find_by_id_in_game(2).id,
 					:lo_id => mathQuiz.los.find_by_resource_identifier("RescormBoilerplate_resource2").id
+
 
 
 		cRogersMapQuiz = Game.create! :owner_id => user.id,
@@ -714,6 +721,21 @@ namespace :db do
 					:game_template_event_id => event.id,
 					:lo_id => lo_id
 			end
+		end
+
+
+		sudokuPhishingDetector = Game.create! :owner_id => user.id,
+		:game_template_id=>sudoku.id,
+		:title=>"Sudoku",
+		:description=>"Aprender a detectar sitios web fraudulentos mientras resuelves Sudokus.", 
+		:thumbnail=> File.open(File.join(Rails.root, 'public/game_template_examples/SudokuJS/thumbnail.png')),
+		:language => "es",
+		:certified => true
+
+		((phishingDetector.los).map{|lo| lo.id}).uniq.each do |lo_id|
+			GameEventMapping.create! :game_id => sudokuPhishingDetector.id, 
+				:game_template_event_id => sudoku.events.first.id, 
+				:lo_id => lo_id
 		end
 
 		puts "Populate finished"
