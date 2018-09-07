@@ -611,6 +611,14 @@ namespace :db do
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/scorm_examples/tabla_periodica_interactiva.zip'))
 
+		mapQuiz = Scormfile.create! :owner_id => user.id,
+			:title  => "MapQuiz",
+			:description   => "Aplicación interactiva para aprender a situar las provincias españolas.",
+			:thumbnail=> File.open(File.join(Rails.root, 'public/scorm_examples/MapQuiz_thumbnail.png')),
+			:language => "es",
+			:certified => true,
+			:file =>  File.open(File.join(Rails.root, 'public/scorm_examples/MapQuiz.zip'))
+
 		#3: Create game templates
 		# Events of the game templates are created based on the sgame_events_json.json file
 		system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/Captain_Rogers.zip')
@@ -652,12 +660,12 @@ namespace :db do
 		:language => "es",
 		:certified => true
 	
-		#Event mapping for floppybirdMathQuiz
 		((mathQuiz.los).map{|lo| lo.id}).uniq.each do |lo_id|
 			GameEventMapping.create! :game_id => floppybirdMathQuiz.id, 
 				:game_template_event_id => floppybirdMathQuiz.template.events.first.id, 
 				:lo_id => lo_id
 		end
+
 
 		floppybirdIPeriodicTable = Game.create! :owner_id => user.id,
 		:game_template_id=>GameTemplate.find_by_title("Floppy Bird").id,
@@ -672,6 +680,40 @@ namespace :db do
 			GameEventMapping.create! :game_id => floppybirdIPeriodicTable.id, 
 				:game_template_event_id => floppybirdIPeriodicTable.template.events.first.id, 
 				:lo_id => lo_id
+		end
+
+
+		cRogersMathQuiz = Game.create! :owner_id => user.id,
+		:game_template_id=>cRogers.id,
+		:title=>"Suma y resta con el capitán Rogers",
+		:description=>"Juego educativo basado en el juego Capitán Rogers y la aplicación MathQuiz para practicar sumas y restas.", 
+		:thumbnail=> File.open(File.join(Rails.root, 'public/game_template_examples/Captain_Rogers/thumbnail.png')),
+		:language => "es",
+		:certified => true
+
+		#Event mapping for cRogersMathQuiz
+		GameEventMapping.create! :game_id => cRogersMathQuiz.id,
+					:game_template_event_id => cRogers.events.find_by_id_in_game(1).id,
+					:lo_id => mathQuiz.los.find_by_resource_identifier("RescormBoilerplate_resource1").id
+		GameEventMapping.create! :game_id => cRogersMathQuiz.id,
+					:game_template_event_id => cRogers.events.find_by_id_in_game(2).id,
+					:lo_id => mathQuiz.los.find_by_resource_identifier("RescormBoilerplate_resource2").id
+
+
+		cRogersMapQuiz = Game.create! :owner_id => user.id,
+		:game_template_id=>cRogers.id,
+		:title=>"Aprende las provincias con el capitán Rogers",
+		:description=>"Juego para aprender a situar las provincias españolas basado en el juego Capitán Rogers y una aplicación educativa interactiva.", 
+		:thumbnail=> File.open(File.join(Rails.root, 'public/game_template_examples/Captain_Rogers/thumbnail.png')),
+		:language => "es",
+		:certified => true
+
+		cRogers.events.each do |event|
+			((mapQuiz.los).map{|lo| lo.id}).uniq.each do |lo_id|
+				GameEventMapping.create! :game_id => cRogersMapQuiz.id,
+					:game_template_event_id => event.id,
+					:lo_id => lo_id
+			end
 		end
 
 		puts "Populate finished"
