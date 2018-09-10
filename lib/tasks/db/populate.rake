@@ -627,6 +627,14 @@ namespace :db do
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/scorm_examples/Phishing.zip'))
 
+		evg = Scormfile.create! :owner_id => user.id,
+			:title  => "Prevención de la violencia de género",
+			:description   => "Recurso educativo para aprender sobre prevención de la violencia de género.",
+			:thumbnail=> File.open(File.join(Rails.root, 'public/scorm_examples/evg_thumbnail.png')),
+			:language => "es",
+			:certified => true,
+			:file =>  File.open(File.join(Rails.root, 'public/scorm_examples/evg.zip'))
+
 		#3: Create game templates
 		# Events of the game templates are created based on the sgame_events_json.json file
 		system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/Captain_Rogers.zip')
@@ -736,6 +744,22 @@ namespace :db do
 			GameEventMapping.create! :game_id => sudokuPhishingDetector.id, 
 				:game_template_event_id => sudoku.events.first.id, 
 				:lo_id => lo_id
+		end
+
+		cCircusEvg = Game.create! :owner_id => user.id,
+		:game_template_id=>cCircus.id,
+		:title=>"Circus Charly: Prevención de la violencia de genéro",
+		:description=>"Aprende sobre prevención de la violencia de género jugando a Circus Charly.", 
+		:thumbnail=> File.open(File.join(Rails.root, 'public/game_template_examples/Circus/thumbnail.png')),
+		:language => "es",
+		:certified => true
+
+		cCircusEvg.events.each do |event|
+			((evg.los).map{|lo| lo.id}).uniq.each do |lo_id|
+				GameEventMapping.create! :game_id => cCircusEvg.id,
+					:game_template_event_id => event.id,
+					:lo_id => lo_id
+			end
 		end
 
 		puts "Populate finished"

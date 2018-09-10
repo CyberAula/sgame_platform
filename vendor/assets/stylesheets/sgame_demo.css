@@ -157,11 +157,22 @@ ul#scormfiles_list li.scormfile_item div.scormfile_item_c1 img.scormfile_item_th
 }
 
 ul#scormfiles_list li.scormfile_item div.scormfile_item_c2 {
-  padding: 15px;
+  padding: 0px 5px 0px 15px;
   font-size: 13px;
   height: 110px;
   width: 314px;
   float: left;
+  overflow-y: auto;
+}
+
+p.scormfile_description, p.scormfile_description_c {
+  margin-top: 0px;
+  margin-bottom: 8px;
+}
+
+p.scormfile_description_b {
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 
 ul#scormfiles_list li.scormfile_item div.scormfile_item_c3 {
