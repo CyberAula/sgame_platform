@@ -23,11 +23,15 @@ class DemoController < ApplicationController
 						:description => "Example of educational game based on " + @game_template.title, 
 						:thumbnail_url => @game_template.thumbnail_url,
 						:certified => false
-					@scormfiles.map{|sf| sf.los}.sum.map{|lo| lo.id}.uniq.each do |lo_id|
-						GameEventMapping.create! :game_id => gameInstance.id,
-						:game_template_event_id => @game_template.events.first.id, 
-						:lo_id => lo_id
+
+					@game_template.events.each do |event|
+						@scormfiles.map{|sf| sf.los}.sum.map{|lo| lo.id}.uniq.each do |lo_id|
+							GameEventMapping.create! :game_id => gameInstance.id,
+							:game_template_event_id => event.id, 
+							:lo_id => lo_id
+						end
 					end
+					
 					gameInstance.create_editor_data
 				end
 			end
