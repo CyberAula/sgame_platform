@@ -162,6 +162,10 @@
   margin-top: 10px;
 }
 
+#sgame_at table th, #sgame_at table td {
+  padding: 2px;
+}
+
 #sgame_at table.at_a th, #sgame_at table.at_b th.name, #sgame_at table.at_b td.name {
   width: auto;
   padding: 10px 25px 10px 15px;
