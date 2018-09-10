@@ -735,7 +735,7 @@ namespace :db do
 		sudokuPhishingDetector = Game.create! :owner_id => user.id,
 		:game_template_id=>sudoku.id,
 		:title=>"Sudoku",
-		:description=>"Aprender a detectar sitios web fraudulentos mientras resuelves Sudokus.", 
+		:description=>"Aprende a detectar sitios web fraudulentos mientras resuelves Sudokus.", 
 		:thumbnail=> File.open(File.join(Rails.root, 'public/game_template_examples/SudokuJS/thumbnail.png')),
 		:language => "es",
 		:certified => true
