@@ -1,6 +1,6 @@
 class PresentationsController < ApplicationController
   require 'fileutils'
-  before_filter :authenticate_user!, :only => [ :new, :create, :edit, :update, :uploadTmpJSON ]
+  before_filter :authenticate_user!, :only => [ :new, :create, :edit, :update, :clone, :uploadTmpJSON ]
   load_and_authorize_resource :except => [:metadata]
 
   # Enable CORS
@@ -122,7 +122,9 @@ class PresentationsController < ApplicationController
     @presentation = Presentation.find(params[:id])
     @presentation.destroy
     respond_to do |format|
-      format.all { redirect_to user_path(current_user) }
+      format.all { 
+        redirect_to view_context.current_user_path_for("presentations")
+      }
     end
   end
 
@@ -166,6 +168,23 @@ class PresentationsController < ApplicationController
       format.any {
         redirect_to (presentation_path(presentation)+"/scormMetadata.xml?version=" + scormVersion)
       }
+    end
+  end
+
+  def clone
+    original = Presentation.find_by_id(params[:id])
+    if original.blank?
+      flash[:alert] = t('dictionary.errors.resource_not_found')
+      redirect_to presentation_path(original)
+    else
+      cloned_presentation = original.clone_for(current_user)
+      if cloned_presentation.nil?
+        flash[:notice] = t('presentations.clone.fail')
+        redirect_to presentation_path(original)
+      else
+        flash[:notice] = t('presentations.clone.success')
+        redirect_to presentation_path(cloned_presentation)
+      end
     end
   end
 

@@ -57,7 +57,9 @@ class ScormfilesController < ApplicationController
     @scormfile.destroy
 
     respond_to do |format|
-      format.html { redirect_to (user_path(current_user) + "/files") }
+      format.html { 
+        redirect_to view_context.current_user_path_for("scormfiles")
+      }
       format.json { head :no_content }
     end
   end

@@ -177,7 +177,9 @@ class GamesController < ApplicationController
     @game = Game.find(params[:id])
     @game.destroy
     respond_to do |format|
-      format.all { redirect_to user_path(current_user) }
+      format.all { 
+        redirect_to view_context.current_user_path_for("games")
+      }
     end
   end
 

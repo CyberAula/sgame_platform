@@ -128,6 +128,7 @@ en:
     are_you_sure: "Are you sure?"
     back: "Back"
     cancel: "Cancel"
+    clone: "Clone"
     delete: "Delete"
     description: "Description"
     download: "Download"
@@ -138,10 +139,12 @@ en:
       name_blank: "Name can't be blank"
       page_not_found: "This page does not exists"
       reserved_word: "is a reserved word"
+      resource_not_found: "Resource not found"
       too_short: "is too short"
       unspecified: "has to be specified"
     file: "File"
     finish: "Finish"
+    full_screen: "Full screen"
     language: "Language"
     login: "Login"
     next: "Next"
@@ -272,6 +275,9 @@ en:
     unlock_instructions_resend: "Resend unlock instructions"
     username_or_email: "Username or Email"
   presentations:
+    clone:
+      success: "The presentation was cloned succesfully"
+      fail: "You cannot clone this presentation"
     new: "Create presentation"
     tabtitle: "Presentations"
   profile:

@@ -129,6 +129,7 @@ es:
     and: "y"
     back: "Volver"
     cancel: "Cancelar"
+    clone: "Clonar"
     delete: "Borrar"
     description: "Descripción"
     download: "Descargar"
@@ -139,10 +140,12 @@ es:
       name_blank: "El nombre no puede estar en blanco"
       page_not_found: "Esta página no existe"
       reserved_word: "es una palabra reservada"
+      resource_not_found: "Recurso no encontrado"
       too_short: "es demasiado corto"
       unspecified: "tiene que ser especificado"
     file: "Archivo"
     finish: "Terminar"
+    full_screen: "Pantalla completa"
     language: "Idioma"
     login: "Inicia sesión"
     next: "Siguiente"
@@ -272,6 +275,9 @@ es:
     unlock_instructions_resend: "Reenviar instrucciones para desbloquear la cuenta"
     username_or_email: "Nombre de usuario o Correo electrónico"
   presentations:
+    clone:
+      success: "La presentación fue clonada con éxito"
+      fail: "No puedes clonar esta presentación"
     new: "Crear presentacion"
     tabtitle: "Presentaciones"
   profile:

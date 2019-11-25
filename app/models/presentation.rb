@@ -47,6 +47,23 @@ class Presentation < ActiveRecord::Base
     sf
   end
 
+  def clone_for(user)
+    return nil if (user.blank? or (user != self.owner))
+
+    p = Presentation.new
+    p.owner = user
+
+    pJson = JSON(self.json)
+    pJson["author"] = {name: user.name, vishMetadata:{ id: user.id }}
+    pJson.delete("license")
+    pJson["vishMetadata"] = {draft: "true"}
+    p.json = pJson.to_json
+
+    p.draft=true
+    p.save!
+    p
+  end
+
 
   ####################
   ## SCORM Management

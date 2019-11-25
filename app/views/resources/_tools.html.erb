@@ -2,22 +2,28 @@
 <% canBeShared = true %>
 <% canBeDownloaded = true %>
 <% canBeDownloadedInSCORM = ["presentation","game"].include?(resourceClassName) %>
-<% showFullScreen = ["game"].include?(resourceClassName) %>
+<% showFullScreen = ["game","presentation"].include?(resourceClassName) %>
+<% canBeCloned = ["presentation"].include?(resourceClassName) %>
 
 <div class="tooltab_buttons">
   <% if showFullScreen %>
     <a href="<%=polymorphic_path(resource, :format => 'full')%>" target="_blank">
-      <button class="sgame_button"><span class="glyphicon glyphicon-fullscreen"></span></button>
+      <button class="sgame_button"><span title='<%=t("dictionary.full_screen")%>' class="glyphicon glyphicon-fullscreen"></span></button>
     </a>
   <% end %>
   <% if can? :update, resource %>
     <%= link_to(edit_polymorphic_path(resource), :title => t("dictionary.edit")) do %>
       <button class="sgame_button"><span class="glyphicon glyphicon-edit"></span></button>
-    <%end%>
+    <% end %>
+  <%end%>
+  <% if canBeCloned and can? :update, resource %>
+    <a href="<%=polymorphic_path(resource)+'/clone'%>" data-confirm="<%=t('dictionary.are_you_sure')%>" data-ok-button="<%=t('dictionary.ok')%>" data-cancel-button="<%=t('dictionary.cancel')%>" data-method="get" rel="nofollow">
+      <button class="sgame_button"><span title='<%=t("dictionary.clone")%>' class="glyphicon glyphicon-duplicate"></span></button>
+    </a>
   <% end %>
   <% if can? :destroy, resource %>
     <a href="<%=polymorphic_path(resource)%>" data-confirm="<%=t('dictionary.are_you_sure')%>" data-ok-button="<%=t('dictionary.ok')%>" data-cancel-button="<%=t('dictionary.cancel')%>" data-method="delete" rel="nofollow">
-      <button class="sgame_button"><span class="glyphicon glyphicon-trash"></span></button>
+      <button class="sgame_button"><span title='<%=t("dictionary.delete")%>' class="glyphicon glyphicon-trash"></span></button>
     </a>
   <% end %>
 </div>

@@ -33,6 +33,7 @@ SgamePlatform::Application.routes.draw do
   #Presentations
   match '/presentations/:id/metadata' => 'presentations#metadata', :via => :get
   match '/presentations/:id/scormMetadata' => 'presentations#scormMetadata', :via => :get
+  match '/presentations/:id/clone' => 'presentations#clone', :via => :get
   match '/presentations/last_slide' => 'presentations#last_slide', :via => :get
   match '/presentations/preview' => 'presentations#preview', :via => :get
   match '/presentations/tmpJson' => 'presentations#uploadTmpJSON', :via => :post
