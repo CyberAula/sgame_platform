@@ -20,7 +20,7 @@ gem 'devise', '4.3.0'
 gem 'warden', '1.2.7'
 gem "recaptcha", '4.3.1', require: "recaptcha/rails"
 gem 'omniauth', '1.4.2'
-gem 'paperclip', '= 4.3.6'
+gem 'paperclip', '6.1.0'
 gem 'rubyzip', '= 1.0.0'
 gem 'rmagick', '=2.13.2'
 gem 'pdf-reader', '= 1.3.3'
