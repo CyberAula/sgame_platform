@@ -16,7 +16,7 @@ gem 'jquery-rails', '4.3.1'
 gem 'jquery-ui-rails', '6.0.1'
 
 gem 'acts-as-taggable-on', '3.4'
-gem 'devise', '4.3.0'
+gem 'devise', '4.7.1'
 gem 'warden', '1.2.7'
 gem "recaptcha", '4.3.1', require: "recaptcha/rails"
 gem 'omniauth', '1.4.2'
