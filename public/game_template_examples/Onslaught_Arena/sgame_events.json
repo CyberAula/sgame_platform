@@ -5,5 +5,17 @@
 		"description": "Event triggered when the player tries to get a new weapon. The player will only get the new weapon by successfully consuming the presented learning object.",
 		"type": "reward",
 		"frequency": "high"
+	},{
+		"id": 2,
+		"title": "Food",
+		"description": "Event triggered when the player tries to get food in order to recover health. The player will only recover health by successfully consuming the presented learning object.",
+		"type": "reward",
+		"frequency": "medium"
+	},{
+		"id": 3,
+		"title": "Coins",
+		"description": "Event triggered when the player tries to earn coins. The player will only earn the coins by successfully consuming the presented learning object.",
+		"type": "reward",
+		"frequency": "high"
 	}
 ]

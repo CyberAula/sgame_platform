@@ -45,6 +45,12 @@ SGAME_AT = (function($,undefined){
 			catalog.scormfiles[scormfile.id] = scormfile;
 		});
 
+		all_game_templates_ids = game_templates.map(function(e){return e.id + ""});
+		all_lo_ids = (scormfiles.map(function(e){
+				return e.los.map(function(e){return e.id + ""});
+			}
+		)).flat(1);
+
 		if((typeof state === "object")&&(Object.keys(state).length>0)){
 			editMode = true;
 
@@ -52,28 +58,48 @@ SGAME_AT = (function($,undefined){
 			if(typeof state.step !== "undefined"){
 				current_step = parseInt(state.step);
 			}
-			if(typeof state.game_template !== "undefined"){
-				current_game_template = state.game_template;
+
+			if((typeof state.game_template !== "undefined")&&(all_game_templates_ids.indexOf(state.game_template.id + "")!==-1)){
+				current_game_template = catalog.game_templates[state.game_template.id + ""];
 			}
+
 			if(typeof state.los !== "undefined"){
-				current_los = state.los;
+				var lo_ids = Object.keys(state.los);
+				var existing_lo_ids = all_lo_ids.filter(value => -1 !== lo_ids.indexOf(value));
+				$.each(existing_lo_ids, function(i, loId){
+					current_los[loId] = state.los[loId];
+				});
 			}
+
 			if(typeof state.mapping !== "undefined"){
-				current_mapping = state.mapping;
-				
-				//Check mapping
-				var mKeys = Object.keys(current_mapping);
-				var mKeysL = mKeys.length;
-				for(var x=0; x<mKeysL; x++){
-					current_mapping[mKeys[x]] = current_mapping[mKeys[x]] + "";
+				var lo_ids = Object.keys(current_los);
+				var smKeys = Object.keys(state.mapping);
+				var smKeysL = smKeys.length;
+				for(var x=0; x<smKeysL; x++){
+					var mapped_lo_ids = state.mapping[smKeys[x]].map(function(e){return e + ""});
+					var existing_mapped_los = mapped_lo_ids.filter(value => -1 !== lo_ids.indexOf(value));
+					current_mapping[smKeys[x]] = existing_mapped_los;
+				}
+				//Check events
+				if(current_game_template.events instanceof Array){
+					var all_event_ids = current_game_template.events.map(function(e){return e.id + ""});
+					var all_event_ids_N = all_event_ids.length;
+					for(var y=0; y<all_event_ids_N; y++){
+						if(typeof current_mapping[all_event_ids[y]] === "undefined"){
+							current_mapping[all_event_ids[y]] = ["none"];
+						}
+					}
 				}
 			}
+
 			if(typeof state.sequencing !== "undefined"){
 				current_sequencing = state.sequencing;
 			}
+
 			if(typeof state.settings !== "undefined"){
 				current_settings = state.settings;
 			}
+			
 			if(typeof state.metadata !== "undefined"){
 				current_metadata = state.metadata;
 			}
@@ -637,11 +663,14 @@ SGAME_AT = (function($,undefined){
 		var emDOM = "<tr class='eminstance' eid='" + event.id + "'><td class='title'>" + event.title + "</td><td class='description'>" + event.description + "</td><td class='type'>" + event_type + "</td><td class='frequency'>" + event_frequency + "</td><td class='mapping'><select multiple='multiple'></select></td></tr>";
 		$(mappingTable).append(emDOM);
 
-		var select = $(mappingTable).find("tr.eminstance[eid='" + event.id + "'] td.mapping select");
-		var selectOptions = [{value:"none", text:_getTrans("i.none"), selected: ((typeof current_mapping[event.id] !== "undefined")&&(current_mapping[event.id].indexOf("none")!==-1))},{value: "*", text: _getTrans("i.all"), selected: ((typeof current_mapping[event.id] === "undefined")||(current_mapping[event.id].length===0)||(current_mapping[event.id].indexOf("*")!==-1))}];
-
 		var loIds = Object.keys(current_los);
 		var nLOs = loIds.length;
+
+		var select = $(mappingTable).find("tr.eminstance[eid='" + event.id + "'] td.mapping select");
+		var selectOptions = [];
+		selectOptions.push({value:"none", text:_getTrans("i.none"), selected: ((nLOs===0)||((typeof current_mapping[event.id] !== "undefined")&&(current_mapping[event.id].indexOf("none")!==-1)))});
+		selectOptions.push({value: "*", text: _getTrans("i.all"), selected: ((nLOs>0)&&((typeof current_mapping[event.id] === "undefined")||(current_mapping[event.id].length===0)||(current_mapping[event.id].indexOf("*")!==-1)))});
+
 		for(var j=0; j<nLOs; j++){
 			var lo = current_los[loIds[j]];
 			var selected = ((typeof current_mapping[event.id] !== "undefined")&&(current_mapping[event.id].indexOf(lo.id + "")!==-1));

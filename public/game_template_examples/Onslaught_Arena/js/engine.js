@@ -1909,12 +1909,28 @@ proto.updateObjects = function (elapsed) {
 };
 
 proto.getObjectSGAME = function (o,o2) {
-	if(o2.role!=="powerup_weapon"){
+	var eventId;
+	switch (o2.role) {
+		case "powerup_weapon":
+			eventId = 1;
+			break;
+		case "powerup_food":
+			eventId = 2;
+			break;
+		case "powerup_coin":
+			eventId = 3;
+			break;
+		default:
+			eventId = undefined;
+			break;
+	}
+
+	if(typeof eventId === "undefined"){
 		this.getObject(o,o2);
 		return;
 	}
 
-	var callTogglePause = SGAME.losCanBeShown(1);
+	var callTogglePause = SGAME.losCanBeShown(eventId);
 	if(callTogglePause){
 		this.togglePause();
 	}
@@ -1922,7 +1938,7 @@ proto.getObjectSGAME = function (o,o2) {
 	var that = this;
 	
 	setTimeout(function(){
-		SGAME.triggerLO(1,function(pass){
+		SGAME.triggerLO(eventId,function(pass){
 			setTimeout(function(){
 				if(callTogglePause){
 					that.togglePause();
