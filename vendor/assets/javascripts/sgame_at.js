@@ -76,9 +76,18 @@ SGAME_AT = (function($,undefined){
 				var smKeys = Object.keys(state.mapping);
 				var smKeysL = smKeys.length;
 				for(var x=0; x<smKeysL; x++){
-					var mapped_lo_ids = state.mapping[smKeys[x]].map(function(e){return e + ""});
-					var existing_mapped_los = mapped_lo_ids.filter(value => -1 !== lo_ids.indexOf(value));
-					current_mapping[smKeys[x]] = existing_mapped_los;
+					var existing_mapped_los;
+					if(state.mapping[smKeys[x]] instanceof Array){
+						var mapped_lo_ids = state.mapping[smKeys[x]].map(function(e){return e + ""});
+						existing_mapped_los = mapped_lo_ids.filter(value => -1 !== lo_ids.indexOf(value));
+					} else {
+						if(typeof state.mapping[smKeys[x]] === "string"){
+							existing_mapped_los = state.mapping[smKeys[x]];
+						}
+					}
+					if(typeof existing_mapped_los !== "undefined"){
+						current_mapping[smKeys[x]] = existing_mapped_los;
+					}
 				}
 				//Check events
 				if(current_game_template.events instanceof Array){
