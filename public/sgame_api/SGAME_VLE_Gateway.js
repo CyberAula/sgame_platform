@@ -3635,7 +3635,7 @@ SGAME_GATEWAY.CORE = function() {
     }
   };
   var updateCompletionStatus = function(completionStatus) {
-    if(["completed", "incomplete", "not attempted"].indexof(completionStatus) !== -1) {
+    if(["completed", "incomplete", "not attempted"].indexOf(completionStatus) !== -1) {
       scorm.setvalue("cmi.completion_status", completionStatus)
     }
   };
@@ -3647,7 +3647,7 @@ SGAME_GATEWAY.CORE = function() {
     }
   };
   var updateSuccessStatus = function(successStatus) {
-    if(["unknown", "passed", "failed"].indexof(successStatus) !== -1) {
+    if(["unknown", "passed", "failed"].indexOf(successStatus) !== -1) {
       scorm.setvalue("cmi.success_status", successStatus)
     }
   };
