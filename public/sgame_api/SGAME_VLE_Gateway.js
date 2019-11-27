@@ -3635,10 +3635,9 @@ SGAME_GATEWAY.CORE = function() {
     }
   };
   var updateCompletionStatus = function(completionStatus) {
-    if(["completed", "incomplete", "not attempted"].indexof(successStatus) !== -1) {
-      scorm.setvalue("cmi.success_status", successStatus)
+    if(["completed", "incomplete", "not attempted"].indexof(completionStatus) !== -1) {
+      scorm.setvalue("cmi.completion_status", completionStatus)
     }
-    scorm.setvalue("cmi.completion_status", completionStatus)
   };
   var updateScore = function(score) {
     if(typeof score === "number") {
