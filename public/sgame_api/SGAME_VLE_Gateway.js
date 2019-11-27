@@ -3612,18 +3612,22 @@ SGAME_GATEWAY.CORE = function() {
     connected = scorm.initialize();
     scorm.debug("Connected: " + connected, 4);
     if(!isConnected()) {
-      console.log("NO CONEXION");
       return
     }
     var learnerName = scorm.getvalue("cmi.learner_name");
     var learnerId = scorm.getvalue("cmi.learner_id");
     user = {name:learnerName, id:learnerId};
-    updateProgressMeasure(0);
+    updateProgressMeasure(100);
+    updateCompletionStatus("completed");
     if(hasScore) {
       scorm.setvalue("cmi.score.min", (0).toString());
       scorm.setvalue("cmi.score.max", (100).toString());
-      updateScore(0)
+      updateScore(0);
+      updateSuccessStatus("failed")
     }
+    $(window).on("unload", function() {
+      onExit()
+    })
   };
   var updateProgressMeasure = function(progressMeasure) {
     if(typeof progressMeasure == "number") {
