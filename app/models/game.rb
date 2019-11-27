@@ -189,12 +189,11 @@ class Game < ActiveRecord::Base
 	# Exportation to SCORM
 	#
 	def to_scorm(controller,version="2004")
-		if self.scorm_needs_generate(version)
-			folderPath = Game.scormFolderPath(version)
-			fileName = self.id
-			Game.createSCORM(version,folderPath,fileName,self,controller)
-			self.update_column(((version=="12") ? :scorm12_timestamp : :scorm2004_timestamp), Time.now)
-		end
+		return unless self.scorm_needs_generate(version)
+		folderPath = Game.scormFolderPath(version)
+		fileName = self.id
+		Game.createSCORM(version,folderPath,fileName,self,controller)
+		self.update_column(((version=="12") ? :scorm12_timestamp : :scorm2004_timestamp), Time.now)
 	end
 
 	def self.scormFolderPath(version)
