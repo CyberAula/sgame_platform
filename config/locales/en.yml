@@ -217,6 +217,8 @@ en:
   footer:
     contact: "Contact"
     code: "Source code"
+    manual: "User manual"
+    manual_url: "/Manual_SGAME_es.pdf"
     survey: "SGAME platform survey"
     survey_short: "Survey"
     survey_url: "https://docs.google.com/forms/d/e/1FAIpQLSffXo2RDs-N096HcY-IMAVS4DJJKRYi4ckqycWLWpxdhULYeA/viewform"
