@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SGAME SCORM Testing Environment - SCORM 1.2</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script type="text/javascript" src="http://localhost:3000/config/config_lms.js"></script>
+  <script type="text/javascript" src="http://localhost:3000/scorm_api/Local_API_SCORM_12.js"></script>
+  <script type="text/javascript" src="http://localhost:3000/scorm_api/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="http://localhost:3000/scorm_api/SCORM_Player.js"></script>
+  <script type="text/javascript" src="http://localhost:3000/scorm_api/scorm_iframe_api.js"></script>
+ </head>
+<body>
+  <script type="text/javascript">
+    //SCORM URL
+    var scormpackageURL = "http://localhost:3000/scorm_testing/game.html";
+    var scormResourceURLs = [scormpackageURL];
+
+    // Create SCORM LMS API
+    var API = new Local_API_SCORM_12({debug: false});
+
+    //Create SCORM player
+    var SCORM_Player = new SCORM_Player({debug: false, SCORM_VERSION: "1.2", LMS_API: API, IFRAME_API: SCORM_IFRAME_API, SCORM_PACKAGE_URL: scormpackageURL, SCORM_RESOURCE_URLS: scormResourceURLs});
+
+    SCORM_Player.loadScormContent(function(){
+      // SCORM content loaded
+      console.log("SCORM content succesfully loaded");
+    });
+  </script>
+</body>
+</html>
