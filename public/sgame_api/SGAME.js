@@ -922,9 +922,12 @@ SGAME.Messenger = function() {
     }catch(e) {
     }
   };
-  var sendMessage = function(message) {
-    if(_initialized && (_connected && validateMessage(message))) {
-      _sendMessage(message)
+  var sendMessage = function(data) {
+    if(_initialized && _connected) {
+      var message = _createMessage(data);
+      if(_validateMessage(message)) {
+        _sendMessage(message)
+      }
     }
   };
   var _sendMessage = function(message) {
@@ -956,16 +959,16 @@ SGAME.Messenger = function() {
     this.origin = ORIGIN;
     this.destination = DESTINATION
   }
-  var createMessage = function(data, type) {
+  var _createMessage = function(data, type) {
     return JSON.stringify(new IframeMessage(data, type))
   };
   var _validateWrapperedMessage = function(wrapperedMessage) {
     if(typeof wrapperedMessage !== "object" || typeof wrapperedMessage.data !== "string") {
       return false
     }
-    return validateMessage(wrapperedMessage.data)
+    return _validateMessage(wrapperedMessage.data)
   };
-  var validateMessage = function(message) {
+  var _validateMessage = function(message) {
     try {
       var message = JSON.parse(message);
       if(VALID_TYPES.indexOf(message.type) === -1 || VALID_ORIGINS.indexOf(message.origin) === -1) {
@@ -1020,7 +1023,7 @@ SGAME.Messenger = function() {
     vle_data["user"] = user;
     SGAME.CORE.setVLEData(vle_data)
   };
-  return{init:init, createMessage:createMessage, validateMessage:validateMessage, sendMessage:sendMessage}
+  return{init:init, sendMessage:sendMessage}
 }();
 SGAME.API = function() {
   var init = function() {
@@ -1059,11 +1062,19 @@ SGAME.CORE = function() {
   var _settings = {};
   var _settings_loaded = false;
   var _vle_data = {};
+  var _tracking = {completion_status:"incompleted", success_status:"unknown"};
   var supportedRepeatLo = ["repeat", "repeat_unless_successfully_consumed", "no_repeat"];
-  var supportedCompletionNotification = ["no_more_los", "all_los_consumed", "all_los_succesfully_consumed", "never"];
+  var supportedCompletionStatus = ["percentage_los", "n_los_shown", "n_times_shown", "disabled"];
+  var supportedSuccessStatus = ["percentage_los", "n_los_shown", "n_times_shown", "disabled"];
+  var supportedCompletionNotification = ["no_more_los", "all_los_consumed", "all_los_succesfully_consumed", "completion_status", "success_status", "never"];
   var supportedBehaviourWhenNoMoreLOs = ["success", "failure", "success_unless_damage", "failure_unless_blocking"];
   var supportedEventTypes = ["reward", "damage", "blocking", "no-effect"];
   var _los_can_be_shown = false;
+  var _nLOs = 0;
+  var _nloshown = 0;
+  var _nshown = 0;
+  var _nlosuccess = 0;
+  var _nsuccess = 0;
   var _final_screen_shown = false;
   var _final_screen_text = "Congratulations. You have achieved the objectives of this educational game. You may close this window or continue playing.";
   var init = function(options) {
@@ -1105,6 +1116,21 @@ SGAME.CORE = function() {
     if(typeof _settings["game_settings"] === "undefined") {
       _settings["game_settings"] = {}
     }
+    if(supportedCompletionStatus.indexOf(_settings["game_settings"]["completion_status"]) === -1) {
+      _settings["game_settings"]["completion_status"] = "disabled"
+    }
+    if(_settings["game_settings"]["completion_status"] === "disabled" || typeof _settings["game_settings"]["completion_status_n"] !== "number") {
+      delete _settings["game_settings"]["completion_status_n"]
+    }
+    if(supportedCompletionStatus.indexOf(_settings["game_settings"]["success_status"]) === -1) {
+      _settings["game_settings"]["success_status"] = "disabled"
+    }
+    if(_settings["game_settings"]["success_status"] === "disabled" || typeof _settings["game_settings"]["success_status_n"] !== "number") {
+      delete _settings["game_settings"]["success_status_n"]
+    }
+    if(supportedSuccessStatus.indexOf(_settings["game_settings"]["success_status"]) === -1) {
+      _settings["game_settings"]["success_status"] = "disabled"
+    }
     if(supportedCompletionNotification.indexOf(_settings["game_settings"]["completion_notification"]) === -1) {
       _settings["game_settings"]["completion_notification"] = "never"
     }
@@ -1116,8 +1142,8 @@ SGAME.CORE = function() {
     }
     if(typeof _settings["los"] === "object") {
       var lo_ids = Object.keys(_settings["los"]);
-      var nLOs = lo_ids.length;
-      for(var i = 0;i < nLOs;i++) {
+      _nLOs = lo_ids.length;
+      for(var i = 0;i < _nLOs;i++) {
         if(typeof _settings["los"][lo_ids[i]].url !== "undefined") {
           _settings["los"][lo_ids[i]].url = SGAME.Utils.checkUrlProtocol(_settings["los"][lo_ids[i]].url)
         }
@@ -1125,6 +1151,7 @@ SGAME.CORE = function() {
         _settings["los"][lo_ids[i]]["shown"] = false;
         _settings["los"][lo_ids[i]]["nshown"] = 0;
         _settings["los"][lo_ids[i]]["succesfully_consumed"] = false;
+        _settings["los"][lo_ids[i]]["nsuccess"] = 0;
         _settings["los"][lo_ids[i]]["acts_as_asset"] = _settings["los"][lo_ids[i]]["scorm_type"] === "asset" || _settings["los"][lo_ids[i]]["scorm_type"] === "sco" && _settings["los"][lo_ids[i]]["report_data"] === false;
         _los_can_be_shown = true
       }
@@ -1194,6 +1221,9 @@ SGAME.CORE = function() {
     _settings["los"][lo["id"]]["nshown"] += 1;
     SGAME.Fancybox.create({lo:lo}, function(report) {
       _settings["los"][lo["id"]]["succesfully_consumed"] = report.success;
+      if(report.success === true) {
+        _settings["los"][lo["id"]]["nsuccess"] += 1
+      }
       switch(_settings["sequencing"]["repeat_lo"]) {
         case "repeat":
           break;
@@ -1206,7 +1236,7 @@ SGAME.CORE = function() {
         default:
           break
       }
-      _checkLOsToShow();
+      _updateFlagsAndTracking();
       report["more_los"] = _los_can_be_shown;
       _checkFinalScreen(function() {
         if(typeof callback === "function") {
@@ -1255,16 +1285,87 @@ SGAME.CORE = function() {
       _togglePauseFunction()
     }
   };
-  var _checkLOsToShow = function() {
+  var _updateFlagsAndTracking = function() {
+    _los_can_be_shown = false;
     var lo_ids = Object.keys(_settings["los"]);
     var nLOs = lo_ids.length;
     for(var i = 0;i < nLOs;i++) {
+      if(_settings["los"][lo_ids[i]]["shown"] === true) {
+        _nloshown += 1;
+        _nshown += _settings["los"][lo_ids[i]]["nshown"]
+      }
+      if(_settings["los"][lo_ids[i]]["succesfully_consumed"] === true) {
+        _nlosuccess += 1;
+        _nsuccess += _settings["los"][lo_ids[i]]["nsuccess"]
+      }
       if(_settings["los"][lo_ids[i]]["can_be_shown"] === true) {
-        _los_can_be_shown = true;
-        return
+        _los_can_be_shown = true
       }
     }
-    _los_can_be_shown = false
+    var completion_status = "incompleted";
+    if(typeof _settings["game_settings"]["completion_status_n"] === "number") {
+      switch(_settings["game_settings"]["completion_status"]) {
+        case "percentage_los":
+          if(_nloshown / _nLOs >= _settings["game_settings"]["completion_status_n"]) {
+            completion_status = "completed"
+          }else {
+            completion_status = "incompleted"
+          }
+          break;
+        case "n_los_shown":
+          if(_nloshown >= _settings["game_settings"]["completion_status_n"]) {
+            completion_status = "completed"
+          }else {
+            completion_status = "incompleted"
+          }
+          break;
+        case "n_times_shown":
+          if(_nshown >= _settings["game_settings"]["completion_status_n"]) {
+            completion_status = "completed"
+          }else {
+            completion_status = "incompleted"
+          }
+          break;
+        case "disabled":
+        ;
+        default:
+          completion_status = "incompleted";
+          break
+      }
+    }
+    var success_status = "unknown";
+    if(typeof _settings["game_settings"]["success_status_n"] === "number") {
+      switch(_settings["game_settings"]["success_status"]) {
+        case "percentage_los":
+          if(_nloshown / _nLOs >= _settings["game_settings"]["success_status_n"]) {
+            success_status = "passed"
+          }else {
+            success_status = "failed"
+          }
+          break;
+        case "n_los_shown":
+          if(_nloshown >= _settings["game_settings"]["success_status_n"]) {
+            success_status = "passed"
+          }else {
+            success_status = "failed"
+          }
+          break;
+        case "n_times_shown":
+          if(_nshown >= _settings["game_settings"]["success_status_n"]) {
+            success_status = "passed"
+          }else {
+            success_status = "failed"
+          }
+          break;
+        case "disabled":
+        ;
+        default:
+          success_status = "unknown";
+          break
+      }
+    }
+    _tracking = {completion_status:completion_status, success_status:success_status};
+    SGAME.Messenger.sendMessage({key:"tracking", value:_tracking})
   };
   var _checkFinalScreen = function(callback) {
     if(_shouldShowFinalScreen() !== true) {

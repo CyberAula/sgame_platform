@@ -3810,6 +3810,8 @@ SGAME_GATEWAY.Messenger = function() {
   };
   var _onAppMessage = function(appMessage) {
     if(appMessage.data) {
+      console.log("VLE GATEWAY: APP Message received with data:");
+      console.log(appMessage.data)
     }
   };
   return{init:init, sendMessage:sendMessage}
