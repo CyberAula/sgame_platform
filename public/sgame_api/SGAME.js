@@ -47,11 +47,19 @@ iso8601Parser = function(undefined) {
   return{getDuration:getDuration}
 }();
 function Local_API_1484_11(options) {
-  var defaults = {version:"2.4", prefix:"Local_API_1484_11", errorCode:0, diagnostic:"", initialized:0, terminated:0, debug:true, listeners:{}, CMI:{_version:"1.0", comments_from_learner:{_children:"comment,location,timestamp", _count:"0"}, comments_from_lms:{_children:"comment,location,timestamp", _count:"0"}, completion_status:"unknown", completion_threshold:"0.7", credit:"credit", entry:"ab-initio", exit:"", interactions:{_children:"id,type,objectives,timestamp,correct_responses,weighting,learner_response,result,latency,description", 
+  var defaults = {version:"2.4", prefix:"Local_API_1484_11", errorCode:0, diagnostic:"", initialized:0, terminated:0, user:undefined, debug:true, listeners:{}, CMI:{_version:"1.0", comments_from_learner:{_children:"comment,location,timestamp", _count:"0"}, comments_from_lms:{_children:"comment,location,timestamp", _count:"0"}, completion_status:"unknown", completion_threshold:"0.7", credit:"credit", entry:"ab-initio", exit:"", interactions:{_children:"id,type,objectives,timestamp,correct_responses,weighting,learner_response,result,latency,description", 
   _count:"0"}, launch_data:"", learner_id:"100", learner_name:"Simulated User", learner_preference:{_children:"audio_level,language,delivery_speed,audio_captioning", audio_level:"1", language:"", delivery_speed:"1", audio_captioning:"0"}, location:"", max_time_allowed:"", mode:"normal", objectives:{_children:"id,score,success_status,completion_status,description", _count:"0"}, progress_measure:"", scaled_passing_score:"0.5", score:{_children:"scaled,raw,min,max", scaled:"", raw:"", min:"", max:""}, 
   session_time:"PT0H0M0S", success_status:"unknown", suspend_data:"", time_limit_action:"", total_time:"PT0H0M0S"}}, settings = deepMergeHash(defaults, options), cmi = {}, completion_status = "|completed|incomplete|not attempted|unknown|", success_status = "|passed|failed|unknown|", read_only = "|_version|completion_threshold|credit|entry|launch_data|learner_id|learner_name|_children|_count|mode|maximum_time_allowed|scaled_passing_score|time_limit_action|total_time|comment|", write_only = "|exit|session_time|", 
   exit = "|time-out|suspend|logout|normal||", errors = {0:"No error", 101:"General exception", 102:"General Initialization Failure", 103:"Already Initialized", 104:"Content Instance Terminated", 111:"General Termination Failure", 112:"Termination Before Initialization", 113:"Termination After Termination", 122:"Retrieve Data Before Initialization", 123:"Retrieve Data After Termination", 132:"Store Data Before Initialization", 133:"Store Data After Termination", 142:"Commit Before Initialization", 
   143:"Commit After Termination", 201:"General Argument Error", 301:"General Get Failure", 351:"General Set Failure", 391:"General Commit Failure", 401:"Undefined Data Model", 402:"Unimplemented Data Model Element", 403:"Data Model Element Value Not Initialized", 404:"Data Model Element Is Read Only", 405:"Data Model Element Is Write Only", 406:"Data Model Element Type Mismatch", 407:"Data Model Element Value Out Of Range", 408:"Data Model Dependency Not Established"}, self = this;
+  if(typeof settings.user === "object") {
+    if(typeof settings.user.name === "string") {
+      settings.CMI.learner_name = settings.user.name
+    }
+    if(typeof settings.user.id === "string") {
+      settings.CMI.learner_id = settings.user.id
+    }
+  }
   function throwVocabError(k, v) {
     settings.diganostic = "The " + k + " of " + v + " must be a proper vocabulary element.";
     settings.errorCode = 406;
@@ -512,11 +520,19 @@ function Local_API_1484_11(options) {
   }
 }
 ;function Local_API_SCORM_12(options) {
-  var defaults = {version:"1.1", prefix:"Local_API_SCORM_12", errorCode:0, diagnostic:"", initialized:0, terminated:0, debug:true, listeners:{}, CMI:{_version:"3.4", comments:"", comments_from_lms:"", launch_data:"", suspend_data:"", core:{entry:"ab-initio", credit:"credit", lesson_status:"not attempted", lesson_mode:"normal", lesson_location:"", student_id:"100", student_name:"Simulated User", student_preference:{_children:"audio,language,speed,text", audio:"0", language:"", speed:"0", text:"0"}, 
-  score:{_children:"raw,min,max", raw:"", max:"", min:""}, total_time:"0000:00:00.00", session_time:"", exit:""}, student_data:{_children:"mastery_score,time_limit_action,max_time_allowed", mastery_score:"50", max_time_allowed:"", time_limit_action:"continue,no message"}}}, settings = deepMergeHash(defaults, options), cmi = {}, lesson_status = "|passed|completed|failed|incomplete|browsed|not attempted|unknown|", read_only = "|_version|completion_threshold|credit|entry|launch_data|learner_id|learner_name|_children|_count|mode|maximum_time_allowed|scaled_passing_score|time_limit_action|total_time|comment|", 
+  var defaults = {version:"1.1", prefix:"Local_API_SCORM_12", errorCode:0, diagnostic:"", initialized:0, terminated:0, user:undefined, debug:true, listeners:{}, CMI:{_version:"3.4", comments:"", comments_from_lms:"", launch_data:"", suspend_data:"", core:{entry:"ab-initio", credit:"credit", lesson_status:"not attempted", lesson_mode:"normal", lesson_location:"", student_id:"100", student_name:"Simulated User", student_preference:{_children:"audio,language,speed,text", audio:"0", language:"", speed:"0", 
+  text:"0"}, score:{_children:"raw,min,max", raw:"", max:"", min:""}, total_time:"0000:00:00.00", session_time:"", exit:""}, student_data:{_children:"mastery_score,time_limit_action,max_time_allowed", mastery_score:"50", max_time_allowed:"", time_limit_action:"continue,no message"}}}, settings = deepMergeHash(defaults, options), cmi = {}, lesson_status = "|passed|completed|failed|incomplete|browsed|not attempted|unknown|", read_only = "|_version|completion_threshold|credit|entry|launch_data|learner_id|learner_name|_children|_count|mode|maximum_time_allowed|scaled_passing_score|time_limit_action|total_time|comment|", 
   write_only = "|exit|session_time|", exit = "|time-out|suspend|logout|normal||", errors = {0:"No error", 101:"General exception", 102:"General Initialization Failure", 103:"Already Initialized", 104:"Content Instance Terminated", 111:"General Termination Failure", 112:"Termination Before Initialization", 113:"Termination After Termination", 122:"Retrieve Data Before Initialization", 123:"Retrieve Data After Termination", 132:"Store Data Before Initialization", 133:"Store Data After Termination", 
   142:"Commit Before Initialization", 143:"Commit After Termination", 201:"General Argument Error", 301:"General Get Failure", 351:"General Set Failure", 391:"General Commit Failure", 401:"Undefined Data Model", 402:"Unimplemented Data Model Element", 403:"Data Model Element Value Not Initialized", 404:"Data Model Element Is Read Only", 405:"Data Model Element Is Write Only", 406:"Data Model Element Type Mismatch", 407:"Data Model Element Value Out Of Range", 408:"Data Model Dependency Not Established"}, 
   self = this;
+  if(typeof settings.user === "object") {
+    if(typeof settings.user.name === "string") {
+      settings.CMI.core.student_name = settings.user.name
+    }
+    if(typeof settings.user.id === "string") {
+      settings.CMI.core.student_id = settings.user.id
+    }
+  }
   function throwVocabError(k, v) {
     settings.diganostic = "The " + k + " of " + v + " must be a proper vocabulary element.";
     settings.errorCode = 406;
@@ -980,10 +996,29 @@ SGAME.Messenger = function() {
     }
   };
   var _onAppMessage = function(appMessage) {
-    if(appMessage.data) {
-      console.log("SGAME API: APP Message received with data:");
-      console.log(appMessage.data)
+    if(appMessage.data && typeof appMessage.data.key === "string") {
+      switch(appMessage.data.key) {
+        case "lms_data":
+          if(typeof appMessage.data.value === "object") {
+            _onUserDataReceived(appMessage.data.value)
+          }
+          break;
+        default:
+          break
+      }
     }
+  };
+  var _onUserDataReceived = function(data) {
+    var user = {};
+    if(typeof data.name === "string" || typeof data.name === "number") {
+      user.name = "" + data.name
+    }
+    if(typeof data.id === "string" || typeof data.id === "number") {
+      user.id = "" + data.id
+    }
+    var vle_data = SGAME.CORE.getVLEData();
+    vle_data["user"] = user;
+    SGAME.CORE.setVLEData(vle_data)
   };
   return{init:init, createMessage:createMessage, validateMessage:validateMessage, sendMessage:sendMessage}
 }();
@@ -1023,6 +1058,7 @@ SGAME.CORE = function() {
   var _togglePauseFunction = undefined;
   var _settings = {};
   var _settings_loaded = false;
+  var _vle_data = {};
   var supportedRepeatLo = ["repeat", "repeat_unless_successfully_consumed", "no_repeat"];
   var supportedCompletionNotification = ["no_more_los", "all_los_consumed", "all_los_succesfully_consumed", "never"];
   var supportedBehaviourWhenNoMoreLOs = ["success", "failure", "success_unless_damage", "failure_unless_blocking"];
@@ -1207,6 +1243,13 @@ SGAME.CORE = function() {
   var successWhenNoLOs = function(event_id) {
     return _getSuccessWhenNoLOs(event_id)
   };
+  var getVLEData = function() {
+    return _vle_data
+  };
+  var setVLEData = function(data) {
+    _vle_data = data;
+    return _vle_data
+  };
   var _togglePause = function() {
     if(typeof _togglePauseFunction === "function") {
       _togglePauseFunction()
@@ -1358,7 +1401,7 @@ SGAME.CORE = function() {
   SGAME.Debugger.init(true);
   _loadInitialSettings();
   SGAME.Messenger.init();
-  return{init:init, loadSettings:loadSettings, triggerLO:triggerLO, showLO:showLO, showRandomLO:showRandomLO, closeLO:closeLO, getSettings:getSettings, losCanBeShown:losCanBeShown, successWhenNoLOs:successWhenNoLOs}
+  return{init:init, loadSettings:loadSettings, triggerLO:triggerLO, showLO:showLO, showRandomLO:showRandomLO, closeLO:closeLO, getSettings:getSettings, losCanBeShown:losCanBeShown, successWhenNoLOs:successWhenNoLOs, getVLEData:getVLEData, setVLEData:setVLEData}
 }();
 var API;
 var API_1484_11;
@@ -1418,13 +1461,18 @@ SGAME.Fancybox = function(undefined) {
       var SCORM_API = undefined;
       API = undefined;
       API_1484_11 = undefined;
+      var user = undefined;
+      var vleData = SGAME.CORE.getVLEData();
+      if(typeof vleData.user === "object") {
+        user = vleData.user
+      }
       if(lo.scorm_type === "sco") {
         if(lo.scorm_version === "1.2") {
-          API = new Local_API_SCORM_12({debug:SGAME.Debugger.isDebugging()});
+          API = new Local_API_SCORM_12({user:user, debug:SGAME.Debugger.isDebugging()});
           SCORM_API = API
         }else {
           if(lo.scorm_version === "2004") {
-            API_1484_11 = new Local_API_1484_11({debug:SGAME.Debugger.isDebugging()});
+            API_1484_11 = new Local_API_1484_11({user:user, debug:SGAME.Debugger.isDebugging()});
             SCORM_API = API_1484_11
           }
         }

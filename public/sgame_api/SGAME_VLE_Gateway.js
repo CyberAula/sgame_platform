@@ -3573,7 +3573,6 @@ function SCORM_API(options) {
 }
 ;SGAME_GATEWAY = function() {
   var init = function() {
-    console.log("SCORM VLE Gateway Init");
     SGAME_GATEWAY.CORE.init();
     return
   };
@@ -3811,8 +3810,6 @@ SGAME_GATEWAY.Messenger = function() {
   };
   var _onAppMessage = function(appMessage) {
     if(appMessage.data) {
-      console.log("APP Message received with data:");
-      console.log(appMessage.data)
     }
   };
   return{init:init, sendMessage:sendMessage}

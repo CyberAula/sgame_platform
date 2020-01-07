@@ -38,6 +38,7 @@ function Local_API_SCORM_12(options){
     diagnostic:  '',
     initialized: 0,
     terminated:  0,
+    user: undefined,
     debug: true,
     listeners: {},
     CMI: {
@@ -134,6 +135,16 @@ function Local_API_SCORM_12(options){
     408: "Data Model Dependency Not Established"
   },
   self = this;
+
+  //Set user
+  if(typeof settings.user === "object"){
+    if(typeof settings.user.name === "string"){
+      settings.CMI.core.student_name = settings.user.name;
+    }
+    if(typeof settings.user.id === "string"){
+      settings.CMI.core.student_id = settings.user.id;
+    }
+  }
 
   // Private
   /**

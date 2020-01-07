@@ -39,6 +39,7 @@ function Local_API_1484_11(options){
     diagnostic:  '',
     initialized: 0,
     terminated:  0,
+    user: undefined,
     debug: true,
     listeners: {},
     CMI:         {
@@ -152,6 +153,16 @@ function Local_API_1484_11(options){
     408: "Data Model Dependency Not Established"
   },
   self = this;
+
+  //Set user
+  if(typeof settings.user === "object"){
+    if(typeof settings.user.name === "string"){
+      settings.CMI.learner_name = settings.user.name;
+    }
+    if(typeof settings.user.id === "string"){
+      settings.CMI.learner_id = settings.user.id;
+    }
+  }
 
   // Private
   /**
