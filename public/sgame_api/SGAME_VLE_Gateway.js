@@ -3210,12 +3210,17 @@ function SCORM_API(options) {
                 ig = true;
                 break;
               case "cmi.success_status":
-                if(API.data.completion_status == "completed" && v != "passed") {
+                if(API.data.completion_status == "completed" && (v != "passed" && v != "failed")) {
                   return"false"
+                }
+                if(v == "failed") {
+                  if(API.data.completion_status != "completed") {
+                    return"false"
+                  }
                 }
               ;
               case "cmi.completion_status":
-                if(API.data.completion_status == "passed") {
+                if((API.data.completion_status == "passed" || API.data.completion_status == "failed") && (v != "passed" && v != "failed")) {
                   return"false"
                 }
                 nn = "cmi.core.lesson_status";
@@ -3618,21 +3623,21 @@ SGAME_GATEWAY.CORE = function() {
     var learnerName = scorm.getvalue("cmi.learner_name");
     var learnerId = scorm.getvalue("cmi.learner_id");
     user = {name:learnerName, id:learnerId};
-    updateProgressMeasure(100);
-    updateCompletionStatus("completed");
-    if(hasScore) {
-      scorm.setvalue("cmi.score.min", (0).toString());
-      scorm.setvalue("cmi.score.max", (100).toString());
-      updateScore(0);
-      updateSuccessStatus("failed")
-    }
+    updateProgressMeasure(0);
+    updateCompletionStatus("incompleted");
     $(window).on("unload", function() {
       onExit()
     });
     SGAME_GATEWAY.Messenger.init()
   };
+  var initScore = function() {
+    scorm.setvalue("cmi.score.min", (0).toString());
+    scorm.setvalue("cmi.score.max", (100).toString());
+    updateScore(0);
+    updateSuccessStatus("failed")
+  };
   var updateProgressMeasure = function(progressMeasure) {
-    if(typeof progressMeasure == "number") {
+    if(typeof progressMeasure === "number") {
       scorm.setvalue("cmi.progress_measure", progressMeasure.toString())
     }
   };
@@ -3679,7 +3684,7 @@ SGAME_GATEWAY.CORE = function() {
     }
     return true
   };
-  return{init:init, isConnected:isConnected, updateProgressMeasure:updateProgressMeasure, updateCompletionStatus:updateCompletionStatus, updateScore:updateScore, updateSuccessStatus:updateSuccessStatus, onExit:onExit, getUser:getUser, getAPIWrapper:getAPIWrapper, getLMSAPIInstance:getLMSAPIInstance}
+  return{init:init, isConnected:isConnected, initScore:initScore, updateProgressMeasure:updateProgressMeasure, updateCompletionStatus:updateCompletionStatus, updateScore:updateScore, updateSuccessStatus:updateSuccessStatus, onExit:onExit, getUser:getUser, getAPIWrapper:getAPIWrapper, getLMSAPIInstance:getLMSAPIInstance}
 }();
 SGAME_GATEWAY.Messenger = function() {
   var VALID_TYPES = ["PROTOCOL", "APP"];
@@ -3704,10 +3709,6 @@ SGAME_GATEWAY.Messenger = function() {
       }
     }
     _initHelloExchange()
-  };
-  var _onConnection = function() {
-    var user = SGAME_GATEWAY.CORE.getUser();
-    sendMessage({"key":"lms_data", "value":user})
   };
   function IframeMessage(data, type) {
     this.data = data || {};
@@ -3772,7 +3773,7 @@ SGAME_GATEWAY.Messenger = function() {
   };
   var _onProtocolMessage = function(protocolMessage) {
     if(protocolMessage.data) {
-      switch(protocolMessage.data.message) {
+      switch(protocolMessage.data.key) {
         case "onIframeMessengerHello":
           if(protocolMessage.origin === "SGAME_API") {
             if(_helloTimeout) {
@@ -3784,7 +3785,7 @@ SGAME_GATEWAY.Messenger = function() {
               helloMessage.destination = helloMessage.origin;
               helloMessage.origin = ORIGIN;
               _sendMessage(JSON.stringify(helloMessage));
-              _onConnection()
+              _onConnection(protocolMessage.data.settings)
             }
           }
           break;
@@ -3801,7 +3802,7 @@ SGAME_GATEWAY.Messenger = function() {
     _sayHello()
   };
   var _sayHello = function() {
-    var helloMessage = _createMessage({"message":"onIframeMessengerHello"}, "PROTOCOL");
+    var helloMessage = _createMessage({"key":"onIframeMessengerHello"}, "PROTOCOL");
     _sendMessage(helloMessage);
     _helloAttempts++;
     if(_helloAttempts >= MAX_HELLO_ATTEMPTS && _helloTimeout) {
@@ -3810,8 +3811,44 @@ SGAME_GATEWAY.Messenger = function() {
   };
   var _onAppMessage = function(appMessage) {
     if(appMessage.data) {
-      console.log("VLE GATEWAY: APP Message received with data:");
-      console.log(appMessage.data)
+      switch(appMessage.data.key) {
+        case "tracking":
+          if(typeof appMessage.data.value === "object") {
+            _onTrackingDataReceived(appMessage.data.value)
+          }
+          break;
+        default:
+          break
+      }
+    }
+  };
+  var _onConnection = function(settings) {
+    if(SGAME_GATEWAY.CORE.isConnected() === false) {
+      return
+    }
+    if(settings["game_settings"]["success_status"] !== "disabled") {
+      SGAME_GATEWAY.CORE.initScore()
+    }
+    var user = SGAME_GATEWAY.CORE.getUser();
+    sendMessage({"key":"lms_data", "value":user})
+  };
+  var _onTrackingDataReceived = function(data) {
+    if(SGAME_GATEWAY.CORE.isConnected() === false) {
+      return
+    }
+    if(typeof data.progress_measure === "number") {
+      var progress_measure = Math.max(0, Math.min(1, data.progress_measure));
+      SGAME_GATEWAY.CORE.updateProgressMeasure(progress_measure)
+    }
+    if(typeof data.score === "number") {
+      var score = Math.max(0, Math.min(1, data.score));
+      SGAME_GATEWAY.CORE.updateScore(score)
+    }
+    if(typeof data.completion_status === "string") {
+      SGAME_GATEWAY.CORE.updateCompletionStatus(data.completion_status)
+    }
+    if(typeof data.success_status === "string") {
+      SGAME_GATEWAY.CORE.updateSuccessStatus(data.success_status)
     }
   };
   return{init:init, sendMessage:sendMessage}

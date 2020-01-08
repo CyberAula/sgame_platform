@@ -16,7 +16,7 @@
     var scormResourceURLs = [scormpackageURL];
 
     // Create SCORM LMS API
-    var API = new Local_API_SCORM_12({user: {name: "Custom name", id: "999"}, debug: false});
+    var API = new Local_API_SCORM_12({user: {name: "Custom name", id: "999"}, debug: true});
 
     //Create SCORM player
     var SCORM_Player = new SCORM_Player({debug: false, SCORM_VERSION: "1.2", LMS_API: API, IFRAME_API: SCORM_IFRAME_API, SCORM_PACKAGE_URL: scormpackageURL, SCORM_RESOURCE_URLS: scormResourceURLs});

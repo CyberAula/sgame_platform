@@ -981,12 +981,13 @@ SGAME.Messenger = function() {
   };
   var _onProtocolMessage = function(protocolMessage) {
     if(protocolMessage.data) {
-      switch(protocolMessage.data.message) {
+      switch(protocolMessage.data.key) {
         case "onIframeMessengerHello":
           if(protocolMessage.origin === "SGAME_GATEWAY") {
             if(_connected !== true) {
               _connected = true;
               var helloMessage = protocolMessage;
+              helloMessage.data.settings = SGAME.CORE.getSettings();
               helloMessage.destination = helloMessage.origin;
               helloMessage.origin = ORIGIN;
               _sendMessage(JSON.stringify(helloMessage))
@@ -1062,7 +1063,7 @@ SGAME.CORE = function() {
   var _settings = {};
   var _settings_loaded = false;
   var _vle_data = {};
-  var _tracking = {completion_status:"incompleted", success_status:"unknown"};
+  var _tracking = {progress_measure:0, completion_status:"incompleted", score:0, success_status:"unknown"};
   var supportedRepeatLo = ["repeat", "repeat_unless_successfully_consumed", "no_repeat"];
   var supportedCompletionStatus = ["percentage_los", "n_los_shown", "n_times_shown", "disabled"];
   var supportedSuccessStatus = ["percentage_los", "n_los_shown", "n_times_shown", "disabled"];
@@ -1122,13 +1123,13 @@ SGAME.CORE = function() {
     if(_settings["game_settings"]["completion_status"] === "disabled" || typeof _settings["game_settings"]["completion_status_n"] !== "number") {
       delete _settings["game_settings"]["completion_status_n"]
     }
-    if(supportedCompletionStatus.indexOf(_settings["game_settings"]["success_status"]) === -1) {
+    if(supportedCompletionStatus.indexOf(_settings["game_settings"]["success_status"]) === -1 || typeof _settings["game_settings"]["completion_status_n"] !== "number") {
       _settings["game_settings"]["success_status"] = "disabled"
     }
     if(_settings["game_settings"]["success_status"] === "disabled" || typeof _settings["game_settings"]["success_status_n"] !== "number") {
       delete _settings["game_settings"]["success_status_n"]
     }
-    if(supportedSuccessStatus.indexOf(_settings["game_settings"]["success_status"]) === -1) {
+    if(supportedSuccessStatus.indexOf(_settings["game_settings"]["success_status"]) === -1 || typeof _settings["game_settings"]["success_status_n"] !== "number") {
       _settings["game_settings"]["success_status"] = "disabled"
     }
     if(supportedCompletionNotification.indexOf(_settings["game_settings"]["completion_notification"]) === -1) {
@@ -1302,69 +1303,85 @@ SGAME.CORE = function() {
         _los_can_be_shown = true
       }
     }
+    var progress_measure = 0;
     var completion_status = "incompleted";
     if(typeof _settings["game_settings"]["completion_status_n"] === "number") {
       switch(_settings["game_settings"]["completion_status"]) {
         case "percentage_los":
-          if(_nloshown / _nLOs >= _settings["game_settings"]["completion_status_n"]) {
-            completion_status = "completed"
+          _settings["game_settings"]["completion_status_n"] = Math.min(100, Math.max(0, _settings["game_settings"]["completion_status_n"])) / 100;
+          if(_settings["game_settings"]["completion_status_n"] <= 0 || _nLOs <= 0) {
+            progress_measure = 1
           }else {
-            completion_status = "incompleted"
+            progress_measure = _nloshown / _nLOs / _settings["game_settings"]["completion_status_n"]
           }
           break;
         case "n_los_shown":
-          if(_nloshown >= _settings["game_settings"]["completion_status_n"]) {
-            completion_status = "completed"
+          var n_los_shown_threshold = Math.min(_settings["game_settings"]["completion_status_n"], _nLOs);
+          if(n_los_shown_threshold === 0) {
+            progress_measure = 1
           }else {
-            completion_status = "incompleted"
+            progress_measure = _nloshown / n_los_shown_threshold
           }
           break;
         case "n_times_shown":
-          if(_nshown >= _settings["game_settings"]["completion_status_n"]) {
-            completion_status = "completed"
+          if(_settings["game_settings"]["completion_status_n"] <= 0) {
+            progress_measure = 1
           }else {
-            completion_status = "incompleted"
+            progress_measure = _nshown / _settings["game_settings"]["completion_status_n"]
           }
           break;
         case "disabled":
         ;
         default:
-          completion_status = "incompleted";
           break
       }
+      progress_measure = Math.max(Math.min(1, +progress_measure.toFixed(2)), 0);
+      if(progress_measure === 1) {
+        completion_status = "completed"
+      }else {
+        completion_status = "incompleted"
+      }
     }
+    var score = 0;
     var success_status = "unknown";
     if(typeof _settings["game_settings"]["success_status_n"] === "number") {
       switch(_settings["game_settings"]["success_status"]) {
         case "percentage_los":
-          if(_nloshown / _nLOs >= _settings["game_settings"]["success_status_n"]) {
-            success_status = "passed"
+          _settings["game_settings"]["success_status_n"] = Math.min(100, Math.max(0, _settings["game_settings"]["success_status_n"])) / 100;
+          if(_settings["game_settings"]["success_status_n"] <= 0 || _nLOs <= 0) {
+            score = 1
           }else {
-            success_status = "failed"
+            score = _nlosuccess / _nLOs / _settings["game_settings"]["success_status_n"]
           }
           break;
         case "n_los_shown":
-          if(_nloshown >= _settings["game_settings"]["success_status_n"]) {
-            success_status = "passed"
+          var n_los_shown_threshold = Math.min(_settings["game_settings"]["success_status_n"], _nLOs);
+          if(n_los_shown_threshold === 0) {
+            score = 1
           }else {
-            success_status = "failed"
+            score = _nloshown / n_los_shown_threshold
           }
           break;
         case "n_times_shown":
-          if(_nshown >= _settings["game_settings"]["success_status_n"]) {
-            success_status = "passed"
+          if(_settings["game_settings"]["success_status_n"] <= 0) {
+            score = 1
           }else {
-            success_status = "failed"
+            score = _nsuccess / _settings["game_settings"]["success_status_n"]
           }
           break;
         case "disabled":
         ;
         default:
-          success_status = "unknown";
           break
       }
+      score = Math.max(Math.min(1, +score.toFixed(2)), 0);
+      if(score === 1) {
+        success_status = "passed"
+      }else {
+        success_status = "failed"
+      }
     }
-    _tracking = {completion_status:completion_status, success_status:success_status};
+    _tracking = {progress_measure:progress_measure, completion_status:completion_status, score:score, success_status:success_status};
     SGAME.Messenger.sendMessage({key:"tracking", value:_tracking})
   };
   var _checkFinalScreen = function(callback) {
@@ -1499,7 +1516,7 @@ SGAME.CORE = function() {
       _loadSettings({})
     }
   };
-  SGAME.Debugger.init(true);
+  SGAME.Debugger.init(false);
   _loadInitialSettings();
   SGAME.Messenger.init();
   return{init:init, loadSettings:loadSettings, triggerLO:triggerLO, showLO:showLO, showRandomLO:showRandomLO, closeLO:closeLO, getSettings:getSettings, losCanBeShown:losCanBeShown, successWhenNoLOs:successWhenNoLOs, getVLEData:getVLEData, setVLEData:setVLEData}
