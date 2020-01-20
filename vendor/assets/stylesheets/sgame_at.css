@@ -234,6 +234,21 @@
   border: 2px solid white;
 }
 
+#sgame_at div.options_wrapper div.option_wrapper input[type='number']{
+  color: black;
+  background: white;
+  width: 55px;
+  text-align: center;
+  height: "auto";
+  padding: 0px;
+}
+
+#sgame_at div.options_wrapper div.option_wrapper input[type='number'][disabled]{
+  color: gray;
+  background: #ccc;
+  cursor: default;
+}
+
 #sgame_at div[step="6"] div.metadata_wrapper div.metadata_field {
   margin-bottom: 15px;
 }

@@ -879,7 +879,7 @@ function Local_API_1484_11(options) {
   };
   return{init:init, loadSettings:loadSettings, triggerLO:triggerLO, showLO:showLO, showRandomLO:showRandomLO, closeLO:closeLO, getSettings:getSettings, losCanBeShown:losCanBeShown, successWhenNoLOs:successWhenNoLOs}
 }();
-SGAME.VERSION = "0.6";
+SGAME.VERSION = "0.7";
 SGAME.AUTHORS = "Aldo Gordillo, Enrique Barra";
 SGAME.URL = "https://github.com/ging/sgame_platform";
 SGAME.Debugger = function() {
@@ -1064,12 +1064,12 @@ SGAME.CORE = function() {
   var _settings_loaded = false;
   var _vle_data = {};
   var _tracking = {progress_measure:0, completion_status:"incompleted", score:0, success_status:"unknown"};
+  var supportedEventTypes = ["reward", "damage", "blocking", "no-effect"];
   var supportedRepeatLo = ["repeat", "repeat_unless_successfully_consumed", "no_repeat"];
-  var supportedCompletionStatus = ["percentage_los", "n_los_shown", "n_times_shown", "disabled"];
-  var supportedSuccessStatus = ["percentage_los", "n_los_shown", "n_times_shown", "disabled"];
+  var supportedCompletionStatus = ["all_los", "percentage_los", "n_los", "n_times", "disabled", "onstart"];
+  var supportedSuccessStatus = ["all_los", "percentage_los", "n_los", "n_times", "disabled", "onstart"];
   var supportedCompletionNotification = ["no_more_los", "all_los_consumed", "all_los_succesfully_consumed", "completion_status", "success_status", "never"];
   var supportedBehaviourWhenNoMoreLOs = ["success", "failure", "success_unless_damage", "failure_unless_blocking"];
-  var supportedEventTypes = ["reward", "damage", "blocking", "no-effect"];
   var _los_can_be_shown = false;
   var _nLOs = 0;
   var _nloshown = 0;
@@ -1315,15 +1315,15 @@ SGAME.CORE = function() {
             progress_measure = _nloshown / _nLOs / _settings["game_settings"]["completion_status_n"]
           }
           break;
-        case "n_los_shown":
-          var n_los_shown_threshold = Math.min(_settings["game_settings"]["completion_status_n"], _nLOs);
-          if(n_los_shown_threshold === 0) {
+        case "n_los":
+          var n_los_threshold = Math.min(_settings["game_settings"]["completion_status_n"], _nLOs);
+          if(n_los_threshold === 0) {
             progress_measure = 1
           }else {
-            progress_measure = _nloshown / n_los_shown_threshold
+            progress_measure = _nloshown / n_los_threshold
           }
           break;
-        case "n_times_shown":
+        case "n_times":
           if(_settings["game_settings"]["completion_status_n"] <= 0) {
             progress_measure = 1
           }else {
@@ -1354,15 +1354,15 @@ SGAME.CORE = function() {
             score = _nlosuccess / _nLOs / _settings["game_settings"]["success_status_n"]
           }
           break;
-        case "n_los_shown":
-          var n_los_shown_threshold = Math.min(_settings["game_settings"]["success_status_n"], _nLOs);
-          if(n_los_shown_threshold === 0) {
+        case "n_los":
+          var n_los_threshold = Math.min(_settings["game_settings"]["success_status_n"], _nLOs);
+          if(n_los_threshold === 0) {
             score = 1
           }else {
-            score = _nloshown / n_los_shown_threshold
+            score = _nloshown / n_los_threshold
           }
           break;
-        case "n_times_shown":
+        case "n_times":
           if(_settings["game_settings"]["success_status_n"] <= 0) {
             score = 1
           }else {

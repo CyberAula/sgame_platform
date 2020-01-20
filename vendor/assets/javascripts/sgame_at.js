@@ -1,5 +1,5 @@
 SGAME_AT = (function($,undefined){
-	var VERSION = "1.0";
+	var VERSION = "1.1";
 
 	var options = {};
 
@@ -14,6 +14,10 @@ SGAME_AT = (function($,undefined){
 	var supportedLanguages = ["en","es"];
 	var supportedEventTypes = ["reward","damage","blocking"];
 	var supportedEventFrequencies = ["high","medium","low","one-shot","skill-dependent","skill-dependent_high","skill-dependent_medium","skill-dependent_low"];
+	var supportedCompletionStatus = ["all_los","percentage_los","n_los","n_times","disabled","onstart"];
+	var supportedSuccessStatus = ["all_los","percentage_los","n_los","n_times","disabled","onstart"];
+	var supportedCompletionNotification = ["no_more_los","all_los_consumed","all_los_succesfully_consumed","completion_status","success_status","never"];
+	var supportedBehaviourWhenNoMoreLOs = ["success","failure","success_unless_damage","failure_unless_blocking"];
 
 	//Application state (Editor data in the SGAME platform)
 	var current_step = 1;
@@ -79,7 +83,16 @@ SGAME_AT = (function($,undefined){
 					var existing_mapped_los;
 					if(state.mapping[smKeys[x]] instanceof Array){
 						var mapped_lo_ids = state.mapping[smKeys[x]].map(function(e){return e + ""});
-						existing_mapped_los = mapped_lo_ids.filter(value => -1 !== lo_ids.indexOf(value));
+						if(mapped_lo_ids.indexOf("*")!==-1){
+							existing_mapped_los = ["*"];
+						} else if(mapped_lo_ids.indexOf("none")!==-1){
+							existing_mapped_los = ["none"];
+						} else {
+							existing_mapped_los = mapped_lo_ids.filter(value => -1 !== lo_ids.indexOf(value));
+							if(existing_mapped_los.length === 0){
+								existing_mapped_los = ["none"];
+							}
+						}
 					} else {
 						if(typeof state.mapping[smKeys[x]] === "string"){
 							existing_mapped_los = state.mapping[smKeys[x]];
@@ -115,6 +128,7 @@ SGAME_AT = (function($,undefined){
 		}
 
 		_loadEvents();
+		_loadValues();
 		_translateUI();
 
 		for(var i=0; i<current_step; i++){
@@ -158,6 +172,23 @@ SGAME_AT = (function($,undefined){
 				}
 			}
 		);
+
+		//Complex inputs (input radio + input number)
+		$("span.complexinput").bind("change", function(){
+            $(this).parent().find("span.complexinput input[type!='radio']").prop('disabled', true); //Add attribute without value
+            $(this).find("input[type!='radio']").removeAttr("disabled");
+        });
+	};
+
+	var _loadValues = function(){
+		var nLOs = Object.keys(current_los).length;
+		if(nLOs > 0){
+			$.each($("input[type='radio'][value='n_los']"),function(i,input){
+				if(!($(input).is(':checked'))){
+					$(input).parent().find("input[type='number']").val(nLOs);
+				}
+			});
+		}
 	};
 
 	var _loadStep = function(step){
@@ -291,14 +322,36 @@ SGAME_AT = (function($,undefined){
 				});
 				break;
 			case 5:
-				//Setting option 1: completion_notification
+				//Setting option: completion_status
+				if(typeof supportedCompletionStatus.indexOf(current_settings["completion_status"]) !== -1){
+					$("#sgame_at div[step='5'] div.options_wrapper input[name='set_opt3'][value='" + current_settings["completion_status"] + "']").attr('checked',true);
+					if(typeof current_settings["completion_status_n"] === "number"){
+						$("#sgame_at div[step='5'] div.options_wrapper input[name='set_opt3'][value='" + current_settings["completion_status"] + "']").parent().find("input[type='number']").val(current_settings["completion_status_n"]);
+					}
+				}
+
+				//Setting option: success_status
+				if(typeof supportedSuccessStatus.indexOf(current_settings["success_status"]) !== -1){
+					$("#sgame_at div[step='5'] div.options_wrapper input[name='set_opt4'][value='" + current_settings["success_status"] + "']").attr('checked',true);
+					if(typeof current_settings["success_status_n"] === "number"){
+						$("#sgame_at div[step='5'] div.options_wrapper input[name='set_opt4'][value='" + current_settings["success_status"] + "']").parent().find("input[type='number']").val(current_settings["success_status_n"]);
+					}
+				}
+
+				//Setting option: completion_notification
 				if(typeof current_settings["completion_notification"] !== "undefined"){
 					$("#sgame_at div[step='5'] div.options_wrapper input[name='set_opt1'][value='" + current_settings["completion_notification"] + "']").attr('checked',true);
 				}
-				//Setting option 2: behaviour when no more learning objects can be shown
+				//Setting option: behaviour when no more learning objects can be shown
 				if(typeof current_settings["behaviour_when_no_more_los"] !== "undefined"){
 					$("#sgame_at div[step='5'] div.options_wrapper input[name='set_opt2'][value='" + current_settings["behaviour_when_no_more_los"] + "']").attr('checked',true);
 				}
+
+				//Apply all necessary changes in complex inputs (i.e. inputs with a radio button and an input of type number)
+				$.each($("span.complexinput").find("input[type='radio']:checked"), function(i, input){
+					$(input).parent("span.complexinput").trigger("change");
+				});
+
 				$("#step5_confirmation").on("click",function(){
 					_onStep5Confirmation();
 				});
@@ -649,6 +702,7 @@ SGAME_AT = (function($,undefined){
 			return _showSGAMEDialogWithSettings({"msg":_getTrans("i.error_no_los")}, false);
 		}
 		_redrawMappingTable();
+		_loadValues();
 		_finishStep("2");
 	};
 
@@ -782,9 +836,21 @@ SGAME_AT = (function($,undefined){
 	//Step 5
 
 	var _onStep5Confirmation = function(){
-		//Settings option 1: completion_notification
+		//Settings option: completion_status (and completion_status_n)
+		current_settings["completion_status"] = $("#sgame_at div[step='5'] div.options_wrapper input[name='set_opt3']:checked").val();
+		if($("#sgame_at div[step='5'] div.options_wrapper input[name='set_opt3']:checked").parent().find("input[type!='radio']").length > 0){
+			current_settings["completion_status_n"] = parseInt($("#sgame_at div[step='5'] div.options_wrapper input[name='set_opt3']:checked").parent().find("input[type!='radio']").val());
+		}
+
+		//Settings option: success_status (and success_status_n)
+		current_settings["success_status"] = $("#sgame_at div[step='5'] div.options_wrapper input[name='set_opt4']:checked").val();
+		if($("#sgame_at div[step='5'] div.options_wrapper input[name='set_opt4']:checked").parent().find("input[type!='radio']").length > 0){
+			current_settings["success_status_n"] = parseInt($("#sgame_at div[step='5'] div.options_wrapper input[name='set_opt4']:checked").parent().find("input[type!='radio']").val());
+		}
+
+		//Settings option: completion_notification
 		current_settings["completion_notification"] = $("#sgame_at div[step='5'] div.options_wrapper input[name='set_opt1']:checked").val();
-		//Setting option 2: behaviour when no more learning objects can be shown
+		//Setting option: behaviour when no more learning objects can be shown
 		current_settings["behaviour_when_no_more_los"] = $("#sgame_at div[step='5'] div.options_wrapper input[name='set_opt2']:checked").val();
 
 		_finishStep("5");
