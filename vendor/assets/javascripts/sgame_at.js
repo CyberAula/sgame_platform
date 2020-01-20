@@ -14,6 +14,7 @@ SGAME_AT = (function($,undefined){
 	var supportedLanguages = ["en","es"];
 	var supportedEventTypes = ["reward","damage","blocking"];
 	var supportedEventFrequencies = ["high","medium","low","one-shot","skill-dependent","skill-dependent_high","skill-dependent_medium","skill-dependent_low"];
+	var supportedInterruptions = ["no_restrictions","n_times","1_per_timeperiod"];
 	var supportedCompletionStatus = ["all_los","percentage_los","n_los","n_times","disabled","onstart"];
 	var supportedSuccessStatus = ["all_los","percentage_los","n_los","n_times","disabled","onstart"];
 	var supportedCompletionNotification = ["no_more_los","all_los_consumed","all_los_succesfully_consumed","completion_status","success_status","never"];
@@ -188,6 +189,10 @@ SGAME_AT = (function($,undefined){
 					$(input).parent().find("input[type='number']").val(nLOs);
 				}
 			});
+			var inputSeq2 = $("input[type='radio'][name='seq_opt2'][value='n_times']");
+			if(!($(inputSeq2).is(':checked'))){
+				$(inputSeq2).parent().find("input[type='number']").val(nLOs);
+			}
 		}
 	};
 
@@ -312,9 +317,16 @@ SGAME_AT = (function($,undefined){
 				_redrawMappingTable();
 				break;
 			case 4:
-				//Sequencing option 1: repeat_lo
+				//Sequencing option: repeat_lo
 				if(typeof current_sequencing["repeat_lo"] !== "undefined"){
 					$("#sgame_at div[step='4'] div.options_wrapper input[name='seq_opt1'][value='" + current_sequencing["repeat_lo"] + "']").attr('checked',true);
+				}
+
+				if(typeof supportedInterruptions.indexOf(current_sequencing["interruptions"]) !== -1){
+					$("#sgame_at div[step='4'] div.options_wrapper input[name='seq_opt2'][value='" + current_sequencing["interruptions"] + "']").attr('checked',true);
+					if(typeof current_sequencing["interruptions_n"] === "number"){
+						$("#sgame_at div[step='4'] div.options_wrapper input[name='seq_opt2'][value='" + current_sequencing["interruptions"] + "']").parent().find("input[type='number']").val(current_sequencing["interruptions_n"]);
+					}
 				}
 
 				$("#step4_confirmation").on("click",function(){
@@ -827,8 +839,17 @@ SGAME_AT = (function($,undefined){
 	//Step 4
 
 	var _onStep4Confirmation = function(){
-		//Sequencing option 1: repeat_lo
+		//Sequencing option: repeat_lo
 		current_sequencing["repeat_lo"] = $("#sgame_at div[step='4'] div.options_wrapper input[name='seq_opt1']:checked").val();
+		
+		//Sequencing option: interruptions
+		current_sequencing["interruptions"] = $("#sgame_at div[step='4'] div.options_wrapper input[name='seq_opt2']:checked").val();
+		if($("#sgame_at div[step='4'] div.options_wrapper input[name='seq_opt2']:checked").parent().find("input[type!='radio']").length > 0){
+			current_sequencing["interruptions_n"] = parseInt($("#sgame_at div[step='4'] div.options_wrapper input[name='seq_opt2']:checked").parent().find("input[type!='radio']").val());
+		} else {
+			delete current_sequencing["interruptions_n"];
+		}
+
 		_finishStep("4");
 	};
 
@@ -840,12 +861,16 @@ SGAME_AT = (function($,undefined){
 		current_settings["completion_status"] = $("#sgame_at div[step='5'] div.options_wrapper input[name='set_opt3']:checked").val();
 		if($("#sgame_at div[step='5'] div.options_wrapper input[name='set_opt3']:checked").parent().find("input[type!='radio']").length > 0){
 			current_settings["completion_status_n"] = parseInt($("#sgame_at div[step='5'] div.options_wrapper input[name='set_opt3']:checked").parent().find("input[type!='radio']").val());
+		} else {
+			delete current_settings["completion_status_n"];
 		}
 
 		//Settings option: success_status (and success_status_n)
 		current_settings["success_status"] = $("#sgame_at div[step='5'] div.options_wrapper input[name='set_opt4']:checked").val();
 		if($("#sgame_at div[step='5'] div.options_wrapper input[name='set_opt4']:checked").parent().find("input[type!='radio']").length > 0){
 			current_settings["success_status_n"] = parseInt($("#sgame_at div[step='5'] div.options_wrapper input[name='set_opt4']:checked").parent().find("input[type!='radio']").val());
+		} else {
+			delete current_settings["success_status_n"];
 		}
 
 		//Settings option: completion_notification

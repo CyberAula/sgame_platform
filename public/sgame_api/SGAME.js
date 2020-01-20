@@ -1066,6 +1066,7 @@ SGAME.CORE = function() {
   var _tracking = {progress_measure:0, completion_status:"incompleted", score:0, success_status:"unknown"};
   var supportedEventTypes = ["reward", "damage", "blocking", "no-effect"];
   var supportedRepeatLo = ["repeat", "repeat_unless_successfully_consumed", "no_repeat"];
+  var supportedInterruptions = ["no_restrictions", "n_times", "1_per_timeperiod"];
   var supportedCompletionStatus = ["all_los", "percentage_los", "n_los", "n_times", "disabled", "onstart"];
   var supportedSuccessStatus = ["all_los", "percentage_los", "n_los", "n_times", "disabled", "onstart"];
   var supportedCompletionNotification = ["no_more_los", "all_los_consumed", "all_los_succesfully_consumed", "completion_status", "success_status", "never"];

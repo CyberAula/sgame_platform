@@ -82,6 +82,11 @@ en:
         choice1: "The game can show that learning object again."
         choice2: "The game can show that learning object again only if it has not been successfully consumed."
         choice3: "The game will not show that learning object again."
+      opt2:
+        title: "The game can be interrupted to show learning objects:"
+        choice1: "Whenever an event occurs for which there is a mapped learning object that can be shown."
+        choice2: "At most, the following number of times:"
+        choice3: "At most, once per period with a duration of the following number of seconds:"
     step5:
       title: "Specify settings for the game"
       description: "In this step you can specify different settings for the educational game."

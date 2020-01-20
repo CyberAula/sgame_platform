@@ -186,6 +186,14 @@
 					<input type="radio" name="seq_opt1" value="no_repeat"> <%=t("at.step4.opt1.choice3")%><br>
 				</div>
 			</div>
+			<div class="options_wrapper">
+				<div class="option_wrapper">
+					<p class="options_legend"><%=t("at.step4.opt2.title")%></p>
+					<span class="complexinput"><input type="radio" name="seq_opt2" value="no_restrictions" checked> <%=t("at.step4.opt2.choice1")%></span><br>
+					<span class="complexinput"><input type="radio" name="seq_opt2" value="n_times"> <%=t("at.step4.opt2.choice2")%><input type="number" min=1 step=1 value="1" disabled></span><br>
+					<span class="complexinput"><input type="radio" name="seq_opt2" value="1_per_timeperiod"> <%=t("at.step4.opt2.choice3")%><input type="number" min=1 step=1 value="60" disabled></span><br>
+				</div>
+			</div>
 			<div class="step_actions">
 				<button id="step4_confirmation" class="sgame_button"><%=t("at.step4.confirmation")%></button>
 			</div>
