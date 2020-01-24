@@ -100,7 +100,7 @@ es:
         choice5: "Cuando el estado de éxito del juego pase a superado."
         choice6: "Nunca."
       opt2:
-        title: "Cuando se desencadene un evento de juego que deba mostrar un objeto de aprendizaje pero no se puedan mostrar más objetos de aprendizaje:"
+        title: "Cuando se desencadene un evento de juego que deba mostrar un objeto de aprendizaje pero no se puedan mostrar objetos de aprendizaje:"
         choice1: "El juego deberá actuar como si el jugador hubiera consumido con éxito el objeto de aprendizaje."
         choice2: "El juego deberá actuar como si el jugador no hubiera consumido con éxito el objeto de aprendizaje."
         choice3: "El juego deberá actuar como si el jugador no hubiera consumido con éxito el objeto de aprendizaje a menos que el evento sea de tipo bloqueante."

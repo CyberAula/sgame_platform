@@ -922,6 +922,9 @@ SGAME.Messenger = function() {
     }catch(e) {
     }
   };
+  var isConnected = function() {
+    return _connected
+  };
   var sendMessage = function(data) {
     if(_initialized && _connected) {
       var message = _createMessage(data);
@@ -990,7 +993,8 @@ SGAME.Messenger = function() {
               helloMessage.data.settings = SGAME.CORE.getSettings();
               helloMessage.destination = helloMessage.origin;
               helloMessage.origin = ORIGIN;
-              _sendMessage(JSON.stringify(helloMessage))
+              _sendMessage(JSON.stringify(helloMessage));
+              SGAME.CORE.onConnectedToVLE()
             }
           }
           break;
@@ -1024,7 +1028,7 @@ SGAME.Messenger = function() {
     vle_data["user"] = user;
     SGAME.CORE.setVLEData(vle_data)
   };
-  return{init:init, sendMessage:sendMessage}
+  return{init:init, isConnected:isConnected, sendMessage:sendMessage}
 }();
 SGAME.API = function() {
   var init = function() {
@@ -1316,6 +1320,27 @@ SGAME.CORE = function() {
   var successWhenNoLOs = function(event_id) {
     return _getSuccessWhenNoLOs(event_id)
   };
+  var onConnectedToVLE = function() {
+    if(_settings["game_settings"]["completion_status"] === "onstart") {
+      _tracking["progress_measure"] = 1;
+      _tracking["completion_status"] = "completed"
+    }
+    if(_settings["game_settings"]["success_status"] === "onstart") {
+      _tracking["score"] = 1;
+      _tracking["success_status"] = "passed"
+    }
+    if(_settings["game_settings"]["completion_status"] === "onstart" || _settings["game_settings"]["success_status"] === "onstart") {
+      SGAME.Messenger.sendMessage({key:"tracking", value:_tracking});
+      setTimeout(function() {
+        if(_shouldShowFinalScreen() === true) {
+          _togglePause();
+          _checkFinalScreen(function() {
+            _togglePause()
+          })
+        }
+      }, 500)
+    }
+  };
   var getVLEData = function() {
     return _vle_data
   };
@@ -1329,9 +1354,13 @@ SGAME.CORE = function() {
     }
   };
   var _updateFlagsAndTracking = function() {
-    _los_can_be_shown = false;
     var lo_ids = Object.keys(_settings["los"]);
     var nLOs = lo_ids.length;
+    _nloshown = 0;
+    _nshown = 0;
+    _nlosuccess = 0;
+    _nsuccess = 0;
+    _los_can_be_shown = false;
     for(var i = 0;i < nLOs;i++) {
       if(_settings["los"][lo_ids[i]]["shown"] === true) {
         _nloshown += 1;
@@ -1347,81 +1376,87 @@ SGAME.CORE = function() {
     }
     var progress_measure = 0;
     var completion_status = "incompleted";
-    if(typeof _settings["game_settings"]["completion_status_n"] === "number") {
-      switch(_settings["game_settings"]["completion_status"]) {
-        case "percentage_los":
-          _settings["game_settings"]["completion_status_n"] = Math.min(100, Math.max(0, _settings["game_settings"]["completion_status_n"])) / 100;
-          if(_settings["game_settings"]["completion_status_n"] <= 0 || _nLOs <= 0) {
-            progress_measure = 1
-          }else {
-            progress_measure = _nloshown / _nLOs / _settings["game_settings"]["completion_status_n"]
-          }
-          break;
-        case "n_los":
-          var n_los_threshold = Math.min(_settings["game_settings"]["completion_status_n"], _nLOs);
-          if(n_los_threshold === 0) {
-            progress_measure = 1
-          }else {
-            progress_measure = _nloshown / n_los_threshold
-          }
-          break;
-        case "n_times":
-          if(_settings["game_settings"]["completion_status_n"] <= 0) {
-            progress_measure = 1
-          }else {
-            progress_measure = _nshown / _settings["game_settings"]["completion_status_n"]
-          }
-          break;
-        case "disabled":
-        ;
-        default:
-          break
-      }
-      progress_measure = Math.max(Math.min(1, +progress_measure.toFixed(2)), 0);
-      if(progress_measure === 1) {
-        completion_status = "completed"
-      }else {
-        completion_status = "incompleted"
-      }
+    switch(_settings["game_settings"]["completion_status"]) {
+      case "all_los":
+        _settings["game_settings"]["completion_status_n"] = 100;
+      case "percentage_los":
+        var n_percentage_los_threshold = Math.min(100, Math.max(0, _settings["game_settings"]["completion_status_n"])) / 100;
+        if(n_percentage_los_threshold <= 0 || _nLOs <= 0) {
+          progress_measure = 1
+        }else {
+          progress_measure = _nloshown / _nLOs / n_percentage_los_threshold
+        }
+        break;
+      case "n_los":
+        var n_los_threshold = Math.min(_settings["game_settings"]["completion_status_n"], _nLOs);
+        if(n_los_threshold === 0) {
+          progress_measure = 1
+        }else {
+          progress_measure = _nloshown / n_los_threshold
+        }
+        break;
+      case "n_times":
+        if(_settings["game_settings"]["completion_status_n"] <= 0) {
+          progress_measure = 1
+        }else {
+          progress_measure = _nshown / _settings["game_settings"]["completion_status_n"]
+        }
+        break;
+      case "onstart":
+        progress_measure = 1;
+        break;
+      case "disabled":
+      ;
+      default:
+        break
+    }
+    progress_measure = Math.max(Math.min(1, +progress_measure.toFixed(2)), 0);
+    if(progress_measure === 1) {
+      completion_status = "completed"
+    }else {
+      completion_status = "incompleted"
     }
     var score = 0;
     var success_status = "unknown";
-    if(typeof _settings["game_settings"]["success_status_n"] === "number") {
-      switch(_settings["game_settings"]["success_status"]) {
-        case "percentage_los":
-          _settings["game_settings"]["success_status_n"] = Math.min(100, Math.max(0, _settings["game_settings"]["success_status_n"])) / 100;
-          if(_settings["game_settings"]["success_status_n"] <= 0 || _nLOs <= 0) {
-            score = 1
-          }else {
-            score = _nlosuccess / _nLOs / _settings["game_settings"]["success_status_n"]
-          }
-          break;
-        case "n_los":
-          var n_los_threshold = Math.min(_settings["game_settings"]["success_status_n"], _nLOs);
-          if(n_los_threshold === 0) {
-            score = 1
-          }else {
-            score = _nloshown / n_los_threshold
-          }
-          break;
-        case "n_times":
-          if(_settings["game_settings"]["success_status_n"] <= 0) {
-            score = 1
-          }else {
-            score = _nsuccess / _settings["game_settings"]["success_status_n"]
-          }
-          break;
-        case "disabled":
-        ;
-        default:
-          break
-      }
-      score = Math.max(Math.min(1, +score.toFixed(2)), 0);
-      if(score === 1) {
-        success_status = "passed"
-      }else {
-        success_status = "failed"
-      }
+    switch(_settings["game_settings"]["success_status"]) {
+      case "all_los":
+        _settings["game_settings"]["success_status_n"] = 100;
+      case "percentage_los":
+        var n_percentage_los_threshold = Math.min(100, Math.max(0, _settings["game_settings"]["success_status_n"])) / 100;
+        if(n_percentage_los_threshold <= 0 || _nLOs <= 0) {
+          score = 1
+        }else {
+          score = _nlosuccess / _nLOs / n_percentage_los_threshold
+        }
+        break;
+      case "n_los":
+        var n_los_threshold = Math.min(_settings["game_settings"]["success_status_n"], _nLOs);
+        if(n_los_threshold === 0) {
+          score = 1
+        }else {
+          score = _nloshown / n_los_threshold
+        }
+        break;
+      case "n_times":
+        if(_settings["game_settings"]["success_status_n"] <= 0) {
+          score = 1
+        }else {
+          score = _nsuccess / _settings["game_settings"]["success_status_n"]
+        }
+        break;
+      case "onstart":
+        score = 1;
+        break;
+      case "disabled":
+      ;
+      default:
+        break
+    }
+    score = Math.max(Math.min(1, +score.toFixed(2)), 0);
+    if(score === 1) {
+      success_status = "passed"
+    }else {
+      success_status = "failed"
     }
     _tracking = {progress_measure:progress_measure, completion_status:completion_status, score:score, success_status:success_status};
     SGAME.Messenger.sendMessage({key:"tracking", value:_tracking})
@@ -1443,23 +1478,13 @@ SGAME.CORE = function() {
       case "no_more_los":
         return _los_can_be_shown === false;
       case "all_los_consumed":
-        var lo_ids = Object.keys(_settings["los"]);
-        var nLOs = lo_ids.length;
-        for(var i = 0;i < nLOs;i++) {
-          if(_settings["los"][lo_ids[i]]["shown"] === false) {
-            return false
-          }
-        }
-        return true;
+        return _nloshown >= _nLOs;
       case "all_los_succesfully_consumed":
-        var lo_ids = Object.keys(_settings["los"]);
-        var nLOs = lo_ids.length;
-        for(var i = 0;i < nLOs;i++) {
-          if(_settings["los"][lo_ids[i]]["succesfully_consumed"] === false) {
-            return false
-          }
-        }
-        return true;
+        return _nlosuccess >= _nLOs;
+      case "completion_status":
+        return _tracking["completion_status"] === "completed";
+      case "success_status":
+        return _tracking["success_status"] === "passed";
       case "never":
         return false;
       default:
@@ -1561,7 +1586,7 @@ SGAME.CORE = function() {
   SGAME.Debugger.init(false);
   _loadInitialSettings();
   SGAME.Messenger.init();
-  return{init:init, loadSettings:loadSettings, triggerLO:triggerLO, showLO:showLO, showRandomLO:showRandomLO, closeLO:closeLO, getSettings:getSettings, losCanBeShown:losCanBeShown, successWhenNoLOs:successWhenNoLOs, getVLEData:getVLEData, setVLEData:setVLEData}
+  return{init:init, loadSettings:loadSettings, triggerLO:triggerLO, showLO:showLO, showRandomLO:showRandomLO, closeLO:closeLO, getSettings:getSettings, losCanBeShown:losCanBeShown, successWhenNoLOs:successWhenNoLOs, onConnectedToVLE:onConnectedToVLE, getVLEData:getVLEData, setVLEData:setVLEData}
 }();
 var API;
 var API_1484_11;

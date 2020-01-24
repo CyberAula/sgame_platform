@@ -100,7 +100,7 @@ en:
         choice5: "When the success status of the game change to passed."
         choice6: "Never."
       opt2:
-        title: "When a game event that should show a learning object is triggered but no more learning objects can be shown:"
+        title: "When a game event that should show a learning object is triggered but no learning objects can be shown:"
         choice1: "The game should act as if the player had successfully consumed the learning object."
         choice2: "The game should act as if the player had not consumed the learning object successfully."
         choice3: "The game should act as if the player had not consumed the learning object successfully unless if the event is of type blocking."
