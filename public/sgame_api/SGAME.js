@@ -1060,6 +1060,7 @@ SGAME.API = function() {
 SGAME.CORE = function() {
   var _options = {};
   var _togglePauseFunction = undefined;
+  var _final_screen_text = "Congratulations. You have achieved the objectives of this educational game. You may close this window or continue playing.";
   var _settings = {};
   var _settings_loaded = false;
   var _vle_data = {};
@@ -1078,7 +1079,7 @@ SGAME.CORE = function() {
   var _nlosuccess = 0;
   var _nsuccess = 0;
   var _final_screen_shown = false;
-  var _final_screen_text = "Congratulations. You have achieved the objectives of this educational game. You may close this window or continue playing.";
+  var _lastLoTimeStamp = undefined;
   var init = function(options) {
     SGAME.Debugger.log("SGAME init with options ");
     SGAME.Debugger.log(options);
@@ -1115,23 +1116,37 @@ SGAME.CORE = function() {
     if(supportedRepeatLo.indexOf(_settings["sequencing"]["repeat_lo"]) === -1) {
       _settings["sequencing"]["repeat_lo"] = "repeat"
     }
+    if(supportedInterruptions.indexOf(_settings["sequencing"]["interruptions"]) === -1) {
+      _settings["sequencing"]["interruptions"] = "no_restrictions"
+    }
+    if(["n_times", "1_per_timeperiod"].indexOf(_settings["sequencing"]["interruptions"]) === -1 || typeof _settings["sequencing"]["interruptions_n"] !== "number") {
+      delete _settings["sequencing"]["interruptions_n"]
+    }
+    if(["n_times", "1_per_timeperiod"].indexOf(_settings["sequencing"]["interruptions"]) !== -1 && typeof _settings["sequencing"]["interruptions_n"] !== "number") {
+      _settings["sequencing"]["interruptions"] = "no_restrictions"
+    }
     if(typeof _settings["game_settings"] === "undefined") {
       _settings["game_settings"] = {}
     }
     if(supportedCompletionStatus.indexOf(_settings["game_settings"]["completion_status"]) === -1) {
       _settings["game_settings"]["completion_status"] = "disabled"
     }
-    if(_settings["game_settings"]["completion_status"] === "disabled" || typeof _settings["game_settings"]["completion_status_n"] !== "number") {
+    if(["percentage_los", "n_los", "n_times"].indexOf(_settings["game_settings"]["completion_status"]) === -1 || typeof _settings["game_settings"]["completion_status_n"] !== "number") {
       delete _settings["game_settings"]["completion_status_n"]
     }
-    if(supportedCompletionStatus.indexOf(_settings["game_settings"]["success_status"]) === -1 || typeof _settings["game_settings"]["completion_status_n"] !== "number") {
+    if(["percentage_los", "n_los", "n_times"].indexOf(_settings["game_settings"]["completion_status"]) !== -1 && typeof _settings["game_settings"]["completion_status_n"] !== "number") {
+      _settings["game_settings"]["completion_status"] = "disabled";
+      delete _settings["game_settings"]["completion_status_n"]
+    }
+    if(supportedSuccessStatus.indexOf(_settings["game_settings"]["success_status"]) === -1) {
       _settings["game_settings"]["success_status"] = "disabled"
     }
-    if(_settings["game_settings"]["success_status"] === "disabled" || typeof _settings["game_settings"]["success_status_n"] !== "number") {
+    if(["percentage_los", "n_los", "n_times"].indexOf(_settings["game_settings"]["success_status"]) === -1 || typeof _settings["game_settings"]["success_status_n"] !== "number") {
       delete _settings["game_settings"]["success_status_n"]
     }
-    if(supportedSuccessStatus.indexOf(_settings["game_settings"]["success_status"]) === -1 || typeof _settings["game_settings"]["success_status_n"] !== "number") {
-      _settings["game_settings"]["success_status"] = "disabled"
+    if(["percentage_los", "n_los", "n_times"].indexOf(_settings["game_settings"]["success_status"]) !== -1 && typeof _settings["game_settings"]["success_status_n"] !== "number") {
+      _settings["game_settings"]["success_status"] = "disabled";
+      delete _settings["game_settings"]["success_status_n"]
     }
     if(supportedCompletionNotification.indexOf(_settings["game_settings"]["completion_notification"]) === -1) {
       _settings["game_settings"]["completion_notification"] = "never"
@@ -1160,13 +1175,32 @@ SGAME.CORE = function() {
     }
   };
   var triggerLO = function(event_id, callback) {
+    switch(_settings["sequencing"]["interruptions"]) {
+      case "no_restrictions":
+        return _triggerLO(event_id, callback);
+      case "n_times":
+        if(_nshown >= _settings["sequencing"]["interruptions_n"]) {
+          return _abortTriggerLO(event_id, callback)
+        }else {
+          return _triggerLO(event_id, callback)
+        }
+      ;
+      case "1_per_timeperiod":
+        if(typeof _lastLoTimeStamp !== "undefined") {
+          var timeSinceLastLo = (new Date - _lastLoTimeStamp) / 1E3;
+          if(timeSinceLastLo <= _settings["sequencing"]["interruptions_n"]) {
+            return _abortTriggerLO(event_id, callback)
+          }
+        }
+        return _triggerLO(event_id, callback);
+      default:
+        break
+    }
+  };
+  var _triggerLO = function(event_id, callback) {
     var los_mapped = _getMappedLOs(event_id);
     if(los_mapped.length < 1) {
-      if(typeof callback === "function") {
-        var report = _getReportWhenNoLOs(event_id);
-        callback(report.success, report)
-      }
-      return
+      return _abortTriggerLO(event_id, callback)
     }
     var los_candidate = _getCandidateLOsFromMappedLOs(los_mapped);
     if(los_candidate.length > 0) {
@@ -1177,6 +1211,12 @@ SGAME.CORE = function() {
         var report = _getReportWhenNoLOs(event_id);
         callback(report.success, report)
       }
+    }
+  };
+  var _abortTriggerLO = function(event_id, callback) {
+    if(typeof callback === "function") {
+      var report = _getReportWhenNoLOs(event_id);
+      callback(report.success, report)
     }
   };
   var _getMappedLOs = function(event_id) {
@@ -1218,6 +1258,7 @@ SGAME.CORE = function() {
       }
       return
     }
+    _lastLoTimeStamp = new Date;
     _togglePause();
     _settings["los"][lo["id"]]["shown"] = true;
     _settings["los"][lo["id"]]["nshown"] += 1;

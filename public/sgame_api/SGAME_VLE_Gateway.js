@@ -3612,7 +3612,6 @@ SGAME_GATEWAY.CORE = function() {
   var scorm;
   var connected;
   var user;
-  var hasScore = false;
   var init = function() {
     scorm = new SCORM_API({debug:false, windowDebug:false, exit_type:""});
     connected = scorm.initialize();
