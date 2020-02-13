@@ -37,6 +37,14 @@ set :user, username
 
 set :keep_releases, 2
 
+set :default_environment, {
+  'PATH' => '/home/'+username+'/.rvm/gems/ruby-2.2.0/bin:/home/'+username+'/.rvm/gems/ruby-2.2.0@global/bin:/home/'+username+'/.rvm/rubies/ruby-2.2.0/bin:/home/'+username+'/.rvm/bin:/home/'+username+'/.rbenv/plugins/ruby-build/bin:/home/'+username+'/.rbenv/shims:/home/'+username+'/.rbenv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games',
+  'RUBY_VERSION' => 'ruby-2.2.0p0',
+  'GEM_HOME'     => '/home/'+username+'/.rvm/gems/ruby-2.2.0',
+  'GEM_PATH'     => '/home/'+username+'/.rvm/gems/ruby-2.2.0:/home/'+username+'/.rvm/gems/ruby-2.2.0@global',
+  'BUNDLE_PATH'  => '/home/'+username+'/.rvm/gems/ruby-2.2.0:/home/'+username+'/.rvm/gems/ruby-2.2.0@global'
+}
+
 role :web, server_url # Your HTTP server, Apache/etc
 role :app, server_url # This may be the same as your `Web` server
 role :db,  server_url, :primary => true # This is where Rails migrations will run
