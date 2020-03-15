@@ -2,6 +2,7 @@ class PresentationsController < ApplicationController
   require 'fileutils'
   before_filter :authenticate_user!, :only => [ :new, :create, :edit, :update, :clone, :uploadTmpJSON ]
   load_and_authorize_resource :except => [:metadata]
+  before_filter :allow_iframe_requests, :only => [:show]
 
   # Enable CORS
   before_filter :cors_preflight_check, :only => [:presentation_thumbnails, :last_slide, :iframe_api]
