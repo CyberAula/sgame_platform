@@ -245,6 +245,3 @@ DEPENDENCIES
   uglifier (= 3.2.0)
   warden (= 1.2.7)
   web-console (= 2.0.0)
-
-BUNDLED WITH
-   1.15.1

@@ -89,7 +89,7 @@ namespace :vish_editor do
     end
     js_files.uniq!
     puts "matched #{js_files.size} .js file(s)"
-    compile_js(js_files)
+    compile_ve_js(js_files)
 
 
     #CSS files
@@ -128,7 +128,7 @@ namespace :vish_editor do
     end
     css_files.uniq!
     puts "matched #{css_files.size} .css file(s)"
-    compile_css(css_files)
+    compile_ve_css(css_files)
   end
 
   task :cleanCompile do
@@ -196,7 +196,7 @@ namespace :vish_editor do
 
   #========================================================================
 
-  def compile_js(files)
+  def compile_ve_js(files)
     files = [ files ] unless files.is_a?(Array)
 
     compiler_options = {}
@@ -249,7 +249,7 @@ namespace :vish_editor do
   end
 
 
-  def compile_css(files)
+  def compile_ve_css(files)
     files = [ files ] unless files.is_a?(Array)
 
     files.each do |file|
