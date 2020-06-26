@@ -14,7 +14,7 @@ class Pdfp < ActiveRecord::Base
       raise "#PDFexAPIError:3 PDF file have too many pages"
     end
 
-    require 'RMagick'
+    require 'rmagick'
     pdf = Magick::ImageList.new(self.attach.path){ self.density = 200 }
     pdf.write(getRootFolder + getFileName + (pdf.length===1 ? "-0" : "") + ".jpg")
     #imgLength = pdf.length = self.pcount
