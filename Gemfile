@@ -1,7 +1,9 @@
 source 'https://rubygems.org'
 
+#Bundler (sudo gem install bundler -v "1.17.3" && bundle _1.17.3_ install)
+gem 'bundler', '1.17.3' 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.9'
+gem 'rails', '4.2.11'
 # Use postgreSQL as the database for Active Record
 gem 'pg', '0.20.0'
 # Use SCSS for stylesheets
@@ -22,11 +24,12 @@ gem "recaptcha", '4.3.1', require: "recaptcha/rails"
 gem 'omniauth', '1.4.2'
 gem 'paperclip', '= 4.3.6'
 gem 'rubyzip', '= 1.0.0'
-gem 'rmagick', '=2.13.2'
+gem 'rmagick', '=4.1.2'
 gem 'pdf-reader', '= 1.3.3'
 gem 'font-awesome-sass', '4.7.0'
 gem 'cancancan', '~> 2.0'
 gem 'exception_notification', '=4.1.1'
+gem 'bigdecimal', '=1.4.2'
 
 # $ export FORCE_LOCAL_SCORM=scormGemPath
 if ENV['FORCE_LOCAL_SCORM']
