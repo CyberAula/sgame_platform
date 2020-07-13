@@ -58,7 +58,6 @@ GEM
       sshkit (>= 1.6.1, != 1.7.0)
     arel (9.0.0)
     bcrypt (3.1.13)
-    bigdecimal (2.0.0)
     bindex (0.8.1)
     builder (3.2.4)
     cancancan (3.1.0)
@@ -85,6 +84,8 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
+    devise-encryptable (0.2.0)
+      devise (>= 2.1.0)
     erubi (1.9.0)
     eventmachine (1.2.7)
     exception_notification (4.4.3)
@@ -236,33 +237,33 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  acts-as-taggable-on
-  bigdecimal
-  bundler (= 1.17.3)
-  cancancan
+  acts-as-taggable-on (= 6.5.0)
+  bundler (= 2.1.4)
+  cancancan (= 3.1.0)
   capistrano
-  coffee-rails
-  devise
-  exception_notification
-  font-awesome-sass
-  jquery-rails
-  jquery-ui-rails
-  omniauth
-  paperclip
-  pdf-reader
+  coffee-rails (= 5.0.0)
+  devise (= 4.7.2)
+  devise-encryptable (= 0.2.0)
+  exception_notification (= 4.4.3)
+  font-awesome-sass (= 5.13.0)
+  jquery-rails (= 4.4.0)
+  jquery-ui-rails (= 6.0.1)
+  omniauth (= 1.9.1)
+  paperclip (= 6.1.0)
+  pdf-reader (= 2.4.0)
   pg (= 0.18)
   pry-rails
   rails (= 5.2.4.3)
   recaptcha (= 4.3.1)
-  rmagick
-  rubyzip
-  sass-rails
+  rmagick (= 4.1.2)
+  rubyzip (= 2.3.0)
+  sass-rails (= 6.0.0)
   scorm!
   spring
   thin
-  uglifier
-  warden
+  uglifier (= 4.2.0)
+  warden (= 1.2.8)
   web-console
 
 BUNDLED WITH
-   1.17.3
+   2.1.4
