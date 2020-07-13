@@ -1,31 +1,31 @@
 class UsersController < ApplicationController
-  before_filter :find_user
+  before_action :find_user
   load_and_authorize_resource :except => [:show_scormfiles, :show_presentations, :show_files, :show_games, :show_templates]
 
   def show
     @scormfiles = @profile_user.scormfiles.order('updated_at DESC')
-    @scormfiles = @scormfiles.public unless @isProfileOwner
+    @scormfiles = @scormfiles.public_items unless @isProfileOwner
   end
 
   def show_scormfiles
     @scormfiles = @profile_user.scormfiles.order('updated_at DESC')
-    @scormfiles = @scormfiles.public unless @isProfileOwner
+    @scormfiles = @scormfiles.public_items unless @isProfileOwner
   end
 
   def show_presentations
     @presentations = @profile_user.presentations.order('updated_at DESC')
-    @presentations = @presentations.public unless @isProfileOwner
+    @presentations = @presentations.public_items unless @isProfileOwner
   end
 
   def show_files
     @files = @profile_user.documents
-    @files = @files.public unless @isProfileOwner
+    @files = @files.public_items unless @isProfileOwner
     @files = @files.sort_by(&:updated_at).reverse
   end
 
   def show_games
     @games = @profile_user.games.order('updated_at DESC')
-    @games = @games.public unless @isProfileOwner
+    @games = @games.public_items unless @isProfileOwner
   end
 
   def show_templates
@@ -41,7 +41,7 @@ class UsersController < ApplicationController
     
     #Get game templates (in order to decide if the tab 'templates' should be displayed)
     @game_templates = @profile_user.game_templates
-    @game_templates = @game_templates.public unless @isProfileOwner
+    @game_templates = @game_templates.public_items unless @isProfileOwner
   end
 
 end

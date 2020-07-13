@@ -1,10 +1,10 @@
 class TagsController < ApplicationController
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
   skip_authorization_check
 
   # Enable CORS
-  before_filter :cors_preflight_check, :only => [:index]
-  after_filter :cors_set_access_control_headers, :only => [:index]
+  before_action :cors_preflight_check, :only => [:index]
+  after_action :cors_set_access_control_headers, :only => [:index]
 
   def index
     if params[:mode]=="popular" or !params[:q].present?

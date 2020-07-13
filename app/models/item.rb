@@ -4,7 +4,7 @@ module Item
 	include Recommendable
 
 	module ClassMethods
-		def public
+		def public_items
 			if self.column_names.include?("draft")
 				self.where(:draft => false)
 			else
@@ -13,9 +13,9 @@ module Item
 		end
 		def certified
 			if self.column_names.include?("certified")
-				self.where(:certified => true).public
+				self.where(:certified => true).public_items
 			else
-				self.public
+				self.public_items
 			end
 		end
 	end

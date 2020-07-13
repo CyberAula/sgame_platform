@@ -15,7 +15,7 @@ class LocalesController < ActionController::Base
     if request.env["HTTP_REFERER"].present?
       #Needed due to devise bug on sign_up failure path
       return redirect_to "/users/sign_up" if request.env["HTTP_REFERER"].ends_with?("/users")
-      redirect_to :back
+      redirect_back(fallback_location:"/")
     else
       redirect_to "/"
     end

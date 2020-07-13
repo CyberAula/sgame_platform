@@ -1,5 +1,5 @@
 class HomeController < ApplicationController
-	before_filter :authenticate_user!, :except => [:frontpage]
+	before_action :authenticate_user!, :except => [:frontpage]
 	skip_authorization_check :only => [:frontpage]
 
 	def frontpage

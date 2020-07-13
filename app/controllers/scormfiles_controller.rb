@@ -1,5 +1,5 @@
 class ScormfilesController < ApplicationController
-  before_filter :authenticate_user!, :except => [:show]
+  before_action :authenticate_user!, :except => [:show]
   load_and_authorize_resource
 
   def show

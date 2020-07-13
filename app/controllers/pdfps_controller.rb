@@ -1,6 +1,6 @@
 class PdfpsController < ApplicationController
-  before_filter :authenticate_user_on_pdfps
-  before_filter :fill_create_params, :only => [ :new, :create]
+  before_action :authenticate_user_on_pdfps
+  before_action :fill_create_params, :only => [ :new, :create]
   load_and_authorize_resource
 
   def new

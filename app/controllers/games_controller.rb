@@ -1,6 +1,6 @@
 class GamesController < ApplicationController
-  before_filter :authenticate_user!, :only => [:new, :create, :edit, :update]
-  before_filter :allow_iframe_requests
+  before_action :authenticate_user!, :only => [:new, :create, :edit, :update]
+  before_action :allow_iframe_requests
   load_and_authorize_resource :except => [:sgame_api, :metadata]
   skip_authorization_check :only => [:sgame_api]
 

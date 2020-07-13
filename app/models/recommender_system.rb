@@ -103,7 +103,7 @@ class RecommenderSystem
 
     # Get preselection from database
     searchOptions[:models].each do |model|
-      preSelection += model.limit(searchOptions[:n]).public.where("id not in (?)",searchOptions[:sgame_ids_to_avoid]).order(SgamePlatform::Application.config.agnostic_random)
+      preSelection += model.limit(searchOptions[:n]).public_items.where("id not in (?)",searchOptions[:sgame_ids_to_avoid]).order(SgamePlatform::Application.config.agnostic_random)
     end
     preSelection = preSelection.sample(searchOptions[:n]) if preSelection.length > searchOptions[:n]
 
