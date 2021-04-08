@@ -242,9 +242,8 @@ es:
     code: "Código fuente"
     manual: "Manual de usuario"
     manual_url: "/Manual_SGAME_es.pdf"
-    survey: "Encuesta de la plataforma SGAME"
-    survey_short: "Encuesta"
-    survey_url: "https://docs.google.com/forms/d/e/1FAIpQLSffXo2RDs-N096HcY-IMAVS4DJJKRYi4ckqycWLWpxdhULYeA/viewform"
+    videos: "Videotutoriales"
+    videos_url: "https://www.youtube.com/playlist?list=PLeBm-hVuW42UHHGnKl3CVbr7ikK8SlJ2d"
   header:
     menu:
       profile: "Perfil"
