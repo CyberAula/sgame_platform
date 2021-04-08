@@ -81,7 +81,7 @@ es:
         title: "Después de mostrar un objeto de aprendizaje en el juego:"
         choice1: "El juego puede mostrar ese objeto de aprendizaje otra vez."
         choice2: "El juego puede mostrar ese objeto de aprendizaje otra vez solo si no ha sido consumido con éxito."
-        choice3: "El juego no mostará ese objeto de aprendizaje otra vez."
+        choice3: "El juego no mostrará ese objeto de aprendizaje otra vez."
       opt2:
         title: "El juego se podrá interrumpir para mostrar objetos de aprendizaje:"
         choice1: "Siempre que se produzca un evento para el que haya un objeto de aprendizaje mapeado que se pueda mostrar."
