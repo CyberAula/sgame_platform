@@ -1267,7 +1267,9 @@ SGAME.CORE = function() {
     _settings["los"][lo["id"]]["shown"] = true;
     _settings["los"][lo["id"]]["nshown"] += 1;
     SGAME.Fancybox.create({lo:lo}, function(report) {
-      _settings["los"][lo["id"]]["succesfully_consumed"] = report.success;
+      if(_settings["los"][lo["id"]]["succesfully_consumed"] !== true) {
+        _settings["los"][lo["id"]]["succesfully_consumed"] = report.success
+      }
       if(report.success === true) {
         _settings["los"][lo["id"]]["nsuccess"] += 1
       }
