@@ -11,7 +11,12 @@
 </style>
 <meta charset="utf-8">
 <script type="text/javascript">
-	var protocol = (document.location.protocol==="file:" ? "http:" : document.location.protocol);
+	<% if SgamePlatform::Application.config.domain.start_with?("localhost") %>
+		var protocol = "http:";
+	<% else %>
+		var protocol = (document.location.protocol==="file:" ? "http:" : document.location.protocol);
+	<% end %>
+	
 	<%
 		resources = ["/sgame_api/SGAME_VLE_Gateway.js"]
 		resources.each do |resource| %>
