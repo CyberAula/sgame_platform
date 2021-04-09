@@ -4150,6 +4150,8 @@ SGAME_GATEWAY.CORE = function() {
   var scorm;
   var connected;
   var user;
+  var settings = undefined;
+  var forceCommit = false;
   var currentProgressMeasure = undefined;
   var currentScore = undefined;
   var currentCompletionStatus = undefined;
@@ -4181,6 +4183,10 @@ SGAME_GATEWAY.CORE = function() {
     _updateScore(0);
     _updateSuccessStatus("failed")
   };
+  var setSettings = function(SGAMEsettings) {
+    settings = SGAMEsettings;
+    forceCommit = settings["game_settings"]["force_commit"] === true || settings["game_settings"]["force_commit"] === "ONLY_CHROME" && (typeof platform !== "undefined" && platform.name === "Chrome")
+  };
   var updateTrackingData = function(progressMeasure, score, completionStatus, successStatus) {
     if(isConnected() === false) {
       return
@@ -4190,7 +4196,7 @@ SGAME_GATEWAY.CORE = function() {
     _updateCompletionStatus(completionStatus);
     _updateSuccessStatus(successStatus);
     var shouldCommit = false;
-    if(typeof platform !== "undefined" && platform.name === "Chrome") {
+    if(forceCommit) {
       var shouldCommitProgressMeasure = currentProgressMeasure > 0 && (typeof lastProgressMeasure == "undefined" || currentProgressMeasure != lastProgressMeasure);
       var shouldCommitScore = currentScore > 0 && (typeof lastScore == "undefined" || currentScore != lastScore);
       var shouldCommitCompletionStatus = currentCompletionStatus === "completed" && currentCompletionStatus != lastCompletionStatus;
@@ -4258,7 +4264,7 @@ SGAME_GATEWAY.CORE = function() {
     }
     return true
   };
-  return{init:init, isConnected:isConnected, initScore:initScore, updateTrackingData:updateTrackingData, onExit:onExit, getUser:getUser, getAPIWrapper:getAPIWrapper, getLMSAPIInstance:getLMSAPIInstance}
+  return{init:init, isConnected:isConnected, initScore:initScore, setSettings:setSettings, updateTrackingData:updateTrackingData, onExit:onExit, getUser:getUser, getAPIWrapper:getAPIWrapper, getLMSAPIInstance:getLMSAPIInstance}
 }();
 SGAME_GATEWAY.Messenger = function() {
   var VALID_TYPES = ["PROTOCOL", "APP"];
@@ -4400,6 +4406,7 @@ SGAME_GATEWAY.Messenger = function() {
     if(SGAME_GATEWAY.CORE.isConnected() === false) {
       return
     }
+    SGAME_GATEWAY.CORE.setSettings(settings);
     if(settings["game_settings"]["success_status"] !== "disabled") {
       SGAME_GATEWAY.CORE.initScore()
     }
