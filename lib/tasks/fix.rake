@@ -8,13 +8,13 @@ namespace :fix do
   task :resetScormTimestamps => :environment do
     printTitle("Reset SCORM timestamps")
 
-    Presentation.all.map { |ex| 
-      ex.update_column :scorm2004_timestamp, nil
-      ex.update_column :scorm12_timestamp, nil
+    Presentation.all.map { |p| 
+      p.update_column :scorm2004_timestamp, nil
+      p.update_column :scorm12_timestamp, nil
     }
-    Game.all.map { |ex| 
-      ex.update_column :scorm2004_timestamp, nil
-      ex.update_column :scorm12_timestamp, nil
+    Game.all.map { |g| 
+      g.update_column :scorm2004_timestamp, nil
+      g.update_column :scorm12_timestamp, nil
     }
 
     printTitle("Task Finished")
@@ -137,6 +137,20 @@ namespace :fix do
     end
     
     printTitle("Task finished")
+  end
+
+  #Usage
+  #Development:   bundle exec rake fix:removeResourcesWithoutOwner
+  #In production: bundle exec rake fix:removeResourcesWithoutOwner RAILS_ENV=production
+  task :removeResourcesWithoutOwner => :environment do
+    printTitle("Remove resources without owner")
+    ["Presentation","Document","Scormfile","Pdfp","Game","GameTemplate"].each do |c|
+      c.constantize.select{|r| r.owner.nil?}.each do |r| 
+        r.destroy 
+      end
+    end
+
+    printTitle("Task Finished")
   end
 
   ####################
