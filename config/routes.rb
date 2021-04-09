@@ -21,8 +21,12 @@ SgamePlatform::Application.routes.draw do
   resources :documents
   resources :pictures
   resources :zipfiles
+  resources :officedocs
   resources :scormfiles
   match '/documents/:id/download' => 'documents#download', :via => :get
+  match '/pictures/:id/download' => 'documents#download', :via => :get
+  match '/zipfiles/:id/download' => 'documents#download', :via => :get
+  match '/officedocs/:id/download' => 'documents#download', :via => :get
   match '/scormfiles/:id/download' => 'scormfiles#download', :via => :get
   resources :los, only: [:show]
   resources :games

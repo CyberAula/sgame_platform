@@ -1,0 +1,7 @@
+#container .resource_wrapper_officedoc div.resource_content_wrapper {
+	height: 650px;
+}
+
+.resource_wrapper_officedoc .resource_content_wrapper {
+	border: 1px solid black;
+}
