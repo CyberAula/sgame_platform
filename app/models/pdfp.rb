@@ -84,7 +84,8 @@ class Pdfp < ActiveRecord::Base
 
   def remove_files
     #Remove Image files
-    system "rm #{getRootFolder}/*.jpg"
+    rootFolder = getRootFolder
+    system "rm #{rootFolder}/*.jpg" if File.exists? rootFolder
   end
 
 end
