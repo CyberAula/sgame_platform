@@ -25,12 +25,12 @@
       </div>
     </button>
     <ul class="dropdown-menu">
-      <% I18n.available_locales.map(&:to_s).each do |lanCode| %>
         <form id="change_locale" action="/change_locale" action="GET">
           <input name="locale" value="" type="hidden"/>
-          <li value="<%=lanCode%>"><img src="/assets/flags/flag_<%=lanCode%>"/><%=t("languages." + lanCode)%></li>
+          <% I18n.available_locales.map(&:to_s).each do |lanCode| %>
+            <li value="<%=lanCode%>"><img src="/assets/flags/flag_<%=lanCode%>"/><%=t("languages." + lanCode)%></li>
+          <% end %>
         </form>
-      <% end %>
     </ul>
   </div>
 </div>
