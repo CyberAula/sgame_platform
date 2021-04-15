@@ -281,6 +281,10 @@
   background: #007bbb;
 }
 
+div.sequencing .sequence_form_wrapper div.select2-container.select2-container-multi.linear_sequence {
+  width: 100%;
+}
+
 @media (max-width: 600px) {
   #sgame_at div.game_template table.gevents tr.geheader th {
     white-space: normal;

@@ -15,6 +15,7 @@ SGAME_AT = (function($,undefined){
 	var supportedEventTypes = ["reward","damage","blocking"];
 	var supportedEventFrequencies = ["high","medium","low","one-shot","skill-dependent","skill-dependent_high","skill-dependent_medium","skill-dependent_low"];
 	var supportedInterruptions = ["no_restrictions","n_times","1_per_timeperiod"];
+	var supportedSequencingApproach = ["random","linear_completion","linear_success","custom"];
 	var supportedCompletionStatus = ["all_los","percentage_los","n_los","n_times","disabled","onstart"];
 	var supportedSuccessStatus = ["all_los","percentage_los","n_los","n_times","disabled","onstart","oncompletion"];
 	var supportedCompletionNotification = ["no_more_los","all_los_consumed","all_los_succesfully_consumed","completion_status","success_status","never"];
@@ -179,6 +180,11 @@ SGAME_AT = (function($,undefined){
             $(this).parent().find("span.complexinput input[type!='radio']").prop('disabled', true); //Add attribute without value
             $(this).find("input[type!='radio']").removeAttr("disabled");
         });
+
+        //Show sequence form
+		$("span.complexinput input[name='seq_opt3']").bind("change", function(){
+			_redrawSequenceForm();
+        });
 	};
 
 	var _loadValues = function(){
@@ -308,6 +314,7 @@ SGAME_AT = (function($,undefined){
 				_createScormfilesCarrousel();
 
 				_redrawLoTable();
+				_redrawSequenceForm();
 				break;
 			case 3:
 				$("#step3_confirmation").on("click",function(){
@@ -329,9 +336,16 @@ SGAME_AT = (function($,undefined){
 					}
 				}
 
+				if(typeof supportedSequencingApproach.indexOf(current_settings["approach"]) !== -1){
+					$("#sgame_at div[step='4'] div.options_wrapper input[name='seq_opt3'][value='" + current_sequencing["approach"] + "']").attr('checked',true);
+				}
+
+
 				$("#step4_confirmation").on("click",function(){
 					_onStep4Confirmation();
 				});
+
+				_redrawSequenceForm();
 				break;
 			case 5:
 				//Setting option: completion_status
@@ -714,6 +728,7 @@ SGAME_AT = (function($,undefined){
 			return _showSGAMEDialogWithSettings({"msg":_getTrans("i.error_no_los")}, false);
 		}
 		_redrawMappingTable();
+		_redrawSequenceForm();
 		_loadValues();
 		_finishStep("2");
 	};
@@ -838,6 +853,97 @@ SGAME_AT = (function($,undefined){
 
 	//Step 4
 
+	var _redrawSequenceForm = function(){
+		var opt = $("span.complexinput input[name='seq_opt3']:checked").val();
+		switch(opt){
+		case "random":
+			$("#sgame_at div.sequencing .sequence_form_wrapper").html("").hide();
+			break;
+		case "linear_completion":
+		case "linear_success":
+			_redrawLinearSequenceForm();
+			break;
+		case "custom":
+			//TODO
+		}
+	};
+
+	var _redrawLinearSequenceForm = function(){
+		var lsequence = $("#sgame_at div.sequencing .sequence_form_wrapper");
+		$(lsequence).html("<select class='linear_sequence' multiple='multiple'></select>");
+
+		var loIds = Object.keys(current_los);
+		var nLOs = loIds.length;
+		var selectOptions = [];
+		for(var j=0; j<nLOs; j++){
+			var lo = current_los[loIds[j]];
+			var selected = false;
+			selectOptions.push({value:lo.id, text:lo.title, selected: selected});
+		}
+
+		//Get los in order
+		var loIdsSequence = [];
+		if(typeof current_sequencing["sequence"] !== "undefined"){
+			var groupIds = Object.keys(current_sequencing["sequence"]);
+			var nGroups = groupIds.length;
+			loIdsSequence = new Array(nGroups);
+			for(var k = 0; k<nGroups; k++){
+				var group = current_sequencing["sequence"][groupIds[k]];
+				if(group.los instanceof Array && typeof group.los[0] !== "undefined"){
+					var loId = parseInt(group.los[0]);
+					if(group.conditions instanceof Array && typeof group.conditions[0] !== "undefined" && typeof group.conditions[0].group !== "undefined"){
+						loIdsSequence[group.conditions[0].group] = loId;
+					} else {
+						loIdsSequence[0] = loId;
+					}
+				}
+			}
+		}
+
+		var select = $(lsequence).find("select");
+		for(var i=0; i<selectOptions.length; i++){
+			var option = selectOptions[i];
+			var oselected = (loIdsSequence.indexOf(option.value) !== -1);
+			//Selected but in WRONG ORDER. TODO. FIX.
+			if(oselected === true){
+				selected = 'selected="selected"';
+			}
+			$(select).append('<option value="' + option.value + '" ' + selected + '>' + option.text + '</option>');
+		}
+
+		$(select).select2();
+		$("#sgame_at div.sequencing .sequence_form_wrapper ul.select2-choices").sortable();
+		$(lsequence).show();
+	};
+
+	var _composeSequenceData = function(){
+		var sapproach = $("span.complexinput input[name='seq_opt3']:checked").val();
+		switch(sapproach){
+		case "linear_completion":
+		case "linear_success":
+			return _composeLinearSequenceData(sapproach);
+		case "custom":
+			//TODO
+		}
+	};
+
+	var _composeLinearSequenceData = function(sapproach){
+		var data = $("#sgame_at div.sequencing .sequence_form_wrapper div.select2-container-multi").select2("data");
+
+		var sequence = {};
+		for(var i = 0; i<data.length; i++){
+			var group = {};
+			group.id = (i+1);
+			group.los = [data[i].id];
+			if (group.id !== 1){
+				group.conditions = [{id:1, group: (group.id-1), requirement: ((sapproach === "linear_completion") ? "completion" : "success")}];
+			}
+			sequence[group.id] = group;
+		}
+
+		return sequence;
+	};
+
 	var _onStep4Confirmation = function(){
 		//Sequencing option: repeat_lo
 		current_sequencing["repeat_lo"] = $("#sgame_at div[step='4'] div.options_wrapper input[name='seq_opt1']:checked").val();
@@ -850,6 +956,14 @@ SGAME_AT = (function($,undefined){
 			delete current_sequencing["interruptions_n"];
 		}
 
+		//Sequence option
+		current_sequencing["approach"] = $("span.complexinput input[name='seq_opt3']:checked").val();
+		if(current_sequencing["approach"] === "random"){
+			delete current_sequencing["sequence"];
+		} else {
+			current_sequencing["sequence"] = _composeSequenceData();
+		}
+		
 		_finishStep("4");
 	};
 

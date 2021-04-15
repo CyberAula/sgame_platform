@@ -87,6 +87,13 @@ es:
         choice1: "Siempre que se produzca un evento para el que haya un objeto de aprendizaje mapeado que se pueda mostrar."
         choice2: "Como máximo la siguiente cantidad de veces:"
         choice3: "Como máximo una vez por cada periodo con la siguiente cantidad de segundos:"
+      opt3:
+        title: "Cuando se pueda elegir entre varios candidatos a la hora de mostrar un objeto de aprendizaje, el juego elegirá este objeto:"
+        title_secondary: "Si selecciona que los objetos de aprendizaje deben elegirse siguiendo una secuencia, deberá definir esta secuencia a continuación."
+        choice1: "De manera aleatoria entre aquellos objetos de aprendizaje que se hayan visto menos veces."
+        choice2: "Siguiendo una secuencia lineal, de tal manera que cuando un objeto de aprendizaje sea mostrado se desbloqueará el siguiente."
+        choice3: "Siguiendo una secuencia lineal, de tal manera que cuando un objeto de aprendizaje sea consumido con éxito se desbloqueará el siguiente."
+        choice4: "Siguiendo una secuencia personalizada."
     step5:
       title: "Especifica ajustes para el juego"
       description: "En este paso puedes especificar diferentes ajustes para el juego educativo."
