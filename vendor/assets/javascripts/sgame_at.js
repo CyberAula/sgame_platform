@@ -16,7 +16,7 @@ SGAME_AT = (function($,undefined){
 	var supportedEventFrequencies = ["high","medium","low","one-shot","skill-dependent","skill-dependent_high","skill-dependent_medium","skill-dependent_low"];
 	var supportedInterruptions = ["no_restrictions","n_times","1_per_timeperiod"];
 	var supportedCompletionStatus = ["all_los","percentage_los","n_los","n_times","disabled","onstart"];
-	var supportedSuccessStatus = ["all_los","percentage_los","n_los","n_times","disabled","onstart"];
+	var supportedSuccessStatus = ["all_los","percentage_los","n_los","n_times","disabled","onstart","oncompletion"];
 	var supportedCompletionNotification = ["no_more_los","all_los_consumed","all_los_succesfully_consumed","completion_status","success_status","never"];
 	var supportedBehaviourWhenNoMoreLOs = ["success","failure","success_unless_damage","failure_unless_blocking"];
 

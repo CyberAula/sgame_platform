@@ -121,6 +121,7 @@ en:
         choice4: "When the player has succesfully consumed whatever learning objects the following number of times:"
         choice5: "When the game starts."
         choice6: "Never."
+        choice7: "When the completion status of the game change to completed."
     step6:
       title: "Specify metadata for the game"
       description: "In this step you should specify metadata (title, description, ...) for the educational game."

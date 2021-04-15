@@ -121,6 +121,7 @@ es:
         choice4: "Cuando el jugador haya consumido con éxito objetos de aprendizaje cualesquiera la siguiente cantidad de veces:"
         choice5: "Al iniciar el juego."
         choice6: "Nunca."
+        choice7: "Cuando el estado de finalización del juego pase a completado."
     step6:
       title: "Especifica metadatos para el juego"
       description: "En este paso debes especificar metadatos (título, descripción, ...) para el juego educativo."
