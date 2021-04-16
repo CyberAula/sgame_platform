@@ -19,6 +19,8 @@ es:
             password:
               blank: "no puede estar en blanco"
   at:
+    confirmations:
+      sequencing_change: "¿Está seguro? Si cambia este ajuste perderá la secuencia que haya definido previamente."
     errors:
       generic_create: "Ocurrió un error y el juego no pudo ser creado."
       generic_update: "Ocurrió un error y el juego no pudo ser actualizado."
@@ -90,7 +92,7 @@ es:
       opt3:
         title: "Cuando se pueda elegir entre varios candidatos a la hora de mostrar un objeto de aprendizaje, el juego elegirá este objeto:"
         title_secondary: "Si selecciona que los objetos de aprendizaje deben elegirse siguiendo una secuencia, deberá definir esta secuencia a continuación."
-        choice1: "De manera aleatoria entre aquellos objetos de aprendizaje que se hayan visto menos veces."
+        choice1: "De manera aleatoria entre aquellos objetos de aprendizaje que se hayan mostrado menos veces."
         choice2: "Siguiendo una secuencia lineal, de tal manera que cuando un objeto de aprendizaje sea mostrado se desbloqueará el siguiente."
         choice3: "Siguiendo una secuencia lineal, de tal manera que cuando un objeto de aprendizaje sea consumido con éxito se desbloqueará el siguiente."
         choice4: "Siguiendo una secuencia personalizada."

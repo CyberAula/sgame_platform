@@ -314,7 +314,6 @@ SGAME_AT = (function($,undefined){
 				_createScormfilesCarrousel();
 
 				_redrawLoTable();
-				_redrawSequenceForm();
 				break;
 			case 3:
 				$("#step3_confirmation").on("click",function(){
@@ -329,14 +328,14 @@ SGAME_AT = (function($,undefined){
 					$("#sgame_at div[step='4'] div.options_wrapper input[name='seq_opt1'][value='" + current_sequencing["repeat_lo"] + "']").attr('checked',true);
 				}
 
-				if(typeof supportedInterruptions.indexOf(current_sequencing["interruptions"]) !== -1){
+				if(supportedInterruptions.indexOf(current_sequencing["interruptions"]) !== -1){
 					$("#sgame_at div[step='4'] div.options_wrapper input[name='seq_opt2'][value='" + current_sequencing["interruptions"] + "']").attr('checked',true);
 					if(typeof current_sequencing["interruptions_n"] === "number"){
 						$("#sgame_at div[step='4'] div.options_wrapper input[name='seq_opt2'][value='" + current_sequencing["interruptions"] + "']").parent().find("input[type='number']").val(current_sequencing["interruptions_n"]);
 					}
 				}
 
-				if(typeof supportedSequencingApproach.indexOf(current_settings["approach"]) !== -1){
+				if(supportedSequencingApproach.indexOf(current_sequencing["approach"]) !== -1){
 					$("#sgame_at div[step='4'] div.options_wrapper input[name='seq_opt3'][value='" + current_sequencing["approach"] + "']").attr('checked',true);
 				}
 
@@ -853,33 +852,47 @@ SGAME_AT = (function($,undefined){
 
 	//Step 4
 
+	var _lastOptRedrawSequence = undefined;
+
 	var _redrawSequenceForm = function(){
 		var opt = $("span.complexinput input[name='seq_opt3']:checked").val();
 		switch(opt){
 		case "random":
-			$("#sgame_at div.sequencing .sequence_form_wrapper").html("").hide();
+			if((supportedSequencingApproach.indexOf(_lastOptRedrawSequence) !== -1)&&(_lastOptRedrawSequence !== "random")){
+				opt = undefined;
+				_showSGAMEDialogWithSettings({msg: _getTrans("i.sequencing_change_confirmation")}, true, function(dialog_ok){
+					if(dialog_ok === true){
+						_lastOptRedrawSequence = undefined;
+						_redrawSequenceForm();
+					} else {
+						$("#sgame_at div[step='4'] div.options_wrapper input[name='seq_opt3'][value='" + _lastOptRedrawSequence + "']").prop('checked',true);
+					}
+				});
+			} else {
+				$("#sgame_at div.sequencing .sequence_form_wrapper").html("").hide();
+				current_sequencing["sequence"] = {};
+			}
 			break;
 		case "linear_completion":
 		case "linear_success":
+			if((_lastOptRedrawSequence === "linear_completion")||(_lastOptRedrawSequence === "linear_success")){
+				break;
+			}
 			_redrawLinearSequenceForm();
 			break;
 		case "custom":
 			//TODO
+			current_sequencing["sequence"] = {};
+			break;
+		}
+		if(typeof opt !== "undefined"){
+			_lastOptRedrawSequence = opt;
 		}
 	};
 
 	var _redrawLinearSequenceForm = function(){
 		var lsequence = $("#sgame_at div.sequencing .sequence_form_wrapper");
 		$(lsequence).html("<select class='linear_sequence' multiple='multiple'></select>");
-
-		var loIds = Object.keys(current_los);
-		var nLOs = loIds.length;
-		var selectOptions = [];
-		for(var j=0; j<nLOs; j++){
-			var lo = current_los[loIds[j]];
-			var selected = false;
-			selectOptions.push({value:lo.id, text:lo.title, selected: selected});
-		}
 
 		//Get los in order
 		var loIdsSequence = [];
@@ -890,7 +903,7 @@ SGAME_AT = (function($,undefined){
 			for(var k = 0; k<nGroups; k++){
 				var group = current_sequencing["sequence"][groupIds[k]];
 				if(group.los instanceof Array && typeof group.los[0] !== "undefined"){
-					var loId = parseInt(group.los[0]);
+					var loId = group.los[0] + "";
 					if(group.conditions instanceof Array && typeof group.conditions[0] !== "undefined" && typeof group.conditions[0].group !== "undefined"){
 						loIdsSequence[group.conditions[0].group] = loId;
 					} else {
@@ -900,12 +913,32 @@ SGAME_AT = (function($,undefined){
 			}
 		}
 
+		//Include selected LOs in order
+		var selectOptions = [];
+		var loIds = Object.keys(current_los);
+
+		for(var i=0; i<loIdsSequence.length; i++){
+			var indexInLoIds = loIds.indexOf(loIdsSequence[i]);
+			if(indexInLoIds !== -1){
+				var lo = current_los[loIdsSequence[i]];
+				selectOptions.push({value:lo.id, text:lo.title, selected: true});
+			}
+		}
+
+		//Inclue the remaining (non-selected) los
+		var nLOs = loIds.length;
+		for(var j=0; j<nLOs; j++){
+			var lo = current_los[loIds[j]];
+			if(loIdsSequence.indexOf(loIds[j]) === -1){
+				selectOptions.push({value:lo.id, text:lo.title, selected: false});
+			}
+		}
+
 		var select = $(lsequence).find("select");
-		for(var i=0; i<selectOptions.length; i++){
-			var option = selectOptions[i];
-			var oselected = (loIdsSequence.indexOf(option.value) !== -1);
-			//Selected but in WRONG ORDER. TODO. FIX.
-			if(oselected === true){
+		for(var k=0; k<selectOptions.length; k++){
+			var option = selectOptions[k];
+			var selected = "";
+			if(option.selected === true){
 				selected = 'selected="selected"';
 			}
 			$(select).append('<option value="' + option.value + '" ' + selected + '>' + option.text + '</option>');

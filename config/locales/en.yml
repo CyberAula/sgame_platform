@@ -19,6 +19,8 @@ en:
             password:
               blank: "can't be blank"
   at:
+    confirmations:
+      sequencing_change: "Are you sure? If you change this setting you will lose the sequence you have previously defined."
     errors:
       generic_create: "There was an error and the game could not be created."
       generic_update: "There was an error and the game could not be updated."
@@ -87,6 +89,13 @@ en:
         choice1: "Whenever an event occurs for which there is a mapped learning object that can be shown."
         choice2: "At most, the following number of times:"
         choice3: "At most, once per period with a duration of the following number of seconds:"
+      opt3:
+        title: "If several candidates can be chosen when showing a learning object, the game will choose this object:"
+        title_secondary: "If you choose the learning objects to be shown following a sequence, you must define this sequence below."
+        choice1: "Randomly among those learning objects that have been shown the least number of times."
+        choice2: "Following a linear sequence, so that when one learning object is shown the next one will be unlocked."
+        choice3: "Following a linear sequence, so that when one learning object is succesfully consumed the next one will be unlocked."
+        choice4: "Following a customized sequence."
     step5:
       title: "Specify settings for the game"
       description: "In this step you can specify different settings for the educational game."
