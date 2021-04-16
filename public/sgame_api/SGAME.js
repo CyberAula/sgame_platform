@@ -1072,8 +1072,9 @@ SGAME.CORE = function() {
   var supportedEventTypes = ["reward", "damage", "blocking", "no-effect"];
   var supportedRepeatLo = ["repeat", "repeat_unless_successfully_consumed", "no_repeat"];
   var supportedInterruptions = ["no_restrictions", "n_times", "1_per_timeperiod"];
+  var supportedSequencingApproach = ["random", "linear_completion", "linear_success", "custom"];
   var supportedCompletionStatus = ["all_los", "percentage_los", "n_los", "n_times", "disabled", "onstart"];
-  var supportedSuccessStatus = ["all_los", "percentage_los", "n_los", "n_times", "disabled", "onstart"];
+  var supportedSuccessStatus = ["all_los", "percentage_los", "n_los", "n_times", "disabled", "onstart", "oncompletion"];
   var supportedCompletionNotification = ["no_more_los", "all_los_consumed", "all_los_succesfully_consumed", "completion_status", "success_status", "never"];
   var supportedBehaviourWhenNoMoreLOs = ["success", "failure", "success_unless_damage", "failure_unless_blocking"];
   var _los_can_be_shown = false;
@@ -1122,6 +1123,10 @@ SGAME.CORE = function() {
     }
     if(supportedInterruptions.indexOf(_settings["sequencing"]["interruptions"]) === -1) {
       _settings["sequencing"]["interruptions"] = "no_restrictions"
+    }
+    if(supportedSequencingApproach.indexOf(_settings["sequencing"]["approach"]) === -1) {
+      _settings["sequencing"]["approach"] = "random";
+      delete _settings["sequencing"]["sequence"]
     }
     if(["n_times", "1_per_timeperiod"].indexOf(_settings["sequencing"]["interruptions"]) === -1 || typeof _settings["sequencing"]["interruptions_n"] !== "number") {
       delete _settings["sequencing"]["interruptions_n"]
@@ -1175,6 +1180,15 @@ SGAME.CORE = function() {
         _settings["los"][lo_ids[i]]["nsuccess"] = 0;
         _settings["los"][lo_ids[i]]["acts_as_asset"] = _settings["los"][lo_ids[i]]["scorm_type"] === "asset" || _settings["los"][lo_ids[i]]["scorm_type"] === "sco" && _settings["los"][lo_ids[i]]["report_data"] === false;
         _los_can_be_shown = true
+      }
+    }
+    if(_settings["sequencing"]["approach"] !== "random") {
+      var validatedSequence = SGAME.Sequencing.validateSequence(_settings["sequencing"]["sequence"], _settings["los"]);
+      if(validatedSequence === false) {
+        _settings["sequencing"]["approach"] = "random";
+        delete _settings["sequencing"]["sequence"]
+      }else {
+        _settings["sequencing"]["sequence"] = validatedSequence
       }
     }
   };
@@ -1445,6 +1459,9 @@ SGAME.CORE = function() {
         }else {
           score = _nsuccess / _settings["game_settings"]["success_status_n"]
         }
+        break;
+      case "oncompletion":
+        score = progress_measure;
         break;
       case "onstart":
         score = 1;
@@ -1907,6 +1924,100 @@ SGAME.Observer = function(undefined) {
     return Math.min(alfa * TLT, maximumTime)
   };
   return{start:start, stop:stop, isStopped:isStopped}
+}();
+SGAME.Sequencing = function() {
+  var supportedGroupRequirements = ["completion", "success"];
+  var init = function() {
+  };
+  var validateSequence = function(sequence, los) {
+    if(typeof sequence !== "object" || typeof los !== "object") {
+      return false
+    }
+    var group_ids = Object.keys(sequence);
+    var lo_ids = Object.keys(los);
+    for(var i = 0;i < group_ids.length;i++) {
+      var group = _validateGroup(sequence[group_ids[i]], lo_ids);
+      if(group !== false) {
+        sequence[group_ids[i]] = group
+      }else {
+        delete sequence[group_ids[i]]
+      }
+    }
+    sequence = _validateGroupsConditions(sequence);
+    var valid_group_ids = Object.keys(sequence);
+    var los_in_valid_groups = [];
+    for(var j = 0;j < valid_group_ids.length;j++) {
+      var group = sequence[valid_group_ids[j]];
+      for(var k = 0;k < group.los.length;k++) {
+        if(los_in_valid_groups.indexOf(group.los[k]) === -1) {
+          los_in_valid_groups.push(group.los[k])
+        }
+      }
+    }
+    if(typeof valid_group_ids.length < 2 || los_in_valid_groups.length < 2) {
+      return false
+    }
+    return sequence
+  };
+  var _validateGroup = function(group, lo_ids) {
+    var validLos = [];
+    for(var i = 0;i < group.los.length;i++) {
+      var loId = group.los[i];
+      if(lo_ids.indexOf(loId) !== -1) {
+        validLos.push(loId)
+      }
+    }
+    group.los = validLos;
+    if(group.los.length < 1) {
+      return false
+    }
+    return group
+  };
+  var _validateGroupsConditions = function(groups) {
+    var group_ids = Object.keys(groups);
+    var nGroups = group_ids.length;
+    for(var i = 0;i < nGroups;i++) {
+      var group = _validateGroupConditions(groups[group_ids[i]], group_ids);
+      if(group !== false) {
+        groups[group_ids[i]] = group
+      }else {
+        delete groups[group_ids[i]]
+      }
+    }
+    var nNewGroups = Object.keys(groups).length;
+    if(nNewGroups === nGroups) {
+      return groups
+    }else {
+      return _validateGroupsConditions(groups)
+    }
+  };
+  var _validateGroupConditions = function(group, groupIds) {
+    if(typeof group.conditions === "undefined") {
+      return group
+    }
+    if(typeof group.conditions !== "object") {
+      return false
+    }
+    if(group.conditions.length === 0) {
+      delete group.conditions;
+      return group
+    }
+    var validConditions = [];
+    for(var i = 0;i < group.conditions.length;i++) {
+      var condition = group.conditions[i];
+      if(groupIds.indexOf(condition.group + "") !== -1) {
+        if(supportedGroupRequirements.indexOf(condition.requirement) !== -1) {
+          validConditions.push(condition)
+        }
+      }
+    }
+    group.conditions = validConditions;
+    if(group.conditions.length === 0) {
+      return false
+    }
+    return group
+  };
+  return{init:init, validateSequence:validateSequence}
 }();
 SGAME.TrafficLight = function(undefined) {
   var current_color;
