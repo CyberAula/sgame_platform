@@ -183,7 +183,7 @@ SGAME_AT = (function($,undefined){
 
         //Show sequence form
 		$("span.complexinput input[name='seq_opt3']").bind("change", function(){
-			_redrawSequenceForm();
+			_redrawSequenceForm(false);
         });
 	};
 
@@ -344,7 +344,7 @@ SGAME_AT = (function($,undefined){
 					_onStep4Confirmation();
 				});
 
-				_redrawSequenceForm();
+				_redrawSequenceForm(true);
 				break;
 			case 5:
 				//Setting option: completion_status
@@ -727,7 +727,7 @@ SGAME_AT = (function($,undefined){
 			return _showSGAMEDialogWithSettings({"msg":_getTrans("i.error_no_los")}, false);
 		}
 		_redrawMappingTable();
-		_redrawSequenceForm();
+		_redrawSequenceForm(true);
 		_loadValues();
 		_finishStep("2");
 	};
@@ -854,16 +854,16 @@ SGAME_AT = (function($,undefined){
 
 	var _lastOptRedrawSequence = undefined;
 
-	var _redrawSequenceForm = function(){
+	var _redrawSequenceForm = function(force){
 		var opt = $("span.complexinput input[name='seq_opt3']:checked").val();
 		switch(opt){
 		case "random":
-			if((supportedSequencingApproach.indexOf(_lastOptRedrawSequence) !== -1)&&(_lastOptRedrawSequence !== "random")){
+			if((force===false)&&(supportedSequencingApproach.indexOf(_lastOptRedrawSequence) !== -1)&&(_lastOptRedrawSequence !== "random")){
 				opt = undefined;
 				_showSGAMEDialogWithSettings({msg: _getTrans("i.sequencing_change_confirmation")}, true, function(dialog_ok){
 					if(dialog_ok === true){
 						_lastOptRedrawSequence = undefined;
-						_redrawSequenceForm();
+						_redrawSequenceForm(true);
 					} else {
 						$("#sgame_at div[step='4'] div.options_wrapper input[name='seq_opt3'][value='" + _lastOptRedrawSequence + "']").prop('checked',true);
 					}
@@ -875,14 +875,13 @@ SGAME_AT = (function($,undefined){
 			break;
 		case "linear_completion":
 		case "linear_success":
-			if((_lastOptRedrawSequence === "linear_completion")||(_lastOptRedrawSequence === "linear_success")){
+			if((force===false)&&((_lastOptRedrawSequence === "linear_completion")||(_lastOptRedrawSequence === "linear_success"))){
 				break;
 			}
 			_redrawLinearSequenceForm();
 			break;
 		case "custom":
 			//TODO
-			current_sequencing["sequence"] = {};
 			break;
 		}
 		if(typeof opt !== "undefined"){
