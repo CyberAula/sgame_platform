@@ -1178,6 +1178,7 @@ SGAME.CORE = function() {
         _settings["los"][lo_ids[i]]["nshown"] = 0;
         _settings["los"][lo_ids[i]]["succesfully_consumed"] = false;
         _settings["los"][lo_ids[i]]["nsuccess"] = 0;
+        _settings["los"][lo_ids[i]].groups = [];
         _settings["los"][lo_ids[i]]["acts_as_asset"] = _settings["los"][lo_ids[i]]["scorm_type"] === "asset" || _settings["los"][lo_ids[i]]["scorm_type"] === "sco" && _settings["los"][lo_ids[i]]["report_data"] === false;
         _los_can_be_shown = true
       }
@@ -1189,6 +1190,25 @@ SGAME.CORE = function() {
         delete _settings["sequencing"]["sequence"]
       }else {
         _settings["sequencing"]["sequence"] = validatedSequence
+      }
+    }
+    if(typeof _settings["sequencing"]["sequence"] === "object") {
+      var group_ids = Object.keys(_settings["sequencing"]["sequence"]);
+      _nGroups = group_ids.length;
+      for(var j = 0;j < _nGroups;j++) {
+        var group = _settings["sequencing"]["sequence"][group_ids[j]];
+        group["can_be_shown"] = typeof group.conditions === "undefined" || group.conditions.length === 0;
+        group["shown"] = false;
+        group["succesfully_consumed"] = false;
+        if(typeof group.conditions !== "undefined") {
+          for(var k = 0;k < group.conditions.length;k++) {
+            group.conditions[k].met = false
+          }
+        }
+        _settings["sequencing"]["sequence"][group_ids[j]] = group;
+        for(var l = 0;l < group.los.length;l++) {
+          _settings["los"][group.los[l]].groups.push(group.id)
+        }
       }
     }
   };
@@ -1286,6 +1306,9 @@ SGAME.CORE = function() {
       }
       if(report.success === true) {
         _settings["los"][lo["id"]]["nsuccess"] += 1
+      }
+      if(_settings["sequencing"]["approach"] !== "random") {
+        _settings["sequencing"]["sequence"] = SGAME.Sequencing.updateGroupsTracking(_settings["los"][lo["id"]], _settings["sequencing"]["sequence"], _settings["los"])
       }
       switch(_settings["sequencing"]["repeat_lo"]) {
         case "repeat":
@@ -1519,6 +1542,24 @@ SGAME.CORE = function() {
     })
   };
   var _selectLoFromCandidates = function(los_candidate) {
+    var loSelected = undefined;
+    switch(_settings["sequencing"]["approach"]) {
+      case "linear_completion":
+      ;
+      case "linear_success":
+      ;
+      case "custom":
+        loSelected = _selectLoFromCandidatesSequence(los_candidate);
+        break;
+      case "random":
+      ;
+      default:
+        loSelected = _selectLoFromCandidatesRandom(los_candidate);
+        break
+    }
+    return loSelected
+  };
+  var _selectLoFromCandidatesRandom = function(los_candidate) {
     var filtered_candidates = [];
     var nShownMin;
     for(var i = 0;i < los_candidate.length;i++) {
@@ -1534,6 +1575,32 @@ SGAME.CORE = function() {
       }
     }
     return SGAME.Utils.getRandomElement(filtered_candidates)
+  };
+  var _selectLoFromCandidatesSequence = function(loCandidatesFromMapping) {
+    return _selectLoFromCandidatesRandom(_getLoCandidatesFromSequecingRules(loCandidatesFromMapping))
+  };
+  var _getLoCandidatesFromSequecingRules = function(loCandidatesFromMapping) {
+    var candidates = [];
+    var candidates_ids = [];
+    var lo_candidates_mapping_ids = [];
+    for(var j = 0;j < loCandidatesFromMapping.length;j++) {
+      lo_candidates_mapping_ids.push(loCandidatesFromMapping[j].id)
+    }
+    var group_ids = Object.keys(_settings["sequencing"]["sequence"]);
+    for(var i = 0;i < group_ids.length;i++) {
+      var group = _settings["sequencing"]["sequence"][group_ids[i]];
+      if(group["can_be_shown"] === true) {
+        for(var j = 0;j < group.los.length;j++) {
+          if(lo_candidates_mapping_ids.indexOf(group.los[j]) !== -1) {
+            if(candidates_ids.indexOf(group.los[j]) === -1) {
+              candidates_ids.push(group.los[j]);
+              candidates.push(_settings["los"][group.los[j]])
+            }
+          }
+        }
+      }
+    }
+    return candidates
   };
   var _getAllLoArray = function() {
     var all_los = [];
@@ -2017,7 +2084,92 @@ SGAME.Sequencing = function() {
     }
     return group
   };
-  return{init:init, validateSequence:validateSequence}
+  var updateGroupsTracking = function(lo, groups, los) {
+    for(var i = 0;i < lo.groups.length;i++) {
+      var group = groups[lo.groups[i] + ""];
+      groups[lo.groups[i] + ""] = _updateGroupTracking(group, los)
+    }
+    var group_ids = Object.keys(groups);
+    for(var j = 0;j < group_ids.length;j++) {
+      var ogroup = groups[group_ids[j]];
+      if(ogroup.can_be_shown === false && (ogroup.shown === false && ogroup.succesfully_consumed === false)) {
+        groups[group_ids[j]] = _updateGroupUnlock(ogroup, groups)
+      }
+    }
+    for(var k = 0;k < lo.groups.length;k++) {
+      var ogroup = groups[lo.groups[k] + ""];
+      if(ogroup.can_be_shown === true) {
+        groups[lo.groups[k] + ""] = _updateGroupLock(ogroup, groups)
+      }
+    }
+    return groups
+  };
+  var _updateGroupTracking = function(group, los) {
+    if((group.shown && group.succesfully_consumed) === true) {
+      return group
+    }
+    var gShown = true;
+    var gSuccess = true;
+    for(var i = 0;i < group.los.length;i++) {
+      var lo = los[group.los[i]];
+      gShown = gShown && lo.shown === true;
+      gSuccess = gSuccess && lo.succesfully_consumed === true
+    }
+    group.shown = gShown;
+    group.succesfully_consumed = gSuccess;
+    if(group.succesfully_consumed) {
+      group.can_be_shown = false
+    }
+    return group
+  };
+  var _updateGroupUnlock = function(group, groups) {
+    if(typeof group.conditions === "undefined") {
+      return group
+    }
+    var unlock = true;
+    for(var k = 0;k < group.conditions.length;k++) {
+      if(group.conditions[k].met === false) {
+        switch(group.conditions[k].requirement) {
+          case "completion":
+            group.conditions[k].met = groups[group.conditions[k].group + ""].shown === true;
+            break;
+          case "success":
+            group.conditions[k].met = groups[group.conditions[k].group + ""].succesfully_consumed === true;
+            break
+        }
+        unlock = unlock && group.conditions[k].met;
+        if(unlock === false) {
+          break
+        }
+      }
+    }
+    group.can_be_shown = unlock;
+    return group
+  };
+  var _updateGroupLock = function(group, groups) {
+    var lock = _getLockForGroup(group, groups);
+    group.can_be_shown = lock === false;
+    return group
+  };
+  var _getLockForGroup = function(group, groups) {
+    var group_ids = Object.keys(groups);
+    var nConditions = 0;
+    for(var j = 0;j < group_ids.length;j++) {
+      var ogroup = groups[group_ids[j]];
+      if(ogroup.id != group.id && typeof ogroup.conditions !== "undefined") {
+        for(var k = 0;k < ogroup.conditions.length;k++) {
+          if(ogroup.conditions[k].group == group.id) {
+            nConditions = nConditions + 1;
+            if(ogroup.conditions[k].met === false) {
+              return false
+            }
+          }
+        }
+      }
+    }
+    return nConditions > 0
+  };
+  return{init:init, validateSequence:validateSequence, updateGroupsTracking:updateGroupsTracking}
 }();
 SGAME.TrafficLight = function(undefined) {
   var current_color;
