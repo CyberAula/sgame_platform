@@ -153,6 +153,33 @@ namespace :fix do
     printTitle("Task Finished")
   end
 
+  #Usage
+  #Development:   bundle exec rake fix:cleanUnusedFiles
+  #In production: bundle exec rake fix:cleanUnusedFiles RAILS_ENV=production
+  task :cleanUnusedFiles => :environment do
+    printTitle("Cleaning unused files")
+    now = Time.now
+    maxDays = 500
+
+    printTitle("Cleaning unused documents")
+    Document.all.each do |d|
+      if File.file?(d.file.path)
+        atime = File.atime(d.file.path)
+        diffInDays = ((now - atime)/(86400)).round(0)
+        if diffInDays > maxDays
+          puts "Document with title '" + d.title + "'. Days since last access (>" + maxDays.to_s + "): " + diffInDays.to_s + ". URL: " + d.file.url
+          d.destroy
+        end
+      else
+        puts "Destroy document wihtout file " + d.title
+        d.destroy
+      end
+    end
+
+    printTitle("Task Finished")
+  end
+
+
   ####################
   #Task Utils
   ####################
