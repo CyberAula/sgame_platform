@@ -154,18 +154,16 @@ namespace :fix do
   end
 
   #Usage
-  #Development:   bundle exec rake fix:cleanUnusedFiles
-  #In production: bundle exec rake fix:cleanUnusedFiles RAILS_ENV=production
-  task :cleanUnusedFiles => :environment do
-    printTitle("Cleaning unused files")
-    now = Time.now
+  #Development:   bundle exec rake fix:cleanUnusedDocuments
+  #In production: bundle exec rake fix:cleanUnusedDocuments RAILS_ENV=production
+  task :cleanUnusedDocuments => :environment do
+    printTitle("Cleaning unused documents")
     maxDays = 500
 
-    printTitle("Cleaning unused documents")
     Document.all.each do |d|
       if File.file?(d.file.path)
         atime = File.atime(d.file.path)
-        diffInDays = ((now - atime)/(86400)).round(0)
+        diffInDays = ((Time.now - atime)/(86400)).round(0)
         if diffInDays > maxDays
           puts "Document with title '" + d.title + "'. Days since last access (>" + maxDays.to_s + "): " + diffInDays.to_s + ". URL: " + d.file.url
           d.destroy
@@ -173,6 +171,38 @@ namespace :fix do
       else
         puts "Destroy document wihtout file " + d.title
         d.destroy
+      end
+    end
+
+    printTitle("Task Finished")
+  end
+
+  #Usage
+  #Development:   bundle exec rake fix:cleanUnusedPdfps
+  #In production: bundle exec rake fix:cleanUnusedPdfps RAILS_ENV=production
+  task :cleanUnusedPdfps => :environment do
+    printTitle("Cleaning unused pdfps")
+    maxDays = 500
+
+    Pdfp.all.each do |pdfp|
+      if File.file?(pdfp.attach.path)
+        folderPath = File.dirname(pdfp.attach.path)
+        imgs = Dir.glob("#{folderPath}/*.jpg")
+        removedImgs = 0
+        imgs.each do |img|
+          atime = File.atime(img)
+          diffInDays = ((Time.now - atime)/(86400)).round(0)
+          puts diffInDays
+          if diffInDays > maxDays
+            system "rm "+ img if File.exists? (img)
+            removedImgs = removedImgs + 1
+          end
+        end
+        if removedImgs == imgs.length
+          pdfp.destroy
+        end
+      else
+        pdfp.destroy
       end
     end
 
