@@ -192,9 +192,8 @@ namespace :fix do
         imgs.each do |img|
           atime = File.atime(img)
           diffInDays = ((Time.now - atime)/(86400)).round(0)
-          puts diffInDays
           if diffInDays > maxDays
-            system "rm "+ img if File.exists? (img)
+            system ("rm "+ img) if File.exists? (img)
             removedImgs = removedImgs + 1
           end
         end
