@@ -165,11 +165,10 @@ namespace :fix do
         atime = File.atime(d.file.path)
         diffInDays = ((Time.now - atime)/(86400)).round(0)
         if diffInDays > maxDays
-          puts "Document with title '" + d.title + "'. Days since last access (>" + maxDays.to_s + "): " + diffInDays.to_s + ". URL: " + d.file.url
+          #puts "Document with title '" + d.title + "'. Days since last access (>" + maxDays.to_s + "): " + diffInDays.to_s + ". URL: " + d.file.url
           d.destroy
         end
       else
-        puts "Destroy document wihtout file " + d.title
         d.destroy
       end
     end
@@ -202,6 +201,40 @@ namespace :fix do
         end
       else
         pdfp.destroy
+      end
+    end
+
+    printTitle("Task Finished")
+  end
+
+  #Usage
+  #Development:   bundle exec rake fix:cleanUnusedScormfiles
+  #In production: bundle exec rake fix:cleanUnusedScormfiles RAILS_ENV=production
+  task :cleanUnusedScormfiles => :environment do
+    printTitle("Cleaning unused scormfiles")
+    maxDays = 500
+
+    Scormfile.all.each do |sf|
+      if File.file?(sf.file.path)
+        folderPath = File.dirname(sf.file.path)
+
+        Dir[folderPath + "/*"].select{|path| path != sf.file.path}.each do |path|
+          require 'fileutils'
+          if File.directory?(path)
+            FileUtils.rm_rf(path)
+          end
+        end
+
+        unpackagedScormPath = Rails.root.join('public', 'code', 'scormfiles', sf.id.to_s).to_s
+        if File.directory?(unpackagedScormPath)
+          atime = Dir[unpackagedScormPath + "/*"].map{|f| File.atime(f)}.max || 0
+          diffInDays = ((Time.now - atime)/(86400)).round(0)
+          if diffInDays > maxDays
+            sf.destroy
+          end
+        end
+      else
+        sf.destroy
       end
     end
 
