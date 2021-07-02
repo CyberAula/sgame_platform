@@ -1349,8 +1349,7 @@ SGAME.CORE = function() {
       _settings["sequencing"]["interruptions"] = "no_restrictions"
     }
     if(supportedSequencingApproach.indexOf(_settings["sequencing"]["approach"]) === -1) {
-      _settings["sequencing"]["approach"] = "random";
-      delete _settings["sequencing"]["sequence"]
+      _settings["sequencing"]["approach"] = "random"
     }
     if(["n_times", "1_per_timeperiod"].indexOf(_settings["sequencing"]["interruptions"]) === -1 || typeof _settings["sequencing"]["interruptions_n"] !== "number") {
       delete _settings["sequencing"]["interruptions_n"]
@@ -1409,11 +1408,13 @@ SGAME.CORE = function() {
     if(_settings["sequencing"]["approach"] !== "random") {
       var validatedSequence = SGAME.Sequencing.validateSequence(_settings["sequencing"]["sequence"], _settings["los"]);
       if(validatedSequence === false) {
-        _settings["sequencing"]["approach"] = "random";
-        delete _settings["sequencing"]["sequence"]
+        _settings["sequencing"]["approach"] = "random"
       }else {
         _settings["sequencing"]["sequence"] = validatedSequence
       }
+    }
+    if(_settings["sequencing"]["approach"] === "random") {
+      delete _settings["sequencing"]["sequence"]
     }
     if(typeof _settings["sequencing"]["sequence"] === "object") {
       var lo_ids = Object.keys(_settings["los"]);
