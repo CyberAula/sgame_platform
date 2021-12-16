@@ -22,6 +22,8 @@
 		name: "<%= SgamePlatform::Application.config.name %>"
 	}
 
+	options["lang"] = "<%= I18n.locale.to_s %>";
+
 	var presentation = <%= raw @presentation.json %>;
 
 	function start(){
