@@ -1030,6 +1030,301 @@ SGAME.Messenger = function() {
   };
   return{init:init, isConnected:isConnected, sendMessage:sendMessage}
 }();
+var API;
+var API_1484_11;
+SGAME.Fancybox = function(undefined) {
+  var _currentFancybox = undefined;
+  var _currentFancyboxMode = undefined;
+  var _currentOnCloseCallback = undefined;
+  var _assetsPath;
+  var init = function(assetsPath) {
+    if(typeof assetsPath === "string") {
+      _assetsPath = assetsPath
+    }
+  };
+  var create = function(options, onCloseCallback) {
+    _removeCurrentFancybox();
+    _currentOnCloseCallback = onCloseCallback;
+    var mode = typeof options !== "undefined" && options.dialog === true ? "dialog" : "lo";
+    var ar = 4 / 3;
+    var minMargin = 0.05;
+    var width;
+    var height;
+    var maxWidth = window.innerWidth * (1 - 2 * minMargin);
+    var maxHeight = window.innerHeight * (1 - 2 * minMargin);
+    if(maxHeight * ar > maxWidth) {
+      width = maxWidth;
+      height = width / ar
+    }else {
+      height = maxHeight;
+      width = height * ar
+    }
+    if(mode === "lo") {
+      var lo = {};
+      var url
+    }else {
+      var dialogMsg = ""
+    }
+    if(options) {
+      if(options.width) {
+        width = options.width
+      }
+      if(options.height) {
+        height = options.height
+      }
+      if(mode === "lo") {
+        if(options.lo) {
+          lo = options.lo;
+          if(typeof lo["url"] === "string") {
+            url = lo["url"]
+          }
+        }
+      }else {
+        if(typeof options.msg == "string") {
+          dialogMsg = options.msg
+        }
+      }
+    }
+    if(mode === "lo") {
+      if(typeof url != "string" || typeof lo.scorm_type == "undefined") {
+        return
+      }
+      var SCORM_API = undefined;
+      API = undefined;
+      API_1484_11 = undefined;
+      var user = undefined;
+      var vleData = SGAME.CORE.getVLEData();
+      if(typeof vleData.user === "object") {
+        user = vleData.user
+      }
+      if(lo.scorm_type === "sco") {
+        if(lo.scorm_version === "1.2") {
+          API = new Local_API_SCORM_12({user:user, debug:SGAME.Debugger.isDebugging()});
+          SCORM_API = API
+        }else {
+          if(lo.scorm_version === "2004") {
+            API_1484_11 = new Local_API_1484_11({user:user, debug:SGAME.Debugger.isDebugging()});
+            SCORM_API = API_1484_11
+          }
+        }
+      }
+    }
+    var fancybox = document.createElement("div");
+    fancybox.style.width = width + "px";
+    fancybox.style.height = height + "px";
+    fancybox.style.maxWidth = maxWidth + "px";
+    fancybox.style.maxHeight = maxHeight + "px";
+    fancybox.style.overflow = mode === "lo" ? "hidden" : "auto";
+    fancybox.style.background = "white";
+    fancybox.style.position = "absolute";
+    fancybox.style.top = 0;
+    fancybox.style.zIndex = 9999;
+    fancybox.style.borderRadius = "1em";
+    fancybox.style.border = "2px solid black";
+    fancybox.setAttribute("id", "sgame_fancybox");
+    var marginLeft = (window.innerWidth - width) / 2;
+    fancybox.style.marginLeft = marginLeft + "px";
+    var marginTop = (window.innerHeight - height) / 2;
+    fancybox.style.marginTop = marginTop + "px";
+    var closeButton = document.createElement("img");
+    closeButton.src = _assetsPath + "close.png";
+    var closeButtonDimension = Math.max(25, Math.floor(height * 0.05));
+    closeButton.style.width = closeButtonDimension + "px";
+    closeButton.style.height = closeButtonDimension + "px";
+    closeButton.style.padding = "5px";
+    closeButton.style.cursor = "pointer";
+    closeButton.style.position = "absolute";
+    closeButton.style.right = 0;
+    closeButton.onclick = function() {
+      closeCurrentFancybox()
+    };
+    fancybox.appendChild(closeButton);
+    if(mode === "lo") {
+      var trafficLight = document.createElement("img");
+      trafficLight.id = "trafficLight";
+      trafficLight.src = _assetsPath + "trafficLight/trafficLight_red.png";
+      var trafficLightHeight = Math.max(40, Math.floor(height * 0.085));
+      var trafficLightWidth = Math.max(30, Math.floor(trafficLightHeight * 0.75));
+      trafficLight.style.height = trafficLightHeight + "px";
+      trafficLight.style.width = trafficLightWidth + "px";
+      trafficLight.style.padding = "4px";
+      trafficLight.style.position = "absolute";
+      trafficLight.style.left = "0px";
+      trafficLight.style.top = "0px";
+      trafficLight.style.background = "#fff";
+      trafficLight.style.borderRadius = "0px 0px 20px 0px";
+      trafficLight.style.borderRight = "2px solid black";
+      trafficLight.style.borderBottom = "2px solid black";
+      fancybox.appendChild(trafficLight);
+      var iframe = document.createElement("iframe");
+      iframe.src = url;
+      var iframeMarginTop = Math.ceil(Math.max(closeButtonDimension, trafficLightHeight)) + 4;
+      var iframeMarginBottom = Math.floor(height * 0.02);
+      var iframeMarginLeft = Math.floor(width * 0.02);
+      var iframeMarginRight = iframeMarginLeft;
+      iframe.style.marginLeft = iframeMarginLeft + "px";
+      iframe.style.marginTop = iframeMarginTop + "px";
+      iframe.style.width = Math.max(0, width - iframeMarginLeft - iframeMarginRight) + "px";
+      iframe.style.height = Math.max(0, height - iframeMarginTop - iframeMarginBottom) + "px";
+      iframe.style.overflow = "auto";
+      iframe.scrolling = "yes";
+      iframe.style.frameBorder = "0";
+      iframe.style.borderStyle = "none";
+      iframe.setAttribute("allowfullscreen", "false");
+      fancybox.appendChild(iframe)
+    }else {
+      var dialog = document.createElement("p");
+      dialog.id = "dialog";
+      dialog.innerHTML = dialogMsg;
+      dialog.style.padding = "15px";
+      dialog.style.marginTop = "30px";
+      dialog.style.marginBottom = "20px";
+      dialog.style.marginRight = "20px";
+      dialog.style.marginLeft = "20px";
+      dialog.style.textAlign = "center";
+      dialog.style.fontSize = "24px";
+      dialog.style.position = "relative";
+      dialog.style.cursor = "default";
+      dialog.style.color = "#000";
+      dialog.style.fontFamily = "initial";
+      fancybox.appendChild(dialog)
+    }
+    _currentFancybox = fancybox;
+    _currentFancyboxMode = mode;
+    document.body.appendChild(fancybox);
+    if(mode === "lo") {
+      SGAME.Observer.start(iframe, lo, SCORM_API)
+    }
+  };
+  var _removeCurrentFancybox = function() {
+    if(typeof _currentFancybox == "undefined") {
+      return
+    }
+    _currentFancybox.style.display = "none";
+    _currentFancybox.parentNode.removeChild(_currentFancybox);
+    if(_currentFancyboxMode === "lo") {
+      API = undefined;
+      API_1484_11 = undefined
+    }
+    _currentFancybox = undefined;
+    _currentFancyboxMode = undefined
+  };
+  var closeCurrentFancybox = function() {
+    if(typeof _currentFancybox == "undefined") {
+      return
+    }
+    var closedFancyboxMode = _currentFancyboxMode;
+    _removeCurrentFancybox();
+    var callbackResult;
+    if(closedFancyboxMode === "lo") {
+      callbackResult = SGAME.Observer.stop()
+    }else {
+      callbackResult = true
+    }
+    var currentOnCloseCallback = _currentOnCloseCallback;
+    _currentOnCloseCallback = undefined;
+    setTimeout(function() {
+      if(typeof currentOnCloseCallback === "function") {
+        currentOnCloseCallback(callbackResult)
+      }
+    }, 50)
+  };
+  return{init:init, create:create, closeCurrentFancybox:closeCurrentFancybox}
+}();
+SGAME.TrafficLight = function(undefined) {
+  var current_color;
+  var changeColorTimer;
+  var startBlinkTimer;
+  var blinkTimer;
+  var stopBlinkTimer;
+  var _assetsPath;
+  var init = function(assetsPath) {
+    if(typeof assetsPath === "string") {
+      _assetsPath = assetsPath
+    }
+  };
+  var getCurrentColor = function() {
+    return current_color
+  };
+  var changeColor = function(color, delay) {
+    if(delay) {
+      changeColorTimer = setTimeout(function() {
+        _changeColor(color)
+      }, delay * 1E3)
+    }else {
+      _changeColor(color)
+    }
+  };
+  var _changeColor = function(color) {
+    var trafficLight = document.getElementById("trafficLight");
+    if(trafficLight) {
+      current_color = color;
+      trafficLight.src = _getImageForColor(color)
+    }
+  };
+  var _getImageForColor = function(color) {
+    switch(color) {
+      case "green":
+        return _assetsPath + "trafficLight/trafficLight_green.png";
+        break;
+      case "yellow":
+        return _assetsPath + "trafficLight/trafficLight_yellow.png";
+        break;
+      case "red":
+        return _assetsPath + "trafficLight/trafficLight_red.png";
+        break;
+      default:
+        return _assetsPath + "trafficLight/trafficLight.png";
+        break
+    }
+  };
+  var setUpBlink = function(color, duration, delay) {
+    if(delay) {
+      startBlinkTimer = setTimeout(function() {
+        _blink(color, duration)
+      }, delay * 1E3)
+    }else {
+      _blink(color, duration)
+    }
+  };
+  var _blink = function(color, duration) {
+    var trafficLight = document.getElementById("trafficLight");
+    if(!trafficLight) {
+      return
+    }
+    var coin = false;
+    blinkTimer = setInterval(function() {
+      if(!trafficLight) {
+        return
+      }
+      if(coin) {
+        trafficLight.src = _getImageForColor(null);
+        coin = false
+      }else {
+        trafficLight.src = _getImageForColor(color);
+        coin = true
+      }
+    }, 500);
+    stopBlinkTimer = setTimeout(function() {
+      clearTimeout(blinkTimer)
+    }, duration * 1E3)
+  };
+  var stop = function() {
+    if(changeColorTimer) {
+      clearTimeout(changeColorTimer)
+    }
+    if(startBlinkTimer) {
+      clearTimeout(startBlinkTimer)
+    }
+    if(blinkTimer) {
+      clearTimeout(blinkTimer)
+    }
+    if(stopBlinkTimer) {
+      clearTimeout(stopBlinkTimer)
+    }
+  };
+  return{init:init, getCurrentColor:getCurrentColor, changeColor:changeColor, setUpBlink:setUpBlink, stop:stop}
+}();
 SGAME.Sequencing = function() {
   var _sequencingApproach;
   var supportedGroupRequirements = ["completion", "success"];
@@ -1446,6 +1741,11 @@ SGAME.CORE = function() {
         }
       }
     }
+    if(typeof _settings["assets_path"] !== "string") {
+      _settings["assets_path"] = "/assets/sgame/"
+    }
+    SGAME.Fancybox.init(_settings["assets_path"]);
+    SGAME.TrafficLight.init(_settings["assets_path"]);
     SGAME.Sequencing.init(_settings["sequencing"])
   };
   var triggerLO = function(event_id, callback) {
@@ -1921,203 +2221,6 @@ SGAME.CORE = function() {
   SGAME.Messenger.init();
   return{init:init, loadSettings:loadSettings, triggerLO:triggerLO, showLO:showLO, showRandomLO:showRandomLO, closeLO:closeLO, getSettings:getSettings, losCanBeShown:losCanBeShown, successWhenNoLOs:successWhenNoLOs, onConnectedToVLE:onConnectedToVLE, getVLEData:getVLEData, setVLEData:setVLEData}
 }();
-var API;
-var API_1484_11;
-SGAME.Fancybox = function(undefined) {
-  var _currentFancybox = undefined;
-  var _currentFancyboxMode = undefined;
-  var _currentOnCloseCallback = undefined;
-  var init = function() {
-  };
-  var create = function(options, onCloseCallback) {
-    _removeCurrentFancybox();
-    _currentOnCloseCallback = onCloseCallback;
-    var mode = typeof options !== "undefined" && options.dialog === true ? "dialog" : "lo";
-    var ar = 4 / 3;
-    var minMargin = 0.05;
-    var width;
-    var height;
-    var maxWidth = window.innerWidth * (1 - 2 * minMargin);
-    var maxHeight = window.innerHeight * (1 - 2 * minMargin);
-    if(maxHeight * ar > maxWidth) {
-      width = maxWidth;
-      height = width / ar
-    }else {
-      height = maxHeight;
-      width = height * ar
-    }
-    if(mode === "lo") {
-      var lo = {};
-      var url
-    }else {
-      var dialogMsg = ""
-    }
-    if(options) {
-      if(options.width) {
-        width = options.width
-      }
-      if(options.height) {
-        height = options.height
-      }
-      if(mode === "lo") {
-        if(options.lo) {
-          lo = options.lo;
-          if(typeof lo["url"] === "string") {
-            url = lo["url"]
-          }
-        }
-      }else {
-        if(typeof options.msg == "string") {
-          dialogMsg = options.msg
-        }
-      }
-    }
-    if(mode === "lo") {
-      if(typeof url != "string" || typeof lo.scorm_type == "undefined") {
-        return
-      }
-      var SCORM_API = undefined;
-      API = undefined;
-      API_1484_11 = undefined;
-      var user = undefined;
-      var vleData = SGAME.CORE.getVLEData();
-      if(typeof vleData.user === "object") {
-        user = vleData.user
-      }
-      if(lo.scorm_type === "sco") {
-        if(lo.scorm_version === "1.2") {
-          API = new Local_API_SCORM_12({user:user, debug:SGAME.Debugger.isDebugging()});
-          SCORM_API = API
-        }else {
-          if(lo.scorm_version === "2004") {
-            API_1484_11 = new Local_API_1484_11({user:user, debug:SGAME.Debugger.isDebugging()});
-            SCORM_API = API_1484_11
-          }
-        }
-      }
-    }
-    var fancybox = document.createElement("div");
-    fancybox.style.width = width + "px";
-    fancybox.style.height = height + "px";
-    fancybox.style.maxWidth = maxWidth + "px";
-    fancybox.style.maxHeight = maxHeight + "px";
-    fancybox.style.overflow = mode === "lo" ? "hidden" : "auto";
-    fancybox.style.background = "white";
-    fancybox.style.position = "absolute";
-    fancybox.style.top = 0;
-    fancybox.style.zIndex = 9999;
-    fancybox.style.borderRadius = "1em";
-    fancybox.style.border = "2px solid black";
-    fancybox.setAttribute("id", "sgame_fancybox");
-    var marginLeft = (window.innerWidth - width) / 2;
-    fancybox.style.marginLeft = marginLeft + "px";
-    var marginTop = (window.innerHeight - height) / 2;
-    fancybox.style.marginTop = marginTop + "px";
-    var closeButton = document.createElement("img");
-    closeButton.src = "/assets/sgame/close.png";
-    var closeButtonDimension = Math.max(25, Math.floor(height * 0.05));
-    closeButton.style.width = closeButtonDimension + "px";
-    closeButton.style.height = closeButtonDimension + "px";
-    closeButton.style.padding = "5px";
-    closeButton.style.cursor = "pointer";
-    closeButton.style.position = "absolute";
-    closeButton.style.right = 0;
-    closeButton.onclick = function() {
-      closeCurrentFancybox()
-    };
-    fancybox.appendChild(closeButton);
-    if(mode === "lo") {
-      var trafficLight = document.createElement("img");
-      trafficLight.id = "trafficLight";
-      trafficLight.src = "/assets/sgame/trafficLight/trafficLight_red.png";
-      var trafficLightHeight = Math.max(40, Math.floor(height * 0.085));
-      var trafficLightWidth = Math.max(30, Math.floor(trafficLightHeight * 0.75));
-      trafficLight.style.height = trafficLightHeight + "px";
-      trafficLight.style.width = trafficLightWidth + "px";
-      trafficLight.style.padding = "4px";
-      trafficLight.style.position = "absolute";
-      trafficLight.style.left = "0px";
-      trafficLight.style.top = "0px";
-      trafficLight.style.background = "#fff";
-      trafficLight.style.borderRadius = "0px 0px 20px 0px";
-      trafficLight.style.borderRight = "2px solid black";
-      trafficLight.style.borderBottom = "2px solid black";
-      fancybox.appendChild(trafficLight);
-      var iframe = document.createElement("iframe");
-      iframe.src = url;
-      var iframeMarginTop = Math.ceil(Math.max(closeButtonDimension, trafficLightHeight)) + 4;
-      var iframeMarginBottom = Math.floor(height * 0.02);
-      var iframeMarginLeft = Math.floor(width * 0.02);
-      var iframeMarginRight = iframeMarginLeft;
-      iframe.style.marginLeft = iframeMarginLeft + "px";
-      iframe.style.marginTop = iframeMarginTop + "px";
-      iframe.style.width = Math.max(0, width - iframeMarginLeft - iframeMarginRight) + "px";
-      iframe.style.height = Math.max(0, height - iframeMarginTop - iframeMarginBottom) + "px";
-      iframe.style.overflow = "auto";
-      iframe.scrolling = "yes";
-      iframe.style.frameBorder = "0";
-      iframe.style.borderStyle = "none";
-      iframe.setAttribute("allowfullscreen", "false");
-      fancybox.appendChild(iframe)
-    }else {
-      var dialog = document.createElement("p");
-      dialog.id = "dialog";
-      dialog.innerHTML = dialogMsg;
-      dialog.style.padding = "15px";
-      dialog.style.marginTop = "30px";
-      dialog.style.marginBottom = "20px";
-      dialog.style.marginRight = "20px";
-      dialog.style.marginLeft = "20px";
-      dialog.style.textAlign = "center";
-      dialog.style.fontSize = "24px";
-      dialog.style.position = "relative";
-      dialog.style.cursor = "default";
-      dialog.style.color = "#000";
-      dialog.style.fontFamily = "initial";
-      fancybox.appendChild(dialog)
-    }
-    _currentFancybox = fancybox;
-    _currentFancyboxMode = mode;
-    document.body.appendChild(fancybox);
-    if(mode === "lo") {
-      SGAME.Observer.start(iframe, lo, SCORM_API)
-    }
-  };
-  var _removeCurrentFancybox = function() {
-    if(typeof _currentFancybox == "undefined") {
-      return
-    }
-    _currentFancybox.style.display = "none";
-    _currentFancybox.parentNode.removeChild(_currentFancybox);
-    if(_currentFancyboxMode === "lo") {
-      API = undefined;
-      API_1484_11 = undefined
-    }
-    _currentFancybox = undefined;
-    _currentFancyboxMode = undefined
-  };
-  var closeCurrentFancybox = function() {
-    if(typeof _currentFancybox == "undefined") {
-      return
-    }
-    var closedFancyboxMode = _currentFancyboxMode;
-    _removeCurrentFancybox();
-    var callbackResult;
-    if(closedFancyboxMode === "lo") {
-      callbackResult = SGAME.Observer.stop()
-    }else {
-      callbackResult = true
-    }
-    var currentOnCloseCallback = _currentOnCloseCallback;
-    _currentOnCloseCallback = undefined;
-    setTimeout(function() {
-      if(typeof currentOnCloseCallback === "function") {
-        currentOnCloseCallback(callbackResult)
-      }
-    }, 50)
-  };
-  return{init:init, create:create, closeCurrentFancybox:closeCurrentFancybox}
-}();
 SGAME.Observer = function(undefined) {
   var _stopped = true;
   var _current_iframe = undefined;
@@ -2238,94 +2341,6 @@ SGAME.Observer = function(undefined) {
     return Math.min(alfa * TLT, maximumTime)
   };
   return{start:start, stop:stop, isStopped:isStopped}
-}();
-SGAME.TrafficLight = function(undefined) {
-  var current_color;
-  var changeColorTimer;
-  var startBlinkTimer;
-  var blinkTimer;
-  var stopBlinkTimer;
-  var getCurrentColor = function() {
-    return current_color
-  };
-  var changeColor = function(color, delay) {
-    if(delay) {
-      changeColorTimer = setTimeout(function() {
-        _changeColor(color)
-      }, delay * 1E3)
-    }else {
-      _changeColor(color)
-    }
-  };
-  var _changeColor = function(color) {
-    var trafficLight = document.getElementById("trafficLight");
-    if(trafficLight) {
-      current_color = color;
-      trafficLight.src = _getImageForColor(color)
-    }
-  };
-  var _getImageForColor = function(color) {
-    switch(color) {
-      case "green":
-        return"/assets/sgame/trafficLight/trafficLight_green.png";
-        break;
-      case "yellow":
-        return"/assets/sgame/trafficLight/trafficLight_yellow.png";
-        break;
-      case "red":
-        return"/assets/sgame/trafficLight/trafficLight_red.png";
-        break;
-      default:
-        return"/assets/sgame/trafficLight/trafficLight.png";
-        break
-    }
-  };
-  var setUpBlink = function(color, duration, delay) {
-    if(delay) {
-      startBlinkTimer = setTimeout(function() {
-        _blink(color, duration)
-      }, delay * 1E3)
-    }else {
-      _blink(color, duration)
-    }
-  };
-  var _blink = function(color, duration) {
-    var trafficLight = document.getElementById("trafficLight");
-    if(!trafficLight) {
-      return
-    }
-    var coin = false;
-    blinkTimer = setInterval(function() {
-      if(!trafficLight) {
-        return
-      }
-      if(coin) {
-        trafficLight.src = _getImageForColor(null);
-        coin = false
-      }else {
-        trafficLight.src = _getImageForColor(color);
-        coin = true
-      }
-    }, 500);
-    stopBlinkTimer = setTimeout(function() {
-      clearTimeout(blinkTimer)
-    }, duration * 1E3)
-  };
-  var stop = function() {
-    if(changeColorTimer) {
-      clearTimeout(changeColorTimer)
-    }
-    if(startBlinkTimer) {
-      clearTimeout(startBlinkTimer)
-    }
-    if(blinkTimer) {
-      clearTimeout(blinkTimer)
-    }
-    if(stopBlinkTimer) {
-      clearTimeout(stopBlinkTimer)
-    }
-  };
-  return{getCurrentColor:getCurrentColor, changeColor:changeColor, setUpBlink:setUpBlink, stop:stop}
 }();
 SGAME.Utils = function() {
   var init = function(debugging) {

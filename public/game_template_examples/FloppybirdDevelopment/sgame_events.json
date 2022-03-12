@@ -1,0 +1,11 @@
+[
+	{
+		"id": 1,
+		"title": "Pipe",
+		"description": "Event triggered when the bird touches a pipe. Players who successfully consume a learning object will be rewarded with an extra life that will allow them to continue playing.",
+		"type": "damage",
+		"frequency": "skill-dependent_high"
+	}
+]
+
+
