@@ -879,7 +879,7 @@ function Local_API_1484_11(options) {
   };
   return{init:init, loadSettings:loadSettings, triggerLO:triggerLO, showLO:showLO, showRandomLO:showRandomLO, closeLO:closeLO, getSettings:getSettings, losCanBeShown:losCanBeShown, successWhenNoLOs:successWhenNoLOs}
 }();
-SGAME.VERSION = "1.0.0";
+SGAME.VERSION = "1.0.1";
 SGAME.AUTHORS = "Aldo Gordillo";
 SGAME.URL = "https://github.com/ging/sgame_platform";
 SGAME.Debugger = function() {
@@ -1327,7 +1327,7 @@ SGAME.TrafficLight = function(undefined) {
 }();
 SGAME.Sequencing = function() {
   var _sequencingApproach;
-  var supportedGroupRequirements = ["completion", "success"];
+  var supportedGroupRequirements = ["completion", "success", "fail", "score_higher", "score_lower"];
   var init = function(seq_settings) {
     _sequencingApproach = seq_settings["approach"]
   };
@@ -1406,11 +1406,9 @@ SGAME.Sequencing = function() {
     }
     var validConditions = [];
     for(var i = 0;i < group.conditions.length;i++) {
-      var condition = group.conditions[i];
-      if(groupIds.indexOf(condition.group + "") !== -1) {
-        if(supportedGroupRequirements.indexOf(condition.requirement) !== -1) {
-          validConditions.push(condition)
-        }
+      var condition = _validateGroupCondition(group.conditions[i], groupIds);
+      if(typeof condition === "object") {
+        validConditions.push(condition)
       }
     }
     group.conditions = validConditions;
@@ -1418,6 +1416,26 @@ SGAME.Sequencing = function() {
       return false
     }
     return group
+  };
+  var _validateGroupCondition = function(condition, groupIds) {
+    if(groupIds.indexOf(condition.group + "") === -1) {
+      return false
+    }
+    if(supportedGroupRequirements.indexOf(condition.requirement) === -1) {
+      return false
+    }
+    if(["score_higher", "score_lower"].indexOf(condition.requirement) !== -1) {
+      if(typeof condition.score !== "number" || (condition.score < 0 || condition.score > 1)) {
+        return false
+      }
+      if(condition.requirement === "score_higher" && condition.score === 1) {
+        return false
+      }
+      if(condition.requirement === "score_lower" && condition.score === 0) {
+        return false
+      }
+    }
+    return condition
   };
   var updateGroupsTracking = function(lo, groups, los) {
     for(var i = 0;i < lo.groups.length;i++) {
@@ -1428,14 +1446,12 @@ SGAME.Sequencing = function() {
     var group_ids = Object.keys(groups);
     for(var j = 0;j < group_ids.length;j++) {
       var ogroup = groups[group_ids[j]];
-      if(ogroup.can_be_shown === false) {
+      if(ogroup.can_be_shown === false && ogroup.shown === false) {
         nLockedGroups = nLockedGroups + 1;
-        if(ogroup.shown === false && ogroup.succesfully_consumed === false) {
-          groups[group_ids[j]] = _updateGroupUnlock(ogroup, groups);
-          if(groups[group_ids[j]].can_be_shown === true) {
-            los = _changeCanBeShownForLOsInGroup(groups[group_ids[j]], los, true);
-            nLockedGroups = nLockedGroups - 1
-          }
+        groups[group_ids[j]] = _updateGroupUnlock(ogroup, groups);
+        if(groups[group_ids[j]].can_be_shown === true) {
+          los = _changeCanBeShownForLOsInGroup(groups[group_ids[j]], los, true);
+          nLockedGroups = nLockedGroups - 1
         }
       }
     }
@@ -1456,33 +1472,49 @@ SGAME.Sequencing = function() {
     return{"groups":groups, "los":los, "finished":finished}
   };
   var _updateGroupTracking = function(group, los) {
-    if((group.shown && group.succesfully_consumed) === true) {
+    if(group.shown && group.can_be_shown === false) {
       return group
     }
-    var gShown = true;
-    var gSuccess = true;
-    for(var i = 0;i < group.los.length;i++) {
+    var nLos = group.los.length;
+    var nShown = 0;
+    var nSuccess = 0;
+    for(var i = 0;i < nLos;i++) {
       var lo = los[group.los[i]];
-      gShown = gShown && lo.shown === true;
-      gSuccess = gSuccess && lo.succesfully_consumed === true
+      if(lo.shown === true) {
+        nShown += 1
+      }
+      if(lo.successfully_consumed === true) {
+        nSuccess += 1
+      }
     }
-    group.shown = gShown;
-    group.succesfully_consumed = gSuccess;
+    group.shown = nShown === nLos;
+    group.score = nShown > 0 ? nSuccess / nShown : 1;
     return group
   };
   var _updateGroupUnlock = function(group, groups) {
-    if(typeof group.conditions === "undefined") {
+    if(typeof group.conditions === "undefined" || (group.can_be_shown === true || group.shown === true)) {
       return group
     }
     var unlock = true;
     for(var k = 0;k < group.conditions.length;k++) {
       if(group.conditions[k].met === false) {
+        var cgroup = groups[group.conditions[k].group + ""];
+        var cgroupShown = cgroup.shown === true;
         switch(group.conditions[k].requirement) {
           case "completion":
-            group.conditions[k].met = groups[group.conditions[k].group + ""].shown === true;
+            group.conditions[k].met = cgroupShown;
             break;
           case "success":
-            group.conditions[k].met = groups[group.conditions[k].group + ""].succesfully_consumed === true;
+            group.conditions[k].met = cgroupShown && cgroup.score === 1;
+            break;
+          case "fail":
+            group.conditions[k].met = cgroupShown && cgroup.score < 1;
+            break;
+          case "score_higher":
+            group.conditions[k].met = cgroupShown && cgroup.score > group.conditions[k].score;
+            break;
+          case "score_lower":
+            group.conditions[k].met = cgroupShown && cgroup.score < group.conditions[k].score;
             break
         }
         unlock = unlock && group.conditions[k].met;
@@ -1500,35 +1532,37 @@ SGAME.Sequencing = function() {
     return group
   };
   var _getLockForGroup = function(group, groups) {
+    if(group.shown !== true || group.can_be_shown !== true) {
+      return false
+    }
     var group_ids = Object.keys(groups);
-    var nConditionsMet = 0;
+    var unmetConditions = false;
     for(var j = 0;j < group_ids.length;j++) {
       var ogroup = groups[group_ids[j]];
-      if(ogroup.can_be_shown === false && (ogroup.id != group.id && typeof ogroup.conditions !== "undefined")) {
+      if(ogroup.id != group.id && typeof ogroup.conditions !== "undefined") {
         for(var k = 0;k < ogroup.conditions.length;k++) {
           if(ogroup.conditions[k].group == group.id) {
-            if(ogroup.conditions[k].met === false) {
-              return false
+            if(ogroup.conditions[k].met === true) {
+              return true
+            }else {
+              unmetConditions = true
             }
-            nConditionsMet = nConditionsMet + 1
           }
         }
       }
     }
-    if(nConditionsMet > 0) {
-      return true
-    }else {
-      switch(_sequencingApproach) {
-        case "linear_completion":
-          return group.shown;
-        case "linear_success":
-          return group.succesfully_consumed;
-        case "custom":
-        ;
-        default:
-          return group.shown && group.succesfully_consumed;
-          break
-      }
+    if(unmetConditions === true) {
+      return false
+    }
+    switch(_sequencingApproach) {
+      case "linear_success":
+        return group.score === 1;
+      case "linear_completion":
+      ;
+      case "custom":
+      ;
+      default:
+        return true
     }
   };
   var _changeCanBeShownForLOsInGroup = function(group, los, canBeShown) {
@@ -1594,7 +1628,7 @@ SGAME.CORE = function() {
   var supportedSequencingApproach = ["random", "linear_completion", "linear_success", "custom"];
   var supportedCompletionStatus = ["all_los", "percentage_los", "n_los", "n_times", "disabled", "onstart"];
   var supportedSuccessStatus = ["all_los", "percentage_los", "n_los", "n_times", "disabled", "onstart", "oncompletion"];
-  var supportedCompletionNotification = ["no_more_los", "all_los_consumed", "all_los_succesfully_consumed", "completion_status", "success_status", "never"];
+  var supportedCompletionNotification = ["no_more_los", "all_los_consumed", "all_los_successfully_consumed", "completion_status", "success_status", "never"];
   var supportedBehaviourWhenNoMoreLOs = ["success", "failure", "success_unless_damage", "failure_unless_blocking"];
   var _los_can_be_shown = false;
   var _nLOs = 0;
@@ -1694,8 +1728,9 @@ SGAME.CORE = function() {
         _settings["los"][lo_ids[i]]["can_be_shown"] = true;
         _settings["los"][lo_ids[i]]["shown"] = false;
         _settings["los"][lo_ids[i]]["nshown"] = 0;
-        _settings["los"][lo_ids[i]]["succesfully_consumed"] = false;
+        _settings["los"][lo_ids[i]]["successfully_consumed"] = false;
         _settings["los"][lo_ids[i]]["nsuccess"] = 0;
+        _settings["los"][lo_ids[i]]["unsuccessfully_consumed"] = false;
         _settings["los"][lo_ids[i]]["acts_as_asset"] = _settings["los"][lo_ids[i]]["scorm_type"] === "asset" || _settings["los"][lo_ids[i]]["scorm_type"] === "sco" && _settings["los"][lo_ids[i]]["report_data"] === false;
         _los_can_be_shown = true
       }
@@ -1725,7 +1760,7 @@ SGAME.CORE = function() {
         var group = _settings["sequencing"]["sequence"][group_ids[j]];
         group["can_be_shown"] = typeof group.conditions === "undefined" || group.conditions.length === 0;
         group["shown"] = false;
-        group["succesfully_consumed"] = false;
+        group["score"] = false;
         if(typeof group.conditions !== "undefined") {
           for(var k = 0;k < group.conditions.length;k++) {
             group.conditions[k].met = false
@@ -1837,11 +1872,13 @@ SGAME.CORE = function() {
     _settings["los"][lo["id"]]["shown"] = true;
     _settings["los"][lo["id"]]["nshown"] += 1;
     SGAME.Fancybox.create({lo:lo}, function(report) {
-      if(_settings["los"][lo["id"]]["succesfully_consumed"] !== true) {
-        _settings["los"][lo["id"]]["succesfully_consumed"] = report.success
+      if(_settings["los"][lo["id"]]["successfully_consumed"] !== true) {
+        _settings["los"][lo["id"]]["successfully_consumed"] = report.success
       }
       if(report.success === true) {
         _settings["los"][lo["id"]]["nsuccess"] += 1
+      }else {
+        _settings["los"][lo["id"]]["unsuccessfully_consumed"] = true
       }
       if(_settings["sequencing"]["approach"] !== "random" && _sequence_finished === false) {
         var output = SGAME.Sequencing.updateGroupsTracking(_settings["los"][lo["id"]], _settings["sequencing"]["sequence"], _settings["los"]);
@@ -1855,7 +1892,7 @@ SGAME.CORE = function() {
         case "repeat":
           break;
         case "repeat_unless_successfully_consumed":
-          _settings["los"][lo["id"]]["can_be_shown"] = _settings["los"][lo["id"]]["succesfully_consumed"] !== true;
+          _settings["los"][lo["id"]]["can_be_shown"] = _settings["los"][lo["id"]]["successfully_consumed"] !== true;
           break;
         case "no_repeat":
           _settings["los"][lo["id"]]["can_be_shown"] = false;
@@ -1946,7 +1983,7 @@ SGAME.CORE = function() {
         _nloshown += 1;
         _nshown += _settings["los"][lo_ids[i]]["nshown"]
       }
-      if(_settings["los"][lo_ids[i]]["succesfully_consumed"] === true) {
+      if(_settings["los"][lo_ids[i]]["successfully_consumed"] === true) {
         _nlosuccess += 1;
         _nsuccess += _settings["los"][lo_ids[i]]["nsuccess"]
       }
@@ -2062,7 +2099,7 @@ SGAME.CORE = function() {
         return _los_can_be_shown === false;
       case "all_los_consumed":
         return _nloshown >= _nLOs;
-      case "all_los_succesfully_consumed":
+      case "all_los_successfully_consumed":
         return _nlosuccess >= _nLOs;
       case "completion_status":
         return _tracking["completion_status"] === "completed";

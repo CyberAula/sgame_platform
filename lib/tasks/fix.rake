@@ -241,6 +241,25 @@ namespace :fix do
     printTitle("Task Finished")
   end
 
+  #Usage
+  #Development:   bundle exec rake fix:gameSettings
+  #In production: bundle exec rake fix:gameSettings RAILS_ENV=production
+  task :gameSettings => :environment do
+    printTitle("Fixing game settings")
+    
+    Game.all.each do |g|
+      if g.editor_data
+        editor_data = JSON(g.editor_data)
+        if editor_data["settings"] and editor_data["settings"]["completion_notification"] === "all_los_succesfully_consumed"
+          editor_data["settings"]["completion_notification"] = "all_los_successfully_consumed"
+          g.update_column :editor_data, editor_data.to_json
+        end
+      end
+    end
+
+    printTitle("Task Finished")
+  end
+
 
   ####################
   #Task Utils

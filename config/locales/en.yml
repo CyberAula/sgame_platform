@@ -94,7 +94,7 @@ en:
         title_secondary: "If you choose the learning objects to be shown following a sequence, you must define this sequence below."
         choice1: "Randomly among those learning objects that have been shown the least number of times."
         choice2: "Following a linear sequence, so that when one learning object is shown the next one will be unlocked."
-        choice3: "Following a linear sequence, so that when one learning object is succesfully consumed the next one will be unlocked."
+        choice3: "Following a linear sequence, so that when one learning object is successfully consumed the next one will be unlocked."
         choice4: "Following a customized sequence."
     step5:
       title: "Specify settings for the game"
@@ -124,10 +124,10 @@ en:
         choice6: "Never."
       opt4:
         title: "The 'success status' of the game must change to 'passed':"
-        choice1: "When the player has succesfully consumed all the learning objects integrated in the game."
-        choice2: "When the player has succesfully consumed the following percentage of learning objects:"
-        choice3: "When the player has succesfully consumed the following number of learning objects:"
-        choice4: "When the player has succesfully consumed whatever learning objects the following number of times:"
+        choice1: "When the player has successfully consumed all the learning objects integrated in the game."
+        choice2: "When the player has successfully consumed the following percentage of learning objects:"
+        choice3: "When the player has successfully consumed the following number of learning objects:"
+        choice4: "When the player has successfully consumed whatever learning objects the following number of times:"
         choice5: "When the game starts."
         choice6: "Never."
         choice7: "When the completion status of the game change to completed."
@@ -310,7 +310,7 @@ en:
     username_or_email: "Username or Email"
   presentations:
     clone:
-      success: "The presentation was cloned succesfully"
+      success: "The presentation was cloned successfully"
       fail: "You cannot clone this presentation"
     new: "Create presentation"
     tabtitle: "Presentations"
