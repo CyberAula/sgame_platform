@@ -91,11 +91,12 @@ es:
         choice3: "Como máximo una vez por cada periodo con la siguiente cantidad de segundos:"
       opt3:
         title: "Cuando se pueda elegir entre varios candidatos a la hora de mostrar un objeto de aprendizaje, el juego elegirá este objeto:"
-        title_secondary: "Si selecciona que los objetos de aprendizaje deben elegirse siguiendo una secuencia, deberá definir esta secuencia a continuación."
         choice1: "De manera aleatoria entre aquellos objetos de aprendizaje que se hayan mostrado menos veces."
         choice2: "Siguiendo una secuencia lineal, de tal manera que cuando un objeto de aprendizaje sea mostrado se desbloqueará el siguiente."
         choice3: "Siguiendo una secuencia lineal, de tal manera que cuando un objeto de aprendizaje sea consumido con éxito se desbloqueará el siguiente."
         choice4: "Siguiendo una secuencia personalizada."
+        sequencing_description: "Ha indicado que los objetos de aprendizaje deben elegirse siguiendo una secuencia. Por lo tanto, debe definir esta secuencia a continuación."
+        sequencing_custom_description: "Para definir una secuencia personalizada debe definir varios grupos de objetos de aprendizaje, así como condiciones para desbloquear dichos grupos."
     step5:
       title: "Especifica ajustes para el juego"
       description: "En este paso puedes especificar diferentes ajustes para el juego educativo."

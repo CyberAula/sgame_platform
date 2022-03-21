@@ -91,11 +91,12 @@ en:
         choice3: "At most, once per period with a duration of the following number of seconds:"
       opt3:
         title: "If several candidates can be chosen when showing a learning object, the game will choose this object:"
-        title_secondary: "If you choose the learning objects to be shown following a sequence, you must define this sequence below."
         choice1: "Randomly among those learning objects that have been shown the least number of times."
         choice2: "Following a linear sequence, so that when one learning object is shown the next one will be unlocked."
         choice3: "Following a linear sequence, so that when one learning object is successfully consumed the next one will be unlocked."
         choice4: "Following a customized sequence."
+        sequencing_description: "You have indicated that the learning objects should be chosen following a sequence. Thus, you must define this sequence below."
+        sequencing_custom_description: "To define a custom sequence you must define several groups of learning objects, as well as conditions for unlocking these groups."
     step5:
       title: "Specify settings for the game"
       description: "In this step you can specify different settings for the educational game."
