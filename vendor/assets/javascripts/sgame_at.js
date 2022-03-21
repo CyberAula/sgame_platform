@@ -990,7 +990,7 @@ SGAME_AT = (function($,undefined){
 	var _redrawCustomSequenceForm = function(){
 		$("#sequencing_description, #sequencing_custom_description").show();
 		var csequence = $("#sgame_at div.sequencing .sequence_form_wrapper");
-		$(csequence).html("Test custom sequencing");
+		$(csequence).html("<div class='sequence_new_group'>" + _getTrans("i.sequencing_new_group") + "</div>");
 	};
 
 	var _composeSequenceData = function(sapproach){
