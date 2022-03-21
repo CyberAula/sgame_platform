@@ -176,7 +176,7 @@
   text-align: center;
 }
 
-#sgame_at table.at_c td.preview img, #sgame_at table.at_c td.add img, #sgame_at table.at_c td.remove img {
+#sgame_at table.at_c td.preview img, #sgame_at table.at_c td.add img, #sgame_at table.at_c td.remove img, #sgame_at table.sequencing_group_header td.remove img {
   max-width: 20px;
   max-height: 20px;
   cursor: pointer;
@@ -281,12 +281,67 @@
   background: #007bbb;
 }
 
-div.sequencing .sequence_form_wrapper div.select2-container.select2-container-multi.linear_sequence {
+#sgame_at div.sequencing .sequence_form_wrapper div.select2-container.select2-container-multi.linear_sequence {
   width: 100%;
 }
 
-#sequencing_description {
+#sgame_at #sequencing_description, #sgame_at #sequencing_custom_description {
   display: none;
+}
+
+#sgame_at #new_sequence_group_button {
+  font-size: 1em;
+}
+
+#sgame_at div.sequencing_group_wrapper {
+  padding: 0px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: 2px solid white;
+}
+
+#sgame_at div.sequencing_group_content_wrapper {
+  padding: 10px;
+}
+
+#sgame_at table.sequencing_group_header {
+  background: black;
+  color: white;
+}
+
+#sgame_at table.sequencing_group_header td {
+  padding: 7px;
+}
+
+#sgame_at table.sequencing_group_header td:first-child {
+  width: 100%;
+  text-align: center;
+  font-size: 1.2em;
+}
+#sgame_at table.sequencing_group_header td:last-child {
+  width: auto;
+}
+#sgame_at table.sequencing_group_header td:last-child img {
+  margin: 7px;
+}
+#sgame_at button.new_condition_group_button {
+  font-size: 1em;
+}
+#sgame_at table.sequencing_group_data tr {
+  width:  100%;
+}
+#sgame_at table.sequencing_group_data td:not(.sequencing_group_input) {
+  white-space: nowrap;
+}
+#sgame_at table.sequencing_group_data td.sequencing_group_input {
+  width:  100%;
+}
+#sgame_at table.sequencing_group_data td.sequencing_group_input input {
+  width:  100%;
+  color:  black;
+}
+#sgame_at td.sequencing_group_los div.select2-container {
+  width:  100%;
 }
 
 @media (max-width: 600px) {

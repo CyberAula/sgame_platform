@@ -339,7 +339,25 @@ SGAME_AT = (function($,undefined){
 					$("#sgame_at div[step='4'] div.options_wrapper input[name='seq_opt3'][value='" + current_sequencing["approach"] + "']").attr('checked',true);
 				}
 
+				$(document).on('click', '#new_sequence_group_button', function(event) {
+					_newSequenceGroup();
+				});
 
+				$(document).on('click', 'div.sequencing_group_wrapper table.sequencing_group_header td.remove img', function(event) {
+					_removeSequenceGroup($(this).parents("div.sequencing_group_wrapper").attr("groupid"));
+				});
+
+				$(document).on('click', 'button.new_condition_group_button', function(event) {
+					_newSequenceCondition($(this).parents("div.sequencing_group_wrapper").attr("groupid"));
+				});
+
+				$(document).on('click', 'div.sequencing_condition_wrapper img', function(event) {
+					_removeSequenceCondition($(this).parents("div.sequencing_condition_wrapper").attr("conditionid"));
+				});
+
+				//TODO
+
+				
 				$("#step4_confirmation").on("click",function(){
 					_onStep4Confirmation();
 				});
@@ -990,7 +1008,81 @@ SGAME_AT = (function($,undefined){
 	var _redrawCustomSequenceForm = function(){
 		$("#sequencing_description, #sequencing_custom_description").show();
 		var csequence = $("#sgame_at div.sequencing .sequence_form_wrapper");
-		$(csequence).html("<div class='sequence_new_group'>" + _getTrans("i.sequencing_new_group") + "</div>");
+		$(csequence).html("<button id='new_sequence_group_button' class='sgame_button'>+ " + _getTrans("i.sequencing_new_group") + "</button>");
+	};
+
+	var _newSequenceGroup = function(){
+		_drawSequenceGroup();
+	};
+
+	var _drawSequenceGroup = function(group){
+		if(typeof group === "undefined"){
+			group = {};
+		}
+		var groupId = (typeof group.id === "string") ? group.id : _generateSequenceGroupId();
+		
+		var csequence = $("#sgame_at div.sequencing .sequence_form_wrapper");
+		$(csequence).append("<div class='sequencing_group_wrapper' groupid='" + groupId + "'><div class='sequencing_group_content_wrapper'></div></div>");
+		var groupDiv = $("div.sequencing_group_wrapper[groupid=" + groupId + "]");
+		var groupContentDiv = $(groupDiv).find("div.sequencing_group_content_wrapper");
+
+		var headerTable = "<table class='sequencing_group_header'><tr><td>" + _getTrans("i.sequencing_group") + "</td><td class='remove'><img src='/assets/remove.png'/></td></tr></table>";
+		groupDiv.prepend(headerTable);
+
+		var groupName = (typeof group.name === "string") ? group.name : _getTrans("i.sequencing_group") + " " + groupId;
+		var dataTable = "<table class='sequencing_group_data'><tr><td>" + _getTrans("i.sequencing_name_for_group") + "</td><td class='sequencing_group_input'><input maxlength='60' type='text' name='sequence_group_name' value='" + groupName + "'></td></tr><tr><td>" + _getTrans("i.sequencing_los") + "</td><td class='sequencing_group_los'><select multiple='multiple'></select></td></tr></table>";
+		groupContentDiv.append(dataTable);
+
+		var loIds = Object.keys(current_los);
+		var nLOs = loIds.length;
+		var select = $(groupContentDiv).find("td.sequencing_group_los select");
+		var selectOptions = [];
+
+		for(var j=0; j<nLOs; j++){
+			var lo = current_los[loIds[j]];
+			var selected = ((typeof group.los !== "undefined")&&(group.los.indexOf(lo.id + "")!==-1));
+			selectOptions.push({value:lo.id, text:lo.title, selected: selected});
+		}
+
+		for(var i=0; i<selectOptions.length; i++){
+			var option = selectOptions[i];
+			var selected = '';
+			if(option.selected === true){
+				selected = 'selected="selected"';
+			}
+			$(select).append('<option value="' + option.value + '" ' + selected + '>' + option.text + '</option>');
+		}
+		$(select).select2();
+
+		$(groupContentDiv).append("<button class='sgame_button new_condition_group_button'>+ " + _getTrans("i.sequencing_new_condition") + "</button>");
+	};
+
+	var _generateSequenceGroupId = function(){
+		for(var i=1; i<1000; i++){
+			if($("div.sequencing_group_wrapper[groupid=" + i + "]").length === 0){
+				return i;
+			}
+		}
+		return $("div.sequencing_group_wrapper").length + 1;
+	};
+
+	var _removeSequenceGroup = function(groupId){
+		$("div.sequencing_group_wrapper[groupid=" + groupId + "]").remove();
+	};
+
+	var _newSequenceCondition = function(groupId){
+		_drawSequenceCondition({},groupId);
+	};
+
+	var _drawSequenceCondition = function(condition,groupId){
+		//TODO
+		console.log("_drawSequenceCondition");
+		console.log(condition);
+		console.log(groupId);
+	};
+
+	var _removeSequenceCondition = function(){
+		//TODO
 	};
 
 	var _composeSequenceData = function(sapproach){

@@ -63,6 +63,8 @@ en:
     sequencing:
       new_group: "Add group"
       new_condition: "Add condition"
+      remove_group: "Remove grupo"
+      remove_condition: "Remove condición"
       group: "Group"
       name_for_group: "Name"
       los: "Learning objects"

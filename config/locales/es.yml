@@ -63,6 +63,8 @@ es:
     sequencing:
       new_group: "Añadir grupo"
       new_condition: "Añadir condición"
+      remove_group: "Eliminar grupo"
+      remove_condition: "Eliminar condición"
       group: "Grupo"
       name_for_group: "Nombre"
       los: "Objetos de aprendizaje"
