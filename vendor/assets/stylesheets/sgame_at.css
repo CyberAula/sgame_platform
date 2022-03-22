@@ -176,7 +176,7 @@
   text-align: center;
 }
 
-#sgame_at table.at_c td.preview img, #sgame_at table.at_c td.add img, #sgame_at table.at_c td.remove img, #sgame_at table.sequencing_group_header td.remove img {
+#sgame_at table.at_c td.preview img, #sgame_at table.at_c td.add img, #sgame_at table.at_c td.remove img, #sgame_at table.sequencing_group_header td.remove img, #sgame_at table.sequencing_condition_header td.remove img {
   max-width: 20px;
   max-height: 20px;
   cursor: pointer;
@@ -289,7 +289,7 @@
   display: none;
 }
 
-#sgame_at #new_sequence_group_button {
+#sgame_at #new_sequence_group_button, #sgame_at button.new_condition_group_button {
   font-size: 1em;
 }
 
@@ -300,7 +300,14 @@
   border: 2px solid white;
 }
 
-#sgame_at div.sequencing_group_content_wrapper {
+#sgame_at div.sequencing_group_wrapper, #sgame_at div.sequencing_condition_wrapper {
+  padding: 0px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: 2px solid black;
+}
+
+#sgame_at div.sequencing_group_content_wrapper, #sgame_at div.sequencing_condition_content_wrapper {
   padding: 10px;
 }
 
@@ -309,24 +316,27 @@
   color: white;
 }
 
-#sgame_at table.sequencing_group_header td {
+#sgame_at table.sequencing_condition_header {
+  background: #ccc;
+  color: black;
+}
+
+#sgame_at table.sequencing_group_header td, #sgame_at table.sequencing_condition_header td {
   padding: 7px;
 }
 
-#sgame_at table.sequencing_group_header td:first-child {
+#sgame_at table.sequencing_group_header td:first-child, #sgame_at table.sequencing_condition_header td:first-child {
   width: 100%;
   text-align: center;
   font-size: 1.2em;
 }
-#sgame_at table.sequencing_group_header td:last-child {
+#sgame_at table.sequencing_group_header td:last-child, #sgame_at table.sequencing_condition_header td:last-child {
   width: auto;
 }
-#sgame_at table.sequencing_group_header td:last-child img {
+#sgame_at table.sequencing_group_header td:last-child img, #sgame_at table.sequencing_condition_header td:last-child img {
   margin: 7px;
 }
-#sgame_at button.new_condition_group_button {
-  font-size: 1em;
-}
+
 #sgame_at table.sequencing_group_data tr {
   width:  100%;
 }
@@ -342,6 +352,20 @@
 }
 #sgame_at td.sequencing_group_los div.select2-container {
   width:  100%;
+}
+#sgame_at select.select_group_in_condition, #sgame_at select.select_condition_in_condition {
+  color: black;
+  font-size: 1em;
+}
+#sgame_at select.select_group_in_condition {
+  width:  auto;
+}
+#sgame_at select.select_condition_in_condition {
+  width:  auto;
+}
+
+#sgame_at p.condition_statement {
+  line-height: 2em;
 }
 
 @media (max-width: 600px) {
