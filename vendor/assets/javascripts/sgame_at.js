@@ -16,6 +16,7 @@ SGAME_AT = (function($,undefined){
 	var supportedEventFrequencies = ["high","medium","low","one-shot","skill-dependent","skill-dependent_high","skill-dependent_medium","skill-dependent_low"];
 	var supportedInterruptions = ["no_restrictions","n_times","1_per_timeperiod"];
 	var supportedSequencingApproach = ["random","linear_completion","linear_success","custom"];
+	var supportedSequencingConditions = ["condition_completion","condition_completion_higher_inmediate","condition_success","condition_fail","condition_score_higher","condition_score_higher_inmediate","condition_score_lower"];
 	var supportedCompletionStatus = ["all_los","percentage_los","n_los","n_times","disabled","onstart"];
 	var supportedSuccessStatus = ["all_los","percentage_los","n_los","n_times","disabled","onstart","oncompletion"];
 	var supportedCompletionNotification = ["no_more_los","all_los_consumed","all_los_succesfully_consumed","completion_status","success_status","never"];
@@ -1201,12 +1202,11 @@ SGAME_AT = (function($,undefined){
 			$(selectGroup).append('<option value="' + option.value + '" ' + selected + '>' + option.text + '</option>');
 		}
 
-		var supportedConditions = ["condition_completion","condition_success","condition_fail","condition_score_higher","condition_score_lower"];
 		var selectCondition = $(conditionStatement).find("select.select_condition_in_condition");
 		var selectOptionsForCondition = [];
-		for(var i=0; i<supportedConditions.length; i++){
-			var selected = (condition.requirement === supportedConditions[i]);
-			selectOptionsForCondition.push({value:supportedConditions[i], text: _getTrans("i.sequencing_" + supportedConditions[i]), selected: selected});
+		for(var i=0; i<supportedSequencingConditions.length; i++){
+			var selected = (condition.requirement === supportedSequencingConditions[i]);
+			selectOptionsForCondition.push({value:supportedSequencingConditions[i], text: _getTrans("i.sequencing_" + supportedSequencingConditions[i]), selected: selected});
 		}
 		for(var j=0; j<selectOptionsForCondition.length; j++){
 			var option = selectOptionsForCondition[j];
