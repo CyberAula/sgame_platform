@@ -1259,7 +1259,7 @@ SGAME_AT = (function($,undefined){
 		case "linear_success":
 			return _composeLinearSequenceData(sapproach);
 		case "custom":
-			//TODO
+			return _composeCustomSequenceData();
 		}
 	};
 
@@ -1278,6 +1278,43 @@ SGAME_AT = (function($,undefined){
 			}
 			sequence[group.id] = group;
 		}
+
+		return sequence;
+	};
+
+	var _composeCustomSequenceData = function(sapproach){
+		var sequence = {};
+		var groupId = 1;
+		var conditionId = 1;
+
+		//Groups
+		$("div.sequencing_group_wrapper").each(function(index, groupDOM){
+			var group = {};
+			group.id = groupId;
+			groupId += 1;
+			group.name = $(groupDOM).find("input[name='sequence_group_name']").val();
+			group.los = [];
+			var losData = $(groupDOM).find("td.sequencing_group_los div.select2-container-multi").select2("data");
+			for(var i=0; i<losData.length; i++){
+				group.los.push(losData[i].id);
+			}
+
+			//Group conditions
+			var conditions = [];
+			$(groupDOM).find("div.sequencing_condition_wrapper").each(function(index, conditionDOM){
+				var condition = {};
+				condition.id = conditionId;
+				conditionId += 1;
+				condition.group = $(conditionDOM).find("select.select_group_in_condition option:selected").val();
+				condition.requirement = $(conditionDOM).find("select.select_condition_in_condition option:selected").val();
+				conditions.push(condition);
+			});
+			if(conditions.length > 0){
+				group.condition = {type: "multiple", operator: "AND", conditions: conditions};
+			}
+			 	
+			sequence[group.id] = group;
+		});
 
 		return sequence;
 	};
