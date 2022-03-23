@@ -1331,6 +1331,25 @@ SGAME.Sequencing = function() {
   var init = function(seq_settings) {
     _sequencingApproach = seq_settings["approach"]
   };
+  var initGroupSequence = function(group) {
+    group.can_be_shown = typeof group.condition === "undefined" || Object.keys(group.condition).length === 0;
+    group.shown = false;
+    group.score = false;
+    group.condition = _resetConditionMet(group.condition);
+    return group
+  };
+  var _resetConditionMet = function(condition) {
+    if(typeof condition !== "object") {
+      return condition
+    }
+    condition.met = false;
+    if(condition.type === "multiple" && Array.isArray(condition.conditions)) {
+      for(var i = 0;i < condition.conditions.length;i++) {
+        condition.conditions[i] = _resetConditionMet(condition.conditions[i])
+      }
+    }
+    return condition
+  };
   var validateSequence = function(sequence, los) {
     if(typeof sequence !== "object" || typeof los !== "object") {
       return false
@@ -1379,11 +1398,14 @@ SGAME.Sequencing = function() {
     var group_ids = Object.keys(groups);
     var nGroups = group_ids.length;
     for(var i = 0;i < nGroups;i++) {
-      var group = _validateGroupConditions(groups[group_ids[i]], group_ids);
-      if(group !== false) {
-        groups[group_ids[i]] = group
-      }else {
-        delete groups[group_ids[i]]
+      var group = groups[group_ids[i]];
+      if(typeof group.condition === "undefined" && typeof group.conditions !== "undefined") {
+        group = _adaptConditionsForLegacy(group)
+      }
+      if(typeof group.condition !== "undefined") {
+        if(_validateGroupCondition(group.condition, group_ids) === false) {
+          delete groups[group_ids[i]]
+        }
       }
     }
     var nNewGroups = Object.keys(groups).length;
@@ -1393,31 +1415,43 @@ SGAME.Sequencing = function() {
       return _validateGroupsConditions(groups)
     }
   };
-  var _validateGroupConditions = function(group, groupIds) {
-    if(typeof group.conditions === "undefined") {
-      return group
+  var _adaptConditionsForLegacy = function(group) {
+    var multipleCondition = {type:"multiple", operator:"AND", conditions:group.conditions};
+    for(var i = 0;i < multipleCondition.conditions.length;i++) {
+      multipleCondition.conditions[i].type = "single"
     }
-    if(typeof group.conditions !== "object") {
-      return false
-    }
-    if(group.conditions.length === 0) {
-      delete group.conditions;
-      return group
-    }
-    var validConditions = [];
-    for(var i = 0;i < group.conditions.length;i++) {
-      var condition = _validateGroupCondition(group.conditions[i], groupIds);
-      if(typeof condition === "object") {
-        validConditions.push(condition)
-      }
-    }
-    group.conditions = validConditions;
-    if(group.conditions.length === 0) {
-      return false
-    }
+    group.condition = multipleCondition;
+    delete group.conditions;
     return group
   };
   var _validateGroupCondition = function(condition, groupIds) {
+    if(typeof condition !== "object") {
+      return false
+    }
+    switch(condition.type) {
+      case "single":
+        return _validateSingleGroupCondition(condition, groupIds);
+      case "multiple":
+        return _validateMultipleGroupCondition(condition, groupIds);
+      default:
+        return false
+    }
+  };
+  var _validateMultipleGroupCondition = function(condition, groupIds) {
+    if(["AND", "OR"].indexOf(condition.operator) === -1) {
+      return false
+    }
+    if(Array.isArray(condition.conditions) === false || condition.conditions.length < 1) {
+      return false
+    }
+    for(var i = 0;i < condition.conditions.length;i++) {
+      if(_validateGroupCondition(condition.conditions[i], groupIds) === false) {
+        return false
+      }
+    }
+    return condition
+  };
+  var _validateSingleGroupCondition = function(condition, groupIds) {
     if(groupIds.indexOf(condition.group + "") === -1) {
       return false
     }
@@ -1492,44 +1526,94 @@ SGAME.Sequencing = function() {
     return group
   };
   var _updateGroupUnlock = function(group, groups) {
-    if(typeof group.conditions === "undefined" || (group.can_be_shown === true || group.shown === true)) {
+    if(group.can_be_shown === true || group.shown === true) {
       return group
     }
-    var unlock = true;
-    for(var k = 0;k < group.conditions.length;k++) {
-      if(group.conditions[k].met === false) {
-        var cgroup = groups[group.conditions[k].group + ""];
-        var cgroupShown = cgroup.shown === true;
-        switch(group.conditions[k].requirement) {
-          case "completion":
-            group.conditions[k].met = cgroupShown;
-            break;
-          case "success":
-            group.conditions[k].met = cgroupShown && cgroup.score === 1;
-            break;
-          case "fail":
-            group.conditions[k].met = cgroupShown && cgroup.score < 1;
-            break;
-          case "score_higher":
-            group.conditions[k].met = cgroupShown && cgroup.score > group.conditions[k].score;
-            break;
-          case "score_lower":
-            group.conditions[k].met = cgroupShown && cgroup.score < group.conditions[k].score;
-            break
-        }
-        unlock = unlock && group.conditions[k].met;
-        if(unlock === false) {
-          break
+    group.condition = _checkCondition(group.condition, groups);
+    if(group.condition.met === true) {
+      group.can_be_shown = true
+    }
+    return group
+  };
+  var _checkCondition = function(condition, groups) {
+    if(typeof condition === "undefined" || condition.met === true) {
+      return condition
+    }
+    switch(condition.type) {
+      case "single":
+        condition = _checkSingleCondition(condition, groups);
+        break;
+      case "multiple":
+        condition = _checkMultipleCondition(condition, groups);
+        break
+    }
+    return condition
+  };
+  var _checkMultipleCondition = function(condition, groups) {
+    for(var i = 0;i < condition.conditions.length;i++) {
+      condition.conditions[i] = _checkCondition(condition.conditions[i], groups);
+      if(condition.operator === "OR" && condition.conditions[i].met === true) {
+        condition.met = true;
+        return condition
+      }else {
+        if(condition.operator === "AND" && condition.conditions[i].met === false) {
+          condition.met = false;
+          return condition
         }
       }
     }
-    group.can_be_shown = unlock;
-    return group
+    if(condition.operator === "OR") {
+      condition.met = false
+    }else {
+      if(condition.operator === "AND") {
+        condition.met = true
+      }
+    }
+    return condition
+  };
+  var _checkSingleCondition = function(condition, groups) {
+    var cgroup = groups[condition.group + ""];
+    var cgroupShown = cgroup.shown === true;
+    var cmet = false;
+    switch(condition.requirement) {
+      case "completion":
+        cmet = cgroupShown;
+        break;
+      case "success":
+        cmet = cgroupShown && cgroup.score === 1;
+        break;
+      case "fail":
+        cmet = cgroupShown && cgroup.score < 1;
+        break;
+      case "score_higher":
+        cmet = cgroupShown && cgroup.score > condition.score;
+        break;
+      case "score_lower":
+        cmet = cgroupShown && cgroup.score < condition.score;
+        break
+    }
+    condition.met = cmet;
+    return condition
   };
   var _updateGroupLock = function(group, groups) {
     var lock = _getLockForGroup(group, groups);
     group.can_be_shown = lock === false;
     return group
+  };
+  var _getConditionsRelatedToGroup = function(gcondition, group) {
+    switch(gcondition.type) {
+      case "single":
+        if(gcondition.group === group.id) {
+          return[gcondition]
+        }
+        break;
+      case "multiple":
+        var conditions = [];
+        for(var i = 0;i < gcondition.conditions.length;i++) {
+          conditions.concat(_getConditionsRelatedToGroup(gcondition.conditions[i], group))
+        }
+        return conditions
+    }
   };
   var _getLockForGroup = function(group, groups) {
     if(group.shown !== true || group.can_be_shown !== true) {
@@ -1539,14 +1623,13 @@ SGAME.Sequencing = function() {
     var unmetConditions = false;
     for(var j = 0;j < group_ids.length;j++) {
       var ogroup = groups[group_ids[j]];
-      if(ogroup.id != group.id && typeof ogroup.conditions !== "undefined") {
-        for(var k = 0;k < ogroup.conditions.length;k++) {
-          if(ogroup.conditions[k].group == group.id) {
-            if(ogroup.conditions[k].met === true) {
-              return true
-            }else {
-              unmetConditions = true
-            }
+      if(ogroup.id != group.id && typeof ogroup.condition !== "undefined") {
+        var rconditions = _getConditionsRelatedToGroup(ogroup.condition, group);
+        for(var k = 0;k < rconditions.length;k++) {
+          if(rconditions[k].met === true) {
+            return true
+          }else {
+            unmetConditions = true
           }
         }
       }
@@ -1580,7 +1663,7 @@ SGAME.Sequencing = function() {
     }
     return los
   };
-  return{init:init, validateSequence:validateSequence, updateGroupsTracking:updateGroupsTracking}
+  return{init:init, initGroupSequence:initGroupSequence, validateSequence:validateSequence, updateGroupsTracking:updateGroupsTracking}
 }();
 SGAME.API = function() {
   var init = function() {
@@ -1652,7 +1735,9 @@ SGAME.CORE = function() {
     SGAME.Debugger.log("SGAME load settings ");
     SGAME.Debugger.log(settings);
     _settings_loaded = true;
-    _loadSettings(settings)
+    _loadSettings(settings);
+    SGAME.Debugger.log("SGAME settings loaded");
+    SGAME.Debugger.log(_settings)
   };
   var _loadSettings = function(settings) {
     _settings = settings;
@@ -1757,16 +1842,8 @@ SGAME.CORE = function() {
       var group_ids = Object.keys(_settings["sequencing"]["sequence"]);
       _nGroups = group_ids.length;
       for(var j = 0;j < _nGroups;j++) {
+        _settings["sequencing"]["sequence"][group_ids[j]] = SGAME.Sequencing.initGroupSequence(_settings["sequencing"]["sequence"][group_ids[j]]);
         var group = _settings["sequencing"]["sequence"][group_ids[j]];
-        group["can_be_shown"] = typeof group.conditions === "undefined" || group.conditions.length === 0;
-        group["shown"] = false;
-        group["score"] = false;
-        if(typeof group.conditions !== "undefined") {
-          for(var k = 0;k < group.conditions.length;k++) {
-            group.conditions[k].met = false
-          }
-        }
-        _settings["sequencing"]["sequence"][group_ids[j]] = group;
         for(var l = 0;l < group.los.length;l++) {
           _settings["los"][group.los[l]].groups.push(group.id);
           _settings["los"][group.los[l]]["can_be_shown"] = group["can_be_shown"] === true;
@@ -2167,8 +2244,8 @@ SGAME.CORE = function() {
     var candidates = [];
     var candidates_ids = [];
     var lo_candidates_mapping_ids = [];
-    for(var j = 0;j < loCandidatesFromMapping.length;j++) {
-      lo_candidates_mapping_ids.push(loCandidatesFromMapping[j].id)
+    for(var k = 0;k < loCandidatesFromMapping.length;k++) {
+      lo_candidates_mapping_ids.push(loCandidatesFromMapping[k].id)
     }
     var group_ids = Object.keys(_settings["sequencing"]["sequence"]);
     for(var i = 0;i < group_ids.length;i++) {
