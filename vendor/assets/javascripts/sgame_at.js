@@ -1064,9 +1064,13 @@ SGAME_AT = (function($,undefined){
 		}
 		$(select).select2();
 
-		$(groupContentDiv).append("<p class='condition_description'></p>");
+		$(groupContentDiv).append("<p class='condition_description'><span></span><select style='display:none' class='select_operator_in_group'></select></p>");
 		$(groupContentDiv).append("<button style='display:none' class='sgame_button new_condition_group_button'>+ " + _getTrans("i.sequencing_new_condition") + "</button>");
-	
+
+		var selectOperatorGroup = $(groupContentDiv).find("select.select_operator_in_group");
+		$(selectOperatorGroup).append('<option value="AND" selected="selected">' + _getTrans("i.sequencing_condition_description_AND") + '</option>');
+		$(selectOperatorGroup).append('<option value="OR">' + _getTrans("i.sequencing_condition_description_OR") + '</option>');
+
 		if(group.conditions instanceof Array){
 			for(var k=0; k<group.conditions.length; k++){
 				_drawSequenceCondition(group.conditions[k],groupId);
@@ -1100,21 +1104,26 @@ SGAME_AT = (function($,undefined){
 		var groupDiv = $("div.sequencing_group_wrapper[groupid=" + groupId + "]");
 		var nConditionButton = $(groupDiv).find("button.new_condition_group_button");
 		var nConditions = $(groupDiv).find("div.sequencing_condition_wrapper").length;
+		var operatorSelect = $(groupDiv).find("select.select_operator_in_group");
+		var operator = $(operatorSelect).find("option:selected").val();
+		var cDescription = "";
 
 		if(nConditions > 0){
-			var cDescription =  _getTrans("i.sequencing_condition_description");
+			cDescription =  _getTrans("i.sequencing_condition_description");
 			$(nConditionButton).show();
+			$(operatorSelect).show();
 		} else {
-			var cDescription =  _getTrans("i.sequencing_condition_description_none");
+			cDescription =  _getTrans("i.sequencing_condition_description_none");
 			if(_getSequencingGroups().length <= 1){
 				cDescription = cDescription + " " + _getTrans("i.sequencing_condition_description_none_nogroups");
 				$(nConditionButton).hide();
 			} else {
 				$(nConditionButton).show();
 			}
+			$(operatorSelect).hide();
 		}
 		
-		$(groupDiv).find("p.condition_description").html(cDescription);
+		$(groupDiv).find("p.condition_description span").html(cDescription);
 	};
 
 	var _generateSequenceGroupId = function(){
@@ -1310,7 +1319,8 @@ SGAME_AT = (function($,undefined){
 				conditions.push(condition);
 			});
 			if(conditions.length > 0){
-				group.condition = {type: "multiple", operator: "AND", conditions: conditions};
+				var operator = $(groupDOM).find("select.select_operator_in_group option:selected").val();
+				group.condition = {type: "multiple", operator: operator, conditions: conditions};
 			}
 			 	
 			sequence[group.id] = group;

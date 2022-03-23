@@ -353,15 +353,18 @@
 #sgame_at td.sequencing_group_los div.select2-container {
   width:  100%;
 }
-#sgame_at select.select_group_in_condition, #sgame_at select.select_condition_in_condition {
+#sgame_at select.select_group_in_condition, #sgame_at select.select_condition_in_condition, #sgame_at select.select_operator_in_group {
   color: black;
   font-size: 1em;
+  width: auto;
 }
-#sgame_at select.select_group_in_condition {
-  width:  auto;
+
+#sgame_at p.condition_description {
+  margin-top: 7px;
 }
-#sgame_at select.select_condition_in_condition {
-  width:  auto;
+
+#sgame_at select.select_operator_in_group {
+  margin-left: 5px;
 }
 
 #sgame_at p.condition_statement {
