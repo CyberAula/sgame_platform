@@ -878,7 +878,7 @@ SGAME_AT = (function($,undefined){
 
 	var _redrawSequenceForm = function(force){
 		var opt = $("span.complexinput input[name='seq_opt3']:checked").val();
-		var optChanged = ((typeof opt !== "undefined")&&(opt !== _lastOptRedrawSequence));
+		var optChanged = ((typeof _lastOptRedrawSequence !== "undefined")&&(opt !== _lastOptRedrawSequence));
 
 		switch(opt){
 		case "random":
@@ -1020,6 +1020,16 @@ SGAME_AT = (function($,undefined){
 		$("#sequencing_description, #sequencing_custom_description").show();
 		var csequence = $("#sgame_at div.sequencing .sequence_form_wrapper");
 		$(csequence).html("<button id='new_sequence_group_button' class='sgame_button'>+ " + _getTrans("i.sequencing_new_group") + "</button>").show();
+	
+		//Draw groups
+		if(typeof current_sequencing["sequence"] !== "undefined"){
+			var groupIds = Object.keys(current_sequencing["sequence"]);
+			var nGroups = groupIds.length;
+			for(var i = 0; i<nGroups; i++){
+				var group = current_sequencing["sequence"][groupIds[i]];
+				_drawSequenceGroup(group);
+			}
+		}
 	};
 
 	var _newSequenceGroup = function(){
@@ -1030,7 +1040,7 @@ SGAME_AT = (function($,undefined){
 		if(typeof group === "undefined"){
 			group = {};
 		}
-		var groupId = (typeof group.id === "string") ? group.id : _generateSequenceGroupId();
+		var groupId = ((typeof group.id === "string")||(typeof group.id === "number")) ? (group.id+"") : _generateSequenceGroupId();
 		
 		var csequence = $("#sgame_at div.sequencing .sequence_form_wrapper");
 		$(csequence).append("<div class='sequencing_group_wrapper' groupid='" + groupId + "'><div class='sequencing_group_content_wrapper'></div></div>");
@@ -1068,12 +1078,13 @@ SGAME_AT = (function($,undefined){
 		$(groupContentDiv).append("<button style='display:none' class='sgame_button new_condition_group_button'>+ " + _getTrans("i.sequencing_new_condition") + "</button>");
 
 		var selectOperatorGroup = $(groupContentDiv).find("select.select_operator_in_group");
-		$(selectOperatorGroup).append('<option value="AND" selected="selected">' + _getTrans("i.sequencing_condition_description_AND") + '</option>');
-		$(selectOperatorGroup).append('<option value="OR">' + _getTrans("i.sequencing_condition_description_OR") + '</option>');
+		var ORselected = ((typeof group.condition === "object")&&(group.condition.operator === "OR"));
+		$(selectOperatorGroup).append('<option value="AND"' + ((ORselected===true) ? '' : 'selected="selected"') + '>' + _getTrans("i.sequencing_condition_description_AND") + '</option>');
+		$(selectOperatorGroup).append('<option value="OR"' + ((ORselected===true) ? 'selected="selected"' : '') + '>' + _getTrans("i.sequencing_condition_description_OR") + '</option>');
 
-		if(group.conditions instanceof Array){
-			for(var k=0; k<group.conditions.length; k++){
-				_drawSequenceCondition(group.conditions[k],groupId);
+		if((typeof group.condition === "object")&&(group.condition.type === "multiple")&&(Array.isArray(group.condition.conditions))&&(group.condition.conditions.length > 0)){
+			for(var k=0; k<group.condition.conditions.length; k++){
+				_drawSequenceCondition(group.condition.conditions[k],groupId);
 			}
 		}
 

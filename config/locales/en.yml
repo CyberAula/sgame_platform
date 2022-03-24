@@ -80,7 +80,7 @@ en:
       condition_completion: "View all learning objects in the group"
       condition_completion_higher_inmediate: "View a percentage of the group's learning objects higher than:"
       condition_success: "Successfully consume all the learning objects in the group"
-      condition_fail: "View all learning objects in the group and not consume all of them successfully"
+      condition_fail: "Failure to successfully consume all learning objects in the group after viewing them"
       condition_score_higher: "View all learning objects in the group and successfully consume a percentage of them higher than:"
       condition_score_higher_inmediate: "At any point in time, successfully consume a percentage of the group's learning objects higher than:"
       condition_score_lower: "View all learning objects in the group and successfully consume a percentage of them lower than:"
