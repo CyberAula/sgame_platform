@@ -1400,12 +1400,12 @@ SGAME.Sequencing = function() {
     var group_ids = Object.keys(groups);
     var nGroups = group_ids.length;
     for(var i = 0;i < nGroups;i++) {
-      var group = groups[group_ids[i]];
-      if(typeof group.condition === "undefined" && typeof group.conditions !== "undefined") {
-        group = _adaptConditionsForLegacy(group)
+      if(typeof groups[group_ids[i]].condition === "undefined" && typeof groups[group_ids[i]].conditions !== "undefined") {
+        groups[group_ids[i]] = _adaptConditionsForLegacy(group)
       }
-      if(typeof group.condition !== "undefined") {
-        if(_validateGroupCondition(group.condition, group_ids) === false) {
+      if(typeof groups[group_ids[i]].condition !== "undefined") {
+        groups[group_ids[i]].condition = _validateGroupCondition(groups[group_ids[i]].condition, group_ids);
+        if(groups[group_ids[i]].condition === false) {
           delete groups[group_ids[i]]
         }
       }
@@ -1447,7 +1447,8 @@ SGAME.Sequencing = function() {
       return false
     }
     for(var i = 0;i < condition.conditions.length;i++) {
-      if(_validateGroupCondition(condition.conditions[i], groupIds) === false) {
+      condition.conditions[i] = _validateGroupCondition(condition.conditions[i], groupIds);
+      if(condition.conditions[i] === false) {
         return false
       }
     }
@@ -1460,14 +1461,20 @@ SGAME.Sequencing = function() {
     if(supportedGroupRequirements.indexOf(condition.requirement) === -1) {
       return false
     }
-    if(["score_higher", "score_lower"].indexOf(condition.requirement) !== -1) {
-      if(typeof condition.score !== "number" || (condition.score < 0 || condition.score > 1)) {
+    if(["completion_higher_inmediate", "score_higher", "score_higher_inmediate", "score_lower"].indexOf(condition.requirement) !== -1) {
+      if(typeof condition.threshold === "string") {
+        if(isNaN(condition.threshold) === true) {
+          return false
+        }
+        condition.threshold = parseInt(condition.threshold) / 100
+      }
+      if(typeof condition.threshold !== "number" || (condition.threshold < 0 || condition.threshold > 1)) {
         return false
       }
-      if(condition.requirement === "score_higher" && condition.score === 1) {
+      if(["completion_higher_inmediate", "score_higher", "score_higher_inmediate"].indexOf(condition.requirement) !== -1 && condition.threshold === 1) {
         return false
       }
-      if(condition.requirement === "score_lower" && condition.score === 0) {
+      if(condition.requirement === "score_lower" && condition.threshold === 0) {
         return false
       }
     }
@@ -1584,7 +1591,7 @@ SGAME.Sequencing = function() {
         cmet = cgroupShown;
         break;
       case "completion_higher_inmediate":
-        cmet = group.nshown >= condition.nshown;
+        cmet = group.nshown >= condition.threshold;
         break;
       case "success":
         cmet = cgroupShown && cgroup.score === 1;
@@ -1593,13 +1600,13 @@ SGAME.Sequencing = function() {
         cmet = cgroupShown && cgroup.score < 1;
         break;
       case "score_higher":
-        cmet = cgroupShown && cgroup.score > condition.score;
+        cmet = cgroupShown && cgroup.score > condition.threshold;
         break;
       case "score_higher_inmediate":
-        cmet = cgroup.score > condition.score;
+        cmet = cgroup.score > condition.threshold;
         break;
       case "score_lower":
-        cmet = cgroupShown && cgroup.score < condition.score;
+        cmet = cgroupShown && cgroup.score < condition.threshold;
         break
     }
     condition.met = cmet;
@@ -1626,7 +1633,7 @@ SGAME.Sequencing = function() {
     }
   };
   var _getLockForGroup = function(group, groups) {
-    if(group.shown !== true || group.can_be_shown !== true) {
+    if(group.can_be_shown !== true) {
       return false
     }
     var group_ids = Object.keys(groups);
@@ -1655,7 +1662,7 @@ SGAME.Sequencing = function() {
       case "custom":
       ;
       default:
-        return true
+        return group.shown === true
     }
   };
   var _changeCanBeShownForLOsInGroup = function(group, los, canBeShown) {

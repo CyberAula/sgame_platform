@@ -360,7 +360,9 @@ SGAME_AT = (function($,undefined){
 					_onNewSequenceGroupName($(this).parents("div.sequencing_group_wrapper").attr("groupid"),$(this).val());
 				});
 				
-				//TODO
+				$(document).on('change', 'select.select_condition_in_condition', function(event) {
+					_onChangeSelectConditionInCondition($(this).parents("div.sequencing_condition_wrapper").attr("conditionid"));
+				});
 				
 				$("#step4_confirmation").on("click",function(){
 					_onStep4Confirmation();
@@ -1200,7 +1202,7 @@ SGAME_AT = (function($,undefined){
 		var headerTable = "<table class='sequencing_condition_header'><tr><td>" + _getTrans("i.sequencing_condition") + "</td><td class='remove'><img src='/assets/remove_black.png'/></td></tr></table>";
 		$(conditionDiv).prepend(headerTable);
 
-		var conditionStatement = $("<p class='condition_statement'><span class='condition_group_part'></span><select class='select_group_in_condition' groupid='" + groupId + "'></select><span class='condition_must_part'></span><select class='select_condition_in_condition'></select><span class='select_score_in_condition'><input class='select_score_in_condition' type='number' min='1' max='100' step='1' value='50'>%</span></p>");
+		var conditionStatement = $("<p class='condition_statement'><span class='condition_group_part'></span><select class='select_group_in_condition' groupid='" + groupId + "'></select><span class='condition_must_part'></span><select class='select_condition_in_condition'></select><span class='select_number_in_condition'><input class='select_number_in_condition' type='number' min='1' max='100' step='1' value='50'>%</span></p>");
 		$(conditionStatement).find("span.condition_group_part").html(_getTrans("i.sequencing_condition_group_part") + " ");
 		$(conditionStatement).find("span.condition_must_part").html(" " + _getTrans("i.sequencing_condition_must_part") + ": ");
 
@@ -1236,12 +1238,24 @@ SGAME_AT = (function($,undefined){
 			}
 			$(selectCondition).append('<option value="' + option.value + '" ' + selected + '>' + option.text + '</option>');
 		}
-		
-		if(["condition_score_higher","condition_score_lower"].indexOf(condition.requirement) === -1){
-			$(conditionStatement).find("span.select_score_in_condition").hide();
+
+		if((typeof condition.threshold === "string")&&(isNaN(condition.threshold)===false)){
+			$(conditionStatement).find("span.select_number_in_condition input").val(condition.threshold);
 		}
 
 		$(conditionContentDiv).append(conditionStatement);
+		_onChangeSelectConditionInCondition(conditionId);
+	};
+
+	var _onChangeSelectConditionInCondition = function(conditionId){
+		var conditionDOM = $("div.sequencing_condition_wrapper[conditionid='" + conditionId + "']");
+		var conditionRequirement = $(conditionDOM).find("select.select_condition_in_condition option:selected").val();
+		var numberDOM = $(conditionDOM).find("span.select_number_in_condition");
+		if(["completion_higher_inmediate","score_higher","score_higher_inmediate","score_lower"].indexOf(conditionRequirement) !== -1){
+			$(numberDOM).show();
+		} else {
+			$(numberDOM).hide();
+		}
 	};
 
 	var _getSequencingGroups = function(){
@@ -1328,6 +1342,10 @@ SGAME_AT = (function($,undefined){
 				condition.type = "single";
 				condition.group = $(conditionDOM).find("select.select_group_in_condition option:selected").val();
 				condition.requirement = $(conditionDOM).find("select.select_condition_in_condition option:selected").val();
+				if(["completion_higher_inmediate","score_higher","score_higher_inmediate","score_lower"].indexOf(condition.requirement) !== -1){
+					var number = $(conditionDOM).find("span.select_number_in_condition input").val();
+					condition.threshold = number;
+				}
 				conditions.push(condition);
 			});
 			if(conditions.length > 0){

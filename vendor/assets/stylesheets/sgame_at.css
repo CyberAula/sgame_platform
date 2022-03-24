@@ -371,6 +371,24 @@
   line-height: 2em;
 }
 
+#sgame_at span.select_number_in_condition {
+  margin-left: 3px;
+  color: white;
+  font-size: 1em;
+  width: auto;
+}
+
+#sgame_at span.select_number_in_condition input {
+  color: black;
+  margin-right: 4px;
+}
+
+#sgame_at div.sequencing_condition_content_wrapper select.select_group_in_condition, #sgame_at div.sequencing_condition_content_wrapper select.select_condition_in_condition,#sgame_at span.select_number_in_condition input {
+  font-size: 1em;
+  height: 30px;
+  padding: 0px 5px 0px 5px;
+}
+
 @media (max-width: 600px) {
   #sgame_at div.game_template table.gevents tr.geheader th {
     white-space: normal;
