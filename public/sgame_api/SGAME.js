@@ -1327,14 +1327,16 @@ SGAME.TrafficLight = function(undefined) {
 }();
 SGAME.Sequencing = function() {
   var _sequencingApproach;
-  var supportedGroupRequirements = ["completion", "success", "fail", "score_higher", "score_lower"];
+  var supportedGroupRequirements = ["completion", "completion_higher_inmediate", "success", "fail", "score_higher", "score_higher_inmediate", "score_lower"];
   var init = function(seq_settings) {
     _sequencingApproach = seq_settings["approach"]
   };
   var initGroupSequence = function(group) {
     group.can_be_shown = typeof group.condition === "undefined" || Object.keys(group.condition).length === 0;
     group.shown = false;
+    group.nshown = 0;
     group.score = false;
+    group.performance = 0;
     group.condition = _resetConditionMet(group.condition);
     return group
   };
@@ -1522,7 +1524,9 @@ SGAME.Sequencing = function() {
       }
     }
     group.shown = nShown === nLos;
-    group.score = nShown > 0 ? nSuccess / nShown : 1;
+    group.nshown = nShown;
+    group.score = nLos > 0 ? nSuccess / nLos : 0;
+    group.performance = nShown > 0 ? nSuccess / nShown : 0;
     return group
   };
   var _updateGroupUnlock = function(group, groups) {
@@ -1579,6 +1583,9 @@ SGAME.Sequencing = function() {
       case "completion":
         cmet = cgroupShown;
         break;
+      case "completion_higher_inmediate":
+        cmet = group.nshown >= condition.nshown;
+        break;
       case "success":
         cmet = cgroupShown && cgroup.score === 1;
         break;
@@ -1587,6 +1594,9 @@ SGAME.Sequencing = function() {
         break;
       case "score_higher":
         cmet = cgroupShown && cgroup.score > condition.score;
+        break;
+      case "score_higher_inmediate":
+        cmet = cgroup.score > condition.score;
         break;
       case "score_lower":
         cmet = cgroupShown && cgroup.score < condition.score;
@@ -2330,7 +2340,7 @@ SGAME.CORE = function() {
       _loadSettings({})
     }
   };
-  SGAME.Debugger.init(false);
+  SGAME.Debugger.init(true);
   _loadInitialSettings();
   SGAME.Messenger.init();
   return{init:init, loadSettings:loadSettings, triggerLO:triggerLO, showLO:showLO, showRandomLO:showRandomLO, closeLO:closeLO, getSettings:getSettings, losCanBeShown:losCanBeShown, successWhenNoLOs:successWhenNoLOs, onConnectedToVLE:onConnectedToVLE, getVLEData:getVLEData, setVLEData:setVLEData}

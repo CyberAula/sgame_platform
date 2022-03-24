@@ -16,7 +16,7 @@ SGAME_AT = (function($,undefined){
 	var supportedEventFrequencies = ["high","medium","low","one-shot","skill-dependent","skill-dependent_high","skill-dependent_medium","skill-dependent_low"];
 	var supportedInterruptions = ["no_restrictions","n_times","1_per_timeperiod"];
 	var supportedSequencingApproach = ["random","linear_completion","linear_success","custom"];
-	var supportedSequencingConditions = ["condition_completion","condition_completion_higher_inmediate","condition_success","condition_fail","condition_score_higher","condition_score_higher_inmediate","condition_score_lower"];
+	var supportedSequencingConditions = ["completion","completion_higher_inmediate","success","fail","score_higher","score_higher_inmediate","score_lower"];
 	var supportedCompletionStatus = ["all_los","percentage_los","n_los","n_times","disabled","onstart"];
 	var supportedSuccessStatus = ["all_los","percentage_los","n_los","n_times","disabled","onstart","oncompletion"];
 	var supportedCompletionNotification = ["no_more_los","all_los_consumed","all_los_succesfully_consumed","completion_status","success_status","never"];
@@ -1226,7 +1226,7 @@ SGAME_AT = (function($,undefined){
 		var selectOptionsForCondition = [];
 		for(var i=0; i<supportedSequencingConditions.length; i++){
 			var selected = (condition.requirement === supportedSequencingConditions[i]);
-			selectOptionsForCondition.push({value:supportedSequencingConditions[i], text: _getTrans("i.sequencing_" + supportedSequencingConditions[i]), selected: selected});
+			selectOptionsForCondition.push({value:supportedSequencingConditions[i], text: _getTrans("i.sequencing_condition_" + supportedSequencingConditions[i]), selected: selected});
 		}
 		for(var j=0; j<selectOptionsForCondition.length; j++){
 			var option = selectOptionsForCondition[j];
@@ -1293,7 +1293,7 @@ SGAME_AT = (function($,undefined){
 			group.los = [data[i].id];
 			if (group.id !== 1){
 				var multipleCondition = {type: "multiple", operator: "AND", conditions: []};
-				multipleCondition.conditions = [{id:(group.id-1), group: (group.id-1), requirement: ((sapproach === "linear_completion") ? "completion" : "success")}];
+				multipleCondition.conditions = [{id:(group.id-1), type: "single", group: (group.id-1), requirement: ((sapproach === "linear_completion") ? "completion" : "success")}];
 				group.condition = multipleCondition;
 			}
 			sequence[group.id] = group;
@@ -1325,6 +1325,7 @@ SGAME_AT = (function($,undefined){
 				var condition = {};
 				condition.id = conditionId;
 				conditionId += 1;
+				condition.type = "single";
 				condition.group = $(conditionDOM).find("select.select_group_in_condition option:selected").val();
 				condition.requirement = $(conditionDOM).find("select.select_condition_in_condition option:selected").val();
 				conditions.push(condition);
