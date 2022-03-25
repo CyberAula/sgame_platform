@@ -1707,7 +1707,86 @@ SGAME.Sequencing = function() {
     }
     return los
   };
-  return{init:init, initGroupSequence:initGroupSequence, validateSequence:validateSequence, updateGroupsTracking:updateGroupsTracking}
+  var getNLOsForTracking = function(groups) {
+    var _groups = JSON.parse(JSON.stringify(groups));
+    var groupIds = Object.keys(_groups);
+    var nGroups = groupIds.length;
+    var paths = [];
+    for(var i = 0;i < nGroups;i++) {
+      var group = _groups[groupIds[i]];
+      if(group.unlocked === false && typeof group.condition !== "undefined") {
+        for(var j = 0;j < nGroups;j++) {
+          var ogroup = _groups[groupIds[j]];
+          if(ogroup.unlocked === true && (ogroup.locked === false && ogroup.id !== group.id)) {
+            var rconditions = _getConditionsRelatedToGroup(group.condition, ogroup);
+            if(rconditions.length > 0) {
+              var rcondition = rconditions[0];
+              var newPath = {conditionId:rcondition.id, conditionGroup:group.id, lockGroupId:ogroup.id};
+              if(group.condition.type === "multiple" && group.condition.operator === "OR" || group.condition.type === "single") {
+                newPath.unlockGroupId = group.id
+              }else {
+                if(group.condition.type === "multiple" && group.condition.operator === "AND") {
+                  if(_metCondition(rcondition.id, group.condition).met === true) {
+                    newPath.unlockGroupId = group.id
+                  }
+                }
+              }
+              paths.push(newPath)
+            }
+          }
+        }
+      }
+    }
+    var nPaths = paths.length;
+    if(nPaths === 0) {
+      return _getLOsInUnlockedGroups(_groups)
+    }else {
+      var maxLength = 0;
+      for(var k = 0;k < nPaths;k++) {
+        var newPath = JSON.parse(JSON.stringify(_groups));
+        newPath[paths[k].lockGroupId].locked = true;
+        if(typeof paths[k].unlockGroupId !== "undefined") {
+          newPath[paths[k].unlockGroupId].unlocked = true
+        }else {
+          newPath[paths[k].conditionGroup].condition = _metCondition(paths[k].conditionId, newPath[paths[k].conditionGroup].condition)
+        }
+        var pathLength = getNLOsForTracking(newPath);
+        if(pathLength > maxLength) {
+          maxLength = pathLength
+        }
+      }
+      return maxLength
+    }
+  };
+  var _getLOsInUnlockedGroups = function(groups) {
+    var _nLOs = 0;
+    var groupIds = Object.keys(groups);
+    var nGroups = groupIds.length;
+    for(var i = 0;i < nGroups;i++) {
+      var group = groups[groupIds[i]];
+      if(group.unlocked === true && Array.isArray(group.los)) {
+        _nLOs += group.los.length
+      }
+    }
+    return _nLOs
+  };
+  var _metCondition = function(conditionId, condition) {
+    if(condition.id === conditionId) {
+      condition.met = true
+    }else {
+      if(condition.type === "multiple") {
+        condition.met = true;
+        for(var i = 0;i < condition.conditions.length;i++) {
+          condition.conditions[i] = _metCondition(conditionId, condition.conditions[i]);
+          if(condition.conditions[i].met !== true) {
+            condition.met = false
+          }
+        }
+      }
+    }
+    return condition
+  };
+  return{init:init, initGroupSequence:initGroupSequence, validateSequence:validateSequence, getNLOsForTracking:getNLOsForTracking, updateGroupsTracking:updateGroupsTracking}
 }();
 SGAME.API = function() {
   var init = function() {
@@ -1743,7 +1822,6 @@ SGAME.API = function() {
 SGAME.CORE = function() {
   var _options = {};
   var _togglePauseFunction = undefined;
-  var _sequence_finished = false;
   var _final_screen_text = "Congratulations. You have achieved the objectives of this educational game. You may close this window or continue playing.";
   var _settings = {};
   var _settings_loaded = false;
@@ -1765,6 +1843,9 @@ SGAME.CORE = function() {
   var _nsuccess = 0;
   var _final_screen_shown = false;
   var _lastLoTimeStamp = undefined;
+  var _sequence_enabled = false;
+  var _sequence_finished = false;
+  var _nLOsForTrackingWhenSequence = 0;
   var init = function(options) {
     SGAME.Debugger.log("SGAME init with options ");
     SGAME.Debugger.log(options);
@@ -1869,13 +1950,14 @@ SGAME.CORE = function() {
       if(validatedSequence === false) {
         _settings["sequencing"]["approach"] = "random"
       }else {
-        _settings["sequencing"]["sequence"] = validatedSequence
+        _settings["sequencing"]["sequence"] = validatedSequence;
+        _sequence_enabled = true
       }
     }
     if(_settings["sequencing"]["approach"] === "random") {
       delete _settings["sequencing"]["sequence"]
     }
-    if(typeof _settings["sequencing"]["sequence"] === "object") {
+    if(_sequence_enabled === true) {
       var lo_ids = Object.keys(_settings["los"]);
       _nLOs = lo_ids.length;
       for(var x = 0;x < _nLOs;x++) {
@@ -1901,6 +1983,8 @@ SGAME.CORE = function() {
           delete _settings["los"][lo_ids[y]]
         }
       }
+      _nLOs = Object.keys(_settings["los"]).length;
+      _nLOsForTrackingWhenSequence = SGAME.Sequencing.getNLOsForTracking(_settings["sequencing"]["sequence"])
     }
     if(typeof _settings["assets_path"] !== "string") {
       _settings["assets_path"] = "/assets/sgame/"
@@ -2006,7 +2090,7 @@ SGAME.CORE = function() {
       }else {
         _settings["los"][lo["id"]]["unsuccessfully_consumed"] = true
       }
-      if(_settings["sequencing"]["approach"] !== "random" && _sequence_finished === false) {
+      if(_sequence_enabled === true && _sequence_finished === false) {
         var output = SGAME.Sequencing.updateGroupsTracking(_settings["los"][lo["id"]], _settings["sequencing"]["sequence"], _settings["los"]);
         _settings["sequencing"]["sequence"] = output.groups;
         _settings["los"] = output.los;
@@ -2098,13 +2182,13 @@ SGAME.CORE = function() {
   };
   var _updateFlagsAndTracking = function() {
     var lo_ids = Object.keys(_settings["los"]);
-    var nLOs = lo_ids.length;
+    _nLOs = lo_ids.length;
     _nloshown = 0;
     _nshown = 0;
     _nlosuccess = 0;
     _nsuccess = 0;
     _los_can_be_shown = false;
-    for(var i = 0;i < nLOs;i++) {
+    for(var i = 0;i < _nLOs;i++) {
       if(_settings["los"][lo_ids[i]]["shown"] === true) {
         _nloshown += 1;
         _nshown += _settings["los"][lo_ids[i]]["nshown"]
@@ -2117,6 +2201,14 @@ SGAME.CORE = function() {
         _los_can_be_shown = true
       }
     }
+    var nLOsForTracking = _nLOs;
+    if(_sequence_enabled === true) {
+      if(_sequence_finished === true) {
+        nLOsForTracking = _nloshown
+      }else {
+        nLOsForTracking = _nLOsForTrackingWhenSequence
+      }
+    }
     var progress_measure = 0;
     var completion_status = "incompleted";
     switch(_settings["game_settings"]["completion_status"]) {
@@ -2124,14 +2216,14 @@ SGAME.CORE = function() {
         _settings["game_settings"]["completion_status_n"] = 100;
       case "percentage_los":
         var n_percentage_los_threshold = Math.min(100, Math.max(0, _settings["game_settings"]["completion_status_n"])) / 100;
-        if(n_percentage_los_threshold <= 0 || _nLOs <= 0) {
+        if(n_percentage_los_threshold <= 0 || nLOsForTracking <= 0) {
           progress_measure = 1
         }else {
-          progress_measure = _nloshown / _nLOs / n_percentage_los_threshold
+          progress_measure = _nloshown / nLOsForTracking / n_percentage_los_threshold
         }
         break;
       case "n_los":
-        var n_los_threshold = Math.min(_settings["game_settings"]["completion_status_n"], _nLOs);
+        var n_los_threshold = Math.min(_settings["game_settings"]["completion_status_n"], nLOsForTracking);
         if(n_los_threshold === 0) {
           progress_measure = 1
         }else {
@@ -2166,14 +2258,14 @@ SGAME.CORE = function() {
         _settings["game_settings"]["success_status_n"] = 100;
       case "percentage_los":
         var n_percentage_los_threshold = Math.min(100, Math.max(0, _settings["game_settings"]["success_status_n"])) / 100;
-        if(n_percentage_los_threshold <= 0 || _nLOs <= 0) {
+        if(n_percentage_los_threshold <= 0 || nLOsForTracking <= 0) {
           score = 1
         }else {
-          score = _nlosuccess / _nLOs / n_percentage_los_threshold
+          score = _nlosuccess / nLOsForTracking / n_percentage_los_threshold
         }
         break;
       case "n_los":
-        var n_los_threshold = Math.min(_settings["game_settings"]["success_status_n"], _nLOs);
+        var n_los_threshold = Math.min(_settings["game_settings"]["success_status_n"], nLOsForTracking);
         if(n_los_threshold === 0) {
           score = 1
         }else {
@@ -2220,13 +2312,17 @@ SGAME.CORE = function() {
     if(_final_screen_shown === true) {
       return false
     }
+    var nLOsForEnding = _nLOs;
+    if(_sequence_enabled === true && _sequence_finished === true) {
+      nLOsForEnding = _nloshown
+    }
     switch(_settings["game_settings"]["completion_notification"]) {
       case "no_more_los":
         return _los_can_be_shown === false;
       case "all_los_consumed":
-        return _nloshown >= _nLOs;
+        return _nloshown >= nLOsForEnding;
       case "all_los_successfully_consumed":
-        return _nlosuccess >= _nLOs;
+        return _nlosuccess >= nLOsForEnding;
       case "completion_status":
         return _tracking["completion_status"] === "completed";
       case "success_status":
@@ -2282,7 +2378,7 @@ SGAME.CORE = function() {
   };
   var _selectLoFromCandidatesSequence = function(loCandidatesFromMapping) {
     var candidates;
-    if(_sequence_finished === false) {
+    if(_sequence_enabled === true && _sequence_finished === false) {
       candidates = _getLoCandidatesFromSequecingRules(loCandidatesFromMapping)
     }else {
       candidates = loCandidatesFromMapping
