@@ -1308,8 +1308,8 @@ SGAME_AT = (function($,undefined){
 			group.id = (i+1);
 			group.los = [data[i].id];
 			if (group.id !== 1){
-				var multipleCondition = {type: "multiple", operator: "AND", conditions: []};
-				multipleCondition.conditions = [{id:(group.id-1), type: "single", group: (group.id-1), requirement: ((sapproach === "linear_completion") ? "completion" : "success")}];
+				var multipleCondition = {id:1, type: "multiple", operator: "AND", conditions: []};
+				multipleCondition.conditions = [{id:(group.id), type: "single", group: (group.id-1), requirement: ((sapproach === "linear_completion") ? "completion" : "success")}];
 				group.condition = multipleCondition;
 			}
 			sequence[group.id] = group;
@@ -1352,7 +1352,8 @@ SGAME_AT = (function($,undefined){
 			});
 			if(conditions.length > 0){
 				var operator = $(groupDOM).find("select.select_operator_in_group option:selected").val();
-				group.condition = {type: "multiple", operator: operator, conditions: conditions};
+				group.condition = {id: conditionId, type: "multiple", operator: operator, conditions: conditions};
+				conditionId += 1;
 			}
 			 	
 			sequence[group.id] = group;
