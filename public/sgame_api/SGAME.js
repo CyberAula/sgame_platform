@@ -1600,10 +1600,10 @@ SGAME.Sequencing = function() {
         cmet = cgroupShown && cgroup.score < 1;
         break;
       case "score_higher":
-        cmet = cgroupShown && cgroup.score > condition.threshold;
+        cmet = cgroupShown && cgroup.score >= condition.threshold;
         break;
       case "score_higher_inmediate":
-        cmet = cgroup.score > condition.threshold;
+        cmet = cgroup.score >= condition.threshold;
         break;
       case "score_lower":
         cmet = cgroupShown && cgroup.score < condition.threshold;
@@ -2347,7 +2347,7 @@ SGAME.CORE = function() {
       _loadSettings({})
     }
   };
-  SGAME.Debugger.init(true);
+  SGAME.Debugger.init(false);
   _loadInitialSettings();
   SGAME.Messenger.init();
   return{init:init, loadSettings:loadSettings, triggerLO:triggerLO, showLO:showLO, showRandomLO:showRandomLO, closeLO:closeLO, getSettings:getSettings, losCanBeShown:losCanBeShown, successWhenNoLOs:successWhenNoLOs, onConnectedToVLE:onConnectedToVLE, getVLEData:getVLEData, setVLEData:setVLEData}

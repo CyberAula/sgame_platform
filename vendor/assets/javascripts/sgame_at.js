@@ -1049,10 +1049,12 @@ SGAME_AT = (function($,undefined){
 		var groupDiv = $("div.sequencing_group_wrapper[groupid=" + groupId + "]");
 		var groupContentDiv = $(groupDiv).find("div.sequencing_group_content_wrapper");
 
-		var headerTable = "<table class='sequencing_group_header'><tr><td>" + _getTrans("i.sequencing_group") + "</td><td class='remove'><img src='/assets/remove.png'/></td></tr></table>";
+		var groupName = (typeof group.name === "string") ? group.name : _getTrans("i.sequencing_group_unnamed");
+		var groupNameForHeader = (typeof group.name === "string") ? group.name : _getTrans("i.sequencing_group");
+
+		var headerTable = "<table class='sequencing_group_header'><tr><td>" + groupNameForHeader + "</td><td class='remove'><img src='/assets/remove.png'/></td></tr></table>";
 		groupDiv.prepend(headerTable);
 
-		var groupName = (typeof group.name === "string") ? group.name : _getTrans("i.sequencing_group_unnamed");
 		var dataTable = "<table class='sequencing_group_data'><tr><td>" + _getTrans("i.sequencing_name_for_group") + "</td><td class='sequencing_group_input'><input maxlength='60' type='text' name='sequence_group_name' value='" + groupName + "'></td></tr><tr><td>" + _getTrans("i.sequencing_los") + "</td><td class='sequencing_group_los'><select multiple='multiple'></select></td></tr></table>";
 		groupContentDiv.append(dataTable);
 
@@ -1202,7 +1204,7 @@ SGAME_AT = (function($,undefined){
 		var headerTable = "<table class='sequencing_condition_header'><tr><td>" + _getTrans("i.sequencing_condition") + "</td><td class='remove'><img src='/assets/remove_black.png'/></td></tr></table>";
 		$(conditionDiv).prepend(headerTable);
 
-		var conditionStatement = $("<p class='condition_statement'><span class='condition_group_part'></span><select class='select_group_in_condition' groupid='" + groupId + "'></select><span class='condition_must_part'></span><select class='select_condition_in_condition'></select><span class='select_number_in_condition'><input class='select_number_in_condition' type='number' min='1' max='100' step='1' value='50'>%</span></p>");
+		var conditionStatement = $("<p class='condition_statement'><span class='condition_group_part'></span><select class='select_group_in_condition' groupid='" + groupId + "'></select><span class='condition_must_part'></span><br/><select class='select_condition_in_condition'></select><span class='select_number_in_condition'><input class='select_number_in_condition' type='number' min='1' max='100' step='1' value='50'>%.</span></p>");
 		$(conditionStatement).find("span.condition_group_part").html(_getTrans("i.sequencing_condition_group_part") + " ");
 		$(conditionStatement).find("span.condition_must_part").html(" " + _getTrans("i.sequencing_condition_must_part") + ": ");
 
@@ -1211,7 +1213,7 @@ SGAME_AT = (function($,undefined){
 		var selectOptionsForGroup = [];
 		for(var k=0; k<sequencingGroups.length; k++){
 			if(sequencingGroups[k].id !== groupId){
-				var selected = (condition.id === sequencingGroups[k].id);
+				var selected = (condition.group === sequencingGroups[k].id);
 				selectOptionsForGroup.push({value:sequencingGroups[k].id, text: sequencingGroups[k].name, selected: selected});
 			}
 		}

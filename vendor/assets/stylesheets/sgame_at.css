@@ -359,6 +359,10 @@
   width: auto;
 }
 
+#sgame_at select.select_condition_in_condition {
+  margin-top: 7px;
+}
+
 #sgame_at p.condition_description {
   margin-top: 7px;
 }

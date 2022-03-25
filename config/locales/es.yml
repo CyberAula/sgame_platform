@@ -81,8 +81,8 @@ es:
       condition_completion_higher_inmediate: "Ver un porcentaje de los objetos de aprendizaje del grupo superior al:"
       condition_success: "Consumir con éxito todos los objetos de aprendizaje del grupo"
       condition_fail: "No consumir con éxito todos los objetos de aprendizaje del grupo tras verlos"
-      condition_score_higher: "Ver todos los objetos de aprendizaje del grupo y consumir con éxito un porcentaje de ellos superior al:"
-      condition_score_higher_inmediate: "En cualquier momento, consumir con éxito un porcentaje de los objetos de aprendizaje del grupo superior al:"
+      condition_score_higher: "Ver todos los objetos de aprendizaje del grupo y consumir con éxito un porcentaje de ellos igual o superior al:"
+      condition_score_higher_inmediate: "En cualquier momento, consumir con éxito un porcentaje de los objetos de aprendizaje del grupo igual o superior al:"
       condition_score_lower: "Ver todos los objetos de aprendizaje del grupo y consumir con éxito un porcentaje de ellos inferior al:"
     step1:
       title: "Elige una plantilla de juego"
