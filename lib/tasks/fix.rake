@@ -242,18 +242,35 @@ namespace :fix do
   end
 
   #Usage
-  #Development:   bundle exec rake fix:gameSettings
-  #In production: bundle exec rake fix:gameSettings RAILS_ENV=production
-  task :gameSettings => :environment do
+  #Development:   bundle exec rake fix:gameEditorDataForV2
+  #In production: bundle exec rake fix:gameEditorDataForV2 RAILS_ENV=production
+  task :gameEditorDataForV2 => :environment do
     printTitle("Fixing game settings")
     
     Game.all.each do |g|
       if g.editor_data
+        needUpdate = false
         editor_data = JSON(g.editor_data)
         if editor_data["settings"] and editor_data["settings"]["completion_notification"] === "all_los_succesfully_consumed"
           editor_data["settings"]["completion_notification"] = "all_los_successfully_consumed"
-          g.update_column :editor_data, editor_data.to_json
+          needUpdate = true
         end
+        if editor_data["sequencing"] and editor_data["sequencing"]["sequence"] and ["linear_success","linear_completion"].include?(editor_data["sequencing"]["approach"])
+          editor_data["sequencing"]["sequence"].each do |groupId,group|
+            if group.key?("condition") == false and group.key?("conditions") == true
+              multipleCondition = {id:1, type: "multiple", operator: "AND", conditions: group["conditions"]}
+              multipleCondition[:conditions].each_with_index do |condition,index|
+                multipleCondition[:conditions][index]["id"] = (index+2)
+                multipleCondition[:conditions][index]["type"] = "single"
+              end
+              group["condition"] = multipleCondition
+              group.delete("conditions")
+              editor_data["sequencing"]["sequence"][groupId] = group
+              needUpdate = true
+            end
+          end
+        end
+        g.update_column :editor_data, editor_data.to_json if needUpdate
       end
     end
 

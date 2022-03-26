@@ -972,9 +972,9 @@ SGAME_AT = (function($,undefined){
 			for(var k = 0; k<nGroups; k++){
 				var group = current_sequencing["sequence"][groupIds[k]];
 				if(group.los instanceof Array && typeof group.los[0] !== "undefined"){
-					var loId = group.los[0] + "";
-					if(group.conditions instanceof Array && typeof group.conditions[0] !== "undefined" && typeof group.conditions[0].group !== "undefined"){
-						loIdsSequence[group.conditions[0].group] = loId;
+					var loId = group.los[0];
+					if((typeof group.condition === "object")&&(group.condition.conditions instanceof Array && typeof group.condition.conditions[0] !== "undefined" && typeof group.condition.conditions[0].group !== "undefined")){
+						loIdsSequence[group.condition.conditions[0].group] = loId;
 					} else {
 						loIdsSequence[0] = loId;
 					}

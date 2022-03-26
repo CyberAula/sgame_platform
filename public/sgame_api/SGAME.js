@@ -1407,9 +1407,6 @@ SGAME.Sequencing = function() {
     var group_ids = Object.keys(groups);
     var nGroups = group_ids.length;
     for(var i = 0;i < nGroups;i++) {
-      if(typeof groups[group_ids[i]].condition === "undefined" && typeof groups[group_ids[i]].conditions !== "undefined") {
-        groups[group_ids[i]] = _adaptConditionsForLegacy(groups[group_ids[i]])
-      }
       if(typeof groups[group_ids[i]].condition !== "undefined") {
         groups[group_ids[i]].condition = _validateGroupCondition(groups[group_ids[i]].condition, group_ids);
         if(groups[group_ids[i]].condition === false) {
@@ -1423,16 +1420,6 @@ SGAME.Sequencing = function() {
     }else {
       return _validateGroupsConditions(groups)
     }
-  };
-  var _adaptConditionsForLegacy = function(group) {
-    var multipleCondition = {id:1, type:"multiple", operator:"AND", conditions:group.conditions};
-    for(var i = 0;i < multipleCondition.conditions.length;i++) {
-      multipleCondition.conditions[i].id = i + 2;
-      multipleCondition.conditions[i].type = "single"
-    }
-    group.condition = multipleCondition;
-    delete group.conditions;
-    return group
   };
   var _validateGroupCondition = function(condition, groupIds) {
     if(typeof condition !== "object") {
@@ -1496,33 +1483,38 @@ SGAME.Sequencing = function() {
     return condition
   };
   var updateGroupsTracking = function(lo, groups, los) {
-    for(var i = 0;i < lo.groups.length;i++) {
+    var loGroups = lo.groups.length;
+    for(var i = 0;i < loGroups;i++) {
       var group = groups[lo.groups[i]];
       if(group.can_be_shown === true) {
         groups[lo.groups[i]] = _updateGroupTracking(group, los)
       }
     }
+    var groupUnlockedOrLocked = false;
     var group_ids = Object.keys(groups);
-    for(var j = 0;j < group_ids.length;j++) {
+    var nGroups = group_ids.length;
+    for(var j = 0;j < nGroups;j++) {
       var ogroup = groups[group_ids[j]];
       if(ogroup.unlocked === false && ogroup.locked === false) {
         groups[group_ids[j]] = _updateGroupUnlock(ogroup, groups);
         if(groups[group_ids[j]].unlocked === true) {
-          los = _changeCanBeShownForLOsInGroup(groups[group_ids[j]], los, true)
+          los = _changeCanBeShownForLOsInGroup(groups[group_ids[j]], los, true);
+          groupUnlockedOrLocked = true
         }
       }
     }
-    for(var k = 0;k < lo.groups.length;k++) {
+    for(var k = 0;k < loGroups;k++) {
       var ogroup = groups[lo.groups[k]];
       if(ogroup.unlocked === true && ogroup.locked === false) {
         groups[lo.groups[k]] = _updateGroupLock(ogroup, groups);
         if(groups[lo.groups[k]].locked === true) {
-          los = _changeCanBeShownForLOsInGroup(groups[lo.groups[k]], los, false)
+          los = _changeCanBeShownForLOsInGroup(groups[lo.groups[k]], los, false);
+          groupUnlockedOrLocked = true
         }
       }
     }
     var finished = true;
-    for(var l = 0;l < group_ids.length;l++) {
+    for(var l = 0;l < nGroups;l++) {
       var ogroup = groups[group_ids[l]];
       if(ogroup.unlocked === true && ogroup.locked === false) {
         finished = false;
@@ -1532,7 +1524,12 @@ SGAME.Sequencing = function() {
     if(finished) {
       los = _unlockLOsWithoutGroup(los)
     }
-    return{"groups":groups, "los":los, "finished":finished}
+    if(groupUnlockedOrLocked === true) {
+      if(nGroups <= 25) {
+        _lastNLOsForTracking = getNLOsForTracking(groups, los)
+      }
+    }
+    return{"groups":groups, "los":los, nLOsForTracking:_lastNLOsForTracking, "finished":finished}
   };
   var _updateGroupTracking = function(group, los) {
     var nLos = group.los.length;
@@ -1707,50 +1704,154 @@ SGAME.Sequencing = function() {
     }
     return los
   };
-  var getNLOsForTracking = function(groups) {
-    var _groups = JSON.parse(JSON.stringify(groups));
+  var _lastNLOsForTracking = undefined;
+  var _nLOsWithoutGroup = undefined;
+  var getNLOsForTracking = function(groups, los) {
+    if(typeof _nLOsWithoutGroup === "undefined") {
+      if(typeof los !== "undefined") {
+        _nLOsWithoutGroup = _getIdsLOsWithoutGroup(los).length
+      }
+      _nLOsWithoutGroup = 0
+    }
+    var nLOsInSequence;
+    switch(_sequencingApproach) {
+      case "linear_success":
+      ;
+      case "linear_completion":
+        if(typeof _lastNLOsForTracking !== "undefined") {
+          return _lastNLOsForTracking
+        }
+        nLOsInSequence = _getLinearSequencePathLength(groups);
+        break;
+      case "custom":
+        nLOsInSequence = _getSequencePathLength(groups);
+        break;
+      default:
+        nLOsInSequence = 0
+    }
+    _lastNLOsForTracking = nLOsInSequence + _nLOsWithoutGroup;
+    return _lastNLOsForTracking
+  };
+  var _getLinearSequencePathLength = function(path) {
+    var length = 0;
+    var groupIds = Object.keys(path);
+    var nGroups = groupIds.length;
+    for(var i = 0;i < nGroups;i++) {
+      length += path[groupIds[i]].los.length
+    }
+    return length
+  };
+  var _getSequencePathLength = function(path) {
+    var _groups = JSON.parse(JSON.stringify(path));
     var groupIds = Object.keys(_groups);
     var nGroups = groupIds.length;
-    var paths = [];
+    var steps = [];
     for(var i = 0;i < nGroups;i++) {
       var group = _groups[groupIds[i]];
-      if(group.unlocked === false && typeof group.condition !== "undefined") {
+      if(group.unlocked === false && (typeof group.condition !== "undefined" && group.locked === false)) {
         for(var j = 0;j < nGroups;j++) {
           var ogroup = _groups[groupIds[j]];
           if(ogroup.unlocked === true && (ogroup.locked === false && ogroup.id !== group.id)) {
             var rconditions = _getConditionsRelatedToGroup(group.condition, ogroup);
-            if(rconditions.length > 0) {
+            if(rconditions.length > 0 && rconditions[0].met === false) {
               var rcondition = rconditions[0];
-              var newPath = {conditionId:rcondition.id, conditionGroup:group.id, lockGroupId:ogroup.id};
+              var newStep = {conditionsToMet:[], groupsToLock:[], groupsToUnlock:[]};
+              newStep.conditionsToMet.push({id:rcondition.id, group:group.id});
+              newStep.groupsToLock.push(ogroup.id);
               if(group.condition.type === "multiple" && group.condition.operator === "OR" || group.condition.type === "single") {
-                newPath.unlockGroupId = group.id
+                newStep.groupsToUnlock.push(group.id)
               }else {
                 if(group.condition.type === "multiple" && group.condition.operator === "AND") {
-                  if(_metCondition(rcondition.id, group.condition).met === true) {
-                    newPath.unlockGroupId = group.id
+                  if(_metCondition(rcondition.id, JSON.parse(JSON.stringify(group.condition))).met === true) {
+                    newStep.groupsToUnlock.push(group.id)
                   }
                 }
               }
-              paths.push(newPath)
+              for(var k = 0;k < nGroups;k++) {
+                var dgroup = _groups[groupIds[k]];
+                if(dgroup.unlocked === false && (dgroup.locked === false && (dgroup.id !== group.id && (dgroup.id !== ogroup.id && typeof dgroup.condition !== "undefined")))) {
+                  var drconditions = _getConditionsRelatedToGroup(dgroup.condition, ogroup);
+                  if(drconditions.length > 0 && drconditions[0].met === false) {
+                    var multipleMet = false;
+                    switch(rconditions[0].requirement) {
+                      case "completion":
+                      ;
+                      case "completion_higher_inmediate":
+                        multipleMet = true;
+                        break;
+                      case "success":
+                        multipleMet = ["fail", "score_lower"].indexOf(drconditions[0].requirement) === -1;
+                        break;
+                      case "fail":
+                        if(["score_higher", "score_higher_inmediate", "score_lower"].indexOf(drconditions[0].requirement) !== -1) {
+                          multipleMet = drconditions[0].threshold !== 100
+                        }else {
+                          multipleMet = ["success"].indexOf(drconditions[0].requirement) === -1
+                        }
+                        break;
+                      case "score_higher":
+                      ;
+                      case "score_higher_inmediate":
+                        if(["success"].indexOf(drconditions[0].requirement) !== -1) {
+                          multipleMet = rconditions[0].threshold === 100
+                        }else {
+                          if(["fail"].indexOf(drconditions[0].requirement) !== -1) {
+                            multipleMet = rconditions[0].threshold < 100
+                          }else {
+                            if(["score_lower"].indexOf(drconditions[0].requirement) !== -1) {
+                              multipleMet = drconditions[0].threshold > rconditions[0].threshold
+                            }else {
+                              multipleMet = true
+                            }
+                          }
+                        }
+                        break;
+                      case "score_lower":
+                        if(["score_higher", "score_higher_inmediate"].indexOf(drconditions[0].requirement) !== -1) {
+                          multipleMet = rconditions[0].threshold > drconditions[0].threshold
+                        }else {
+                          multipleMet = ["success"].indexOf(drconditions[0].requirement) === -1
+                        }
+                        break
+                    }
+                    if(multipleMet) {
+                      newStep.conditionsToMet.push({id:drconditions[0].id, group:dgroup.id});
+                      if(dgroup.condition.type === "multiple" && dgroup.condition.operator === "OR" || dgroup.condition.type === "single") {
+                        newStep.groupsToUnlock.push(dgroup.id)
+                      }else {
+                        if(dgroup.condition.type === "multiple" && dgroup.condition.operator === "AND") {
+                          if(_metCondition(drconditions[0].id, JSON.parse(JSON.stringify(dgroup.condition))).met === true) {
+                            newStep.groupsToUnlock.push(dgroup.id)
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              steps.push(newStep)
             }
           }
         }
       }
     }
-    var nPaths = paths.length;
-    if(nPaths === 0) {
+    var nSteps = steps.length;
+    if(nSteps === 0) {
       return _getLOsInUnlockedGroups(_groups)
     }else {
       var maxLength = 0;
-      for(var k = 0;k < nPaths;k++) {
+      for(var l = 0;l < nSteps;l++) {
         var newPath = JSON.parse(JSON.stringify(_groups));
-        newPath[paths[k].lockGroupId].locked = true;
-        if(typeof paths[k].unlockGroupId !== "undefined") {
-          newPath[paths[k].unlockGroupId].unlocked = true
-        }else {
-          newPath[paths[k].conditionGroup].condition = _metCondition(paths[k].conditionId, newPath[paths[k].conditionGroup].condition)
+        for(var x = 0;x < steps[l].groupsToLock.length;x++) {
+          newPath[steps[l].groupsToLock[x]].locked = true
         }
-        var pathLength = getNLOsForTracking(newPath);
+        for(var y = 0;y < steps[l].groupsToUnlock.length;y++) {
+          newPath[steps[l].groupsToUnlock[y]].unlocked = true
+        }
+        for(var z = 0;z < steps[l].conditionsToMet.length;z++) {
+          newPath[steps[l].conditionsToMet[z].group].condition = _metCondition(steps[l].conditionsToMet[z].id, newPath[steps[l].conditionsToMet[z].group].condition)
+        }
+        var pathLength = _getSequencePathLength(newPath);
         if(pathLength > maxLength) {
           maxLength = pathLength
         }
@@ -1775,16 +1876,45 @@ SGAME.Sequencing = function() {
       condition.met = true
     }else {
       if(condition.type === "multiple") {
-        condition.met = true;
+        condition.met = condition.operator === "AND";
         for(var i = 0;i < condition.conditions.length;i++) {
           condition.conditions[i] = _metCondition(conditionId, condition.conditions[i]);
-          if(condition.conditions[i].met !== true) {
+          if(condition.conditions[i].met !== true && condition.operator === "AND") {
             condition.met = false
+          }else {
+            if(condition.conditions[i].met === true && condition.operator === "OR") {
+              condition.met = true;
+              break
+            }
           }
         }
       }
     }
     return condition
+  };
+  var _getIdsLOsWithoutGroup = function(los) {
+    var losWithoutGroup = [];
+    var lo_ids = Object.keys(los);
+    for(var i = 0;i < lo_ids.length;i++) {
+      if(typeof los[lo_ids[i]].groups === "undefined" || los[lo_ids[i]].groups.length === 0) {
+        losWithoutGroup.push(lo_ids[i])
+      }
+    }
+    return losWithoutGroup
+  };
+  var _printPath = function(path) {
+    var print = "";
+    var groupIds = Object.keys(path);
+    for(var i = 0;i < groupIds.length;i++) {
+      var group = path[groupIds[i]];
+      if(group.unlocked === true) {
+        if(print !== "") {
+          print += " > "
+        }
+        print += group.name
+      }
+    }
+    console.log(print)
   };
   return{init:init, initGroupSequence:initGroupSequence, validateSequence:validateSequence, getNLOsForTracking:getNLOsForTracking, updateGroupsTracking:updateGroupsTracking}
 }();
@@ -1983,15 +2113,17 @@ SGAME.CORE = function() {
           delete _settings["los"][lo_ids[y]]
         }
       }
-      _nLOs = Object.keys(_settings["los"]).length;
-      _nLOsForTrackingWhenSequence = SGAME.Sequencing.getNLOsForTracking(_settings["sequencing"]["sequence"])
+      _nLOs = Object.keys(_settings["los"]).length
     }
     if(typeof _settings["assets_path"] !== "string") {
       _settings["assets_path"] = "/assets/sgame/"
     }
     SGAME.Fancybox.init(_settings["assets_path"]);
     SGAME.TrafficLight.init(_settings["assets_path"]);
-    SGAME.Sequencing.init(_settings["sequencing"])
+    SGAME.Sequencing.init(_settings["sequencing"]);
+    if(_sequence_enabled === true) {
+      _nLOsForTrackingWhenSequence = SGAME.Sequencing.getNLOsForTracking(_settings["sequencing"]["sequence"], _settings["los"])
+    }
   };
   var triggerLO = function(event_id, callback) {
     switch(_settings["sequencing"]["interruptions"]) {
@@ -2094,6 +2226,7 @@ SGAME.CORE = function() {
         var output = SGAME.Sequencing.updateGroupsTracking(_settings["los"][lo["id"]], _settings["sequencing"]["sequence"], _settings["los"]);
         _settings["sequencing"]["sequence"] = output.groups;
         _settings["los"] = output.los;
+        _nLOsForTrackingWhenSequence = output.nLOsForTracking;
         if(output.finished) {
           _sequence_finished = true
         }
@@ -2297,6 +2430,8 @@ SGAME.CORE = function() {
       success_status = "failed"
     }
     _tracking = {progress_measure:progress_measure, completion_status:completion_status, score:score, success_status:success_status};
+    SGAME.Debugger.log("Tracking");
+    SGAME.Debugger.log(_tracking);
     SGAME.Messenger.sendMessage({key:"tracking", value:_tracking})
   };
   var _checkFinalScreen = function(callback) {
