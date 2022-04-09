@@ -152,6 +152,16 @@ namespace :db do
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/game_template_examples/SudokuJS.zip'))
 
+		system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/Infinite_Mario.zip')
+		Utils.zip_folder(File.join(Rails.root, 'public/game_template_examples/Infinite_Mario.zip'),File.join(Rails.root, 'public/game_template_examples/Infinite_Mario'))
+		mario = GameTemplate.create! :owner_id => user.id,
+			:title=>"Infinite Mario",
+			:description=>"Infinite Mario is the classic platforms game in which players have to finish all levels without dying and using power-ups. The levels are randomly generated at every game.", 
+			:thumbnail=> File.open(File.join(Rails.root, 'public/game_template_examples/Infinite_Mario/thumbnail.png')),
+			:language => "en",
+			:certified => true,
+			:file =>  File.open(File.join(Rails.root, 'public/game_template_examples/Infinite_Mario.zip'))
+
 		#4: Create games
 		#With oArena template
 		oArenaInstance = Game.create! :owner_id => user.id,
@@ -666,6 +676,16 @@ namespace :db do
 			:language => "en",
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/game_template_examples/SudokuJS.zip'))
+			
+		system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/Infinite_Mario.zip')
+		Utils.zip_folder(File.join(Rails.root, 'public/game_template_examples/Infinite_Mario.zip'),File.join(Rails.root, 'public/game_template_examples/Infinite_Mario'))
+		mario = GameTemplate.create! :owner_id => user.id,
+			:title=>"Infinite Mario",
+			:description=>"Infinite Mario is the classic platforms game in which players have to finish all levels without dying and using power-ups. The levels are randomly generated at every game.", 
+			:thumbnail=> File.open(File.join(Rails.root, 'public/game_template_examples/Infinite_Mario/thumbnail.png')),
+			:language => "en",
+			:certified => true,
+			:file =>  File.open(File.join(Rails.root, 'public/game_template_examples/Infinite_Mario.zip'))
 
 		#4: Create games
 		floppybirdMathQuiz = Game.create! :owner_id => user.id,

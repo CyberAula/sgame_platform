@@ -135,6 +135,14 @@ namespace :fix do
       gt.file = File.open(File.join(Rails.root, 'public/game_template_examples/SudokuJS.zip'))
       gt.save!
     end
+
+    system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/Infinite_Mario.zip')
+    Utils.zip_folder(File.join(Rails.root, 'public/game_template_examples/Infinite_Mario.zip'),File.join(Rails.root, 'public/game_template_examples/Infinite_Mario'))
+    gt = GameTemplate.find_by_title("Infinite Mario")
+    unless gt.nil?
+      gt.file = File.open(File.join(Rails.root, 'public/game_template_examples/Infinite_Mario.zip'))
+      gt.save!
+    end
     
     printTitle("Task finished")
   end

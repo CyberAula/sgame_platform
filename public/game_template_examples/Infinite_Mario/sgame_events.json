@@ -1,0 +1,22 @@
+[{
+        "id": "1",
+        "title": "damage",
+        "type": "damage",
+        "description": "Event triggered on receiving damage",
+        "frequency": "skill-dependent_high"
+    },
+    {
+        "id": "2",
+        "title": "powerup",
+        "type": "reward",
+        "description": "Event triggered on picking up a power up",
+        "frequency": "high"
+    },
+    {
+        "id": "3",
+        "title": "void",
+        "type": "damage",
+        "description": "Event triggered on falling to void",
+        "frequency": "skill-dependant_medium"
+    }
+]
