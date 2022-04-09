@@ -1142,12 +1142,11 @@ SGAME_AT = (function($,undefined){
 	};
 
 	var _generateSequenceGroupId = function(){
-		for(var i=1; i<1000; i++){
-			if($("div.sequencing_group_wrapper[groupid=" + i + "]").length === 0){
-				return i;
-			}
+		var maxId = 0;
+		if($("div.sequencing_group_wrapper[groupid]").length > 0){
+			maxId = Math.max.apply(null, $("div.sequencing_group_wrapper[groupid]").map(function() { return parseInt($(this).attr("groupid")) }).get());
 		}
-		return $("div.sequencing_group_wrapper").length + 1;
+		return maxId + 1;
 	};
 
 	var _onNewSequenceGroupName = function(groupId,groupName){
@@ -1270,13 +1269,12 @@ SGAME_AT = (function($,undefined){
 		return sgroups;
 	};
 
-	var _generateSequenceConditionId = function(groupId){
-		for(var i=1; i<1000; i++){
-			if($("div.sequencing_condition_wrapper[conditionid=" + i + "]").length === 0){
-				return i;
-			}
+	var _generateSequenceConditionId = function(){
+		var maxId = 0;
+		if($("div.sequencing_condition_wrapper[conditionid]").length > 0){
+			maxId = Math.max.apply(null, $("div.sequencing_condition_wrapper[conditionid]").map(function() { return parseInt($(this).attr("conditionid")) }).get());
 		}
-		return $(groupDiv).find("div.sequencing_condition_wrapper").length + 1;
+		return maxId + 1;
 	};
 
 	var _removeSequenceCondition = function(conditionId){
