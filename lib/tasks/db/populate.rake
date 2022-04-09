@@ -584,8 +584,9 @@ namespace :db do
 				:lo_id => lo_id
 		end
 
-		#Wave 2
+		#Additional waves
 		Rake::Task["db:install_wave2"].invoke
+		Rake::Task["db:install_wave3"].invoke
 
 		#Create editor data
 		Rake::Task["fix:createEditorData"].invoke
@@ -676,16 +677,6 @@ namespace :db do
 			:language => "en",
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/game_template_examples/SudokuJS.zip'))
-			
-		system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/Infinite_Mario.zip')
-		Utils.zip_folder(File.join(Rails.root, 'public/game_template_examples/Infinite_Mario.zip'),File.join(Rails.root, 'public/game_template_examples/Infinite_Mario'))
-		mario = GameTemplate.create! :owner_id => user.id,
-			:title=>"Infinite Mario",
-			:description=>"Infinite Mario is the classic platforms game in which players have to finish all levels without dying and using power-ups. The levels are randomly generated at every game.", 
-			:thumbnail=> File.open(File.join(Rails.root, 'public/game_template_examples/Infinite_Mario/thumbnail.png')),
-			:language => "en",
-			:certified => true,
-			:file =>  File.open(File.join(Rails.root, 'public/game_template_examples/Infinite_Mario.zip'))
 
 		#4: Create games
 		floppybirdMathQuiz = Game.create! :owner_id => user.id,
@@ -779,6 +770,62 @@ namespace :db do
 				GameEventMapping.create! :game_id => cCircusEvg.id,
 					:game_template_event_id => event.id,
 					:lo_id => lo_id
+			end
+		end
+
+		puts "Populate finished"
+		t2 = Time.now - t1
+		puts "Elapsed time:" + t2.to_s
+	end
+
+	#bundle exec rake db:install_wave3
+	task :install_wave3 => :environment do
+		desc "Populate database for SGAME Platform (Wave 3)"
+		t1 = Time.now
+
+		#1: Get Demo user
+		#1: Create demo user
+		user = User.find_by_email("demo@sgame.dit.upm.es")
+
+		#2: Create SCORM packages and Learning Objects
+		mathQuiz = Scormfile.where(:certified => true, :title => "MathQuiz").first
+		if mathQuiz.nil?
+			mathQuiz = Scormfile.create! :owner_id => user.id,
+				:title  => "MathQuiz",
+				:description   => "Pack de aplicaciones interactivas para aprender matemáticas: sumas, restas, multiplicaciones, divisiones, potencias y raíces. Las preguntas se generan de forma aleatoria. Este pack incluye aplicaciones que generan preguntas de diferentes tipos y niveles de dificultad.",
+				:thumbnail=> File.open(File.join(Rails.root, 'public/scorm_examples/MathQuiz_thumbnail.png')),
+				:language => "es",
+				:certified => true,
+				:file =>  File.open(File.join(Rails.root, 'public/scorm_examples/MathQuiz_pack1.zip'))
+		end
+		
+		#3: Create game templates
+		# Events of the game templates are created based on the sgame_events_json.json file
+
+		system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/Infinite_Mario.zip')
+		Utils.zip_folder(File.join(Rails.root, 'public/game_template_examples/Infinite_Mario.zip'),File.join(Rails.root, 'public/game_template_examples/Infinite_Mario'))
+		iMario = GameTemplate.create! :owner_id => user.id,
+			:title=>"Infinite Mario",
+			:description=>"Infinite Mario is the classic platforms game in which players have to finish all levels without dying and using power-ups. The levels are randomly generated at every game.", 
+			:thumbnail=> File.open(File.join(Rails.root, 'public/game_template_examples/Infinite_Mario/thumbnail.png')),
+			:language => "en",
+			:certified => true,
+			:file =>  File.open(File.join(Rails.root, 'public/game_template_examples/Infinite_Mario.zip'))
+
+		#4: Create games
+		iMarioMathQuiz = Game.create! :owner_id => user.id,
+		:game_template_id=>iMario.id,
+		:title=>"Suma y resta con Infinite Mario",
+		:description=>"Juego educativo basado en el juego Infinite Mario y la aplicación MathQuiz para practicar sumas y restas.", 
+		:thumbnail=> File.open(File.join(Rails.root, 'public/game_template_examples/Infinite_Mario/thumbnail.png')),
+		:language => "es",
+		:certified => true
+		
+		iMario.events.each do |event|
+			mathQuiz.los.each do |lo|
+				GameEventMapping.create! :game_id => iMarioMathQuiz.id,
+				:game_template_event_id => event.id,
+				:lo_id => lo.id
 			end
 		end
 

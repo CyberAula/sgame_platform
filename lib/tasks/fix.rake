@@ -136,6 +136,7 @@ namespace :fix do
       gt.save!
     end
 
+    #Wave 3
     system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/Infinite_Mario.zip')
     Utils.zip_folder(File.join(Rails.root, 'public/game_template_examples/Infinite_Mario.zip'),File.join(Rails.root, 'public/game_template_examples/Infinite_Mario'))
     gt = GameTemplate.find_by_title("Infinite Mario")
