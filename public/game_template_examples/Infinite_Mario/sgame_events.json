@@ -7,7 +7,7 @@
         "frequency": "skill-dependent_high"
     },{
         "id": 2,
-        "title": "Powerup",
+        "title": "Power up",
         "type": "reward",
         "description": "Event triggered on picking up a power up",
         "frequency": "high"

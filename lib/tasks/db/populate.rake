@@ -49,6 +49,14 @@ namespace :db do
 			:certified => true,
 			:file =>  File.open(File.join(Rails.root, 'public/scorm_examples/iberian_lynx.zip'))
 
+		sf5 = Scormfile.create! :owner_id => user.id,
+			:title  => "SGAME LO Testing Pack",
+			:description   => "Pack of learning objects compliant with SCORM 2004 used for testing purposes",
+			:thumbnail=> File.open(File.join(Rails.root, 'public/scorm_examples/scorm2004_Testing_thumbnail.png')),
+			:language => "en",
+			:certified => true,
+			:file =>  File.open(File.join(Rails.root, 'public/scorm_examples/scorm2004_Testing.zip'))
+
 		#3: Create game templates
 		# Events of the game templates are created based on the sgame_events_json.json file
 		system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/Onslaught_Arena.zip')
@@ -154,7 +162,7 @@ namespace :db do
 
 		system "rm -rf " + File.join(Rails.root, 'public/game_template_examples/Infinite_Mario.zip')
 		Utils.zip_folder(File.join(Rails.root, 'public/game_template_examples/Infinite_Mario.zip'),File.join(Rails.root, 'public/game_template_examples/Infinite_Mario'))
-		mario = GameTemplate.create! :owner_id => user.id,
+		iMario = GameTemplate.create! :owner_id => user.id,
 			:title=>"Infinite Mario",
 			:description=>"Infinite Mario is the classic platforms game in which players have to finish all levels without dying and using power-ups. The levels are randomly generated at every game.", 
 			:thumbnail=> File.open(File.join(Rails.root, 'public/game_template_examples/Infinite_Mario/thumbnail.png')),
@@ -266,6 +274,23 @@ namespace :db do
 			GameEventMapping.create! :game_id => pacmanInstance.id, 
 				:game_template_event_id => pacman.events.first.id, 
 				:lo_id => lo_id
+		end
+
+		#With iMario template
+		iMarioInstance = Game.create! :owner_id => user.id,
+			:game_template_id=>iMario.id,
+			:title=>"Infinite Mario",
+			:description=>"Example of educational game based on Infinite Mario", 
+			:thumbnail=> File.open(File.join(Rails.root, 'public/game_template_examples/Infinite_Mario/thumbnail.png')),
+			:certified => true
+			
+		#Event mapping for iMarioInstance
+		sf5.los.map{|lo| lo.id}.uniq.each do |lo_id|
+			iMario.events.each do |event|
+				GameEventMapping.create! :game_id => iMarioInstance.id,
+					:game_template_event_id => event.id,
+					:lo_id => lo_id
+			end
 		end
 
 		#Create editor data
