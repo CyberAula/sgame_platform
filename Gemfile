@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 #Bundler
 gem 'bundler', '2.1.4' 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '= 5.2.4.3'
+gem 'rails', '= 5.2.7'
 # Use postgreSQL as the database for Active Record
 gem 'pg', '= 0.18'
 # Use SCSS for stylesheets
@@ -35,7 +35,7 @@ gem 'exception_notification', '4.4.3'
 if ENV['FORCE_LOCAL_SCORM']
   gem "scorm", :path => ENV['FORCE_LOCAL_SCORM'], :branch => "master"
 else
-  gem "scorm", :git => 'git://github.com/agordillo/scorm.git', :branch => "master"
+  gem 'scorm', git: 'https://github.com/agordillo/scorm.git', branch: 'master'
 end
 
 group :development do
