@@ -50,7 +50,7 @@ class DocumentsController < ApplicationController
       }
       format.any {
         path = @document.file.path(params[:style] || params[:format])
-        head(:not_found) and return unless File.exist?(path)
+        head(:not_found) and return unless (File.exist?(path) and request.format.nil? == false)
         send_file path,
                  :filename => @document.file_file_name,
                  :disposition => "inline",

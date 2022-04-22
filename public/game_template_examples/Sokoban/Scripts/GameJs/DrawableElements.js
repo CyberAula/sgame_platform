@@ -39,12 +39,12 @@ function ImageRepository() {
         this.Floor.src = "";
         this.Devil.src = "";
 
-        this.Wall.src = "http://demo2.felinesoft.com/Sokoban/Content/Images/wall.gif";
-        this.Box.src = "http://demo2.felinesoft.com/Sokoban/Content/Images/box.gif";
-        this.Goal.src = "http://demo2.felinesoft.com/Sokoban/Content/Images/goal.gif";
-        this.Player.src = "http://demo2.felinesoft.com/Sokoban/Content/Images/player.gif";
-        this.BoxOnGoal.src = "http://demo2.felinesoft.com/Sokoban/Content/Images/boxOnGoal.gif";
-        this.Floor.src = "http://demo2.felinesoft.com/Sokoban/Content/Images/floor.gif";
+        this.Wall.src = "Content/Images/wall.gif";
+        this.Box.src = "Content/Images/box.gif";
+        this.Goal.src = "Content/Images/goal.gif";
+        this.Player.src = "Content/Images/player.gif";
+        this.BoxOnGoal.src = "Content/Images/boxOnGoal.gif";
+        this.Floor.src = "Content/Images/floor.gif";
         this.Devil.src = "Content/Images/devil.gif";
 
     }

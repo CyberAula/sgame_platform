@@ -1,11 +1,6 @@
 <div class="col1">
   <img class="icon" src="/assets/escudo_upm.png"/>
 </div>
-<div class="col4">
-  <div>
-    <a href="<%=t('footer.survey_url')%>" target="_blank"><%=t("footer.survey_short")%></a>
-  </div>
-</div>
 <div class="col3">
   <div class="dropup footer_dropdown">
     <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -15,8 +10,8 @@
     <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
       <li><a href="mailto:virtual.science.hub@gmail.com"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span><span><%=t("footer.contact")%></span></a></li>
       <li><a href="<%=t("footer.manual_url")%>" download><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><span><%=t("footer.manual")%></span></a></li>
+      <li><a href="<%=t("footer.videos_url")%>" target="_blank"><span class="glyphicon glyphicon-film" aria-hidden="true"></span><span><%=t("footer.videos")%></span></a></li>
       <li><a href="https://github.com/ging/sgame_platform" target="_blank"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span><%=t("footer.code")%></a></li>
-      <li><a href="<%=t('footer.survey_url')%>" target="_blank"><span class="glyphicon glyphicon-check" aria-hidden="true"></span><%=t("footer.survey")%></a></li>
     </ul>
   </div>
 </div>
@@ -30,12 +25,12 @@
       </div>
     </button>
     <ul class="dropdown-menu">
-      <% I18n.available_locales.map(&:to_s).each do |lanCode| %>
         <form id="change_locale" action="/change_locale" action="GET">
           <input name="locale" value="" type="hidden"/>
-          <li value="<%=lanCode%>"><img src="/assets/flags/flag_<%=lanCode%>"/><%=t("languages." + lanCode)%></li>
+          <% I18n.available_locales.map(&:to_s).each do |lanCode| %>
+            <li value="<%=lanCode%>"><img src="/assets/flags/flag_<%=lanCode%>"/><%=t("languages." + lanCode)%></li>
+          <% end %>
         </form>
-      <% end %>
     </ul>
   </div>
 </div>

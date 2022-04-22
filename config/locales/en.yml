@@ -19,6 +19,8 @@ en:
             password:
               blank: "can't be blank"
   at:
+    confirmations:
+      sequencing_change: "Are you sure? If you change this setting you will lose the sequence you have previously defined."
     errors:
       generic_create: "There was an error and the game could not be created."
       generic_update: "There was an error and the game could not be updated."
@@ -58,6 +60,30 @@ en:
       nresources: "Number of learning objects"
       no_selected_los: "You have not selected any learning object yet"
       scorm_version: "SCORM version"
+    sequencing:
+      new_group: "Add group"
+      new_condition: "Add condition"
+      remove_group: "Remove grupo"
+      remove_condition: "Remove condición"
+      group: "Group"
+      group_unnamed: "Unnamed"
+      name_for_group: "Name"
+      los: "Learning objects"
+      condition: "Condition"
+      condition_description_none: "This group is initially unlocked. If you want the group to start locked you must specify at least one condition."
+      condition_description_none_nogroups: "To specify a condition, another group must exist."
+      condition_description: "To unlock this group"
+      condition_description_AND: "each and every one of the following conditions must be met."
+      condition_description_OR: "at least one of the following conditions must be met."
+      condition_group_part: "For the group"
+      condition_must_part: "the following condition must be met"
+      condition_completion: "View all learning objects in the group"
+      condition_completion_higher_inmediate: "View a percentage of the group's learning objects higher than:"
+      condition_success: "Successfully consume all the learning objects in the group"
+      condition_fail: "Failure to successfully consume all learning objects in the group after viewing them"
+      condition_score_higher: "View all learning objects in the group and successfully consume a percentage of them equal or higher than:"
+      condition_score_higher_inmediate: "At any point in time, successfully consume a percentage of the group's learning objects equal or higher than:"
+      condition_score_lower: "View all learning objects in the group and successfully consume a percentage of them lower than:"
     step1:
       title: "Choose a game template"
       description: "First, you have to select a game template into which the learning objects will be integrated in order to create the educational game. A game template is an entertainment game that has included the SGAME API in order to show learning objects to the players when certain events are triggered. Game templates define the specific events whose triggering will cause a learning object to be shown as well as the rewards that players will receive when they successfully complete one of these learning objects. After chossing a game template, you should click on the 'Select game template' button to advance to the next step."
@@ -87,6 +113,14 @@ en:
         choice1: "Whenever an event occurs for which there is a mapped learning object that can be shown."
         choice2: "At most, the following number of times:"
         choice3: "At most, once per period with a duration of the following number of seconds:"
+      opt3:
+        title: "If several candidates can be chosen when showing a learning object, the game will choose this object:"
+        choice1: "Randomly among those learning objects that have been shown the least number of times."
+        choice2: "Following a linear sequence, so that when one learning object is shown the next one will be unlocked."
+        choice3: "Following a linear sequence, so that when one learning object is successfully consumed the next one will be unlocked."
+        choice4: "Following a customized sequence."
+        sequencing_description: "You have indicated that the learning objects should be chosen following a sequence. Thus, you must define this sequence below."
+        sequencing_custom_description: "To define a custom sequence you must define several groups of learning objects, as well as conditions for unlocking these groups."
     step5:
       title: "Specify settings for the game"
       description: "In this step you can specify different settings for the educational game."
@@ -115,12 +149,13 @@ en:
         choice6: "Never."
       opt4:
         title: "The 'success status' of the game must change to 'passed':"
-        choice1: "When the player has succesfully consumed all the learning objects integrated in the game."
-        choice2: "When the player has succesfully consumed the following percentage of learning objects:"
-        choice3: "When the player has succesfully consumed the following number of learning objects:"
-        choice4: "When the player has succesfully consumed whatever learning objects the following number of times:"
+        choice1: "When the player has successfully consumed all the learning objects integrated in the game."
+        choice2: "When the player has successfully consumed the following percentage of learning objects:"
+        choice3: "When the player has successfully consumed the following number of learning objects:"
+        choice4: "When the player has successfully consumed whatever learning objects the following number of times:"
         choice5: "When the game starts."
         choice6: "Never."
+        choice7: "When the completion status of the game change to completed."
     step6:
       title: "Specify metadata for the game"
       description: "In this step you should specify metadata (title, description, ...) for the educational game."
@@ -242,9 +277,8 @@ en:
     code: "Source code"
     manual: "User manual"
     manual_url: "/Manual_SGAME_es.pdf"
-    survey: "SGAME platform survey"
-    survey_short: "Survey"
-    survey_url: "https://docs.google.com/forms/d/e/1FAIpQLSffXo2RDs-N096HcY-IMAVS4DJJKRYi4ckqycWLWpxdhULYeA/viewform"
+    videos: "Videotutorials"
+    videos_url: "https://www.youtube.com/playlist?list=PLeBm-hVuW42UHHGnKl3CVbr7ikK8SlJ2d"
   header:
     menu:
       profile: "Profile"
@@ -301,7 +335,7 @@ en:
     username_or_email: "Username or Email"
   presentations:
     clone:
-      success: "The presentation was cloned succesfully"
+      success: "The presentation was cloned successfully"
       fail: "You cannot clone this presentation"
     new: "Create presentation"
     tabtitle: "Presentations"

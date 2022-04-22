@@ -1,5 +1,5 @@
 class Pdfp < ActiveRecord::Base
-  belongs_to :user
+  belongs_to :owner, :class_name => 'User', :foreign_key => "owner_id"
 
   before_destroy :remove_files #This callback need to be before has_attached_file, to be executed before paperclip callbacks
   has_attached_file :attach
@@ -84,7 +84,8 @@ class Pdfp < ActiveRecord::Base
 
   def remove_files
     #Remove Image files
-    system "rm #{getRootFolder}/*.jpg"
+    rootFolder = getRootFolder
+    system ("rm " + rootFolder + "*.jpg") if File.exists?(rootFolder) and File.exists?(rootFolder + "*.jpg")
   end
 
 end

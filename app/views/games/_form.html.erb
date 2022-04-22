@@ -194,6 +194,18 @@
 					<span class="complexinput"><input type="radio" name="seq_opt2" value="1_per_timeperiod"> <%=t("at.step4.opt2.choice3")%><input type="number" min=1 step=1 value="60" disabled></span><br>
 				</div>
 			</div>
+			<div class="options_wrapper">
+				<div class="option_wrapper">
+					<p class="options_legend"><%=t("at.step4.opt3.title")%></p>
+					<span class="complexinput"><input type="radio" name="seq_opt3" value="random" checked> <%=t("at.step4.opt3.choice1")%></span><br>
+					<span class="complexinput"><input type="radio" name="seq_opt3" value="linear_completion"> <%=t("at.step4.opt3.choice2")%></span><br>
+					<span class="complexinput"><input type="radio" name="seq_opt3" value="linear_success"> <%=t("at.step4.opt3.choice3")%></span><br>
+					<span class="complexinput"><input type="radio" name="seq_opt3" value="custom"> <%=t("at.step4.opt3.choice4")%></span><br><br>
+					<p id="sequencing_description" class="options_legend"><%=t("at.step4.opt3.sequencing_description")%></p>
+					<p id="sequencing_custom_description" class="options_legend"><%=t("at.step4.opt3.sequencing_custom_description")%></p>
+					<div class="sequence_form_wrapper"></div>
+				</div>
+			</div>
 			<div class="step_actions">
 				<button id="step4_confirmation" class="sgame_button"><%=t("at.step4.confirmation")%></button>
 			</div>
@@ -226,6 +238,7 @@
 					<span class="complexinput"><input type="radio" name="set_opt4" value="percentage_los"> <%=t("at.step5.opt4.choice2")%><input type="number" min=1 max=100 step=1 value="100" disabled>%</span><br>
 					<span class="complexinput"><input type="radio" name="set_opt4" value="n_los"> <%=t("at.step5.opt4.choice3")%><input type="number" min=1 step=1 value="1" disabled></span><br>
 					<span class="complexinput"><input type="radio" name="set_opt4" value="n_times"> <%=t("at.step5.opt4.choice4")%><input type="number" min=1 step=1 value="1" disabled></span><br>
+					<span class="complexinput"><input type="radio" name="set_opt4" value="oncompletion"> <%=t("at.step5.opt4.choice7")%></span><br>
 					<span class="complexinput"><input type="radio" name="set_opt4" value="onstart"> <%=t("at.step5.opt4.choice5")%></span><br>
 					<span class="complexinput"><input type="radio" name="set_opt4" value="disabled"> <%=t("at.step5.opt4.choice6")%></span><br>
 				</div>
@@ -235,7 +248,7 @@
 					<p class="options_legend"><%=t("at.step5.opt1.title")%></p>
 					<input type="radio" name="set_opt1" value="no_more_los" checked> <%=t("at.step5.opt1.choice1")%><br>
 					<input type="radio" name="set_opt1" value="all_los_consumed"> <%=t("at.step5.opt1.choice2")%><br>
-					<input type="radio" name="set_opt1" value="all_los_succesfully_consumed"> <%=t("at.step5.opt1.choice3")%><br>
+					<input type="radio" name="set_opt1" value="all_los_successfully_consumed"> <%=t("at.step5.opt1.choice3")%><br>
 					<input type="radio" name="set_opt1" value="completion_status"> <%=t("at.step5.opt1.choice4")%><br>
 					<input type="radio" name="set_opt1" value="success_status"> <%=t("at.step5.opt1.choice5")%><br>
 					<input type="radio" name="set_opt1" value="never"> <%=t("at.step5.opt1.choice6")%><br>

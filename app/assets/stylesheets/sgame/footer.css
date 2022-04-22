@@ -34,6 +34,8 @@
 }
 #footer div.footer_dropdown ul {
 	color: black;
+	right: 0;
+    left: auto;
 }
 #footer div.footer_dropdown ul li {
 	cursor: pointer;

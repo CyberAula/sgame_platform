@@ -176,7 +176,7 @@
   text-align: center;
 }
 
-#sgame_at table.at_c td.preview img, #sgame_at table.at_c td.add img, #sgame_at table.at_c td.remove img {
+#sgame_at table.at_c td.preview img, #sgame_at table.at_c td.add img, #sgame_at table.at_c td.remove img, #sgame_at table.sequencing_group_header td.remove img, #sgame_at table.sequencing_condition_header td.remove img {
   max-width: 20px;
   max-height: 20px;
   cursor: pointer;
@@ -279,6 +279,118 @@
 .fancybox-close-small:hover:after {
   color: white;
   background: #007bbb;
+}
+
+#sgame_at div.sequencing .sequence_form_wrapper div.select2-container.select2-container-multi.linear_sequence {
+  width: 100%;
+}
+
+#sgame_at #sequencing_description, #sgame_at #sequencing_custom_description {
+  display: none;
+}
+
+#sgame_at #new_sequence_group_button, #sgame_at button.new_condition_group_button {
+  font-size: 1em;
+}
+
+#sgame_at div.sequencing_group_wrapper {
+  padding: 0px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: 2px solid white;
+}
+
+#sgame_at div.sequencing_group_wrapper, #sgame_at div.sequencing_condition_wrapper {
+  padding: 0px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: 2px solid black;
+}
+
+#sgame_at div.sequencing_group_content_wrapper, #sgame_at div.sequencing_condition_content_wrapper {
+  padding: 10px;
+}
+
+#sgame_at table.sequencing_group_header {
+  background: black;
+  color: white;
+}
+
+#sgame_at table.sequencing_condition_header {
+  background: #ccc;
+  color: black;
+}
+
+#sgame_at table.sequencing_group_header td, #sgame_at table.sequencing_condition_header td {
+  padding: 7px;
+}
+
+#sgame_at table.sequencing_group_header td:first-child, #sgame_at table.sequencing_condition_header td:first-child {
+  width: 100%;
+  text-align: center;
+  font-size: 1.2em;
+}
+#sgame_at table.sequencing_group_header td:last-child, #sgame_at table.sequencing_condition_header td:last-child {
+  width: auto;
+}
+#sgame_at table.sequencing_group_header td:last-child img, #sgame_at table.sequencing_condition_header td:last-child img {
+  margin: 7px;
+}
+
+#sgame_at table.sequencing_group_data tr {
+  width:  100%;
+}
+#sgame_at table.sequencing_group_data td:not(.sequencing_group_input) {
+  white-space: nowrap;
+}
+#sgame_at table.sequencing_group_data td.sequencing_group_input {
+  width:  100%;
+}
+#sgame_at table.sequencing_group_data td.sequencing_group_input input {
+  width:  100%;
+  color:  black;
+}
+#sgame_at td.sequencing_group_los div.select2-container {
+  width:  100%;
+}
+#sgame_at select.select_group_in_condition, #sgame_at select.select_condition_in_condition, #sgame_at select.select_operator_in_group {
+  color: black;
+  font-size: 1em;
+  width: auto;
+}
+
+#sgame_at select.select_condition_in_condition {
+  margin-top: 7px;
+}
+
+#sgame_at p.condition_description {
+  margin-top: 7px;
+}
+
+#sgame_at select.select_operator_in_group {
+  margin-left: 5px;
+}
+
+#sgame_at p.condition_statement {
+  line-height: 2em;
+}
+
+#sgame_at span.select_number_in_condition {
+  margin-left: 3px;
+  color: white;
+  font-size: 1em;
+  width: auto;
+}
+
+#sgame_at span.select_number_in_condition input {
+  color: black;
+  margin-right: 4px;
+}
+
+#sgame_at div.sequencing_condition_content_wrapper select.select_group_in_condition, #sgame_at div.sequencing_condition_content_wrapper select.select_condition_in_condition,#sgame_at span.select_number_in_condition input {
+  font-size: 1em;
+  height: 30px;
+  padding: 0px 5px 0px 5px;
 }
 
 @media (max-width: 600px) {

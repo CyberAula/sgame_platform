@@ -15,8 +15,10 @@ SGAME_AT = (function($,undefined){
 	var supportedEventTypes = ["reward","damage","blocking"];
 	var supportedEventFrequencies = ["high","medium","low","one-shot","skill-dependent","skill-dependent_high","skill-dependent_medium","skill-dependent_low"];
 	var supportedInterruptions = ["no_restrictions","n_times","1_per_timeperiod"];
+	var supportedSequencingApproach = ["random","linear_completion","linear_success","custom"];
+	var supportedSequencingConditions = ["completion","completion_higher_inmediate","success","fail","score_higher","score_higher_inmediate","score_lower"];
 	var supportedCompletionStatus = ["all_los","percentage_los","n_los","n_times","disabled","onstart"];
-	var supportedSuccessStatus = ["all_los","percentage_los","n_los","n_times","disabled","onstart"];
+	var supportedSuccessStatus = ["all_los","percentage_los","n_los","n_times","disabled","onstart","oncompletion"];
 	var supportedCompletionNotification = ["no_more_los","all_los_consumed","all_los_succesfully_consumed","completion_status","success_status","never"];
 	var supportedBehaviourWhenNoMoreLOs = ["success","failure","success_unless_damage","failure_unless_blocking"];
 
@@ -179,6 +181,11 @@ SGAME_AT = (function($,undefined){
             $(this).parent().find("span.complexinput input[type!='radio']").prop('disabled', true); //Add attribute without value
             $(this).find("input[type!='radio']").removeAttr("disabled");
         });
+
+        //Show sequence form
+		$("span.complexinput input[name='seq_opt3']").bind("change", function(){
+			_redrawSequenceForm(false);
+        });
 	};
 
 	var _loadValues = function(){
@@ -322,16 +329,46 @@ SGAME_AT = (function($,undefined){
 					$("#sgame_at div[step='4'] div.options_wrapper input[name='seq_opt1'][value='" + current_sequencing["repeat_lo"] + "']").attr('checked',true);
 				}
 
-				if(typeof supportedInterruptions.indexOf(current_sequencing["interruptions"]) !== -1){
+				if(supportedInterruptions.indexOf(current_sequencing["interruptions"]) !== -1){
 					$("#sgame_at div[step='4'] div.options_wrapper input[name='seq_opt2'][value='" + current_sequencing["interruptions"] + "']").attr('checked',true);
 					if(typeof current_sequencing["interruptions_n"] === "number"){
 						$("#sgame_at div[step='4'] div.options_wrapper input[name='seq_opt2'][value='" + current_sequencing["interruptions"] + "']").parent().find("input[type='number']").val(current_sequencing["interruptions_n"]);
 					}
 				}
 
+				if(supportedSequencingApproach.indexOf(current_sequencing["approach"]) !== -1){
+					$("#sgame_at div[step='4'] div.options_wrapper input[name='seq_opt3'][value='" + current_sequencing["approach"] + "']").attr('checked',true);
+				}
+
+				$(document).on('click', '#new_sequence_group_button', function(event) {
+					_newSequenceGroup();
+				});
+
+				$(document).on('click', 'div.sequencing_group_wrapper table.sequencing_group_header td.remove img', function(event) {
+					_removeSequenceGroup($(this).parents("div.sequencing_group_wrapper").attr("groupid"));
+				});
+
+				$(document).on('click', 'button.new_condition_group_button', function(event) {
+					_newSequenceCondition($(this).parents("div.sequencing_group_wrapper").attr("groupid"));
+				});
+
+				$(document).on('click', 'div.sequencing_condition_wrapper img', function(event) {
+					_removeSequenceCondition($(this).parents("div.sequencing_condition_wrapper").attr("conditionid"));
+				});
+
+				$(document).on('focusout', 'div.sequencing_group_wrapper input[name=sequence_group_name]', function(event) {
+					_onNewSequenceGroupName($(this).parents("div.sequencing_group_wrapper").attr("groupid"),$(this).val());
+				});
+				
+				$(document).on('change', 'select.select_condition_in_condition', function(event) {
+					_onChangeSelectConditionInCondition($(this).parents("div.sequencing_condition_wrapper").attr("conditionid"));
+				});
+				
 				$("#step4_confirmation").on("click",function(){
 					_onStep4Confirmation();
 				});
+
+				_redrawSequenceForm(true);
 				break;
 			case 5:
 				//Setting option: completion_status
@@ -714,6 +751,7 @@ SGAME_AT = (function($,undefined){
 			return _showSGAMEDialogWithSettings({"msg":_getTrans("i.error_no_los")}, false);
 		}
 		_redrawMappingTable();
+		_redrawSequenceForm(true);
 		_loadValues();
 		_finishStep("2");
 	};
@@ -838,6 +876,493 @@ SGAME_AT = (function($,undefined){
 
 	//Step 4
 
+	var _lastOptRedrawSequence = undefined;
+
+	var _redrawSequenceForm = function(force){
+		var opt = $("span.complexinput input[name='seq_opt3']:checked").val();
+		var optChanged = ((typeof _lastOptRedrawSequence !== "undefined")&&(opt !== _lastOptRedrawSequence));
+
+		switch(opt){
+		case "random":
+			if(force===false){
+				if((optChanged)&&(supportedSequencingApproach.indexOf(_lastOptRedrawSequence) !== -1)){
+					confirmSequencingSetting();
+					return;
+				}
+			} else {
+				if(optChanged){
+					current_sequencing["sequence"] = {};
+				}
+				_redrawRandomSequenceForm();
+			}
+			break;
+		case "linear_completion":
+		case "linear_success":
+			if(force===false){
+				if(["linear_completion","linear_success"].indexOf(_lastOptRedrawSequence) !== -1){
+					break;
+				}
+				if(_lastOptRedrawSequence === "custom"){
+					confirmSequencingSetting();
+					return;
+				}
+			}
+
+			if((optChanged)&&(["linear_completion","linear_success"].indexOf(_lastOptRedrawSequence) === -1)){
+				current_sequencing["sequence"] = {};
+			}
+			_redrawLinearSequenceForm();
+			break;
+		case "custom":
+			if(force===false){
+				if(["linear_completion","linear_success"].indexOf(_lastOptRedrawSequence) !== -1){
+					confirmSequencingSetting();
+					return;
+				}
+			}
+
+			if(optChanged){
+				current_sequencing["sequence"] = {};
+			}
+			_redrawCustomSequenceForm();
+			break;
+		}
+
+		if(typeof opt !== "undefined"){
+			_lastOptRedrawSequence = opt;
+		}
+	};
+
+	var confirmSequencingSetting = function(){
+		if(typeof _lastOptRedrawSequence !== "undefined"){
+			var sData = _composeSequenceData(_lastOptRedrawSequence);
+			if((typeof sData !== "undefined")&&(Object.keys(sData).length === 0)){
+				_redrawSequenceForm(true);
+				return;
+			}
+		}
+
+		_showSGAMEDialogWithSettings({msg: _getTrans("i.sequencing_change_confirmation")}, true, function(dialog_ok){
+			if(dialog_ok === true){
+				_redrawSequenceForm(true);
+			} else {
+				$("#sgame_at div[step='4'] div.options_wrapper input[name='seq_opt3'][value='" + _lastOptRedrawSequence + "']").prop('checked',true);
+			}
+		});
+	};
+
+	var _redrawRandomSequenceForm = function(){
+		$("#sequencing_description, #sequencing_custom_description").hide();
+		$("#sgame_at div.sequencing .sequence_form_wrapper").html("").hide();
+	};
+
+	var _redrawLinearSequenceForm = function(){
+		$("#sequencing_custom_description").hide();
+		$("#sequencing_description").show();
+		
+		var lsequence = $("#sgame_at div.sequencing .sequence_form_wrapper");
+		$(lsequence).html("<select class='linear_sequence' multiple='multiple'></select>");
+
+		//Get los in order
+		var loIdsSequence = [];
+		if(typeof current_sequencing["sequence"] !== "undefined"){
+			var groupIds = Object.keys(current_sequencing["sequence"]);
+			var nGroups = groupIds.length;
+			loIdsSequence = new Array(nGroups);
+			for(var k = 0; k<nGroups; k++){
+				var group = current_sequencing["sequence"][groupIds[k]];
+				if(group.los instanceof Array && typeof group.los[0] !== "undefined"){
+					var loId = group.los[0];
+					if((typeof group.condition === "object")&&(group.condition.conditions instanceof Array && typeof group.condition.conditions[0] !== "undefined" && typeof group.condition.conditions[0].group !== "undefined")){
+						loIdsSequence[group.condition.conditions[0].group] = loId;
+					} else {
+						loIdsSequence[0] = loId;
+					}
+				}
+			}
+		}
+
+		//Include selected LOs in order
+		var selectOptions = [];
+		var loIds = Object.keys(current_los);
+
+		for(var i=0; i<loIdsSequence.length; i++){
+			var indexInLoIds = loIds.indexOf(loIdsSequence[i]);
+			if(indexInLoIds !== -1){
+				var lo = current_los[loIdsSequence[i]];
+				selectOptions.push({value:lo.id, text:lo.title, selected: true});
+			}
+		}
+
+		//Inclue the remaining (non-selected) los
+		var nLOs = loIds.length;
+		for(var j=0; j<nLOs; j++){
+			var lo = current_los[loIds[j]];
+			if(loIdsSequence.indexOf(loIds[j]) === -1){
+				selectOptions.push({value:lo.id, text:lo.title, selected: false});
+			}
+		}
+
+		var select = $(lsequence).find("select");
+		for(var k=0; k<selectOptions.length; k++){
+			var option = selectOptions[k];
+			var selected = "";
+			if(option.selected === true){
+				selected = 'selected="selected"';
+			}
+			$(select).append('<option value="' + option.value + '" ' + selected + '>' + option.text + '</option>');
+		}
+
+		$(select).select2();
+		$("#sgame_at div.sequencing .sequence_form_wrapper ul.select2-choices").sortable();
+		$(lsequence).show();
+	};
+
+	var _redrawCustomSequenceForm = function(){
+		$("#sequencing_description, #sequencing_custom_description").show();
+		var csequence = $("#sgame_at div.sequencing .sequence_form_wrapper");
+		$(csequence).html("<button id='new_sequence_group_button' class='sgame_button'>+ " + _getTrans("i.sequencing_new_group") + "</button>").show();
+	
+		//Draw groups
+		if(typeof current_sequencing["sequence"] !== "undefined"){
+			var groupIds = Object.keys(current_sequencing["sequence"]);
+			var nGroups = groupIds.length;
+			for(var i = 0; i<nGroups; i++){
+				_drawSequenceGroupScaffold(current_sequencing["sequence"][groupIds[i]]);
+			}
+			for(var j = 0; j<nGroups; j++){
+				_drawConditionsAfterDrawSequenceGroupScaffold(current_sequencing["sequence"][groupIds[j]]);
+			}
+		}
+	};
+
+	var _drawSequenceGroupScaffold = function(group){
+		if((typeof group === "undefined")||(typeof group.id === "undefined")){
+			return;
+		}
+
+		var groupId = (group.id+"");
+		var csequence = $("#sgame_at div.sequencing .sequence_form_wrapper");
+		$(csequence).append("<div class='sequencing_group_wrapper' groupid='" + groupId + "'><div class='sequencing_group_content_wrapper'></div></div>");
+		var groupDiv = $("div.sequencing_group_wrapper[groupid=" + groupId + "]");
+		var groupContentDiv = $(groupDiv).find("div.sequencing_group_content_wrapper");
+
+		var groupName = (typeof group.name === "string") ? group.name : _getTrans("i.sequencing_group_unnamed");
+		var groupNameForHeader = (typeof group.name === "string") ? group.name : _getTrans("i.sequencing_group");
+
+		var headerTable = "<table class='sequencing_group_header'><tr><td>" + groupNameForHeader + "</td><td class='remove'><img src='/assets/remove.png'/></td></tr></table>";
+		groupDiv.prepend(headerTable);
+
+		var dataTable = "<table class='sequencing_group_data'><tr><td>" + _getTrans("i.sequencing_name_for_group") + "</td><td class='sequencing_group_input'><input maxlength='60' type='text' name='sequence_group_name' value='" + groupName + "'></td></tr><tr><td>" + _getTrans("i.sequencing_los") + "</td><td class='sequencing_group_los'><select multiple='multiple'></select></td></tr></table>";
+		groupContentDiv.append(dataTable);
+
+		var loIds = Object.keys(current_los);
+		var nLOs = loIds.length;
+		var select = $(groupContentDiv).find("td.sequencing_group_los select");
+		var selectOptions = [];
+		for(var j=0; j<nLOs; j++){
+			var lo = current_los[loIds[j]];
+			var selected = ((typeof group.los !== "undefined")&&(group.los.indexOf(lo.id + "")!==-1));
+			selectOptions.push({value:lo.id, text:lo.title, selected: selected});
+		}
+
+		for(var i=0; i<selectOptions.length; i++){
+			var option = selectOptions[i];
+			var selected = '';
+			if(option.selected === true){
+				selected = 'selected="selected"';
+			}
+			$(select).append('<option value="' + option.value + '" ' + selected + '>' + option.text + '</option>');
+		}
+		$(select).select2();
+	};
+
+	var _drawConditionsAfterDrawSequenceGroupScaffold = function(group){
+		if((typeof group === "undefined")||(typeof group.id === "undefined")){
+			return;
+		}
+		var groupId = (group.id+"");
+		var groupDiv = $("div.sequencing_group_wrapper[groupid=" + groupId + "]");
+		var groupContentDiv = $(groupDiv).find("div.sequencing_group_content_wrapper");
+		$(groupContentDiv).append("<p class='condition_description'><span></span><select style='display:none' class='select_operator_in_group'></select></p>");
+		$(groupContentDiv).append("<button style='display:none' class='sgame_button new_condition_group_button'>+ " + _getTrans("i.sequencing_new_condition") + "</button>");
+
+		var selectOperatorGroup = $(groupContentDiv).find("select.select_operator_in_group");
+		var ORselected = ((typeof group.condition === "object")&&(group.condition.operator === "OR"));
+		$(selectOperatorGroup).append('<option value="AND"' + ((ORselected===true) ? '' : 'selected="selected"') + '>' + _getTrans("i.sequencing_condition_description_AND") + '</option>');
+		$(selectOperatorGroup).append('<option value="OR"' + ((ORselected===true) ? 'selected="selected"' : '') + '>' + _getTrans("i.sequencing_condition_description_OR") + '</option>');
+
+		if((typeof group.condition === "object")&&(group.condition.type === "multiple")&&(Array.isArray(group.condition.conditions))&&(group.condition.conditions.length > 0)){
+			for(var i=0; i<group.condition.conditions.length; i++){
+				_drawSequenceCondition(group.condition.conditions[i],groupId);
+			}
+		}
+		_updateConditionDescriptionForGroup(groupId);
+	};
+
+	var _drawSequenceCondition = function(condition,groupId){
+		if((typeof groupId === "undefined")||(typeof condition === "undefined")||(typeof condition.id === "undefined")){
+			return;
+		}
+
+		var conditionId = condition.id;
+		var conditionsContainer = $("div.sequencing_group_wrapper[groupid=" + groupId + "] div.sequencing_group_content_wrapper");
+		$(conditionsContainer).append("<div class='sequencing_condition_wrapper' conditionid='" + conditionId + "'><div class='sequencing_condition_content_wrapper'></div></div>");
+		var conditionDiv = $(conditionsContainer).find("div.sequencing_condition_wrapper[conditionid=" + conditionId + "]");
+		var conditionContentDiv = $(conditionDiv).find("div.sequencing_condition_content_wrapper");
+
+		var headerTable = "<table class='sequencing_condition_header'><tr><td>" + _getTrans("i.sequencing_condition") + "</td><td class='remove'><img src='/assets/remove_black.png'/></td></tr></table>";
+		$(conditionDiv).prepend(headerTable);
+
+		var conditionStatement = $("<p class='condition_statement'><span class='condition_group_part'></span><select class='select_group_in_condition' groupid='" + groupId + "'></select><span class='condition_must_part'></span><br/><select class='select_condition_in_condition'></select><span class='select_number_in_condition'><input class='select_number_in_condition' type='number' min='1' max='100' step='1' value='50'>%.</span></p>");
+		$(conditionStatement).find("span.condition_group_part").html(_getTrans("i.sequencing_condition_group_part") + " ");
+		$(conditionStatement).find("span.condition_must_part").html(" " + _getTrans("i.sequencing_condition_must_part") + ": ");
+
+		var sequencingGroups = _getSequencingGroups();
+		var selectGroup = $(conditionStatement).find("select.select_group_in_condition");
+		var selectOptionsForGroup = [];
+		for(var k=0; k<sequencingGroups.length; k++){
+			if((sequencingGroups[k].id+"") !== (groupId+"")){
+				var selected = ((condition.group+"") === (sequencingGroups[k].id+""));
+				selectOptionsForGroup.push({value:sequencingGroups[k].id, text: sequencingGroups[k].name, selected: selected});
+			}
+		}
+		for(var l=0; l<selectOptionsForGroup.length; l++){
+			var option = selectOptionsForGroup[l];
+			var selected = '';
+			if(option.selected === true){
+				selected = 'selected="selected"';
+			}
+			$(selectGroup).append('<option value="' + option.value + '" ' + selected + '>' + option.text + '</option>');
+		}
+
+		var selectCondition = $(conditionStatement).find("select.select_condition_in_condition");
+		var selectOptionsForCondition = [];
+		for(var i=0; i<supportedSequencingConditions.length; i++){
+			var selected = (condition.requirement === supportedSequencingConditions[i]);
+			selectOptionsForCondition.push({value:supportedSequencingConditions[i], text: _getTrans("i.sequencing_condition_" + supportedSequencingConditions[i]), selected: selected});
+		}
+		for(var j=0; j<selectOptionsForCondition.length; j++){
+			var option = selectOptionsForCondition[j];
+			var selected = '';
+			if(option.selected === true){
+				selected = 'selected="selected"';
+			}
+			$(selectCondition).append('<option value="' + option.value + '" ' + selected + '>' + option.text + '</option>');
+		}
+
+		if((typeof condition.threshold === "string")&&(isNaN(condition.threshold)===false)){
+			$(conditionStatement).find("span.select_number_in_condition input").val(condition.threshold);
+		}
+
+		$(conditionContentDiv).append(conditionStatement);
+		_onChangeSelectConditionInCondition(conditionId);
+	};
+
+	var _updateConditionDescriptionForGroup = function(groupId){
+		if(typeof groupId === "undefined"){
+			return;
+		}
+
+		var groupDiv = $("div.sequencing_group_wrapper[groupid=" + groupId + "]");
+		var nConditionButton = $(groupDiv).find("button.new_condition_group_button");
+		var nConditions = $(groupDiv).find("div.sequencing_condition_wrapper").length;
+		var operatorSelect = $(groupDiv).find("select.select_operator_in_group");
+		var cDescription = "";
+
+		if(nConditions > 0){
+			cDescription =  _getTrans("i.sequencing_condition_description");
+			$(nConditionButton).show();
+			$(operatorSelect).show();
+		} else {
+			cDescription =  _getTrans("i.sequencing_condition_description_none");
+			if(_getSequencingGroups().length <= 1){
+				cDescription = cDescription + " " + _getTrans("i.sequencing_condition_description_none_nogroups");
+				$(nConditionButton).hide();
+			} else {
+				$(nConditionButton).show();
+			}
+			$(operatorSelect).hide();
+		}
+		
+		$(groupDiv).find("p.condition_description span").html(cDescription);
+	};
+
+	var _getSequencingGroups = function(){
+		var sgroups = [];
+		$("div.sequencing_group_wrapper").each(function(index, elem){
+			var groupId = $(elem).attr("groupid");
+			sgroups.push({id: $(elem).attr("groupid"), name: $(elem).find("input[name='sequence_group_name']").val()});
+		});
+
+		return sgroups;
+	};
+
+
+	//Functions for creating new groups
+
+	var _newSequenceGroup = function(){
+		var groupId = _generateSequenceGroupId();
+		var newGroup = {id: groupId}
+		_drawSequenceGroupScaffold(newGroup);
+		_drawConditionsAfterDrawSequenceGroupScaffold(newGroup);
+		_drawConditionOptionsAfterDrawNewSequenceGroup(groupId);
+		_updateConditionDescriptionForGroup(groupId);
+	};
+
+	var _generateSequenceGroupId = function(){
+		var maxId = 0;
+		if($("div.sequencing_group_wrapper[groupid]").length > 0){
+			maxId = Math.max.apply(null, $("div.sequencing_group_wrapper[groupid]").map(function() { return parseInt($(this).attr("groupid")) }).get());
+		}
+		return maxId + 1;
+	};
+
+	var _newSequenceCondition = function(groupId){
+		_drawSequenceCondition({id: _generateSequenceConditionId()},groupId);
+		_updateConditionDescriptionForGroup(groupId);
+	};
+
+	var _generateSequenceConditionId = function(){
+		var maxId = 0;
+		if($("div.sequencing_condition_wrapper[conditionid]").length > 0){
+			maxId = Math.max.apply(null, $("div.sequencing_condition_wrapper[conditionid]").map(function() { return parseInt($(this).attr("conditionid")) }).get());
+		}
+		return maxId + 1;
+	};
+
+	var _drawConditionOptionsAfterDrawNewSequenceGroup = function(groupId){
+		//Add group to conditions select of other groups
+		var groupName = $("div.sequencing_group_wrapper[groupid='" + groupId + "']").find("input[name='sequence_group_name']").val();
+		$("select.select_group_in_condition[groupid!='" + groupId + "']").each(function(index, elem){
+			$(elem).append("<option value='" + groupId + "'>" + groupName + "</option>");
+		});
+	};
+
+	var _onNewSequenceGroupName = function(groupId,groupName){
+		var groupTitle = groupName;
+		if(groupTitle === _getTrans("i.sequencing_group_unnamed")){
+			groupTitle = _getTrans("i.sequencing_group")
+		}
+		$("div.sequencing_group_wrapper[groupid='" + groupId + "'] table.sequencing_group_header td:first-child").html(groupTitle);
+		$("select.select_group_in_condition[groupid!='" + groupId + "'] option[value='" + groupId + "']").each(function(index, elem){
+			$(elem).html(groupName);
+		});
+	};
+
+	var _removeSequenceGroup = function(groupId){
+		$("div.sequencing_group_wrapper[groupid=" + groupId + "]").remove();
+
+		//Remove conditions that targeted the removed group
+		$("select.select_group_in_condition[groupid!='" + groupId + "'] option[value='" + groupId + "']:selected").each(function(index, elem){
+			var conditionId = $(elem).parents("div.sequencing_condition_wrapper").attr("conditionid");
+			_removeSequenceCondition(conditionId);
+		});
+
+		//Delete group from conditions select of all groups
+		$("select.select_group_in_condition[groupid!='" + groupId + "'] option[value='" + groupId + "']").remove();
+	
+		$("div.sequencing_group_wrapper").each(function(index, elem){
+			var ogroupId = $(elem).attr("groupid");
+			_updateConditionDescriptionForGroup(ogroupId);
+		});
+	};
+
+	var _onChangeSelectConditionInCondition = function(conditionId){
+		var conditionDOM = $("div.sequencing_condition_wrapper[conditionid='" + conditionId + "']");
+		var conditionRequirement = $(conditionDOM).find("select.select_condition_in_condition option:selected").val();
+		var numberDOM = $(conditionDOM).find("span.select_number_in_condition");
+		if(["completion_higher_inmediate","score_higher","score_higher_inmediate","score_lower"].indexOf(conditionRequirement) !== -1){
+			$(numberDOM).show();
+		} else {
+			$(numberDOM).hide();
+		}
+	};
+
+	var _removeSequenceCondition = function(conditionId){
+		var conditionDiv = $("div.sequencing_condition_wrapper[conditionid=" + conditionId + "]");
+		var groupId = $(conditionDiv).parents("div.sequencing_group_wrapper").attr("groupid");
+		$(conditionDiv).remove();
+		_updateConditionDescriptionForGroup(groupId);
+	};
+
+
+	var _composeSequenceData = function(sapproach){
+		if(typeof sapproach === "undefined"){
+			sapproach = $("span.complexinput input[name='seq_opt3']:checked").val();
+		}
+		switch(sapproach){
+		case "linear_completion":
+		case "linear_success":
+			return _composeLinearSequenceData(sapproach);
+		case "custom":
+			return _composeCustomSequenceData();
+		}
+	};
+
+	var _composeLinearSequenceData = function(sapproach){
+		var data = $("#sgame_at div.sequencing .sequence_form_wrapper div.select2-container-multi").select2("data");
+
+		var sequence = {};
+		for(var i = 0; i<data.length; i++){
+			var group = {};
+			group.id = (i+1);
+			group.los = [data[i].id];
+			if (group.id !== 1){
+				var multipleCondition = {id:1, type: "multiple", operator: "AND", conditions: []};
+				multipleCondition.conditions = [{id:(group.id), type: "single", group: (group.id-1), requirement: ((sapproach === "linear_completion") ? "completion" : "success")}];
+				group.condition = multipleCondition;
+			}
+			sequence[group.id] = group;
+		}
+
+		return sequence;
+	};
+
+	var _composeCustomSequenceData = function(sapproach){
+		var sequence = {};
+		var groupId = 1;
+		var conditionId = 1;
+
+		//Groups
+		$("div.sequencing_group_wrapper").each(function(index, groupDOM){
+			var group = {};
+			group.id = groupId;
+			groupId += 1;
+			group.name = $(groupDOM).find("input[name='sequence_group_name']").val();
+			group.los = [];
+			var losData = $(groupDOM).find("td.sequencing_group_los div.select2-container-multi").select2("data");
+			for(var i=0; i<losData.length; i++){
+				group.los.push(losData[i].id);
+			}
+
+			//Group conditions
+			var conditions = [];
+			$(groupDOM).find("div.sequencing_condition_wrapper").each(function(index, conditionDOM){
+				var condition = {};
+				condition.id = conditionId;
+				conditionId += 1;
+				condition.type = "single";
+				condition.group = $(conditionDOM).find("select.select_group_in_condition option:selected").val();
+				condition.requirement = $(conditionDOM).find("select.select_condition_in_condition option:selected").val();
+				if(["completion_higher_inmediate","score_higher","score_higher_inmediate","score_lower"].indexOf(condition.requirement) !== -1){
+					var number = $(conditionDOM).find("span.select_number_in_condition input").val();
+					condition.threshold = number;
+				}
+				conditions.push(condition);
+			});
+			if(conditions.length > 0){
+				var operator = $(groupDOM).find("select.select_operator_in_group option:selected").val();
+				group.condition = {id: conditionId, type: "multiple", operator: operator, conditions: conditions};
+				conditionId += 1;
+			}
+			 	
+			sequence[group.id] = group;
+		});
+
+		return sequence;
+	};
+
 	var _onStep4Confirmation = function(){
 		//Sequencing option: repeat_lo
 		current_sequencing["repeat_lo"] = $("#sgame_at div[step='4'] div.options_wrapper input[name='seq_opt1']:checked").val();
@@ -850,6 +1375,14 @@ SGAME_AT = (function($,undefined){
 			delete current_sequencing["interruptions_n"];
 		}
 
+		//Sequence option
+		current_sequencing["approach"] = $("span.complexinput input[name='seq_opt3']:checked").val();
+		if(current_sequencing["approach"] === "random"){
+			delete current_sequencing["sequence"];
+		} else {
+			current_sequencing["sequence"] = _composeSequenceData();
+		}
+		
 		_finishStep("4");
 	};
 

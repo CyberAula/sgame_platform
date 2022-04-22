@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest identifier="SGAME_PRESENTATION_15916" version="1.3" xmlns="http://www.imsglobal.org/xsd/imscp_v1p1" xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_v1p3" xmlns:adlseq="http://www.adlnet.org/xsd/adlseq_v1p3" xmlns:adlnav="http://www.adlnet.org/xsd/adlnav_v1p3" xmlns:imsss="http://www.imsglobal.org/xsd/imsss" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imscp_v1p1 imscp_v1p1.xsd http://www.adlnet.org/xsd/adlcp_v1p3 adlcp_v1p3.xsd http://www.adlnet.org/xsd/adlseq_v1p3 adlseq_v1p3.xsd http://www.adlnet.org/xsd/adlnav_v1p3 adlnav_v1p3.xsd http://www.imsglobal.org/xsd/imsss imsss_v1p0.xsd">
+  <metadata>
+    <schema>ADL SCORM</schema>
+    <schemaversion>2004 4th Edition</schemaversion>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM lom.xsd">
+  <general>
+    <identifier>
+      <catalog>URI</catalog>
+      <entry>http://sgame.dit.upm.es/presentations/15916</entry>
+    </identifier>
+    <title>
+      <string>Test 1</string>
+    </title>
+    <description>
+      <string language="en">Test 1. Web Presentation provided by http://sgame.dit.upm.es.</string>
+    </description>
+    <structure>
+      <source>LOMv1.0</source>
+      <value>hierarchical</value>
+    </structure>
+    <aggregationLevel>
+      <source>LOMv1.0</source>
+      <value>2</value>
+    </aggregationLevel>
+  </general>
+  <lifeCycle>
+    <version>
+      <string language="en">v2021.12.17</string>
+    </version>
+    <status>
+      <source>LOMv1.0</source>
+      <value>final</value>
+    </status>
+    <contribute>
+      <role>
+        <source>LOMv1.0</source>
+        <value>author</value>
+      </role>
+      <entity>BEGIN:VCARD&amp;#xD;VERSION:3.0&amp;#xD;N:Aldo&amp;#xD;FN:Aldo&amp;#xD;END:VCARD</entity>
+      <date>
+        <dateTime>2021-12-17</dateTime>
+        <description>
+          <string language="en">This date represents the date the author finished the indicated version of the Learning Object.</string>
+        </description>
+      </date>
+    </contribute>
+    <contribute>
+      <role>
+        <source>LOMv1.0</source>
+        <value>technical implementer</value>
+      </role>
+      <entity>BEGIN:VCARD&amp;#xD;VERSION:3.0&amp;#xD;N:Authoring Tool ViSH Editor v.0.9.4 (http://github.com/ging/vish_editor)&amp;#xD;FN:Authoring Tool ViSH Editor v.0.9.4 (http://github.com/ging/vish_editor)&amp;#xD;END:VCARD</entity>
+    </contribute>
+  </lifeCycle>
+  <metaMetadata>
+    <identifier>
+      <catalog>URI</catalog>
+      <entry>http://sgame.dit.upm.es/presentations/15916/metadata.xml</entry>
+    </identifier>
+    <contribute>
+      <role>
+        <source>LOMv1.0</source>
+        <value>creator</value>
+      </role>
+      <entity>BEGIN:VCARD&amp;#xD;VERSION:3.0&amp;#xD;N:Aldo&amp;#xD;FN:Aldo&amp;#xD;END:VCARD</entity>
+      <date>
+        <dateTime>2021-12-17</dateTime>
+        <description>
+          <string language="en">This date represents the date the author finished authoring the metadata of the indicated version of the Learning Object.</string>
+        </description>
+      </date>
+    </contribute>
+    <metadataSchema>LOMv1.0</metadataSchema>
+    <language>en</language>
+  </metaMetadata>
+  <technical>
+    <format>text/html</format>
+    <location>http://sgame.dit.upm.es/presentations/15916</location>
+    <requirement>
+      <orComposite>
+        <type>
+          <source>LOMv1.0</source>
+          <value>browser</value>
+        </type>
+        <name>
+          <source>LOMv1.0</source>
+          <value>any</value>
+        </name>
+      </orComposite>
+    </requirement>
+    <installationRemarks>
+      <string language="en">Unzip the zip file and launch presentation.html in your browser.</string>
+    </installationRemarks>
+    <otherPlatformRequirements>
+      <string language="en">HTML5-compliant web browser and ViSH Viewer v.0.9.4 (http://github.com/ging/vish_editor).</string>
+    </otherPlatformRequirements>
+  </technical>
+  <educational>
+    <interactivityType>
+      <source>LOMv1.0</source>
+      <value>mixed</value>
+    </interactivityType>
+    <learningResourceType>
+      <source>LOMv1.0</source>
+      <value>lecture</value>
+    </learningResourceType>
+    <learningResourceType>
+      <source>LOMv1.0</source>
+      <value>slide</value>
+    </learningResourceType>
+    <learningResourceType>
+      <source>LOMv1.0</source>
+      <value>questionnaire</value>
+    </learningResourceType>
+    <interactivityLevel>
+      <source>LOMv1.0</source>
+      <value>very high</value>
+    </interactivityLevel>
+    <intendedEndUserRole>
+      <source>LOMv1.0</source>
+      <value>learner</value>
+    </intendedEndUserRole>
+  </educational>
+  <rights>
+    <cost>
+      <source>LOMv1.0</source>
+      <value>no</value>
+    </cost>
+    <copyrightAndOtherRestrictions>
+      <source>LOMv1.0</source>
+      <value>yes</value>
+    </copyrightAndOtherRestrictions>
+    <description>
+      <string language="en">License: 'Creative Commons Reconocimiento-NoComercial'. For additional information or questions regarding copyright, distribution and reproduction, visit http://sgame.dit.upm.es/terms_of_use .</string>
+    </description>
+  </rights>
+</lom>
+  </metadata>
+  <organizations default="defaultOrganization">
+    <organization identifier="defaultOrganization">
+      <title>Test 1</title>
+      <item identifier="PRESENTATION_15916" identifierref="PRESENTATION_15916_RESOURCE">
+        <title>Test 1</title>
+      </item>
+    </organization>
+  </organizations>
+  <resources>
+    <resource identifier="PRESENTATION_15916_RESOURCE" type="webcontent" href="presentation.html" adlcp:scormType="sco">
+      <file href="presentation.html"/>
+    </resource>
+  </resources>
+</manifest>

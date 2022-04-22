@@ -74,7 +74,7 @@ class VishEditorUtils
       when nil,"text","image","video","audio","snapshot"
         #Do nothing
       when "quiz"
-        unless el["quiztype"].blank? or el["question"]["value"].blank? or el["choices"].blank?
+        unless el["quiztype"].blank? or el["question"]["value"].blank? or (el["choices"].blank? and el["quiztype"]!="openAnswer")
           if el["selfA"]===true
             reportData = true
             break

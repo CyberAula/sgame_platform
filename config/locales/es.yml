@@ -19,6 +19,8 @@ es:
             password:
               blank: "no puede estar en blanco"
   at:
+    confirmations:
+      sequencing_change: "¿Está seguro? Si cambia este ajuste perderá la secuencia que haya definido previamente."
     errors:
       generic_create: "Ocurrió un error y el juego no pudo ser creado."
       generic_update: "Ocurrió un error y el juego no pudo ser actualizado."
@@ -58,6 +60,30 @@ es:
       nresources: "Número de objetos de aprendizaje"
       no_selected_los: "No has seleccionado ningún objeto de aprendizaje todavía"
       scorm_version: "Versión SCORM"
+    sequencing:
+      new_group: "Añadir grupo"
+      new_condition: "Añadir condición"
+      remove_group: "Eliminar grupo"
+      remove_condition: "Eliminar condición"
+      group: "Grupo"
+      group_unnamed: "Sin nombre"
+      name_for_group: "Nombre"
+      los: "Objetos de aprendizaje"
+      condition: "Condición"
+      condition_description_none: "Este grupo está inicialmente desbloqueado. Si desea que el grupo empiece bloqueado debe especificar al menos una condición."
+      condition_description_none_nogroups: "Para especificar una condición, es necesario que exista otro grupo."
+      condition_description: "Para desbloquear este grupo"
+      condition_description_AND: "se deben cumplir todas y cada una de las siguientes condiciones."
+      condition_description_OR: "se debe cumplir al menos una de las siguientes condiciones."
+      condition_group_part: "Para el grupo"
+      condition_must_part: "se debe cumplir la siguiente condición"
+      condition_completion: "Ver todos los objetos de aprendizaje del grupo"
+      condition_completion_higher_inmediate: "Ver un porcentaje de los objetos de aprendizaje del grupo superior al:"
+      condition_success: "Consumir con éxito todos los objetos de aprendizaje del grupo"
+      condition_fail: "No consumir con éxito todos los objetos de aprendizaje del grupo tras verlos"
+      condition_score_higher: "Ver todos los objetos de aprendizaje del grupo y consumir con éxito un porcentaje de ellos igual o superior al:"
+      condition_score_higher_inmediate: "En cualquier momento, consumir con éxito un porcentaje de los objetos de aprendizaje del grupo igual o superior al:"
+      condition_score_lower: "Ver todos los objetos de aprendizaje del grupo y consumir con éxito un porcentaje de ellos inferior al:"
     step1:
       title: "Elige una plantilla de juego"
       description: "En primer lugar tienes que seleccionar una plantilla de juego en la cual integrar objetos de aprendizaje a fin de crear el juego educativo. Una plantilla de juego es un juego de entretenimiento que ha incluido la API de SGAME a fin de mostrar objetos de aprendizaje a los jugadores cuando se desencadenan determinados eventos. Las plantillas de juego definen los eventos específicos cuyo desencadenamiento causará que se muestre un objeto de aprendizaje así como las recompensas que los jugadores recibirán cuando completen con éxito uno de esos objetos de aprendizaje. Después de elegir una plantilla de juego, debes pulsar sobre el botón 'Seleccionar plantilla de juego' para avanzar al siguiente paso."
@@ -81,12 +107,20 @@ es:
         title: "Después de mostrar un objeto de aprendizaje en el juego:"
         choice1: "El juego puede mostrar ese objeto de aprendizaje otra vez."
         choice2: "El juego puede mostrar ese objeto de aprendizaje otra vez solo si no ha sido consumido con éxito."
-        choice3: "El juego no mostará ese objeto de aprendizaje otra vez."
+        choice3: "El juego no mostrará ese objeto de aprendizaje otra vez."
       opt2:
         title: "El juego se podrá interrumpir para mostrar objetos de aprendizaje:"
         choice1: "Siempre que se produzca un evento para el que haya un objeto de aprendizaje mapeado que se pueda mostrar."
         choice2: "Como máximo la siguiente cantidad de veces:"
         choice3: "Como máximo una vez por cada periodo con la siguiente cantidad de segundos:"
+      opt3:
+        title: "Cuando se pueda elegir entre varios candidatos a la hora de mostrar un objeto de aprendizaje, el juego elegirá este objeto:"
+        choice1: "De manera aleatoria entre aquellos objetos de aprendizaje que se hayan mostrado menos veces."
+        choice2: "Siguiendo una secuencia lineal, de tal manera que cuando un objeto de aprendizaje sea mostrado se desbloqueará el siguiente."
+        choice3: "Siguiendo una secuencia lineal, de tal manera que cuando un objeto de aprendizaje sea consumido con éxito se desbloqueará el siguiente."
+        choice4: "Siguiendo una secuencia personalizada."
+        sequencing_description: "Ha indicado que los objetos de aprendizaje deben elegirse siguiendo una secuencia. Por lo tanto, debe definir esta secuencia a continuación."
+        sequencing_custom_description: "Para definir una secuencia personalizada debe definir varios grupos de objetos de aprendizaje, así como condiciones para desbloquear dichos grupos."
     step5:
       title: "Especifica ajustes para el juego"
       description: "En este paso puedes especificar diferentes ajustes para el juego educativo."
@@ -121,6 +155,7 @@ es:
         choice4: "Cuando el jugador haya consumido con éxito objetos de aprendizaje cualesquiera la siguiente cantidad de veces:"
         choice5: "Al iniciar el juego."
         choice6: "Nunca."
+        choice7: "Cuando el estado de finalización del juego pase a completado."
     step6:
       title: "Especifica metadatos para el juego"
       description: "En este paso debes especificar metadatos (título, descripción, ...) para el juego educativo."
@@ -242,9 +277,8 @@ es:
     code: "Código fuente"
     manual: "Manual de usuario"
     manual_url: "/Manual_SGAME_es.pdf"
-    survey: "Encuesta de la plataforma SGAME"
-    survey_short: "Encuesta"
-    survey_url: "https://docs.google.com/forms/d/e/1FAIpQLSffXo2RDs-N096HcY-IMAVS4DJJKRYi4ckqycWLWpxdhULYeA/viewform"
+    videos: "Videotutoriales"
+    videos_url: "https://www.youtube.com/playlist?list=PLeBm-hVuW42UHHGnKl3CVbr7ikK8SlJ2d"
   header:
     menu:
       profile: "Perfil"

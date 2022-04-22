@@ -51,7 +51,7 @@ class Scormfile < ActiveRecord::Base
     end
     currentLos = self.los
     addedHrefs = []
-    Scorm::Package.open(zipFile, :cleanup => false) do |pkg|
+    Scorm::Package.open(zipFile, :cleanup => true, :force_cleanup_on_close => true) do |pkg|
       pkg.manifest.resources.each_with_index do |resource,i|
         lo = currentLos.find_by_resource_identifier(resource.id)
         lo = Lo.new if lo.nil?
