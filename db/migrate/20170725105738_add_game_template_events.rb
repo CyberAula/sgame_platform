@@ -1,4 +1,4 @@
-class AddGameTemplateEvents < ActiveRecord::Migration
+class AddGameTemplateEvents < ActiveRecord::Migration[4.2]
   def change
     create_table :game_template_events do |t|
       t.integer :game_template_id

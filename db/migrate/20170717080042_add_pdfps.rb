@@ -1,4 +1,4 @@
-class AddPdfps < ActiveRecord::Migration
+class AddPdfps < ActiveRecord::Migration[4.2]
   def change
     create_table :pdfps do |t|
       t.column :owner_id, :integer

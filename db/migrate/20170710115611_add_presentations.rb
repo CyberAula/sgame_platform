@@ -1,4 +1,4 @@
-class AddPresentations < ActiveRecord::Migration
+class AddPresentations < ActiveRecord::Migration[4.2]
 	def change
 		create_table(:presentations) do |t|
 			t.integer  :owner_id

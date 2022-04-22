@@ -1,4 +1,4 @@
-class AddScormfiles < ActiveRecord::Migration
+class AddScormfiles < ActiveRecord::Migration[4.2]
   def change
     create_table "scormfiles", :force => true do |t|
       t.integer  :owner_id

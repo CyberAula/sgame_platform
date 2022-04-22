@@ -6,7 +6,7 @@ class Game < ActiveRecord::Base
 	belongs_to :template, class_name: :GameTemplate, foreign_key: "game_template_id"
 	has_many :mappings, class_name: :GameEventMapping, :dependent => :destroy
 	has_many :events, class_name: :GameTemplateEvent, :through => :template
-	has_many :los, -> { uniq }, :through => :mappings
+	has_many :los, -> { distinct }, :through => :mappings
 
 	has_attached_file :thumbnail,
 		:styles => SgamePlatform::Application.config.thumbnail_styles

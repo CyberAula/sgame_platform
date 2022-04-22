@@ -1,4 +1,4 @@
-class AddDocuments < ActiveRecord::Migration
+class AddDocuments < ActiveRecord::Migration[4.2]
   def change
     create_table "documents", :force => true do |t|
       t.string   :title

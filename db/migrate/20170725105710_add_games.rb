@@ -1,4 +1,4 @@
-class AddGames < ActiveRecord::Migration
+class AddGames < ActiveRecord::Migration[4.2]
   def change
     create_table :games do |t|
       t.integer :game_template_id

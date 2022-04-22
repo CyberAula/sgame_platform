@@ -117,16 +117,25 @@ module SgamePlatform
     }
 
     config.after_initialize do
-      #Agnostic random
-      if ActiveRecord::Base.connection.adapter_name == "PostgreSQL"
-        config.agnostic_random = "RANDOM()"
-      else
-        #MySQL
-        config.agnostic_random = "RAND()"
+      begin
+        ActiveRecord::Base.connection
+        database_exists = true
+      rescue ActiveRecord::NoDatabaseError
+        database_exists = false
       end
 
-      #Demo user
-      config.demo_user = User.find_by_email("demo@sgame.dit.upm.es") if (ActiveRecord::Base.connection.table_exists? "users" and !User.find_by_email("demo@sgame.dit.upm.es").nil?)
+      if database_exists
+        #Agnostic random
+        if ActiveRecord::Base.connection.adapter_name == "PostgreSQL"
+          config.agnostic_random = "RANDOM()"
+        else
+          #MySQL
+          config.agnostic_random = "RAND()"
+        end
+
+        #Demo user
+        config.demo_user = User.find_by_email("demo@sgame.dit.upm.es") if (ActiveRecord::Base.connection.table_exists? "users" and !User.find_by_email("demo@sgame.dit.upm.es").nil?)
+      end
     end
 
     # Version of your assets, change this if you want to expire all your assets

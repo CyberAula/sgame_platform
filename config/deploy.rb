@@ -23,6 +23,8 @@ end
 set :scm, :git
 set :repository, repository
 
+server server_url, user: "ubuntu", roles: %w{app db web}
+
 puts "Using branch: '" + branch + "'"
 set :branch, fetch(:branch, branch)
 
