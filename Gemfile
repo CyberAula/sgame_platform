@@ -23,7 +23,7 @@ gem "devise-encryptable", '0.2.0'
 gem 'warden', '1.2.9'
 gem "recaptcha", '5.9.0', require: "recaptcha/rails"
 gem 'omniauth', '2.1.0'
-gem 'kt-paperclip', '6.4.1'
+gem 'kt-paperclip', '7.1.1'
 gem 'rubyzip', '2.3.2'
 gem 'rmagick', '4.2.5'
 gem 'pdf-reader', '2.9.2'
