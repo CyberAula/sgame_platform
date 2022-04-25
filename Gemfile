@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 #Bundler
 gem 'bundler', '2.3.12' 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '= 6.1.5'
+gem 'rails', '= 7.0.2.3'
 # Use postgreSQL as the database for Active Record
 gem 'pg', '= 1.3.5'
 # Use SCSS for stylesheets
@@ -28,7 +28,7 @@ gem 'rubyzip', '2.3.2'
 gem 'rmagick', '4.2.5'
 gem 'pdf-reader', '2.9.2'
 gem 'font-awesome-sass', '6.1.1'
-gem 'cancancan', '3.2.0'
+gem 'cancancan', '3.3.0'
 gem 'exception_notification', '4.5.0'
 
 # $ export FORCE_LOCAL_SCORM=scormGemPath

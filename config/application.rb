@@ -28,8 +28,23 @@ module SgamePlatform
     config.full_code_domain = "http://" + (config.APP_CONFIG['code_domain'] || config.APP_CONFIG['domain'])
 
     config.name = (config.APP_CONFIG["name"] || "SGAME Platform")
-    config.sgame_platform_version = "0.1"
-    config.sgame_api_version = "0.3"
+    config.sgame_platform_version = "1.0.0"
+    config.sgame_api_version = "1.0.1"
+
+    #Load SGAME modules
+    require Rails.root + "app/models/recommender_system.rb"
+    
+    #Load ViSH Editor plugin
+    config.before_configuration do
+      $:.unshift File.expand_path("#{__FILE__}/../../lib/plugins/vish_editor/lib")
+      $:.unshift File.expand_path("#{__FILE__}/../../lib/plugins/sgame/lib")
+      require 'vish_editor'
+      require 'sgame'
+    end
+
+    #Require core extensions
+    Dir[File.join(Rails.root, "lib", "core_ext", "*.rb")].each {|l| require l }
+    Dir[File.join(Rails.root, "lib", "acts_as_taggable_on", "*.rb")].each {|l| require l }
 
     # I18n (http://guides.rubyonrails.org/i18n.html)
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
@@ -38,14 +53,6 @@ module SgamePlatform
     config.i18n.available_locales = [config.i18n.default_locale, :es].uniq
     # I18n fallbacks: rails will fallback to config.i18n.default_locale translation
     config.i18n.fallbacks = true
-
-    #Load ViSH Editor plugin
-    config.before_configuration do
-      $:.unshift File.expand_path("#{__FILE__}/../../lib/plugins/vish_editor/lib")
-      $:.unshift File.expand_path("#{__FILE__}/../../lib/plugins/sgame/lib")
-      require 'vish_editor'
-      require 'sgame'
-    end
 
     #Tags settings
     config.tagsSettings = (config.APP_CONFIG['tagsSettings'] || {})
@@ -74,10 +81,6 @@ module SgamePlatform
       :zipfile=> [:zip, :xzip],
       :officedoc=> [:odt, :odp, :ods, :doc, :docx, :ppt, :pptx, :xls, :xlsx, :rtf, :pdf]
     }
-
-    #Require core extensions
-    Dir[File.join(Rails.root, "lib", "core_ext", "*.rb")].each {|l| require l }
-    Dir[File.join(Rails.root, "lib", "acts_as_taggable_on", "*.rb")].each {|l| require l }
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.

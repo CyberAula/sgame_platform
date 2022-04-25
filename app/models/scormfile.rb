@@ -120,7 +120,7 @@ class Scormfile < ActiveRecord::Base
     self.update_column(:lohreffull, SgamePlatform::Application.config.full_code_domain + "/code/scormfiles/" + self.id.to_s + "/" + self.lohref)
 
     #Add SCORM Wrapper (scorm_wrapper.html)
-    scormWrapperFile = DocumentsController.new.render_to_string "show_scorm_wrapper.html.erb", :locals => {:scormPackage => self}, :layout => false
+    scormWrapperFile = DocumentsController.new.render_to_string "documents/show_scorm_wrapper", :locals => {:scormPackage => self}, :layout => false
     scormWrapperFilePath = loDirectoryPath + "/scorm_wrapper.html"
     File.open(scormWrapperFilePath, "w"){|f| f << scormWrapperFile }
     
