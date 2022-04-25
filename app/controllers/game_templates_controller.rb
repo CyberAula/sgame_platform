@@ -68,7 +68,7 @@ class GameTemplatesController < ApplicationController
     params[:game_template].permit! unless params[:game_template].blank?
 
     respond_to do |format|
-      if @game_template.update_attributes(params[:game_template] || {})
+      if @game_template.update(params[:game_template] || {})
         format.html { redirect_to game_template_path(@game_template), notice: I18n.t("game_templates.messages.success.update") }
       else
         format.html { 

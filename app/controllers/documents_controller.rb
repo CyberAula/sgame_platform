@@ -28,7 +28,7 @@ class DocumentsController < ApplicationController
   def update
     @document = Document.find_by_id(params[:id])
     respond_to do |format|
-      if @document.update_attributes(document_params)
+      if @document.update(document_params)
         format.html { redirect_to document_path(@document), notice: I18n.t("documents.messages.success.update") }
       else
         format.html { 

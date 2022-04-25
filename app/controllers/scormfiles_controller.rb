@@ -12,7 +12,7 @@ class ScormfilesController < ApplicationController
         @suggestions = RecommenderSystem.suggestions({:n => 6, :lo_profile => @scormfile.profile, :settings => {}})
       }
       format.full {
-        render :layout => 'iframe.full'
+        render :layout => 'iframe'
       }
     end
   end
@@ -41,7 +41,7 @@ class ScormfilesController < ApplicationController
     @scormfile = Scormfile.find_by_id(params[:id])
     params[:scormfile].permit! unless params[:scormfile].blank?
     respond_to do |format|
-      if @scormfile.update_attributes(params[:scormfile] || {})
+      if @scormfile.update(params[:scormfile] || {})
         format.html { redirect_to scormfile_path(@scormfile), notice: I18n.t("documents.messages.success.update") }
       else
         format.html { 

@@ -9,5 +9,6 @@ section.resource_wrapper_picture .resource_content_wrapper {
 
 section.resource_wrapper_picture .resource_content_wrapper img {
 	max-height: 600px;
+	max-width: 100%;
 }
 

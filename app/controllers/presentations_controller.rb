@@ -104,7 +104,7 @@ class PresentationsController < ApplicationController
       end
     end
 
-    @presentation.update_attributes!(params[:excursion] || {})
+    @presentation.update!(params[:excursion] || {})
    
     published = (wasDraft===true and @presentation.draft===false)
     if published
