@@ -191,6 +191,9 @@ namespace :vish_editor do
     system "sed -i 's/..\\\/..\\\/images/\\\/assets/g' " + VISH_EDITOR_PLUGIN_PATH + "/app/assets/stylesheets/*/*css"
     system "sed -i 's/\\\/images\\\//\\\/assets\\\//g' " + VISH_EDITOR_PLUGIN_PATH + "/app/assets/stylesheets/*/*css"
     system "sed -i 's/..\\\/font/\\\/assets\\\/libs\\\/font-awesome\\\/font/g' " + VISH_EDITOR_PLUGIN_PATH + "/app/assets/stylesheets/libs/font-awesome/css/*css"
+  
+    #Rewrite CSS for CKEditor Skin css file
+    system "sed -i 's/url(/url(\\\/assets\\\/ckeditor\\\/skins\\\/vEditor\\\//g' " + VISH_EDITOR_PLUGIN_PATH + "/app/assets/javascripts/ckeditor/skins/vEditor/editor.css"
   end
 
 

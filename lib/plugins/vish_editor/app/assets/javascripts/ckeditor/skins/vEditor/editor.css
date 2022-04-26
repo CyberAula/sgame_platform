@@ -141,8 +141,8 @@ span.cke_skin_vEditor{
 }
 
 .cke_skin_vEditor .cke_resizer{
-	_background-image:url("/assets/ckeditor/skins/vEditor/images/sprites_ie6.png");
-	background-image:url("/assets/ckeditor/skins/vEditor/images/sprites.png");
+	_background-image:url(/assets/ckeditor/skins/vEditor/images/sprites_ie6.png);
+	background-image:url(/assets/ckeditor/skins/vEditor/images/sprites.png);
 	background-position:0 -1428px;
 	background-repeat:no-repeat;
 	cursor:se-resize;
@@ -386,8 +386,8 @@ a:hover.cke_colorauto,a:hover.cke_colormore,a:focus.cke_colorauto,a:focus.cke_co
 
 .cke_skin_vEditor a.cke_toolbox_collapser,.cke_skin_vEditor a:hover.cke_toolbox_collapser
 {
-	_background-image:url("/assets/ckeditor/skins/vEditor/images/sprites_ie6.png");
-	background-image:url("/assets/ckeditor/skins/vEditor/images/sprites.png");
+	_background-image:url(/assets/ckeditor/skins/vEditor/images/sprites_ie6.png);
+	background-image:url(/assets/ckeditor/skins/vEditor/images/sprites.png);
 	background-position:3px -1366px;
 	background-repeat:no-repeat;
 	border:1px outset #D3D3D3;
@@ -418,8 +418,8 @@ a:hover.cke_colorauto,a:hover.cke_colormore,a:focus.cke_colorauto,a:focus.cke_co
 
 .cke_skin_vEditor a.cke_toolbox_collapser_min,.cke_skin_vEditor a:hover.cke_toolbox_collapser_min
 {
-	_background-image:url("/assets/ckeditor/skins/vEditor/images/sprites_ie6.png");
-	background-image:url("/assets/ckeditor/skins/vEditor/images/sprites.png");
+	_background-image:url(/assets/ckeditor/skins/vEditor/images/sprites_ie6.png);
+	background-image:url(/assets/ckeditor/skins/vEditor/images/sprites.png);
 	background-position:4px -1387px;
 	background-repeat:no-repeat;
 	margin:2px 4px;
@@ -568,7 +568,7 @@ a:hover.cke_colorauto,a:hover.cke_colormore,a:focus.cke_colorauto,a:focus.cke_co
 
 .cke_skin_vEditor .cke_button .cke_icon
 {
-	background-image:url("/assets/ckeditor/skins/vEditor/icons.png");
+	background-image:url(/assets/ckeditor/skins/vEditor/icons.png);
 	background-position:100px;
 	background-repeat:no-repeat;
 	cursor:default;
@@ -581,7 +581,7 @@ a:hover.cke_colorauto,a:hover.cke_colormore,a:focus.cke_colorauto,a:focus.cke_co
 
 .cke_skin_vEditor .cke_rtl .cke_button .cke_icon
 {
-	background-image:url("/assets/ckeditor/skins/vEditor/icons_rtl.png");
+	background-image:url(/assets/ckeditor/skins/vEditor/icons_rtl.png);
 }
 
 .cke_skin_vEditor .cke_browser_ie .cke_button .cke_icon
@@ -726,7 +726,7 @@ a:hover.cke_colorauto,a:hover.cke_colormore,a:focus.cke_colorauto,a:focus.cke_co
 .cke_skin_vEditor .cke_menuitem .cke_icon
 {
 	background-color:transparent;
-	background-image:url("/assets/ckeditor/skins/vEditor/icons.png");
+	background-image:url(/assets/ckeditor/skins/vEditor/icons.png);
 	background-position:100px;
 	background-repeat:no-repeat;
 	float:left;
@@ -736,7 +736,7 @@ a:hover.cke_colorauto,a:hover.cke_colormore,a:focus.cke_colorauto,a:focus.cke_co
 
 .cke_rtl .cke_skin_vEditor .cke_menuitem .cke_icon
 {
-	background-image:url("/assets/ckeditor/skins/vEditor/icons_rtl.png");
+	background-image:url(/assets/ckeditor/skins/vEditor/icons_rtl.png);
 }
 
 .cke_browser_ie .cke_skin_vEditor .cke_menuitem .cke_icon
@@ -858,8 +858,8 @@ a:hover.cke_colorauto,a:hover.cke_colormore,a:focus.cke_colorauto,a:focus.cke_co
 
 .cke_skin_vEditor .cke_menuarrow
 {
-	_background-image:url("/assets/ckeditor/skins/vEditor/images/sprites_ie6.png");
-	background-image:url("/assets/ckeditor/skins/vEditor/images/sprites.png");
+	_background-image:url(/assets/ckeditor/skins/vEditor/images/sprites_ie6.png);
+	background-image:url(/assets/ckeditor/skins/vEditor/images/sprites.png);
 	background-position:0 -1411px;
 	background-repeat:no-repeat;
 	float:right;
@@ -1013,8 +1013,8 @@ a:hover.cke_colorauto,a:hover.cke_colormore,a:focus.cke_colorauto,a:focus.cke_co
 
 .cke_skin_vEditor .cke_rcombo .cke_openbutton .cke_icon
 {
-	_background-image:url("/assets/ckeditor/skins/vEditor/images/sprites_ie6.png");
-	background-image:url("/assets/ckeditor/skins/vEditor/images/sprites.png");
+	_background-image:url(/assets/ckeditor/skins/vEditor/images/sprites_ie6.png);
+	background-image:url(/assets/ckeditor/skins/vEditor/images/sprites.png);
 	background-position:0 -68px;
 	background-repeat:no-repeat;
 	display:inline-block;
@@ -1318,12 +1318,12 @@ a:hover.cke_colorauto,a:hover.cke_colormore,a:focus.cke_colorauto,a:focus.cke_co
 
 .cke_skin_vEditor .cke_button_specialchar .cke_icon{
 	/*background-position: 0 -1150px;*/
-	background-image: url("/assets/ckeditor/skins/vEditor/symbol.png");
+	background-image: url(/assets/ckeditor/skins/vEditor/symbol.png);
 	background-position:0 0px;
 }
 
 .cke_skin_vEditor .cke_button_MediaEmbed .cke_icon{
-	background-image: url("/assets/ckeditor/skins/vEditor/mediaembed.png");
+	background-image: url(/assets/ckeditor/skins/vEditor/mediaembed.png);
 	background-position:0 0px;
 	background-size: contain;
 }
