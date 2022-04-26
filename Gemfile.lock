@@ -1,11 +1,3 @@
-GIT
-  remote: https://github.com/agordillo/scorm.git
-  revision: b3d47f9c90ea2f314859b0e92fd30113775f2613
-  branch: master
-  specs:
-    scorm (1.0.5)
-      rubyzip (>= 1.0.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -150,6 +142,9 @@ GEM
     mime-types-data (3.2022.0105)
     mini_mime (1.1.2)
     minitest (5.15.0)
+    net-http (0.2.0)
+      net-protocol
+      uri
     net-imap (0.2.3)
       digest
       net-protocol
@@ -264,6 +259,7 @@ GEM
       concurrent-ruby (~> 1.0)
     uglifier (4.2.0)
       execjs (>= 0.3.0, < 3)
+    uri (0.11.0)
     warden (1.2.9)
       rack (>= 2.0.9)
     web-console (4.2.0)
@@ -292,6 +288,7 @@ DEPENDENCIES
   jquery-rails (= 4.4.0)
   jquery-ui-rails (= 6.0.1)
   kt-paperclip (= 7.1.1)
+  net-http (= 0.2.0)
   omniauth (= 2.1.0)
   pdf-reader (= 2.9.2)
   pg (= 1.3.5)
@@ -301,7 +298,6 @@ DEPENDENCIES
   rmagick (= 4.2.5)
   rubyzip (= 2.3.2)
   sass-rails (= 6.0.0)
-  scorm!
   spring
   thin
   uglifier (= 4.2.0)

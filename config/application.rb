@@ -33,6 +33,7 @@ module SgamePlatform
 
     #Load SGAME modules
     require Rails.root + "app/models/recommender_system.rb"
+    require 'scorm/package'
     
     #Load ViSH Editor plugin
     config.before_configuration do
