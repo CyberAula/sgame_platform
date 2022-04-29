@@ -34,7 +34,7 @@ ssh_options[:forward_agent] = true
 ssh_options[:keys] = keys if keys
 
 # Servers to deploy to
-set :application, "sgame_platform"
+set :application, "sgame"
 set :user, username
 
 set :keep_releases, 2
