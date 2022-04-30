@@ -7,7 +7,7 @@ namespace :db do
 
 		#1: Create demo user
 		user = User.new
-		user.email = "demo@sgame.dit.upm.es"
+		user.email = "demo@sgame.etsisi.upm.es"
 		user.password = "demonstration"
 		user.name = "Demo"
 		user.ui_language = I18n.default_locale
@@ -308,7 +308,7 @@ namespace :db do
 
 		#1: Create demo user
 		user = User.new
-		user.email = "demo@sgame.dit.upm.es"
+		user.email = "demo@sgame.etsisi.upm.es"
 		user.password = "demonstration"
 		user.name = "Demo"
 		user.ui_language = I18n.default_locale
@@ -628,7 +628,7 @@ namespace :db do
 
 		#1: Get Demo user
 		#1: Create demo user
-		user = User.find_by_email("demo@sgame.dit.upm.es")
+		user = User.find_by_email("demo@sgame.etsisi.upm.es")
 
 		#2: Create SCORM packages and Learning Objects
 		mathQuiz = Scormfile.create! :owner_id => user.id,
@@ -810,7 +810,7 @@ namespace :db do
 
 		#1: Get Demo user
 		#1: Create demo user
-		user = User.find_by_email("demo@sgame.dit.upm.es")
+		user = User.find_by_email("demo@sgame.etsisi.upm.es")
 
 		#2: Create SCORM packages and Learning Objects
 		mathQuiz = Scormfile.where(:certified => true, :title => "MathQuiz").first

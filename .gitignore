@@ -38,6 +38,8 @@ public/code/game_templates/*
 public/code/webapps/*
 
 config/deploy/*
-!config/deploy/example.yml
+!config/deploy/example.yaml
+
+old_cap
 
 dumps/*

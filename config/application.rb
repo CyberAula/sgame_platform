@@ -138,7 +138,7 @@ module SgamePlatform
         end
 
         #Demo user
-        config.demo_user = User.find_by_email("demo@sgame.dit.upm.es") if (ActiveRecord::Base.connection.table_exists? "users" and !User.find_by_email("demo@sgame.dit.upm.es").nil?)
+        config.demo_user = User.find_by_email("demo@sgame.etsisi.upm.es") if (ActiveRecord::Base.connection.table_exists? "users" and !User.find_by_email("demo@sgame.etsisi.upm.es").nil?)
       end
     end
 
