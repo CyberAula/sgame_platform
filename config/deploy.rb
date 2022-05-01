@@ -38,10 +38,10 @@ set :deploy_to, "/u/apps/#{fetch(:application)}"
 set :pty, true
 
 # Default value for :linked_files is []
-append :linked_files, "config/database.yml", "config/application_config.yml"
+append :linked_files, "config/database.yml", "config/application_config.yml", "tmp/restart.txt"
 
 # Default value for linked_dirs is []
-# append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "tmp/webpacker", "public/system", "vendor", "storage"
+append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "tmp/webpacker", "public/system", "public/code", "vendor", "storage", "documents" 
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
@@ -55,7 +55,7 @@ set :keep_releases, 3
 # Uncomment the following to require manually verifying the host key before first deploy.
 set :ssh_options, verify_host_key: :never
 
-#set :ssh_options, forward_agent: true
-#set :ssh_options, keys: keys if keys
+set :ssh_options, forward_agent: true
+set :ssh_options, keys: keys if keys
 
-set :passenger_restart_options, -> { "#{deploy_to} --ignore-app-not-running" }
+set :passenger_restart_with_touch, true
