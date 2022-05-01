@@ -41,9 +41,9 @@ group :development do
   gem 'spring'
   gem 'pry-rails'
   gem 'thin'
-  gem 'capistrano', '3.17.0'
-  gem 'capistrano-rails', '1.6.2'
-  gem 'capistrano-passenger', '0.2.1'
-  gem 'capistrano-bundler', '2.0.1'
+  gem 'capistrano', '3.17.0', require: false
+  gem 'capistrano-rails', '1.6.2', require: false
+  gem 'capistrano-passenger', '0.2.1', require: false
+  gem 'capistrano-bundler', '2.0.1', require: false
 end
 
