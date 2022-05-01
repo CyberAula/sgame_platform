@@ -16,6 +16,8 @@ rescue Exception => e
   exit
 end
 
+server server_url, user: username, roles: %w{app db web}
+
 set :application, "sgame"
 set :repo_url, repository
 
@@ -36,7 +38,7 @@ set :deploy_to, "/u/apps/#{fetch(:application)}"
 set :pty, true
 
 # Default value for :linked_files is []
-# append :linked_files, "config/database.yml", 'config/master.key'
+append :linked_files, "config/database.yml", "config/application_config.yml"
 
 # Default value for linked_dirs is []
 # append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "tmp/webpacker", "public/system", "vendor", "storage"
@@ -51,7 +53,9 @@ set :local_user, username
 set :keep_releases, 3
 
 # Uncomment the following to require manually verifying the host key before first deploy.
-# set :ssh_options, verify_host_key: :secure
+set :ssh_options, verify_host_key: :never
 
 #set :ssh_options, forward_agent: true
 #set :ssh_options, keys: keys if keys
+
+set :passenger_restart_options, -> { "#{deploy_to} --ignore-app-not-running" }

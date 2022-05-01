@@ -4,6 +4,7 @@ source 'https://rubygems.org'
 gem 'bundler', '2.3.12' 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '= 7.0.2.3'
+gem 'passenger', '6.0.13'
 # Use postgreSQL as the database for Active Record
 gem 'pg', '= 1.3.5'
 # Sprockets implementation for Asset Pipeline
@@ -33,6 +34,7 @@ gem 'exception_notification', '4.5.0'
 gem "net-http", '0.2.0'
 gem "nokogiri", '1.13.4'
 gem 'rexml', '3.2.5'
+gem 'net-ssh', '7.0.0.beta1'
 
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> in views
@@ -45,5 +47,7 @@ group :development do
   gem 'capistrano-rails', '1.6.2', require: false
   gem 'capistrano-passenger', '0.2.1', require: false
   gem 'capistrano-bundler', '2.0.1', require: false
+  gem 'ed25519', '1.3.0'
+  gem 'bcrypt_pbkdf', '1.1.0'
 end
 

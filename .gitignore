@@ -39,6 +39,7 @@ public/code/webapps/*
 
 config/deploy/*
 !config/deploy/example.yaml
+!config/deploy/production.rb
 
 old_cap
 

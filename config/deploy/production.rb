@@ -1,0 +1,1 @@
+# Capistrano configuration is defined in config/deploy/*.yml files and used by config/deploy.rb
