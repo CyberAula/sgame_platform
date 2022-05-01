@@ -4,7 +4,6 @@ source 'https://rubygems.org'
 gem 'bundler', '2.3.12' 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '= 7.0.2.3'
-gem 'passenger', '6.0.13'
 # Use postgreSQL as the database for Active Record
 gem 'pg', '= 1.3.5'
 # Sprockets implementation for Asset Pipeline
