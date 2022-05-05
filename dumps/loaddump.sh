@@ -27,6 +27,6 @@ then
     exit 1
 fi
 
-sudo -u postgres dropdb sgame_platform_production
-sudo -u postgres createdb sgame_platform_production
-sudo -u postgres psql sgame_platform_production < $dumpFile
+sudo -u postgres dropdb sgame_production
+sudo -u postgres createdb sgame_production
+sudo -u postgres psql sgame_production < $dumpFile
