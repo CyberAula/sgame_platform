@@ -286,6 +286,35 @@ namespace :fix do
     printTitle("Task Finished")
   end
 
+  #Usage
+  #Development:   bundle exec rake fix:domain
+  #In production: bundle exec rake fix:domain RAILS_ENV=production
+  task :domain => :environment do
+    printTitle("Changing domain")
+    
+    oldDomain = "sgame.dit.upm.es"
+    newDomain = "sgame.etsisi.upm.es"
+
+    #Presentations
+    Presentation.all.each do |p|
+      unless p.thumbnail_url.blank?
+        p.update_column :thumbnail_url, p.thumbnail_url.gsub(oldDomain, newDomain)
+      end
+      p.update_column :json, p.json.gsub(oldDomain, newDomain)
+    end
+
+    #SCORM files
+    Scormfile.all.each do |sc|
+      sc.update_column :lohreffull, sc.lohreffull.gsub(oldDomain, newDomain)
+      sWrapperPath = sc.lopath + "/scorm_wrapper.html"
+      if File.exists? sWrapperPath
+        system "sed -i 's/" + oldDomain + "/" + newDomain + "/g' " + sWrapperPath
+      end
+    end
+    
+    printTitle("Task Finished")
+  end
+
 
   ####################
   #Task Utils
