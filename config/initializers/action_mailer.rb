@@ -6,7 +6,7 @@ Rails.application.configure do
   ActionMailer::Base.default :charset => "utf-8"
   config.action_mailer.default_url_options = {:host => config.APP_CONFIG["domain"]}
 
-  unless sgameMailConf.nil?  
+  unless sgameMailConf.nil?
     if sgameMailConf["type"] == "SENDMAIL"
       ActionMailer::Base.delivery_method = :sendmail
       ActionMailer::Base.default :from => sgameMailConf["no_reply_mail"] unless sgameMailConf["no_reply_mail"].blank?
