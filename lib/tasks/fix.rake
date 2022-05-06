@@ -306,10 +306,28 @@ namespace :fix do
     #SCORM files
     Scormfile.all.each do |sc|
       sc.update_column :lohreffull, sc.lohreffull.gsub(oldDomain, newDomain)
-      sWrapperPath = sc.lopath + "/scorm_wrapper.html"
-      if File.exists? sWrapperPath
-        system "sed -i 's/" + oldDomain + "/" + newDomain + "/g' " + sWrapperPath
+      scLoPath = sc.lopath
+      if File.exists? scLoPath
+        ["scorm_wrapper.html","imsmanifest.xml","presentation.html"].each do |file|
+          filePath = scLoPath + "/" + file
+          system "sed -i 's/" + oldDomain + "/" + newDomain + "/g' " + filePath if File.exists? filePath
+        end
+
+        scFilePath = sc.file.path rescue nil
+        if scFilePath.nil? == false and File.exists? scFilePath
+          FileUtils.rm_rf(scFilePath)
+          Utils.zip_folder(scFilePath,scLoPath)
+        end
       end
+    end
+
+    Lo.all.each do |lo|
+      lo.update_column :hreffull, lo.hreffull.gsub(oldDomain, newDomain) unless lo.hreffull.blank?
+      lo.update_column :metadata, lo.metadata.gsub(oldDomain, newDomain) unless lo.metadata.blank?
+    end
+
+    Game.all.each do |g|
+      g.update_column :editor_data, g.editor_data.gsub(oldDomain, newDomain) unless g.editor_data.blank?
     end
     
     printTitle("Task Finished")

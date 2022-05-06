@@ -7,13 +7,13 @@
   <general>
     <identifier>
       <catalog>URI</catalog>
-      <entry>http://sgame.dit.upm.es/presentations/15916</entry>
+      <entry>http://sgame.etsisi.upm.es/presentations/15916</entry>
     </identifier>
     <title>
       <string>Test 1</string>
     </title>
     <description>
-      <string language="en">Test 1. Web Presentation provided by http://sgame.dit.upm.es.</string>
+      <string language="en">Test 1. Web Presentation provided by http://sgame.etsisi.upm.es.</string>
     </description>
     <structure>
       <source>LOMv1.0</source>
@@ -56,7 +56,7 @@
   <metaMetadata>
     <identifier>
       <catalog>URI</catalog>
-      <entry>http://sgame.dit.upm.es/presentations/15916/metadata.xml</entry>
+      <entry>http://sgame.etsisi.upm.es/presentations/15916/metadata.xml</entry>
     </identifier>
     <contribute>
       <role>
@@ -76,7 +76,7 @@
   </metaMetadata>
   <technical>
     <format>text/html</format>
-    <location>http://sgame.dit.upm.es/presentations/15916</location>
+    <location>http://sgame.etsisi.upm.es/presentations/15916</location>
     <requirement>
       <orComposite>
         <type>
@@ -132,7 +132,7 @@
       <value>yes</value>
     </copyrightAndOtherRestrictions>
     <description>
-      <string language="en">License: 'Creative Commons Reconocimiento-NoComercial'. For additional information or questions regarding copyright, distribution and reproduction, visit http://sgame.dit.upm.es/terms_of_use .</string>
+      <string language="en">License: 'Creative Commons Reconocimiento-NoComercial'. For additional information or questions regarding copyright, distribution and reproduction, visit http://sgame.etsisi.upm.es/terms_of_use .</string>
     </description>
   </rights>
 </lom>
