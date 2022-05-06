@@ -333,6 +333,43 @@ namespace :fix do
     printTitle("Task Finished")
   end
 
+  #Usage
+  #Development:   bundle exec rake fix:removeFilesFromDeletedScormfiles
+  #In production: bundle exec rake fix:removeFilesFromDeletedScormfiles RAILS_ENV=production
+  task :removeFilesFromDeletedScormfiles => :environment do
+    printTitle("Removing files from deleted scormfiles")
+    
+    scormFiles = Scormfile.all
+    scormfilesDirectory = Rails.root.join('documents', 'scormfiles').to_s
+    if File.directory?(scormfilesDirectory)
+      Dir[scormfilesDirectory  + "/*/*/*"].each do |sf|
+        unless scormFiles.select{|s| s.file.path.include? sf}.length > 0
+          #Remove file
+          FileUtils.rm_rf(sf)
+        end
+      end
+    end
+
+    printTitle("Task Finished")
+  end
+
+  #Usage
+  #Development:   bundle exec rake fix:removeFoldersFromScormfiles
+  #In production: bundle exec rake fix:removeFoldersFromScormfiles RAILS_ENV=production
+  task :removeFoldersFromScormfiles => :environment do
+    printTitle("Removing unzipped folders from scormfiles")
+    
+    scormFiles = Scormfile.all
+    scormfilesDirectory = Rails.root.join('documents', 'scormfiles').to_s
+    if File.directory?(scormfilesDirectory)
+      Dir[scormfilesDirectory  + "/*/*/*/*"].each do |f|
+        FileUtils.rm_rf(f) if File.directory? f
+      end
+    end
+
+    printTitle("Task Finished")
+  end
+
 
   ####################
   #Task Utils
