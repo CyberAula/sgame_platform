@@ -1,31 +1,36 @@
 Rails.application.configure do
   #Config action mailer
   #http://edgeguides.rubyonrails.org/action_mailer_basics.html
-  sgameMailConf = config.APP_CONFIG["mail"]
+  mConf = config.APP_CONFIG["mail"]
 
   ActionMailer::Base.default :charset => "utf-8"
-  config.action_mailer.default_url_options = {:host => config.APP_CONFIG["domain"]}
+  ActionMailer::Base.default_url_options = {:host => config.APP_CONFIG["domain"]}
+  ActionMailer::Base.perform_deliveries = false
+  ActionMailer::Base.raise_delivery_errors = false
 
-  unless sgameMailConf.nil?
-    if sgameMailConf["type"] == "SENDMAIL"
+  unless mConf.nil?
+    ActionMailer::Base.default :from => mConf["no_reply_mail"] unless mConf["no_reply_mail"].blank?
+    ActionMailer::Base.perform_deliveries = mConf["perform_deliveries"] unless mConf["perform_deliveries"].blank?
+    ActionMailer::Base.raise_delivery_errors = mConf["raise_delivery_errors"] unless mConf["raise_delivery_errors"].blank?
+    
+    if mConf["type"] == "SENDMAIL"
       ActionMailer::Base.delivery_method = :sendmail
-      ActionMailer::Base.default :from => sgameMailConf["no_reply_mail"] unless sgameMailConf["no_reply_mail"].blank?
       ActionMailer::Base.sendmail_settings = {
         :location => "/usr/sbin/sendmail",
         :arguments => "-i -t"
       }
     else
       ActionMailer::Base.delivery_method = :smtp
-      if sgameMailConf["gmail_credentials"].blank?
-        ActionMailer::Base.default :from => sgameMailConf["no_reply_mail"] unless sgameMailConf["no_reply_mail"].blank?
+      
+      if mConf["gmail_credentials"].blank?
         smtp_settings = {}
-        smtp_settings[:address] = sgameMailConf["address"].blank? ? "127.0.0.1" : sgameMailConf["address"] #If no address is provided, use local SMTP server
-        smtp_settings[:port] = sgameMailConf["port"].blank? ? "25" : sgameMailConf["port"]
-        smtp_settings[:domain] = sgameMailConf["domain"].blank? ? config.APP_CONFIG["domain"] : sgameMailConf["domain"]
-        smtp_settings[:user_name] = sgameMailConf["username"] unless sgameMailConf["username"].blank?
-        smtp_settings[:password] = sgameMailConf["password"] unless sgameMailConf["password"].blank?
-        smtp_settings[:enable_starttls_auto] = sgameMailConf["enable_starttls_auto"].blank? ? true : (sgameMailConf["enable_starttls_auto"]=="true")
-        smtp_settings[:openssl_verify_mode] = sgameMailConf["openssl_verify_mode"].blank? ? "none" : (sgameMailConf["openssl_verify_mode"])
+        smtp_settings[:address] = mConf["address"].blank? ? "127.0.0.1" : mConf["address"]
+        smtp_settings[:port] = mConf["port"].blank? ? "25" : mConf["port"]
+        smtp_settings[:domain] = mConf["domain"].blank? ? config.APP_CONFIG["domain"] : mConf["domain"]
+        smtp_settings[:user_name] = mConf["username"] unless mConf["username"].blank?
+        smtp_settings[:password] = mConf["password"] unless mConf["password"].blank?
+        smtp_settings[:enable_starttls_auto] = mConf["enable_starttls_auto"].blank? ? true : mConf["enable_starttls_auto"]
+        smtp_settings[:openssl_verify_mode] = mConf["openssl_verify_mode"].blank? ? "none" : mConf["openssl_verify_mode"]
         config.action_mailer.smtp_settings = smtp_settings
       else
         #Use gmail Credentials
@@ -33,12 +38,15 @@ Rails.application.configure do
           :address => "smtp.gmail.com",
           :port => 587,
           :domain => "gmail.com",
-          :user_name => sgameMailConf["gmail_credentials"]["username"],
-          :password => sgameMailConf["gmail_credentials"]["password"],
+          :user_name => mConf["gmail_credentials"]["username"],
+          :password => mConf["gmail_credentials"]["password"],
           :authentication => "plain",
-          :enable_starttls_auto => true
+          :enable_starttls_auto => true,
+          :open_timeout => 5,
+          :read_timeout => 5 
         }
       end
+
       ActionMailer::Base.smtp_settings = smtp_settings
     end
   end

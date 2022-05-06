@@ -1,10 +1,12 @@
 development:
   name: "SGAME Platform"
   domain: "localhost:3000"
-  no_reply_mail: "no-reply@example.com"
-  main_mail: "sgame@example.com"
   mail:
-    type: "SMTP"
+    type: "SENDMAIL"
+    main_mail: "sgame@example.com"
+    no_reply_mail: "no-reply@example.com"
+    perform_deliveries: false
+    raise_delivery_errors: false
     enable_starttls_auto: false
   secret_token: "Place secret token here"
   # recaptcha: # Get keys from https://www.google.com/recaptcha
@@ -33,3 +35,14 @@ development:
 #   maxLength: 20
 #   maxTags: 8
 #   triggerKeys: ['enter', 'comma', 'tab', 'space']
+
+#Mailer Configuration for Gmail 
+#  mail:
+#    type: "SMTP"
+#    main_mail: "sgame@example.com"
+#    no_reply_mail: "no-reply@example.com"
+#    perform_deliveries: false
+#    raise_delivery_errors: false
+#    gmail_credentials:
+#      username: 'username@gmail.com'
+#      password: 'password' #For accounts with two-factor authentication enabled, an application-specific password must be generated in https://security.google.com/settings/security/apppasswords

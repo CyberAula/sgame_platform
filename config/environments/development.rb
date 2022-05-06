@@ -15,7 +15,7 @@ SgamePlatform::Application.configure do
 
   #Action Mailer
   # Don't care if the mailer can't send
-  config.action_mailer.raise_delivery_errors = false
+  #config.action_mailer.raise_delivery_errors = false
   Rails.application.routes.default_url_options[:host] = config.APP_CONFIG['domain']
 
   # Print deprecation notices to the Rails logger
