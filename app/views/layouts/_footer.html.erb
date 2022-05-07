@@ -8,7 +8,9 @@
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-      <li><a href="mailto:virtual.science.hub@gmail.com"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span><span><%=t("footer.contact")%></span></a></li>
+      <% if SgamePlatform::Application.config.APP_CONFIG["mail"] and SgamePlatform::Application.config.APP_CONFIG["mail"]["main_mail"] %>
+      <li><a href=<%="mailto:" + SgamePlatform::Application.config.APP_CONFIG["mail"]["main_mail"]%>><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span><span><%=t("footer.contact")%></span></a></li>
+      <% end %>
       <li><a href="<%=t("footer.manual_url")%>" download><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><span><%=t("footer.manual")%></span></a></li>
       <li><a href="<%=t("footer.videos_url")%>" target="_blank"><span class="glyphicon glyphicon-film" aria-hidden="true"></span><span><%=t("footer.videos")%></span></a></li>
       <li><a href="https://github.com/ging/sgame_platform" target="_blank"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span><%=t("footer.code")%></a></li>
