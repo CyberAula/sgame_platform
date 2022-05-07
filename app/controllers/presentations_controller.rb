@@ -136,7 +136,7 @@ class PresentationsController < ApplicationController
 
   def preview
     respond_to do |format|
-      format.all { render "show.full.erb", :layout => 'veditor.full' }
+      format.all { render "show", :formats => [:full], :layout => 'veditor' }
     end
   end
 
