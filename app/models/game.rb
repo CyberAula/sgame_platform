@@ -228,7 +228,7 @@ class Game < ActiveRecord::Base
 		  zos.print xml_manifest.target!()
 
 		  zos.put_next_entry("game.html")
-		  zos.print controller.render_to_string "show", :format => :scorm, :locals => {:game=>game}, :layout => false  
+		  zos.print controller.render_to_string "show", :formats => :scorm, :locals => {:game=>game}, :layout => false  
 		end
 
 		#Add required XSD files and folders

@@ -114,7 +114,7 @@ class Presentation < ActiveRecord::Base
       zos.print xml_manifest.target!()
 
       zos.put_next_entry("presentation.html")
-      zos.print controller.render_to_string "show", :format => :scorm, :locals => {:presentation=>presentation, :json => json}, :layout => false  
+      zos.print controller.render_to_string "show", :formats => :scorm, :locals => {:presentation=>presentation, :json => json}, :layout => false  
     end
 
     #Add required XSD files and folders
