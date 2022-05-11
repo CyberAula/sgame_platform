@@ -1,0 +1,42 @@
+<div id="data_warning_wrapper">
+	<div id="data_warning">
+		<div id="data_warning_row1">
+			<%=t("data_warning.content")%>
+		</div>
+		<div id="data_warning_row2">
+			<button id="data_warning_button"><%=t("data_warning.button")%></button>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	var localStorageSupported = function(){
+		return (!!window.localStorage
+    		&& typeof localStorage.getItem === 'function'
+    		&& typeof localStorage.setItem === 'function'
+    		&& typeof localStorage.removeItem === 'function');
+	};
+
+	var showWarning = function(){
+		var lsSupported = localStorageSupported();
+
+		//Show warning only if necessary
+		if(lsSupported === true){
+			if(window.localStorage.getItem('data_warning')==='true'){
+				//Do not show data warning because it has been previously shown
+				return;
+			}
+		}
+
+		$("#data_warning_button").click(function(){
+			if(lsSupported === true){
+				window.localStorage.setItem('data_warning','true');
+			}
+			$("#data_warning_wrapper").hide();
+		});
+
+		$("#data_warning_wrapper").show();
+	}
+
+	showWarning();
+</script>

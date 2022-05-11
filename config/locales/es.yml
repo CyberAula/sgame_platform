@@ -172,6 +172,9 @@ es:
   authorization:
     errors:
       generic: "No estás autorizado a acceder a esta página"
+  data_warning: 
+      content: "Este sitio web utiliza cookies y tecnologías similares para permitir el funcionamiento y la prestación de los servicios ofrecidos en el mismo."
+      button: "Entendido"
   delete: "Borrar"
   demo:
     game_carousel_title: "Elige un juego"
