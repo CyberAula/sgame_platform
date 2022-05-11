@@ -15,7 +15,7 @@
 	width: 100%;
 	background-color: black;
 	color: white;
-	padding: 50px 20px 20px 20px;
+	padding: 40px 20px 30px 20px;
 	display: flex;
 	flex-direction: row;
 }
@@ -26,9 +26,10 @@
 }
 
 #data_warning_row2 {
-	margin: 5px;
-	margin-left: 35px;
+	margin: 5px 30px 5px 30px;
 	font-size: 1.5em;
+	display:  flex;
+	align-items:  center;
 }
 
 #data_warning_button {
