@@ -22,7 +22,7 @@ set :application, "sgame"
 set :repo_url, repository
 
 puts "Using branch: '" + branch + "'"
-set :branch, fetch(:branch, branch)
+set :branch, branch
 
 # Default deploy_to directory is /var/www/my_app_name
 set :deploy_to, "/u/apps/#{fetch(:application)}"
