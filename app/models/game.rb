@@ -22,7 +22,11 @@ class Game < ActiveRecord::Base
 	validates_presence_of :title
 	validates_attachment :thumbnail, content_type: { content_type: ["image/jpeg", "image/gif", "image/png"] }
 
-	
+
+	#
+	# Methods used to handle editor data
+	#
+
 	def fill_from_editor_data
 		data = JSON.parse(self.editor_data)
 		return if data.blank?
@@ -128,6 +132,10 @@ class Game < ActiveRecord::Base
 		self.update_column :editor_data, editor_data.to_json
 	end
 
+	#
+	# Other methods
+	#
+
 	def mini_thumbnail_url
 		return "/assets/gamepad_black.png"
 	end
@@ -142,6 +150,10 @@ class Game < ActiveRecord::Base
 
 	def scormfiles
 		Scormfile.find(self.los.where("container_type='Scormfile'").uniq.pluck(:container_id))
+	end
+
+	def json
+		JSON.parse(self.editor_data) rescue {"error":"Invalid format"}
 	end
 
 	#
