@@ -2,6 +2,6 @@
 Rails.application.config.middleware.use ExceptionNotification::Rack,
   email: {
     email_prefix: '[SGAME] ',
-    sender_address: %{"notifier" <no-reply@sgame.etsisi.upm.es>},
+    sender_address: %{"SGAME Error Notifier" <no-reply@sgame.etsisi.upm.es>},
     exception_recipients: %w{exceptions@example.com}
   }
