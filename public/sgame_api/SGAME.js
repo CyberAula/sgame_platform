@@ -44,7 +44,10 @@ iso8601Parser = function(undefined) {
     }
     return duration
   }
-  return{getDuration:getDuration}
+  var createTimestamp = function(period) {
+    return(new Date).toISOString()
+  };
+  return{getDuration:getDuration, createTimestamp:createTimestamp}
 }();
 function Local_API_1484_11(options) {
   var defaults = {version:"2.4", prefix:"Local_API_1484_11", errorCode:0, diagnostic:"", initialized:0, terminated:0, user:undefined, debug:true, listeners:{}, CMI:{_version:"1.0", comments_from_learner:{_children:"comment,location,timestamp", _count:"0"}, comments_from_lms:{_children:"comment,location,timestamp", _count:"0"}, completion_status:"unknown", completion_threshold:"0.7", credit:"credit", entry:"ab-initio", exit:"", interactions:{_children:"id,type,objectives,timestamp,correct_responses,weighting,learner_response,result,latency,description", 
@@ -879,7 +882,7 @@ function Local_API_1484_11(options) {
   };
   return{init:init, loadSettings:loadSettings, triggerLO:triggerLO, showLO:showLO, showRandomLO:showRandomLO, closeLO:closeLO, getSettings:getSettings, losCanBeShown:losCanBeShown, successWhenNoLOs:successWhenNoLOs}
 }();
-SGAME.VERSION = "1.0.1";
+SGAME.VERSION = "1.0.2";
 SGAME.AUTHORS = "Aldo Gordillo";
 SGAME.URL = "https://github.com/ging/sgame_platform";
 SGAME.Debugger = function() {
@@ -1918,6 +1921,62 @@ SGAME.Sequencing = function() {
   };
   return{init:init, initGroupSequence:initGroupSequence, validateSequence:validateSequence, getNLOsForTracking:getNLOsForTracking, updateGroupsTracking:updateGroupsTracking}
 }();
+SGAME.Analytics = function(undefined) {
+  var actor;
+  var gameURL;
+  var statements;
+  var init = function(settings) {
+    if(typeof settings["player"] == "object" && (typeof settings["player"]["url"] == "string" && typeof settings["player"]["name"] == "string")) {
+      actor = {};
+      actor["id"] = settings["player"]["url"];
+      actor["name"] = settings["player"]["name"]
+    }
+    gameURL = settings["game_metadata"]["url"];
+    statements = [];
+    _createInitialStatement()
+  };
+  var onVLEDataReceived = function(data) {
+    if(typeof data.user === "object") {
+      var user = {};
+      if(typeof data.user.id === "string") {
+        user["id"] = data.user.id
+      }
+      if(typeof data.user.name === "string") {
+        user["name"] = data.user.name
+      }
+      if(Object.keys(user).length > 0) {
+        actor = user;
+        _createInitialStatement()
+      }
+    }
+  };
+  var _createInitialStatement = function() {
+    return _createStatement(actor, "accessed", gameURL)
+  };
+  var _createStatement = function(actorId, verbId, objectId, result, context) {
+    var statement = {};
+    if(typeof actorId !== "undefined") {
+      statement["actor"] = {id:actorId}
+    }
+    if(typeof verbId !== "undefined") {
+      statement["verb"] = {id:verbId}
+    }
+    if(typeof objectId !== "undefined") {
+      statement["object"] = {id:objectId}
+    }
+    if(typeof result !== "undefined") {
+      statement["result"] = result
+    }
+    if(typeof context !== "undefined") {
+      statement["context"] = context
+    }
+    statement["timestamp"] = iso8601Parser.createTimestamp();
+    statements.push(statement);
+    console.log("Recorded statement");
+    console.log(statement)
+  };
+  return{init:init, onVLEDataReceived:onVLEDataReceived}
+}();
 SGAME.API = function() {
   var init = function() {
   };
@@ -2118,9 +2177,11 @@ SGAME.CORE = function() {
     if(typeof _settings["assets_path"] !== "string") {
       _settings["assets_path"] = "/assets/sgame/"
     }
+    SGAME.Messenger.init();
     SGAME.Fancybox.init(_settings["assets_path"]);
     SGAME.TrafficLight.init(_settings["assets_path"]);
     SGAME.Sequencing.init(_settings["sequencing"]);
+    SGAME.Analytics.init(_settings);
     if(_sequence_enabled === true) {
       _nLOsForTrackingWhenSequence = SGAME.Sequencing.getNLOsForTracking(_settings["sequencing"]["sequence"], _settings["los"])
     }
@@ -2306,7 +2367,7 @@ SGAME.CORE = function() {
   };
   var setVLEData = function(data) {
     _vle_data = data;
-    return _vle_data
+    SGAME.Analytics.onVLEDataReceived(getVLEData())
   };
   var _togglePause = function() {
     if(typeof _togglePauseFunction === "function") {
@@ -2605,14 +2666,7 @@ SGAME.CORE = function() {
       }
     }
   };
-  var _loadInitialSettings = function() {
-    if(_settings_loaded === false) {
-      _loadSettings({})
-    }
-  };
   SGAME.Debugger.init(false);
-  _loadInitialSettings();
-  SGAME.Messenger.init();
   return{init:init, loadSettings:loadSettings, triggerLO:triggerLO, showLO:showLO, showRandomLO:showRandomLO, closeLO:closeLO, getSettings:getSettings, losCanBeShown:losCanBeShown, successWhenNoLOs:successWhenNoLOs, onConnectedToVLE:onConnectedToVLE, getVLEData:getVLEData, setVLEData:setVLEData}
 }();
 SGAME.Observer = function(undefined) {

@@ -169,6 +169,7 @@ class Game < ActiveRecord::Base
 		settings["game_metadata"] = {}
 		settings["game_metadata"]["title"] = self.title
 		settings["game_metadata"]["id"] = self.id.to_s
+		settings["game_metadata"]["url"] = Rails.application.routes.url_helpers.game_url(self)
 		settings["game_metadata"]["description"] = self.description
 		settings["game_metadata"]["thumbnail"] = self.thumbnail_url
 
@@ -193,6 +194,13 @@ class Game < ActiveRecord::Base
 		#Game settings
 		settings["game_settings"] = editor_data["settings"].blank? ? {} : editor_data["settings"]
 		settings["game_settings"]["completion_notification_text"] = I18n.t("at.msgs.educational_objectives_achieved", :locale => (current_user.nil? ? I18n.locale : (Utils.valid_locale?(current_user.ui_language) ? current_user.ui_language : :en)))
+
+		#Player
+		unless current_user.nil?
+			settings["player"] = {}
+			settings["player"]["url"] = Rails.application.routes.url_helpers.user_url(current_user)
+			settings["player"]["name"] = current_user.name
+		end
 
 		return settings
 	end

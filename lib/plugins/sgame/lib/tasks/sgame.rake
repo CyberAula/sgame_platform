@@ -12,7 +12,7 @@ SGAME_COMPILER_JAR_PATH = "extras/compile"
 SGAME_JSCOMPILER_JAR_FILE = SGAME_COMPILER_JAR_PATH + "/compiler.jar"
 
 # SGAME API files and dirs :
-SGAME_API_JS_FILES_AND_DIRS = ['app/assets/js_to_compile_api/iso8601Parser.js','app/assets/js_to_compile_api/Local_API_1484_11.js','app/assets/js_to_compile_api/Local_API_SCORM_12.js','app/assets/js_to_compile_api/SGAME.js','app/assets/js_to_compile_api/SGAME.Debugger.js','app/assets/js_to_compile_api/SGAME.Messenger.js','app/assets/js_to_compile_api/SGAME.Fancybox.js','app/assets/js_to_compile_api/SGAME.TrafficLight.js','app/assets/js_to_compile_api/SGAME.Sequencing.js','app/assets/js_to_compile_api']
+SGAME_API_JS_FILES_AND_DIRS = ['app/assets/js_to_compile_api/iso8601Parser.js','app/assets/js_to_compile_api/Local_API_1484_11.js','app/assets/js_to_compile_api/Local_API_SCORM_12.js','app/assets/js_to_compile_api/SGAME.js','app/assets/js_to_compile_api/SGAME.Debugger.js','app/assets/js_to_compile_api/SGAME.Messenger.js','app/assets/js_to_compile_api/SGAME.Fancybox.js','app/assets/js_to_compile_api/SGAME.TrafficLight.js','app/assets/js_to_compile_api/SGAME.Sequencing.js','app/assets/js_to_compile_api/SGAME.Analytics.js','app/assets/js_to_compile_api']
 SGAME_Gateway_JS_FILES_AND_DIRS = ['app/assets/js_to_compile_gateway/jquery-3.4.1.min.js','app/assets/js_to_compile_gateway/platform.js','app/assets/js_to_compile_gateway/SCORM_API_Wrapper.js','app/assets/js_to_compile_gateway/SGAME_GATEWAY.js','app/assets/js_to_compile_gateway']
 
 
