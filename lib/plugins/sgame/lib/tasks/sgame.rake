@@ -1,7 +1,8 @@
 # encoding: utf-8
 #
 # Rake task to compile the SGAME API and the SGAME VLE Gateway
-# Compile javascript using google's closure compiler (see http://code.google.com/closure/compiler/)
+# Compile javascript code using Google's closure compiler (see http://code.google.com/closure/compiler/)
+# Requires JDK (Java Development Kit)
 # How to use: bundle exec rake sgame:build
 #
 
@@ -114,7 +115,7 @@ namespace :sgame do
     system "java -jar #{SGAME_JSCOMPILER_JAR_FILE} #{compiler_options2.to_a.join(' ')}"
     puts "DONE"
     puts "----------------------------------------------------"
-    puts "compiled #{files.size} javascript file(s) into " + outputname + ".min.js and " + outputname+ ".js"
+    puts "compiled #{files.size} javascript file(s) into " + outputname + ".min.js and " + outputname + ".js"
     puts ""
 
     #Public library
