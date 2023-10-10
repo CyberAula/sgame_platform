@@ -1924,6 +1924,7 @@ SGAME.Sequencing = function() {
 SGAME.Analytics = function(undefined) {
   var actor;
   var gameURL;
+  var attemptId;
   var statements;
   var init = function(settings) {
     if(typeof settings["player"] == "object" && (typeof settings["player"]["url"] == "string" && typeof settings["player"]["name"] == "string")) {
@@ -1932,8 +1933,11 @@ SGAME.Analytics = function(undefined) {
       actor["name"] = settings["player"]["name"]
     }
     gameURL = settings["game_metadata"]["url"];
+    if(typeof settings["attemptId"] == "string") {
+      attemptId = settings["attemptId"]
+    }
     statements = [];
-    _createInitialStatement()
+    recordGameAccessed()
   };
   var onVLEDataReceived = function(data) {
     if(typeof data.user === "object") {
@@ -1945,18 +1949,31 @@ SGAME.Analytics = function(undefined) {
         user["name"] = data.user.name
       }
       if(Object.keys(user).length > 0) {
-        actor = user;
-        _createInitialStatement()
+        if(typeof actor === "undefined") {
+          actor = user;
+          recordGameAccessed()
+        }
       }
     }
   };
-  var _createInitialStatement = function() {
-    return _createStatement(actor, "accessed", gameURL)
+  var recordGameAccessed = function() {
+    return _createStatement("http://activitystrea.ms/schema/1.0/access", gameURL)
   };
-  var _createStatement = function(actorId, verbId, objectId, result, context) {
+  var recordGameClosed = function(tracking) {
+    var result = {"completion":tracking.completion_status === "completed", "success":tracking.success_status === "passed", "score":{"scaled":tracking.score}};
+    return _createStatement("http://activitystrea.ms/schema/1.0/close", gameURL, result)
+  };
+  var recordLOAccessed = function(lo) {
+    return _createStatement("http://activitystrea.ms/schema/1.0/access", lo["url"])
+  };
+  var recordLOClosed = function(lo, report) {
+    var result = {"completion":report.scorm_completion_status === "completed", "success":report.success, "score":{"scaled":report.scorm_scaled_score}};
+    return _createStatement("http://activitystrea.ms/schema/1.0/close", lo["url"], result)
+  };
+  var _createStatement = function(verbId, objectId, result) {
     var statement = {};
-    if(typeof actorId !== "undefined") {
-      statement["actor"] = {id:actorId}
+    if(typeof actor !== "undefined") {
+      statement["actor"] = actor
     }
     if(typeof verbId !== "undefined") {
       statement["verb"] = {id:verbId}
@@ -1967,15 +1984,21 @@ SGAME.Analytics = function(undefined) {
     if(typeof result !== "undefined") {
       statement["result"] = result
     }
-    if(typeof context !== "undefined") {
+    var context = {};
+    if(objectId != gameURL) {
+      context["contextActivities"] = {"parent":{"id":gameURL}}
+    }
+    if(typeof attemptId === "string") {
+      context["extensions"] = {"http://id.tincanapi.com/extension/attempt-id":attemptId}
+    }
+    if(Object.keys(context).length > 0) {
       statement["context"] = context
     }
     statement["timestamp"] = iso8601Parser.createTimestamp();
-    statements.push(statement);
-    console.log("Recorded statement");
-    console.log(statement)
+    statement["authority"] = {"name":SGAME.URL, "version":SGAME.VERSION};
+    return statement
   };
-  return{init:init, onVLEDataReceived:onVLEDataReceived}
+  return{init:init, onVLEDataReceived:onVLEDataReceived, recordGameAccessed:recordGameAccessed, recordGameClosed:recordGameClosed, recordLOAccessed:recordLOAccessed, recordLOClosed:recordLOClosed}
 }();
 SGAME.API = function() {
   var init = function() {
@@ -2044,6 +2067,9 @@ SGAME.CORE = function() {
         _togglePauseFunction = options.togglePause
       }
     }
+    window.addEventListener("unload", function() {
+      _onExit()
+    })
   };
   var loadSettings = function(settings) {
     SGAME.Debugger.log("SGAME load settings ");
@@ -2186,6 +2212,11 @@ SGAME.CORE = function() {
       _nLOsForTrackingWhenSequence = SGAME.Sequencing.getNLOsForTracking(_settings["sequencing"]["sequence"], _settings["los"])
     }
   };
+  var _onExit = function() {
+    if(_settings_loaded === true) {
+      SGAME.Analytics.recordGameClosed(_tracking)
+    }
+  };
   var triggerLO = function(event_id, callback) {
     switch(_settings["sequencing"]["interruptions"]) {
       case "no_restrictions":
@@ -2274,6 +2305,7 @@ SGAME.CORE = function() {
     _togglePause();
     _settings["los"][lo["id"]]["shown"] = true;
     _settings["los"][lo["id"]]["nshown"] += 1;
+    SGAME.Analytics.recordLOAccessed(lo);
     SGAME.Fancybox.create({lo:lo}, function(report) {
       if(_settings["los"][lo["id"]]["successfully_consumed"] !== true) {
         _settings["los"][lo["id"]]["successfully_consumed"] = report.success
@@ -2306,6 +2338,7 @@ SGAME.CORE = function() {
       }
       _updateFlagsAndTracking();
       report["more_los"] = _los_can_be_shown;
+      SGAME.Analytics.recordLOClosed(lo, report);
       _checkFinalScreen(function() {
         if(typeof callback === "function") {
           callback(report.success, report)

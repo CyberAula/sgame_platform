@@ -22,7 +22,7 @@ class GamesController < ApplicationController
         render
       }
       format.full {
-        @game_settings = @game.settings(user_signed_in? ? current_user : nil)
+        @game_settings = @game.settings(user_signed_in? ? current_user : nil, request)
         render :layout => 'game'
       }
       format.json {

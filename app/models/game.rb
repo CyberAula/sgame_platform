@@ -160,7 +160,7 @@ class Game < ActiveRecord::Base
 	# Methods used by the SGAME API
 	#
 
-	def settings(current_user=nil)
+	def settings(current_user=nil,request=nil)
 		settings = Hash.new
 
 		editor_data = JSON.parse(self.editor_data) rescue {}
@@ -198,8 +198,14 @@ class Game < ActiveRecord::Base
 		#Player
 		unless current_user.nil?
 			settings["player"] = {}
+			settings["player"]["id"] = current_user.id.to_s
 			settings["player"]["url"] = Rails.application.routes.url_helpers.user_url(current_user)
 			settings["player"]["name"] = current_user.name
+		end
+
+		#Attempts
+		unless request.nil?
+			settings["attemptId"] = request.uuid
 		end
 
 		return settings
