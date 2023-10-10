@@ -179,7 +179,7 @@ class Game < ActiveRecord::Base
 			settings["los"][lo.id.to_s] = lo.sgame_metadata
 		end
 
-		#Event Mapping
+		#Event mapping
 		settings["events"] = {}
 		settings["event_mapping"] = {}
 		mappings = self.mappings
@@ -195,6 +195,9 @@ class Game < ActiveRecord::Base
 		settings["game_settings"] = editor_data["settings"].blank? ? {} : editor_data["settings"]
 		settings["game_settings"]["completion_notification_text"] = I18n.t("at.msgs.educational_objectives_achieved", :locale => (current_user.nil? ? I18n.locale : (Utils.valid_locale?(current_user.ui_language) ? current_user.ui_language : :en)))
 
+		
+		#Learning analytics
+
 		#Player
 		unless current_user.nil?
 			settings["player"] = {}
@@ -207,6 +210,9 @@ class Game < ActiveRecord::Base
 		unless request.nil?
 			settings["attemptId"] = request.uuid
 		end
+
+		#Learning Record Store (LRS)
+		#settings["lrs"] = nil
 
 		return settings
 	end

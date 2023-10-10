@@ -1922,11 +1922,13 @@ SGAME.Sequencing = function() {
   return{init:init, initGroupSequence:initGroupSequence, validateSequence:validateSequence, getNLOsForTracking:getNLOsForTracking, updateGroupsTracking:updateGroupsTracking}
 }();
 SGAME.Analytics = function(undefined) {
+  var lrs;
   var actor;
   var gameURL;
   var attemptId;
   var statements;
   var init = function(settings) {
+    lrs = settings["lrs"];
     if(typeof settings["player"] == "object" && (typeof settings["player"]["url"] == "string" && typeof settings["player"]["name"] == "string")) {
       actor = {};
       actor["id"] = settings["player"]["url"];
@@ -1963,6 +1965,10 @@ SGAME.Analytics = function(undefined) {
     var result = {"completion":tracking.completion_status === "completed", "success":tracking.success_status === "passed", "score":{"scaled":tracking.score}};
     return _createStatement("http://activitystrea.ms/schema/1.0/close", gameURL, result)
   };
+  var recordGameCompleted = function(tracking) {
+    var result = {"completion":tracking.completion_status === "completed", "success":tracking.success_status === "passed", "score":{"scaled":tracking.score}};
+    return _createStatement("http://activitystrea.ms/schema/1.0/complete", gameURL, result)
+  };
   var recordLOAccessed = function(lo) {
     return _createStatement("http://activitystrea.ms/schema/1.0/access", lo["url"])
   };
@@ -1970,11 +1976,8 @@ SGAME.Analytics = function(undefined) {
     var result = {"completion":report.scorm_completion_status === "completed", "success":report.success, "score":{"scaled":report.scorm_scaled_score}};
     return _createStatement("http://activitystrea.ms/schema/1.0/close", lo["url"], result)
   };
-  var _createStatement = function(verbId, objectId, result) {
+  var _createStatement = function(verbId, objectId, result, xapi) {
     var statement = {};
-    if(typeof actor !== "undefined") {
-      statement["actor"] = actor
-    }
     if(typeof verbId !== "undefined") {
       statement["verb"] = {id:verbId}
     }
@@ -1984,9 +1987,22 @@ SGAME.Analytics = function(undefined) {
     if(typeof result !== "undefined") {
       statement["result"] = result
     }
+    statement["timestamp"] = iso8601Parser.createTimestamp();
+    if(xapi === true) {
+      statement = _processStatementForXAPI(statement)
+    }
+    statements.push(statement);
+    return statement
+  };
+  var _processStatementForXAPI = function(statement) {
+    if(typeof actor !== "undefined") {
+      statement["actor"] = actor
+    }
     var context = {};
-    if(objectId != gameURL) {
-      context["contextActivities"] = {"parent":{"id":gameURL}}
+    if(typeof statement["object"] == "object" && typeof statement["object"]["id"] == "string") {
+      if(statement["object"]["id"] != gameURL) {
+        context["contextActivities"] = {"parent":{"id":gameURL}}
+      }
     }
     if(typeof attemptId === "string") {
       context["extensions"] = {"http://id.tincanapi.com/extension/attempt-id":attemptId}
@@ -1994,11 +2010,23 @@ SGAME.Analytics = function(undefined) {
     if(Object.keys(context).length > 0) {
       statement["context"] = context
     }
-    statement["timestamp"] = iso8601Parser.createTimestamp();
     statement["authority"] = {"name":SGAME.URL, "version":SGAME.VERSION};
     return statement
   };
-  return{init:init, onVLEDataReceived:onVLEDataReceived, recordGameAccessed:recordGameAccessed, recordGameClosed:recordGameClosed, recordLOAccessed:recordLOAccessed, recordLOClosed:recordLOClosed}
+  var storeAnalytics = function() {
+    if(typeof lrs == "undefined") {
+      return
+    }
+    var analytics = {};
+    if(typeof actor !== "undefined") {
+      analytics["actor"] = actor
+    }
+    if(typeof attemptId === "string") {
+      analytics["attemptId"] = attemptId
+    }
+    analytics["statements"] = statements
+  };
+  return{init:init, onVLEDataReceived:onVLEDataReceived, recordGameAccessed:recordGameAccessed, recordGameClosed:recordGameClosed, recordGameCompleted:recordGameCompleted, recordLOAccessed:recordLOAccessed, recordLOClosed:recordLOClosed, storeAnalytics:storeAnalytics}
 }();
 SGAME.API = function() {
   var init = function() {
@@ -2058,6 +2086,7 @@ SGAME.CORE = function() {
   var _sequence_enabled = false;
   var _sequence_finished = false;
   var _nLOsForTrackingWhenSequence = 0;
+  var _analyticsEnabled = false;
   var init = function(options) {
     SGAME.Debugger.log("SGAME init with options ");
     SGAME.Debugger.log(options);
@@ -2203,18 +2232,22 @@ SGAME.CORE = function() {
     if(typeof _settings["assets_path"] !== "string") {
       _settings["assets_path"] = "/assets/sgame/"
     }
+    _analyticsEnabled = typeof settings["lrs"] == "string";
+    if(_analyticsEnabled === true) {
+      SGAME.Analytics.init(_settings)
+    }
     SGAME.Messenger.init();
     SGAME.Fancybox.init(_settings["assets_path"]);
     SGAME.TrafficLight.init(_settings["assets_path"]);
     SGAME.Sequencing.init(_settings["sequencing"]);
-    SGAME.Analytics.init(_settings);
     if(_sequence_enabled === true) {
       _nLOsForTrackingWhenSequence = SGAME.Sequencing.getNLOsForTracking(_settings["sequencing"]["sequence"], _settings["los"])
     }
   };
   var _onExit = function() {
-    if(_settings_loaded === true) {
-      SGAME.Analytics.recordGameClosed(_tracking)
+    if(_settings_loaded === true && _analyticsEnabled === true) {
+      SGAME.Analytics.recordGameClosed(_tracking);
+      SGAME.Analytics.storeAnalytics()
     }
   };
   var triggerLO = function(event_id, callback) {
@@ -2305,7 +2338,9 @@ SGAME.CORE = function() {
     _togglePause();
     _settings["los"][lo["id"]]["shown"] = true;
     _settings["los"][lo["id"]]["nshown"] += 1;
-    SGAME.Analytics.recordLOAccessed(lo);
+    if(_analyticsEnabled === true) {
+      SGAME.Analytics.recordLOAccessed(lo)
+    }
     SGAME.Fancybox.create({lo:lo}, function(report) {
       if(_settings["los"][lo["id"]]["successfully_consumed"] !== true) {
         _settings["los"][lo["id"]]["successfully_consumed"] = report.success
@@ -2338,7 +2373,9 @@ SGAME.CORE = function() {
       }
       _updateFlagsAndTracking();
       report["more_los"] = _los_can_be_shown;
-      SGAME.Analytics.recordLOClosed(lo, report);
+      if(_analyticsEnabled === true) {
+        SGAME.Analytics.recordLOClosed(lo, report)
+      }
       _checkFinalScreen(function() {
         if(typeof callback === "function") {
           callback(report.success, report)
@@ -2400,7 +2437,9 @@ SGAME.CORE = function() {
   };
   var setVLEData = function(data) {
     _vle_data = data;
-    SGAME.Analytics.onVLEDataReceived(getVLEData())
+    if(_analyticsEnabled === true) {
+      SGAME.Analytics.onVLEDataReceived(getVLEData())
+    }
   };
   var _togglePause = function() {
     if(typeof _togglePauseFunction === "function") {
@@ -2564,6 +2603,9 @@ SGAME.CORE = function() {
   };
   var _showFinalScreen = function(callback) {
     _final_screen_shown = true;
+    if(_analyticsEnabled === true) {
+      SGAME.Analytics.recordGameCompleted(_tracking)
+    }
     SGAME.Fancybox.create({dialog:true, msg:_final_screen_text}, function() {
       if(typeof callback === "function") {
         callback(true)
