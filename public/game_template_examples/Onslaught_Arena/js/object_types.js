@@ -87,11 +87,7 @@ o.h_sword = {
 	spriteY: 0,
 	spriteAlign: true,
 	priority: 0,
-	bounce: false,
-	
-	// Clay.io
-	achievementId: "masterswords",
-	deathsForAchievement: 1000
+	bounce: false
 };
 
 o.h_knife = {
@@ -152,11 +148,7 @@ o.h_fireball = {
 			engine.spawnObject(this, "h_fireball_trail");
 			this.trailTimer.reset();
 		}
-	},
-	
-	// Clay.io
-	achievementId: "masterfire",
-	deathsForAchievement: 1000
+	}
 
 };
 
@@ -175,9 +167,7 @@ o.h_fireball_trail = {
 	priority: 3,
 	bounce: false,
 	damageType: "magic",
-	drawIndex: 0,
-	// Clay.io
-	ignoreLogDeath: true
+	drawIndex: 0
 };
 
 /*
@@ -236,11 +226,7 @@ o.h_axe = {
 	rotateSpeed: 700,
 	priority: 5,
 	ttl: 4000,
-	piercing: true,
-	
-	// Clay.io
-	achievementId: "masteraxes",
-	deathsForAchievement: 1000
+	piercing: true
 };
 
 o.h_fire_sword = {
@@ -270,12 +256,7 @@ o.h_fire_sword = {
 			engine.spawnObject(this, "fire_sword_trail");
 			this.spawnTimer.reset();
 		}
-	},
-	
-	// Clay.io
-	achievementId: "masterfireswords",
-	deathsForAchievement: 1000
-	
+	}
 };
 
 o.fire_sword_trail = {
@@ -291,9 +272,7 @@ o.fire_sword_trail = {
 	ttl: 500,
 	bounce: false,
 	drawIndex: 0,
-	damageType: "magic",
-	// Clay.io
-	ignoreLogDeath: true
+	damageType: "magic"
 };
 
 o.h_fire_knife = {
@@ -479,10 +458,6 @@ o.bat = {
 	moveChangeDelay: 500,
 	soundDamage: "bat_damage",
 	soundDies: "bat_dies",
-	
-	// Clay.io
-	achievementId: "killbats",
-	deathsForAchievement: 1000,
 	
 	lootTable: [
 		{type: null, weight: 9},
@@ -717,10 +692,6 @@ o.huge_skull = {
 
 	soundDamage: "skull_damage",
 	soundDies: "skull_dies",
-	
-	// Clay.io
-	achievementId: "killskulls",
-	deathsForAchievement: 100,
 	
 	weapons: [
 		{type: "e_static_green_fire", count: null}
@@ -1044,10 +1015,6 @@ o.owlbear = {
 	soundDamage: "owlbear_damage",
 	soundDies: "owlbear_dies",
 	
-	// Clay.io
-	achievementId: "killowlbears",
-	deathsForAchievement: 100,
-	
 	lootTable: [
 		{type: "item_food", weight: 1}
 	],
@@ -1290,10 +1257,6 @@ o.cube = {
 	soundAttacks: "cube_attacks",
 	soundDamage: "cube_damage",
 	soundDies: "cube_dies",
-	
-	// Clay.io
-	achievementId: "defeatgel",
-	deathsForAchievement: 1,
 
 /*
 	lootTable: [
@@ -1454,10 +1417,6 @@ o.superclops = {
 	soundAttacks: "minotaur_attacks",
 	soundDamage: "minotaur_damage",
 	soundDies: "minotaur_dies",
-	
-	// Clay.io
-	achievementId: "defeatminotaur",
-	deathsForAchievement: 1,
 
 	weapons: [{type: "e_minotaur_trident", count: null}],
 
@@ -1974,10 +1933,6 @@ o.doppelganger = {
 	soundAttacks: "dopp_attacks",
 	soundDamage: "dopp_damage",
 	soundDies: "dopp_dies",
-	
-	// Clay.io
-	achievementId: "defeatdoppelganger",
-	deathsForAchievement: 1,
 
 	onInit: function () {
 		this.phaseTimer = new horde.Timer();
@@ -2375,9 +2330,7 @@ o.e_dopp_axe = {
 			engine.spawnObject(this, "e_dopp_fire");
 			this.spawnTimer.reset();
 		}
-	},
-	// Clay.io
-	ignoreLogDeath: true
+	}
 };
 
 o.e_dopp_sword = {
@@ -2406,9 +2359,7 @@ o.e_dopp_sword = {
 			engine.spawnObject(this, "e_dopp_fire");
 			this.spawnTimer.reset();
 		}
-	},
-	// Clay.io
-	ignoreLogDeath: true
+	}
 };
 
 o.beholder = {
@@ -2429,10 +2380,6 @@ o.beholder = {
 	//soundAttacks: "_attacks",
 	soundDamage: "beholder_damage",
 	soundDies: "beholder_dies",
-	
-	// Clay.io
-	achievementId: "defeatbeholder",
-	deathsForAchievement: 1,
 
 	collidable: false,
 
@@ -2679,10 +2626,6 @@ o.dragon = {
 	soundAttacks: "dragon_attacks",
 	soundDamage: "dragon_damage",
 	soundDies: "dragon_dies",
-	
-	// Clay.io
-	achievementId: "defeatdragon",
-	deathsForAchievement: 1,
 
 	weapons: [{type: "e_fireball", count: null}],
 
@@ -2827,9 +2770,7 @@ o.e_arrow = {
 	spriteX: 256,
 	spriteY: 0,
 	spriteAlign: true,
-	bounce: false,
-	// Clay.io
-	ignoreLogDeath: true
+	bounce: false
 };
 
 o.e_trident = {
@@ -2842,9 +2783,7 @@ o.e_trident = {
 	spriteX: 160,
 	spriteY: 0,
 	spriteAlign: true,
-	bounce: false,
-	// Clay.io
-	ignoreLogDeath: true
+	bounce: false
 };
 
 o.e_boulder = {
@@ -2857,9 +2796,7 @@ o.e_boulder = {
 	spriteX: 224,
 	spriteY: 0,
 	rotate: true,
-	bounce: false,
-	// Clay.io
-	ignoreLogDeath: true
+	bounce: false
 };
 
 o.e_bouncing_boulder = {
@@ -2873,9 +2810,7 @@ o.e_bouncing_boulder = {
 	spriteY: 0,
 	rotate: true,
 	bounce: true,
-	ttl: 5000,
-	// Clay.io
-	ignoreLogDeath: true
+	ttl: 5000
 };
 
 o.e_minotaur_trident = {
@@ -2888,9 +2823,7 @@ o.e_minotaur_trident = {
 	spriteSheet: "objects",
 	spriteX: 160,
 	spriteY: 0,
-	bounce: false,
-	// Clay.io
-	ignoreLogDeath: true
+	bounce: false
 };
 
 o.e_energy_ball = {
@@ -2903,9 +2836,7 @@ o.e_energy_ball = {
 	spriteX: 320,
 	spriteY: 0,
 	rotate: true,
-	bounce: false,
-	// Clay.io
-	ignoreLogDeath: true
+	bounce: false
 };
 
 o.e_ring_fire = {
@@ -2919,9 +2850,7 @@ o.e_ring_fire = {
 	spriteY: 0,
 	rotate: true,
 	bounce: false,
-	damageType: "magic",
-	// Clay.io
-	ignoreLogDeath: true
+	damageType: "magic"
 };
 
 o.e_ring_fire_dopp = {
@@ -2935,9 +2864,7 @@ o.e_ring_fire_dopp = {
 	spriteY: 544,
 	rotate: true,
 	bounce: false,
-	damageType: "magic",
-	// Clay.io
-	ignoreLogDeath: true
+	damageType: "magic"
 };
 
 o.e_fireball = {
@@ -2951,9 +2878,7 @@ o.e_fireball = {
 	spriteY: 544,
 	rotate: true,
 	bounce: false,
-	damageType: "magic",
-	// Clay.io
-	ignoreLogDeath: true
+	damageType: "magic"
 };
 
 o.e_fireball_green = {
@@ -2968,9 +2893,7 @@ o.e_fireball_green = {
 	rotate: true,
 	ttl: 400,
 	bounce: false,
-	damageType: "magic",
-	// Clay.io
-	ignoreLogDeath: true
+	damageType: "magic"
 };
 
 o.e_static_blue_fire = {
@@ -2987,9 +2910,7 @@ o.e_static_blue_fire = {
 	ttl: 1000,
 	bounce: false,
 	drawIndex: 0,
-	damageType: "magic",
-	// Clay.io
-	ignoreLogDeath: true
+	damageType: "magic"
 };
 
 o.e_dopp_fire = {
@@ -3006,9 +2927,7 @@ o.e_dopp_fire = {
 	ttl: 250,
 	bounce: false,
 	drawIndex: 0,
-	damageType: "magic",
-	// Clay.io
-	ignoreLogDeath: true
+	damageType: "magic"
 };
 
 o.e_static_green_fire = {
@@ -3026,9 +2945,7 @@ o.e_static_green_fire = {
 	ttl: 2000,
 	bounce: false,
 	drawIndex: 0,
-	damageType: "magic",
-	// Clay.io
-	ignoreLogDeath: true
+	damageType: "magic"
 };
 
 o.e_dirt_pile = {
@@ -3055,9 +2972,7 @@ o.e_dirt_pile = {
 		if (object.team !== this.team && object.role !== "projectile") {
 			object.addState(horde.Object.states.SLOWED, 300);
 		}
-	},
-	// Clay.io
-	ignoreLogDeath: true
+	}
 	
 };
 
@@ -3081,9 +2996,7 @@ o.e_spit_pool = {
 		if (object.team !== this.team && object.role !== "projectile") {
 			object.addState(horde.Object.states.SLOWED, 300);
 		}
-	},
-	// Clay.io
-	ignoreLogDeath: true
+	}
 	
 };
 
@@ -3099,9 +3012,7 @@ o.e_shock_wave = {
 	spriteAlign: true,
 	bounce: false,
 	animated: true,
-	damageType: "magic",
-	// Clay.io
-	ignoreLogDeath: true
+	damageType: "magic"
 };
 
 o.e_worm_spit = {
@@ -3132,9 +3043,7 @@ o.e_worm_spit = {
 	
 	onDelete: function (engine) {
 		engine.spawnObject(this, "e_spit_pool");
-	},
-	// Clay.io
-	ignoreLogDeath: true
+	}
 	
 };
 

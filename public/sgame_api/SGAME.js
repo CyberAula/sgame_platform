@@ -2096,19 +2096,22 @@ SGAME.CORE = function() {
         _togglePauseFunction = options.togglePause
       }
     }
+    if(_settings_loaded === false) {
+      _loadSettings(_settings)
+    }
     window.addEventListener("unload", function() {
       _onExit()
     })
   };
   var loadSettings = function(settings) {
-    SGAME.Debugger.log("SGAME load settings ");
-    SGAME.Debugger.log(settings);
     _settings_loaded = true;
     _loadSettings(settings);
     SGAME.Debugger.log("SGAME settings loaded");
     SGAME.Debugger.log(_settings)
   };
   var _loadSettings = function(settings) {
+    SGAME.Debugger.log("SGAME load settings ");
+    SGAME.Debugger.log(settings);
     _settings = settings;
     if(typeof _settings["game_metadata"] === "undefined") {
       _settings["game_metadata"] = {}
