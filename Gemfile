@@ -31,7 +31,7 @@ gem 'font-awesome-sass', '6.1.1'
 gem 'cancancan', '3.3.0'
 gem 'exception_notification', '4.5.0'
 gem "net-http", '0.2.0'
-gem "nokogiri", '1.13.4'
+gem "nokogiri", '1.13.9'
 gem 'rexml', '3.2.5'
 gem 'net-ssh', '7.0.0.beta1'
 
