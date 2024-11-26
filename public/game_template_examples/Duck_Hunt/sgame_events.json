@@ -1,0 +1,7 @@
+[{
+    "id": "1",
+    "title": "shot_fail",
+    "type": "reward",
+    "description": "Event triggered on failing a shot. Answer the question correctly to don't loose the bullet",
+    "event_frequency": "skill-dependent_high"
+}]
