@@ -67,6 +67,9 @@ SgamePlatform::Application.routes.draw do
   match '/privacy_policy', to: "home#privacy_policy", via: [:get]
   match '/cookie_policy', to: "home#cookie_policy", via: [:get]
 
+  #Cookie required
+  get "/cookies_required", to: "home#cookies_required", as: :cookies_required
+
   #Wildcard route (This rule should be placed the last)
   match "*not_found", :to => 'application#page_not_found', via: [:get]
 end

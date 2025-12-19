@@ -340,6 +340,10 @@ en:
       content: "This platform uses its own cookies to ensure proper operation and third-party technical cookies required for certain functionalities. In addition, user-hosted content may use third-party cookies. By clicking “Accept,” you consent to the use of all cookies. If you click “Reject,” access to hosted content and certain platform functionalities will not be available. You can find additional information in the <a href='/cookie_policy' target='_blank'>Cookie Policy</a>."
       accept: "Accept"
       reject: "Reject"
+    cookie_required:
+      message: "Access to this page requires accepting cookie consent. What would you like to do?"
+      show_cookie_notice: "Show cookie notice"
+      go_back: "Go back"
     must_accept_terms: "You must accept the Terms of Use and the Privacy Policy."
     privacy_policy: "Privacy Policy"
     terms_of_use: "Terms of Use"

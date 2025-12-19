@@ -340,6 +340,10 @@ es:
       content: "Esta plataforma utiliza cookies propias para garantizar su adecuado funcionamiento y cookies de terceros de carácter técnico requeridas por determinadas funcionalidades. Además, los contenidos alojados por los usuarios pueden usar cookies de terceros. Al pulsar en 'Aceptar', consiente el uso de todas las cookies. Si pulsa en 'Rechazar', no será posible acceder a los contenidos alojados ni emplear ciertas funcionalidades de la plataforma. Puede consultar información adicional en la <a href='/cookie_policy' target='_blank'>Política de Cookies</a>."
       accept: "Aceptar"
       reject: "Rechazar"
+    cookie_required:
+      message: "El acceso a esta página requiere aceptar el consentimiento de cookies. ¿Qué desea hacer?"
+      show_cookie_notice: "Mostrar aviso de cookies"
+      go_back: "Volver"
     must_accept_terms: "Debes aceptar los Términos de Uso y la Política de Privacidad"
     privacy_policy: "Política de Privacidad"
     terms_of_use: "Términos de Uso"

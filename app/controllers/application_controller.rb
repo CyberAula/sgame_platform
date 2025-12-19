@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
 	protect_from_forgery
+	before_action :require_cookie_consent
 	before_action :configure_permitted_parameters, if: :devise_controller?
 	before_action :set_locale
 	check_authorization :unless => :devise_controller?
@@ -96,5 +97,23 @@ class ApplicationController < ActionController::Base
 			client_locale = request.env['HTTP_ACCEPT_LANGUAGE'].scan(/^[a-z]{2}/).first
 			return (Utils.valid_locale?(client_locale) ? client_locale : nil)
 		end
+	end
+
+	def require_cookie_consent
+		consent = cookies[:cookie_accepted] # "true", "false", nil
+
+		return if consent == "true"
+		return if skip_cookie_consent?
+
+		session[:cookie_return_to] = request.fullpath
+
+		redirect_to cookies_required_path
+	end
+
+	def skip_cookie_consent?
+		return true if request.path == cookies_required_path
+		# Devise (login, signup, etc.)
+		return true if devise_controller?
+		false
 	end
 end

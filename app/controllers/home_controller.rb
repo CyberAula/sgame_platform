@@ -1,7 +1,8 @@
 class HomeController < ApplicationController
-	before_action :authenticate_user!, :except => [:frontpage, :terms_of_use, :privacy_policy, :cookie_policy]
-	skip_authorization_check :only => [:frontpage, :terms_of_use, :privacy_policy, :cookie_policy]
-
+	before_action :authenticate_user!, :except => [:frontpage, :terms_of_use, :privacy_policy, :cookie_policy, :cookies_required]
+	skip_authorization_check :only => [:frontpage, :terms_of_use, :privacy_policy, :cookie_policy, :cookies_required]
+	skip_before_action :require_cookie_consent, only: [:frontpage, :terms_of_use, :privacy_policy, :cookie_policy, :cookies_required]
+	
 	def frontpage
 		@certified_resources = Game.certified.order(SgamePlatform::Application.config.agnostic_random)
 		respond_to do |format|
@@ -34,5 +35,9 @@ class HomeController < ApplicationController
 		else
 			redirect_to view_context.home_path, alert: I18n.t("dictionary.errors.page_not_found")
 		end
+	end
+
+	def cookies_required
+		@return_to = session[:cookie_return_to] || root_path
 	end
 end

@@ -1,0 +1,27 @@
+<div id="cookies_required_wrapper">
+	<p class="title"><%=t("policies.cookie_required.message")%></p>
+	<button id="showCookieNoticeButton"><%=t("policies.cookie_required.show_cookie_notice")%></button>
+	<button id="goBackButton"><%=t("policies.cookie_required.go_back")%></button>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+  	window.redirectURLFromCookiesRequired = "<%= j @return_to %>";
+    const showNoticeBtn = document.getElementById("showCookieNoticeButton");
+    const goBackBtn    = document.getElementById("goBackButton");
+
+    if (showNoticeBtn) {
+      showNoticeBtn.addEventListener("click", function () {
+        if (typeof showWarning === "function") {
+        	showWarning();
+        }
+      });
+    }
+
+    if (goBackBtn) {
+      goBackBtn.addEventListener("click", function () {
+      	window.location.href = "/";
+      });
+    }
+  });
+</script>

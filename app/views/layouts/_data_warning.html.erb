@@ -11,37 +11,42 @@
 </div>
 
 <script type="text/javascript">
-	var localStorageSupported = function(){
-		return (!!window.localStorage
-    		&& typeof localStorage.getItem === 'function'
-    		&& typeof localStorage.setItem === 'function'
-    		&& typeof localStorage.removeItem === 'function');
-	};
-
-	var showWarning = function(){
-		var lsSupported = localStorageSupported();
-
-		//Show warning only if necessary
-		if(lsSupported === true){
-			if(window.localStorage.getItem('data_warning')==='true'){
-				//Do not show data warning because it has been previously shown
-				return;
+	function setCookie(name, value, days) {
+		const date = new Date();
+		date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+		const expires = "expires=" + date.toUTCString();
+		document.cookie = name + "=" + value + ";" + expires + ";path=/;SameSite=Lax";
+	}
+	function getCookie(name) {
+		const cookies = document.cookie.split("; ");
+		for (let i = 0; i < cookies.length; i++) {
+			const [key, value] = cookies[i].split("=");
+			if (key === name) {
+				return value;
 			}
 		}
+		return null;
+	}
 
+	var showWarning = function(redirectURL){
 		$("#cookie_accept_button").click(function(){
-			if(lsSupported === true){
-				window.localStorage.setItem('data_warning','true');
-			}
+			setCookie("cookie_accepted", "true", 365);
 			$("#data_warning_wrapper").hide();
+			if(typeof window.redirectURLFromCookiesRequired === "string"){
+				window.location.href = window.redirectURLFromCookiesRequired;
+			}
 		});
 
 		$("#cookie_reject_button").click(function(){
-			window.location.href = "/";
+			setCookie("cookie_accepted", "false", 365);
+			$("#data_warning_wrapper").hide();
 		});
 
 		$("#data_warning_wrapper").show();
 	}
 
-	showWarning();
+	const cookieAccepted = getCookie("cookie_accepted");
+	if (cookieAccepted === null) {
+		showWarning();
+	}
 </script>
