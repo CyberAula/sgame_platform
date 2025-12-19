@@ -38,7 +38,7 @@ set :deploy_to, "/u/apps/#{fetch(:application)}"
 set :pty, true
 
 # Default value for :linked_files is []
-append :linked_files, "config/database.yml", "config/application_config.yml", "tmp/restart.txt", "config/initializers/exception_notification.rb"
+append :linked_files, "config/database.yml", "config/application_config.yml", "public/policies/legal_notice.html", "public/policies/privacy_policy.html", "public/policies/cookie_policy.html", "tmp/restart.txt", "config/initializers/exception_notification.rb"
 
 # Default value for linked_dirs is []
 append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "tmp/webpacker", "public/system", "public/code", "vendor", "storage", "documents" 
