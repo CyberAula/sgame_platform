@@ -172,9 +172,6 @@ es:
   authorization:
     errors:
       generic: "No estás autorizado a acceder a esta página"
-  data_warning: 
-      content: "Este sitio web utiliza cookies y tecnologías similares para permitir el funcionamiento y la prestación de los servicios ofrecidos en el mismo."
-      button: "Entendido"
   delete: "Borrar"
   demo:
     game_carousel_title: "Elige un juego"
@@ -337,9 +334,15 @@ es:
     unlock_instructions_resend: "Reenviar instrucciones para desbloquear la cuenta"
     username_or_email: "Nombre de usuario o Correo electrónico"
   policies:
-    cookie_policy: "Política de cookies"
-    privacy_policy: "Política de privacidad"
-    terms_of_use: "Términos de uso"
+    accept: "Confirmo que he leído y acepto los <a href='/terms_of_use' target='blank'>Términos de Uso</a> y la <a href='/privacy_policy' target='_blank'>Política de Privacidad</a>."
+    cookie_policy: "Política de Cookies"
+    cookie_notice: 
+      content: "Esta plataforma utiliza cookies propias para garantizar su adecuado funcionamiento y cookies de terceros de carácter técnico requeridas por determinadas funcionalidades. Además, los contenidos alojados por los usuarios pueden usar cookies de terceros. Al pulsar en 'Aceptar', consiente el uso de todas las cookies. Si pulsa en 'Rechazar', no será posible acceder a los contenidos alojados ni emplear ciertas funcionalidades de la plataforma. Puede consultar información adicional en la <a href='/cookie_policy' target='_blank'>Política de Cookies</a>."
+      accept: "Aceptar"
+      reject: "Rechazar"
+    must_accept_terms: "Debes aceptar los Términos de Uso y la Política de Privacidad"
+    privacy_policy: "Política de Privacidad"
+    terms_of_use: "Términos de Uso"
   presentations:
     clone:
       success: "La presentación fue clonada con éxito"

@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+	attr_accessor :accept_terms
+	validates :accept_terms, acceptance: true, on: :create
 	devise :database_authenticatable, :registerable,
 	:recoverable, :rememberable, :trackable, :validatable, :confirmable, :omniauthable
 

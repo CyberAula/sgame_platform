@@ -32,7 +32,7 @@
 	align-items:  center;
 }
 
-#data_warning_button {
+.cookie_notice_button {
 	background: white;
 	color: black;
 	border: 2px solid white;
@@ -40,4 +40,5 @@
 	font-weight: bold;
 	white-space: nowrap;
 	margin-top: -7px;
+	margin-left: 10px;
 }

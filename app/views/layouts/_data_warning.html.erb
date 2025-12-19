@@ -1,10 +1,11 @@
 <div id="data_warning_wrapper">
 	<div id="data_warning">
 		<div id="data_warning_row1">
-			<%=t("data_warning.content")%>
+			<%=t("policies.cookie_notice.content").html_safe%>
 		</div>
 		<div id="data_warning_row2">
-			<button id="data_warning_button"><%=t("data_warning.button")%></button>
+			<button class="cookie_notice_button" id="cookie_accept_button"><%=t("policies.cookie_notice.accept")%></button>
+			<button class="cookie_notice_button" id="cookie_reject_button"><%=t("policies.cookie_notice.reject")%></button>
 		</div>
 	</div>
 </div>
@@ -28,11 +29,15 @@
 			}
 		}
 
-		$("#data_warning_button").click(function(){
+		$("#cookie_accept_button").click(function(){
 			if(lsSupported === true){
 				window.localStorage.setItem('data_warning','true');
 			}
 			$("#data_warning_wrapper").hide();
+		});
+
+		$("#cookie_reject_button").click(function(){
+			window.location.href = "/";
 		});
 
 		$("#data_warning_wrapper").show();

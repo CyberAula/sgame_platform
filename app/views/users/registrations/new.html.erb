@@ -36,11 +36,35 @@
       </div>
     <% end %>
 
+    <div class="field">
+      <%= f.check_box :accept_terms, id: "accept_terms_checkbox"  %>
+      <%= f.label :accept_terms, t("policies.accept").html_safe %>
+    </div>
+
     <div class="actions">
-      <%= f.submit(t("devise.registrations.new"), {class: "sgame_button sign_up_button"}) %>
+      <%= f.submit(t("devise.registrations.new"), {class: "sgame_button sign_up_button", id: "signup_submit_button", disabled: true, title: t("policies.must_accept_terms")}) %>
     </div>
   <% end %>
 
   <%= render "devise/shared/links" %>
 
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const checkbox = document.getElementById("accept_terms_checkbox");
+    const submit   = document.getElementById("signup_submit_button");
+    if (!checkbox || !submit) return;
+    checkbox.addEventListener("change", function (){
+      submit.disabled = !this.checked;
+      if (this.checked) {
+        submit.disabled = false;
+        submit.removeAttribute("title");
+      } else {
+        submit.disabled = true;
+        var titleText = '<%=t("policies.must_accept_terms")%>';
+        submit.setAttribute("title", titleText);
+      }
+    });
+  });
+</script>

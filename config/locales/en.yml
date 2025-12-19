@@ -172,9 +172,6 @@ en:
   authorization:
     errors:
       generic: "You are not authorized to access this page"
-  data_warning: 
-      content: "This website uses cookies and similar technologies to enable the operation and provision of the services offered on it."
-      button: "Ok"
   delete: "Delete"
   demo:
     game_carousel_title: "Choose game"
@@ -337,9 +334,15 @@ en:
     unlock_instructions_resend: "Resend unlock instructions"
     username_or_email: "Username or Email"
   policies:
-    cookie_policy: "Cookie policy"
-    privacy_policy: "Privacy policy"
-    terms_of_use: "Terms of use"
+    accept: "I confirm that I have read and accept the <a href='/terms_of_use' target='_blank'>Terms of Use</a> and the <a href='/privacy_policy' target='_blank'>Privacy Policy</a>."
+    cookie_policy: "Cookie Policy"
+    cookie_notice: 
+      content: "This platform uses its own cookies to ensure proper operation and third-party technical cookies required for certain functionalities. In addition, user-hosted content may use third-party cookies. By clicking “Accept,” you consent to the use of all cookies. If you click “Reject,” access to hosted content and certain platform functionalities will not be available. You can find additional information in the <a href='/cookie_policy' target='_blank'>Cookie Policy</a>."
+      accept: "Accept"
+      reject: "Reject"
+    must_accept_terms: "You must accept the Terms of Use and the Privacy Policy."
+    privacy_policy: "Privacy Policy"
+    terms_of_use: "Terms of Use"
   presentations:
     clone:
       success: "The presentation was cloned successfully"

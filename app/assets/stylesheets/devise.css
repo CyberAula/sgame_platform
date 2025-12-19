@@ -65,6 +65,12 @@ div#session_form input[type='submit'] {
   font-size: 1.4rem;
 }
 
+#signup_submit_button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #ccc;
+}
+
 div#session_form p.forgot_password {
   width: 400px;
   text-align: right;
