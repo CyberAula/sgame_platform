@@ -1,6 +1,8 @@
 class User < ActiveRecord::Base
 	attr_accessor :accept_terms
 	validates :accept_terms, acceptance: true, on: :create
+	validates :terms_accepted_at, presence: true, on: :create
+	before_validation :set_terms_accepted_at, on: :create
 	devise :database_authenticatable, :registerable,
 	:recoverable, :rememberable, :trackable, :validatable, :confirmable, :omniauthable
 
@@ -21,6 +23,13 @@ class User < ActiveRecord::Base
 
 	def files
 		self.documents + self.scormfiles
+	end
+
+
+	private
+
+	def set_terms_accepted_at
+		self.terms_accepted_at ||= Time.current if accept_terms == "1"
 	end
 
 end

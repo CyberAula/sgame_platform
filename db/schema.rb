@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2018_08_28_145118) do
+ActiveRecord::Schema[7.0].define(version: 2025_12_19_195324) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -27,12 +27,12 @@ ActiveRecord::Schema[7.0].define(version: 2018_08_28_145118) do
     t.datetime "updated_at", precision: nil
     t.string "file_file_name"
     t.string "file_content_type"
-    t.bigint "file_file_size"
-    t.datetime "file_updated_at"
+    t.integer "file_file_size"
+    t.datetime "file_updated_at", precision: nil
     t.string "thumbnail_file_name"
     t.string "thumbnail_content_type"
-    t.bigint "thumbnail_file_size"
-    t.datetime "thumbnail_updated_at"
+    t.integer "thumbnail_file_size"
+    t.datetime "thumbnail_updated_at", precision: nil
   end
 
   create_table "game_event_mappings", id: :serial, force: :cascade do |t|
@@ -70,12 +70,12 @@ ActiveRecord::Schema[7.0].define(version: 2018_08_28_145118) do
     t.datetime "updated_at", precision: nil
     t.string "file_file_name"
     t.string "file_content_type"
-    t.bigint "file_file_size"
-    t.datetime "file_updated_at"
+    t.integer "file_file_size"
+    t.datetime "file_updated_at", precision: nil
     t.string "thumbnail_file_name"
     t.string "thumbnail_content_type"
-    t.bigint "thumbnail_file_size"
-    t.datetime "thumbnail_updated_at"
+    t.integer "thumbnail_file_size"
+    t.datetime "thumbnail_updated_at", precision: nil
   end
 
   create_table "games", id: :serial, force: :cascade do |t|
@@ -93,8 +93,8 @@ ActiveRecord::Schema[7.0].define(version: 2018_08_28_145118) do
     t.datetime "updated_at", precision: nil
     t.string "thumbnail_file_name"
     t.string "thumbnail_content_type"
-    t.bigint "thumbnail_file_size"
-    t.datetime "thumbnail_updated_at"
+    t.integer "thumbnail_file_size"
+    t.datetime "thumbnail_updated_at", precision: nil
     t.text "editor_data"
   end
 
@@ -125,8 +125,8 @@ ActiveRecord::Schema[7.0].define(version: 2018_08_28_145118) do
     t.datetime "updated_at", precision: nil
     t.string "attach_file_name"
     t.string "attach_content_type"
-    t.bigint "attach_file_size"
-    t.datetime "attach_updated_at"
+    t.integer "attach_file_size"
+    t.datetime "attach_updated_at", precision: nil
   end
 
   create_table "presentations", id: :serial, force: :cascade do |t|
@@ -167,21 +167,21 @@ ActiveRecord::Schema[7.0].define(version: 2018_08_28_145118) do
     t.datetime "updated_at", precision: nil
     t.string "file_file_name"
     t.string "file_content_type"
-    t.bigint "file_file_size"
-    t.datetime "file_updated_at"
+    t.integer "file_file_size"
+    t.datetime "file_updated_at", precision: nil
     t.string "thumbnail_file_name"
     t.string "thumbnail_content_type"
-    t.bigint "thumbnail_file_size"
-    t.datetime "thumbnail_updated_at"
+    t.integer "thumbnail_file_size"
+    t.datetime "thumbnail_updated_at", precision: nil
     t.boolean "rdata", default: true
   end
 
   create_table "taggings", id: :serial, force: :cascade do |t|
     t.integer "tag_id"
-    t.string "taggable_type"
     t.integer "taggable_id"
-    t.string "tagger_type"
+    t.string "taggable_type"
     t.integer "tagger_id"
+    t.string "tagger_type"
     t.string "context", limit: 128
     t.datetime "created_at", precision: nil
     t.index ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true
@@ -216,6 +216,7 @@ ActiveRecord::Schema[7.0].define(version: 2018_08_28_145118) do
     t.string "language"
     t.string "ui_language"
     t.text "tag_array_text", default: ""
+    t.datetime "terms_accepted_at"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
