@@ -58,9 +58,9 @@ SgamePlatform::Application.routes.draw do
   #SGAME API
   match '/SGAME.js', to: 'games#sgame_api', via: [:get]
 
-  #Demo
-  match '/demo', to: 'demo#demo', via: [:get]
-  match '/demo/create', to: 'demo#create', via: [:post]
+  # #Demo
+  # match '/demo', to: 'demo#demo', via: [:get]
+  # match '/demo/create', to: 'demo#create', via: [:post]
 
   #Terms of use
   match '/terms_of_use', to: "home#frontpage", via: [:get]

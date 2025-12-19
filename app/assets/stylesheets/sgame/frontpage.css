@@ -34,23 +34,6 @@ div.frontpage_row1 div.col1 p.description {
 	margin-bottom: 40px;
 }
 
-div.frontpage_row1 div.col1  p.description_demo {
-	display: inline;
-    padding: 10px 20px;
-	font-weight: bold;
-	border: 2px solid white;
-	border-radius: 50px;
-}
-
-div.frontpage_row1 div.col1  a p.description_demo {
-	color: white;
-}
-
-div.frontpage_row1 div.col1  a:hover p.description_demo {
-	background-color: white;
-	color: #046598;
-}
-
 div.frontpage_row1 div.col1 p a {
 	text-decoration: none;
 }
