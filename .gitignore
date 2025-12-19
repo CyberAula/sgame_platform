@@ -17,6 +17,9 @@
 config/database.yml
 config/application_config.yml
 config/initializers/exception_notification.rb
+public/policies/legal_notice.html
+public/policies/privacy_policy.html
+public/policies/cookie_policy.html
 
 # ignore documents folder
 /documents

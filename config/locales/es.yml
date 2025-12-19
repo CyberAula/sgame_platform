@@ -336,6 +336,10 @@ es:
     unlock_instructions: "¿No has recibido las instrucciones para desbloquear la cuenta?"
     unlock_instructions_resend: "Reenviar instrucciones para desbloquear la cuenta"
     username_or_email: "Nombre de usuario o Correo electrónico"
+  policies:
+    cookie_policy: "Política de cookies"
+    privacy_policy: "Política de privacidad"
+    terms_of_use: "Términos de uso"
   presentations:
     clone:
       success: "La presentación fue clonada con éxito"

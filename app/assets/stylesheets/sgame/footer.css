@@ -8,7 +8,7 @@
 #footer div.col1 {
 	float: left;
 }
-#footer div.col2, #footer div.col3, #footer div.col4 {
+#footer div.col2, #footer div.col3 {
 	float: right;
 }
 #footer div.col1 img {
@@ -57,23 +57,48 @@
 	background: none;
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	text-shadow: none;
-	margin-left: 25px;
-	margin-right: 25px;
+	margin-left: 20px;
+	margin-right: 10px;
 }
 #footer div.footer_dropdown span.glyphicon{
 	margin-right: 15px;
 }
 
-#footer div.col4 div {
-	position: relative;
-	margin-top: 18px;
-	margin-left: 25px;
-	margin-right: 50px;
+#footer div.col4 {
+	height: 100%;
+	float: right;
+	margin-right: 10px;
 }
 
-#footer div.col4 div a {
-	text-decoration: none;
-	font-size: 1.3em;
+#footer ul.policies {
+	height: 100%;
+	display: flex;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 1.1em;
+}
+
+#footer ul.policies li {
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+}
+
+#footer ul.policies li span {
+	margin: 0px 0px 0px 10px;
+}
+
+@media (max-width: 900px) {
+	#footer ul.policies {
+		flex-direction: column;
+		font-size: 1em;
+		margin-top: 4px;
+	}
+	#footer ul.policies li {
+		flex-direction: column;
+	}
+	#footer ul.policies li span {
+		display: none;
+	}
 }
 
 @media (max-width: 600px) {
@@ -81,9 +106,8 @@
 		margin-left: 5px;
 		margin-right: 5px;
 	}
-	#footer div.col4 div {
-		margin-left: 5px;
-		margin-right: 5px;
+	#footer ul.policies {
+		font-size: 0.9em;
 	}
 }
 

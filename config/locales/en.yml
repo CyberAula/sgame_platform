@@ -336,6 +336,10 @@ en:
     unlock_instructions: "Didn't receive unlock instructions?"
     unlock_instructions_resend: "Resend unlock instructions"
     username_or_email: "Username or Email"
+  policies:
+    cookie_policy: "Cookie policy"
+    privacy_policy: "Privacy policy"
+    terms_of_use: "Terms of use"
   presentations:
     clone:
       success: "The presentation was cloned successfully"
