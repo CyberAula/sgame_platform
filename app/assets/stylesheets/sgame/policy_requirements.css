@@ -1,0 +1,8 @@
+#cookies_required_wrapper button {
+	color: black;
+}
+
+#accept_terms_submit, #noAccept_terms_button {
+	background: white;
+	color: black;
+}

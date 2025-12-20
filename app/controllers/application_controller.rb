@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
 	protect_from_forgery
+	before_action :ensure_latest_terms_accepted
 	before_action :require_cookie_consent
 	before_action :configure_permitted_parameters, if: :devise_controller?
 	before_action :set_locale
@@ -98,6 +99,15 @@ class ApplicationController < ActionController::Base
 			return (Utils.valid_locale?(client_locale) ? client_locale : nil)
 		end
 	end
+
+	def ensure_latest_terms_accepted
+		return unless user_signed_in?
+		return if devise_controller?
+		return if current_user.accepted_latest_terms?
+
+		session[:after_terms_path] = request.fullpath if request.get?
+		redirect_to terms_required_path
+  	end
 
 	def require_cookie_consent
 		consent = cookies[:cookie_accepted] # "true", "false", nil

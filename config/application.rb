@@ -31,6 +31,13 @@ module SgamePlatform
     config.sgame_platform_version = "1.0.0"
     config.sgame_api_version = "1.0.1"
 
+    termsOfUsePath = Rails.root.join("public", "policies", "legal_notice.html")
+    if File.exist?(termsOfUsePath) && config.APP_CONFIG["terms_last_updated_at"]
+      config.terms_last_updated_at = Date.strptime(config.APP_CONFIG["terms_last_updated_at"], "%d-%m-%Y").beginning_of_day.in_time_zone
+    else
+      config.terms_last_updated_at = nil
+    end
+
     #Load SGAME modules
     require Rails.root + "app/models/recommender_system.rb"
     require 'scorm/package'

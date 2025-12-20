@@ -67,6 +67,10 @@ SgamePlatform::Application.routes.draw do
   match '/privacy_policy', to: "home#privacy_policy", via: [:get]
   match '/cookie_policy', to: "home#cookie_policy", via: [:get]
 
+  #Terms of use required
+  get  "/terms_required", to: "home#terms_required", as: :terms_required
+  post "/accept_terms", to: "home#accept_terms", as: :accept_terms
+
   #Cookie required
   get "/cookies_required", to: "home#cookies_required", as: :cookies_required
 

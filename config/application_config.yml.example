@@ -1,6 +1,7 @@
 development:
   name: "SGAME Platform"
   domain: "localhost:3000"
+  terms_last_updated_at: "19-12-2025"
   mail:
     type: "SENDMAIL"
     main_mail: "sgame@example.com"

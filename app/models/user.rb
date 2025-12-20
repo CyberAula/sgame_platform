@@ -25,6 +25,11 @@ class User < ActiveRecord::Base
 		self.documents + self.scormfiles
 	end
 
+	def accepted_latest_terms?
+    	return true if SgamePlatform::Application.config.terms_last_updated_at.blank?
+    	return false if self.terms_accepted_at.blank?
+    	self.terms_accepted_at >= SgamePlatform::Application.config.terms_last_updated_at
+  	end
 
 	private
 

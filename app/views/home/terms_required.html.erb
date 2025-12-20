@@ -1,0 +1,36 @@
+<div id="terms_required_wrapper">
+  <p class="title">
+    <%= t("policies.terms_required.message").html_safe %>
+  </p>
+
+  <%= form_with url: accept_terms_path, method: :post, local: true do %>
+    <p>
+      <%= check_box_tag :accept_terms, "1", false, required: true %>
+      <%= t("policies.accept").html_safe %>
+    </p>
+
+    <div class="actions">
+      <%= submit_tag t("policies.terms_required.accept"),
+          disabled: true,
+          id: "accept_terms_submit",
+          class: "btn btn-primary" %>
+
+      <%= link_to t("policies.terms_required.noAccept"),
+          destroy_user_session_path,
+          method: :delete,
+          id: "noAccept_terms_button",
+          class: "btn btn-secondary" %>
+    </div>
+  <% end %>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const checkbox = document.querySelector('input[name="accept_terms"]');
+    const submit   = document.getElementById("accept_terms_submit");
+    if (!checkbox || !submit) return;
+    checkbox.addEventListener("change", function () {
+      submit.disabled = !this.checked;
+    });
+  });
+</script>

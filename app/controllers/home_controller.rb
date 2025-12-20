@@ -1,8 +1,9 @@
 class HomeController < ApplicationController
 	before_action :authenticate_user!, :except => [:frontpage, :terms_of_use, :privacy_policy, :cookie_policy, :cookies_required]
-	skip_authorization_check :only => [:frontpage, :terms_of_use, :privacy_policy, :cookie_policy, :cookies_required]
-	skip_before_action :require_cookie_consent, only: [:frontpage, :terms_of_use, :privacy_policy, :cookie_policy, :cookies_required]
-	
+	skip_authorization_check
+	skip_before_action :require_cookie_consent
+	skip_before_action :ensure_latest_terms_accepted, :except => [:frontpage]
+
 	def frontpage
 		@certified_resources = Game.certified.order(SgamePlatform::Application.config.agnostic_random)
 		respond_to do |format|
@@ -39,5 +40,13 @@ class HomeController < ApplicationController
 
 	def cookies_required
 		@return_to = session[:cookie_return_to] || root_path
+	end
+
+	def terms_required
+	end
+
+	def accept_terms
+		current_user.update!(terms_accepted_at: Time.current)
+		redirect_to(session.delete(:after_terms_path) || root_path)
 	end
 end

@@ -347,6 +347,10 @@ en:
     must_accept_terms: "You must accept the Terms of Use and the Privacy Policy."
     privacy_policy: "Privacy Policy"
     terms_of_use: "Terms of Use"
+    terms_required:
+      message: "We have updated our <a href='/terms_of_use' target='_blank'>Terms of Use</a> and/or our <a href='/privacy_policy' target='_blank'>Privacy Policy</a>. You must accept the current Terms of Use and Privacy Policy in order to continue using the platform."
+      accept: "Accept"
+      noAccept: "Cancel"
   presentations:
     clone:
       success: "The presentation was cloned successfully"
