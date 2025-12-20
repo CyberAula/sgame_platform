@@ -46,7 +46,8 @@ class DocumentsController < ApplicationController
         render :json => @document.to_json 
       }
       format.html {
-        @suggestions = RecommenderSystem.suggestions({:n => 6, :lo_profile => @document.profile, :settings => {}})
+        #@suggestions = RecommenderSystem.suggestions({:n => 6, :lo_profile => @document.profile, :settings => {}})
+        @suggestions = []
       }
       format.any {
         path = @document.file.path(params[:style] || params[:format])

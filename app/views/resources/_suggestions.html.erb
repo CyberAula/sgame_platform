@@ -1,6 +1,8 @@
-<h4><%=t("resources.suggestions")%></h4>
-<div>
-	<% suggestions.each do |profile| %>
-		<%= render :partial => 'resources/suggestion', :locals  => { :profile => profile } %>
-	<% end %>
-</div>
+<% if suggestions.length > 0 %>
+	<h4><%=t("resources.suggestions")%></h4>
+	<div>
+		<% suggestions.each do |profile| %>
+			<%= render :partial => 'resources/suggestion', :locals  => { :profile => profile } %>
+		<% end %>
+	</div>
+<% end %>

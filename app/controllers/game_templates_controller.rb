@@ -8,7 +8,8 @@ class GameTemplatesController < ApplicationController
 
   def show
     @game_template = GameTemplate.find(params[:id])
-    @suggestions = RecommenderSystem.suggestions({:n => 6, :lo_profile => @game_template.profile, :settings => {:preselection_filter_by_resource_types => ["Game"]}})
+    #@suggestions = RecommenderSystem.suggestions({:n => 6, :lo_profile => @game_template.profile, :settings => {:preselection_filter_by_resource_types => ["Game"]}})
+    @suggestions = []
     respond_to do |format|
       format.html {
         render

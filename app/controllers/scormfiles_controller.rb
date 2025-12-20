@@ -9,7 +9,8 @@ class ScormfilesController < ApplicationController
         render :json => @scormfile.to_json 
       }
       format.html {
-        @suggestions = RecommenderSystem.suggestions({:n => 6, :lo_profile => @scormfile.profile, :settings => {}})
+        #@suggestions = RecommenderSystem.suggestions({:n => 6, :lo_profile => @scormfile.profile, :settings => {}})
+        @suggestions = []
       }
       format.full {
         render :layout => 'iframe'

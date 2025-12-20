@@ -18,7 +18,8 @@ class PresentationsController < ApplicationController
 
   def show
     @presentation = Presentation.find(params[:id])
-    @suggestions = RecommenderSystem.suggestions({:n => 6, :lo_profile => @presentation.profile, :settings => {:preselection_filter_by_resource_types => ["Presentation"]}})
+    #@suggestions = RecommenderSystem.suggestions({:n => 6, :lo_profile => @presentation.profile, :settings => {:preselection_filter_by_resource_types => ["Presentation"]}})
+    @suggestions = []
     respond_to do |format|
       format.html {
         if @presentation.draft 
