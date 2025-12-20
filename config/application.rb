@@ -27,6 +27,8 @@ module SgamePlatform
     config.full_domain = "http://" + config.domain
     config.full_code_domain = "http://" + (config.APP_CONFIG['code_domain'] || config.APP_CONFIG['domain'])
 
+    config.action_dispatch.default_headers.delete('X-Frame-Options')
+
     config.name = (config.APP_CONFIG["name"] || "SGAME Platform")
     config.sgame_platform_version = "1.0.0"
     config.sgame_api_version = "1.0.1"
